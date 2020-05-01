@@ -1,0 +1,644 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{prop}{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corol}[theorem]{Corollary}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{remark}{Remark}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+
+\newcommand{\junk}[1]{}
+
+
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\C}{{\mathbb{C}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\renewcommand{\S}{\mathbb{S}}
+
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\Pr}{\mathbb{P}}
+
+\newcommand\eps{\varepsilon}
+
+\newcommand\FF{\mathcal{F}}
+\newcommand\HH{\mathcal{H}}
+\newcommand\GG{\mathcal{G}}
+\newcommand\TT{\mathcal{T}}
+\newcommand\PP{\mathcal{P}}
+\newcommand\RR{\mathcal{R}}
+\newcommand\CC{\mathcal{C}}
+\newcommand\BB{\mathcal{B}}
+\newcommand\II{\mathcal{I}}
+\renewcommand\AA{\mathcal{A}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand\AP{\mathcal{AP}}
+
+\newcommand{\eqdef}{:=}
+\newcommand{\maps}{\colon}
+\newcommand{\ale}{\lesssim}
+\newcommand{\age}{\gtrsim}
+
+
+\title{Fast Tensor Scaling}
+\author{Akshay Ramachandran }
+\date{February 2020}
+
+\begin{document}
+
+\maketitle
+
+There are some small but important subtleties between the theorem proved in [Cole,Moitra] and the one proved in [Spectral Analysis]. 
+
+The following is a general statement about geodesic convex optimization (wrt $f$).
+\begin{theorem} [Cole,Moitra]
+Say the current point $Z_{0}$ has a $\lambda$-strongly convex ball of size $\kappa$ around it. Then $\|\nabla f(Z_{0})\|_{F} \ll \lambda \kappa$ is a sufficient condition for linear convergence of any reasonable descent method. 
+\end{theorem}
+
+\begin{corollary}
+For operator scaling, for $f(Z) := \log\det(\Phi(Z)) - \log\det(Z)$, if our current point is a $(1 - \lambda)$-expander and 
+\[ \|\nabla f(Z_{0})\|_{F} = \|Z_{0}^{1/2} \Phi^{*}( \Phi(Z_{0})^{-1} ) Z_{0}^{1/2} - I\|_{F} \ll \lambda^{2}   \]
+\emph{OR} for $f(X,Y) := \sum_{i} \|X A_{i} Y\|_{F}^{2}$, if our current point is a $(1 - \lambda)$-expander and 
+\[ \|\nabla f(I,I)\|_{F} = \sqrt{\|\frac{s}{n} I - \Phi(I)\|_{F}^{2} + \|\frac{s}{n} I - \Phi^{*}(I) \|_{F}^{2}} \ll \lambda^{2}     \]
+we have fast convergence with any descent method. 
+\end{corollary}
+
+\begin{theorem} [Spectral Analysis]If current point is a $(1 - \lambda)$-expander and 
+\[  \|\nabla f(I,I)\|_{op} = \max{ \|\frac{s}{n} I - \Phi(I)\|_{op}, \|\frac{s}{n} I - \Phi^{*}(I) \|_{op} } \ll \frac{\lambda^{2}}{\log n}  \]
+the continuous gradient flow (and gradient descent with small enough discretization) converges fast. 
+\end{theorem}
+
+To compare, in general $\|\nabla f(I,I)\|_{op}^{2} \leq \|\nabla f(I,I)\|_{F}^{2} \leq 2n \|\nabla f(I,I)\|_{op}^{2}$, with the left side being tight for rank one matrices, and the right being tight for $I$. The value of the $\|\cdot\|_{F}$ condition will be shown below as the analysis is much quicker and therefore can be generalized to tensor scaling. 
+
+
+EXPLICIT PROOF OF PERTURBATION BOUNDS
+EXPLICIT CALCULATION OF GEODESIC GRADIENT
+
+
+
+\begin{proof}
+Assume the optimum $Z^{*}$ is a $(1-\lambda)$-expander and the current point $Z_{0}$ has a small gradient. Then we show firstly $Z_{0}$ is in a small geodesic ball around $Z^{*}$ on which $f$ is strongly convex, and secondly that ball contains a large level set $\{Z \mid f(Z) \leq h \}$ containing $Z_{0}$. This means any descent method will stay inside this level set on which the function is strongly convex. For now we will ignore constants, though this can be formalized easily enough. 
+
+For the functions considered, $Z^{*}$ being an $(1-\lambda)$-expander is equivalent to $f$ being strongly convex at $Z^{*}$. Further by simple perturbation bounds (depending on $f$), $f$ is $\Omega(\lambda)$-strongly convex on an $\Omega(\lambda)$ geodesic ball $B$ around $Z^{*}$. As of now, it is unclear that $Z_{0}$ is contained in this ball, so we consider the geodesic $X_{t} := e^{tH} Z^{*}$ such that $\|H\|_{F} = 1, X_{T} = Z_{0}$, and let $g(t) := f(X_{t})$. 
+\[ g'(T) = \langle \nabla f(Z_{0}), H \rangle \leq \|\nabla f(Z_{0})\|_{F}   \]
+\[ g'(T) = g'(0) + \int_{t=0}^{T} g''(t) \geq 0 + a \lambda \min\{T, b \lambda\}  \]
+For appropriate constants, $\|\nabla f(Z_{0})\|_{F} \ll \lambda^{2} \implies T \ll \lambda$, i.e. $f(Z_{0}) \in B$. 
+
+
+Next, assume $f$ is $\lambda$ strongly convex on a $\kappa$ ball $B$ around $Z^{*}$. Let $X$ be any point on $\partial B$. Take the geodesic $X_{t} := e^{tK} Z^{*}$ such that $\|K\|_{F}=1, X_{\kappa} = X$ and let $g(t) := f(X_{t})$:
+\[ g(\kappa) - g(0) = \int_{t=0}^{\kappa} g'(t) = \int_{t=0}^{\kappa} \int_{s=0}^{t} g''(s) \geq \int_{t=0}^{\kappa} \lambda t \geq \lambda \kappa^{2}/2 \]
+Therefore for $h := f(Z^{*}) + \lambda \kappa^{2}/2$, $B$ contains the level set $S := \{Z \mid f(Z) \leq h \}$. Now take $Y \not\in S$ so $f(Y) > h$, and its geodesic $Y_{t} := e^{tH} Z^{*}$ such that $\|H\|_{F}=1$ and $Y = Y_{T}$. Let $Y_{s}$ be the intersection of this geodesic with S, i.e. $f(Y_{s}) = h$. Since $S \subseteq B$, we know $s \leq \kappa$. Letting $g(t) := f(Y_{t})$, we use convexity and intermediate value theorem to show:
+\[ \|\nabla f(Y)\|_{F} \geq \langle \nabla f(Y), H \rangle = g'(T) > g'(s) \geq h / s \geq  \frac{\lambda \kappa^{2}}{2 \kappa} = \lambda \kappa / 2  \]
+Substituting $\kappa = b\lambda$, we've shown that $\|\nabla f(Z_{0})\|_{F} \ll \lambda^{2}$ implies $Z_{0}$ is contained in a level set on which $f$ is $\Omega(\lambda)$ strongly convex. 
+
+In the original statement, we only know that $Z_{0}$ is an expander. To use the above, we can run the original argument backwards. Again by perturbation bounds, $f$ is $\Omega(\lambda)$ strongly convex on an $\Omega(\lambda)$ ball around $Z_{0}$. Take the geodesic $Z_{t} := e^{t H} Z_{0}$ such that $\|H\|_{F} =1$, $Z_{T} = Z^{*}$, and let $g(t) := f(Z_{t})$. 
+\[ \|\nabla f(Z_{0})\|_{F} \geq - \langle \nabla f(Z_{0}), H \rangle = g'(T) - g'(0) = \int_{t=0}^{T} g''(t) \geq a \lambda \min\{T, b \lambda \}  \]
+Therefore, $\|\nabla f(Z_{0})\|_{F} \ll \lambda^{2} \implies T \ll \lambda$, i.e. $Z^{*}$ is in the ball around $Z_{0}$ where $f$ is strongly convex. 
+Choosing large enough constants, this in fact shows by perturbation bounds that $Z^{*}$ is also a $(1-\Omega(\lambda))$-expander, which then allows us to use the arguments above to conclude the theorem. 
+\end{proof}
+
+\begin{proof} [Proof of Corollary]
+Recall the upper bound on $f(Z) := \log\det \Phi(Z) - \log \det Z$ through on one iteration of Sinkhorn scaling:
+\[ f(Z) \leq f(Z_{0}) - \frac{1}{6} \|\nabla f(Z_{0})\|_{F}^{2}   \]
+For the geodesic $Z_{t} := e^{tH} Z_{0}$ where $\|H\|_{F} = 1, Z_{T} = Z^{*}$, we have $\lambda$-strong convexity throughout $g(t) := f(Z_{t})$:
+\[ g(T) - g(0) = \int_{0}^{T} g'(t) = \int_{t=0}^{T} g'(0) + \int_{s=0}^{t} \partial_{s}^{2} g''(s) \geq \frac{\lambda T^{2}}{2} - T \|\nabla f(Z_{0})\|_{F}  \]
+The final inequality follows by balancing terms:
+\[ \inf_{T \geq 0} \lambda T^{2}/2 - \epsilon T = - \epsilon^{2}/ 2 \lambda \]
+So we have that in $O(1/\lambda)$ iterations, the norm of the gradient must decrease by a constant factor. 
+\end{proof}
+
+\section{Random Tensors}
+The above simple analysis is enough to show that random $k$-tensors will have linear convergence for $k$ large enough. 
+
+\subsection{Classical Setting}
+We begin with $\{g_{\vec{i}}\}_{\vec{i} \in [n]^{k}}$ 
+for iid $g_{\vec{i}} := g \sim N(0,n^{-(k-1)})$. 
+This normalization is so the expected size of $\{G_{\vec{i}} := g_{\vec{i}}^{2}\}$ is $\sum_{\vec{i}} g_{\vec{i}}^{2} \approx n^{k} n^{-(k-1)} = n$ and the expected (row, col, etc) marginal is $\sum_{\vec{j} \in [n]^{k-1}} g_{i \vec{j}}^{2} \approx 1$. In fact, all the relevant quantities will be related to $\chi$-square variables with various degrees of freedom, for which the Moment generating function is quite nice. We will prove fast convergence for the function
+\[ f_{g}(D_{1}, ..., D_{k}) := \|D \cdot g\|_{2}^{2} = \sum_{\vec{i}} g_{\vec{i}}^{2} (d_{1,i_{1}} ... d_{k, i_{k}})^{2}   \]
+The function is geodesically convex, i.e. $X \perp 1, h(t) := f(1,..., e^{t X_{a}}, ..., 1)$ is convex in the ordinary sense:
+\[ h'(0) = 2 \sum_{\vec{i}} g_{\vec{i}}^{2} X_{a,i_{a}} \implies \frac{1}{2} \nabla f = (G^{1}, ..., G^{k})  \]
+Similarly, consider $h(s,t) := f(1, ..., e^{t X_{a}}, e^{s Y_{b}}, ..., 1)$:
+\[ \partial_{t=0} \partial_{s=0} h(s,t) = 4 \sum_{\vec{i}} g_{\vec{i}^{2}} X_{a,i_{a}} Y_{b,i_{b}} \]
+\[  \implies \frac{1}{4} \nabla^{2} f = \begin{pmatrix} 
+             \text{diag}(G^{1}) &  \ldots  & G^{1k}
+        \\   \vdots             &  G^{ab}  & \vdots
+        \\   G^{k1} &  \ldots  &  \text{diag}(G^{k})
+\end{pmatrix}
+\]
+Here $G^{a}$ is a one body marginal $(G^{a})_{i \in [n]} = \sum_{\vec{j} \in [n]^{k-1}} g_{i\vec{j}}^{2}$; and $G^{ab}$ is a two body marginal $(G^{ab})_{ij} = \sum_{\vec{k} \in [n]^{k-2}} g_{ij\vec{k}}^{2}$. We would like to show 
+\[ \forall a: G^{a} \approx 1 \]
+\[ \forall a \neq b: \sup_{x,y \perp 1} \dfrac{\langle x, G^{ab} y \rangle}{\|x\|_{2} \|y\|_{2}} \leq \frac{1 - \lambda}{k-1} \]
+\[ \sum_{a} \|G^{a} - \frac{s}{n} 1\|_{2}^{2} \ll \lambda^{2}  \]
+
+\begin{definition} [Spectral Condition]
+Consider each $2 \times 2$ block, then the Hessian is strong convex if
+\[ \forall a \neq b: \begin{pmatrix} \frac{1-\lambda}{k-1} \text{diag}(G^{a}) & G^{ab}
+\\ G^{ba} & \frac{1-\lambda}{k-1} \text{diag}(G^{b})
+\end{pmatrix}  \succeq 0  \]
+\end{definition}
+
+
+\begin{fact}
+Let $X$ be a $\chi$-square variable with $\E X = \nu$ and $m$ degrees of freedom, so $X = \frac{\nu}{m} \sum_{i=1}^{m} g_{i}^{2}$ where $g \sim N(0,1)$. 
+\[ \forall t < \frac{m}{2\nu}: \log \E \exp(t X) = \log \prod_{i} \E \exp(t \frac{\nu}{m} g_{i}^{2}) = m \log \left(1 - \frac{2 t \nu}{m} \right)^{-1/2}  \]
+\[ \log \E \exp(t(X - \nu)) = \frac{-m}{2} \log \left(1 - \frac{2 t \nu}{m} \right) - t \nu = \frac{m}{2} \sum_{k \geq 1} \frac{1}{k} \left( \frac{2 t \nu}{m} \right)^{k} - t \nu \]
+\[ = \frac{t^{2} \nu^{2}}{m} \left[ 1 + \sum_{k \geq 3} \frac{2}{k} \left( \frac{2 t \nu}{m} \right)^{k-2} \right] \leq \frac{t^{2} \nu^{2}}{m} \left(1 -  \frac{2 t \nu}{m} \right)^{-1} = \frac{t^{2}}{2}\frac{\nu^{2}}{m} \left(1 - t \frac{2 \nu}{m} \right)^{-1}  \]
+i.e. sub gamma variable with variance factor $\nu^{2}/m$ and scale parameter $2 \nu / m$. 
+\[ \Pr[ | X - \nu | \geq t ] \leq 2 \exp \left( \frac{-m t^{2}/2}{\nu^{2} + 2t \nu} \right)    \]
+\end{fact}
+
+Note that for a fixed marginal, the entries of $G^{a}, G^{ab}$ are independent. By the above, $(G^{a})_{i}$ has mean $1$ and $n^{k-1}$ degrees of freedom; $(G^{ab})_{ij}$ has mean $n^{-1}$ and $n^{k-2}$ degrees of freedom. 
+
+\begin{lemma}
+\[ \Pr[ |(G^{a})_{i} - 1| \geq t ] \leq 2 \exp \left( \frac{- n^{k-1} t^{2}}{2(1 + 2t)} \right)  \]
+\[ \Pr [ \|\nabla f\|_{\infty} \geq t ] \leq 2kn \exp \left( \frac{- n^{k-1} t^{2}}{2(1 + 2t)} \right)  \]
+\[  \Pr [ \|\nabla f\|_{2}^{2} \geq t^{2} ] \leq \Pr[ \|\nabla f\|_{\infty}^{2} \geq t^{2}/kn ] \leq 2kn \exp \left( \frac{- n^{k-2} t^{2}}{2k(1+2t/\sqrt{kn})}  \right) \]
+\end{lemma}
+For the $k=2$ case, $\E (G^{a})_{i} - 1)^{2} = \frac{1}{n^{2(k-1)}}[3n + n(n-1) - n^{2}] = \frac{2}{n}$. So with some substantial probability, $\|\nabla f\|_{2}^{2} \geq \sum_{i} ((G^{a})_{i} - 1)^{2} \geq 1$. On the other hand, $\|\nabla f\|_{\infty}^{2} \ll \frac{\log n}{n}$ quite comfortably. There is a way to shave off the $\log n$ factor in the bound for $\|\nabla f\|_{2}^{2}$ for $k \geq 3$, but I can come back to that later. 
+
+\begin{lemma}
+\[ \forall a \neq b: \sup_{x,y \perp 1} \dfrac{\langle x, G^{ab} y \rangle}{\|x\|_{2} \|y\|_{2}} \leq \frac{1 - \lambda}{k-1} \]
+\end{lemma}
+For this statement, we will use a simple $\delta$-net. 
+\[ \E \langle x, G^{ab} y \rangle = \sum_{ij} x_{i} y_{j} \sum_{\vec{k}} \E g_{ij\vec{k}}^{2} = \langle x, \vec{1} \rangle \langle y, \vec{1} \rangle n^{-1}  \]
+We have the conditions $x,y \perp \vec{1}, \|x\|_{2}, \|y\|_{2} = 1$. Therefore $|x_{i} y_{j}| \leq 1$ and the following is valid for $|t| < n^{k-1}/2$:
+\[ \log \E \exp \left( t \sum_{ij} x_{i} y_{j} \sum_{\vec{k}} g_{ij\vec{k}}^{2}  \right) = \sum_{ij} \log \E \exp t x_{i} y_{j} G^{ab}_{ij} \]
+\[ = \sum_{ij} \frac{n^{k-2}}{2} \log \left(1 - \frac{2t x_{i} y_{j}}{n^{k-1}}  \right)^{-1} = \sum_{ij} \frac{n^{k-2}}{2} \sum_{m \geq 1} \frac{1}{m} \left( \frac{2 t x_{i} y_{j}}{n^{k-1}} \right)^{m}  \]
+\[ = \frac{t}{n} \sum_{ij} \langle x, \vec{1} \rangle \langle y, \vec{1} \rangle  + \sum_{ij} \frac{t^{2} x_{i}^{2} y_{j}^{2}}{n^{k}} \left[1 + \sum_{m \geq 3} \frac{2}{m} \left( \frac{2 t x_{i} y_{j}}{n^{k-1}} \right)^{m-2} \right]  \]
+\[ \leq \frac{t^{2} \|x\|_{2}^{2} \|y\|_{2}^{2}}{n^{k}} + \frac{n^{k-2}}{2} \sum_{m \geq 3} \left( \frac{2 t \|x\|_{m} \|y\|_{m}}{n^{k-1}}  \right)^{m} \leq \frac{t^{2}}{n^{k}} + \frac{4 t^{3}}{n^{2k-1}} \left(1 - \frac{2 t}{n^{k-1}} \right)^{-1}   \]
+\[ \leq \sum_{ij} \frac{t^{2} x_{i}^{2} y_{j}^{2}}{n^{k}} \sum_{m \geq 0} \left( \frac{2 t x_{i} y_{j}}{n^{k-1}} \right)^{m} = \sum_{ij} \frac{t^{2} x_{i}^{2} y_{j}^{2}}{n^{k}} \left( 1 - \frac{2 t x_{i} y_{j}}{n^{k-1}} \right)^{-1} \leq \frac{2t^{2}}{2n^{k}} \left(1 - \frac{2 |t|}{n^{k-1}} \right)^{-1}  \]
+\[ \implies \Pr [ |\langle x, G^{ab} y \rangle| \geq t ] \leq 2 \exp \left( \frac{-n^{k} t^{2}}{4(1 + 2tn)}  \right)  \]
+
+It was shown above that $(G^{a})_{i} = O(1)$ with very high probability. This is the row sum of $G^{ab}$ and so bounds the operator norm. So a shift of $\delta$ from arbitrary $x,y$ to the $\delta$-net leads only to an $O(\delta)$ loss in the bound. 
+\[ \Pr [ \exists a,b:  \sup_{x,y \perp 1} \frac{\langle x, G^{ab} y \rangle}{\|x\|_{2} \|y\|_{2}} \geq t + \delta ] \leq 2 k^{2} \left( \frac{1}{\delta} \right)^{2n} \exp \left( \frac{- n^{k} t^{2}}{4(1 + 2tn)} \right)    \]
+Choosing $t \approx \sqrt{\frac{\log nk}{k^{2} n^{k-1}}}, \delta \approx \sqrt{\frac{1}{k^{2} n^{k-1}}}$ gives the bound whp (inverse poly). 
+
+\subsubsection{Conclusion}
+For $k=2$, we have a $\sqrt{\frac{\log n}{n}}$-expander whp. We don't have strong enough concentration that $\|\nabla f\|_{2}$ is a small constant. But in this case, we have $\|\nabla f\|_{\infty} \ll \sqrt{\frac{\log n}{n}}$ whp, which is more than sufficient for the spectral analysis (ours) to conclude fast convergence. 
+
+For $k \geq 3$ we have all the concentration we need: the input is a $\sqrt{\frac{\log nk}{n^{k-1}}}$-expander whp and $\|\nabla f\|_{2} \ll \sqrt{\frac{\log nk}{n^{k-2}}}$ whp (should improve). So we can use the simple analysis [Cole,Moitra] to conclude fast convergence. 
+
+
+\subsection{Quantum Setting}
+The plan is just about the same using matrix concentration. In this setting, we have the same $\{g_{\vec{i}}\}_{\vec{i} \in [n]^{k}}$, but now our function is
+\[ f_{g}(A_{1}, ..., A_{k}) := \|A \cdot g\|_{2}^{2} = Tr[ ( \otimes_{a} A_{a} g) ( \otimes_{a} A_{a} g)^{*} ] =: \langle Q, \otimes_{a} A_{a}^{2} \rangle   \]
+\[ \partial_{t=0} f(I, ...,e^{tX^{a}}, ..., I) = 2 \langle Q^{a}, X^{a} \rangle \implies \nabla f = 2 (Q^{1} - sI, ..., Q^{k} - sI)    \]
+\[ \partial_{s=0} \partial_{t=0} f(I, ..., e^{tX^{a}}, e^{sY^{b}}, ..., I) = \partial_{s=0} \langle e^{sY^{b}} Q e^{sY^{b}}, 2 X^{a} \rangle = 2 \langle Q, \{X^{a}, Y^{b}\} \rangle   \]
+Explicitly, this gives the following form for the Hessian:
+\[ \langle X^{a}, \nabla^{2} f Y^{b} \rangle = 4 \langle Q^{ab}, X^{a} \otimes Y^{b} \rangle   \]
+\[ \langle X^{a}, \nabla^{2} f Y^{a} \rangle = 2 \langle Q^{a}, X^{a} Y^{a} + Y^{a} X^{a} \rangle  \]
+So the goal is again to show some of the following
+\[ \forall a: Q^{a} \approx I  \]
+\[ \sum_{a} \|Q^{a} - sI\|_{F}^{2} \ll 1   \]
+\[ \forall a \neq b: \sup_{X,Y \perp I} \frac{\langle Q^{ab}, X^{a} \otimes Y^{b} \rangle}{\|X\|_{F} \|Y\|_{F}} \leq \frac{1 - \lambda}{k-1}   \]
+
+\[ (Q^{a})_{ij} = \sum_{\vec{k} \in [n]^{k-1}} g_{i\vec{k}} g_{j \vec{k}}  \]
+Put another way, let $g_{\vec{j} \in [n]^{k-1}} = \{g_{1 \vec{j}}, ..., g_{n \vec{j}}\}$, then $Q^{a} = \sum_{\vec{j} \in [n]^{k-1}} g_{\vec{j}} g_{\vec{j}}^{*}$ where $g_{\vec{j}} \sim N(0,\frac{1}{n^{k-1}} I)$. 
+
+\begin{theorem}
+For random matrices $\E X_{k} = 0, \|X_{k}\|_{op} \leq R$, the variance parameter $\sigma^{2} := \|\sum_{k} X_{k}^{2} \|_{op}$ controls concentration:
+\[ \Pr [ \|\sum_{k} X_{k}\|_{op} \geq t ] \leq 2 d \exp \left( \frac{-t^{2}/2}{\sigma^{2} + Rt} \right)   \]
+\end{theorem}
+
+So we define $X := X_{\vec{j}} = g_{\vec{j}} g_{\vec{j}}^{*} - \frac{1}{n^{k-1}} I$. Note that whp $\|X\|_{op} \leq \|g\|_{2}^{2} \leq \frac{n}{n^{k-1}}$. 
+\[ \E X^{2} = \E \|g\|_{2}^{2} g g^{*} - \left( \frac{I}{n^{k-1}} \right)^{2} = \frac{I}{n^{2(k-1)}} (3 + (n-1) - 1) = \frac{n+2}{n^{2(k-1)}} I  \]
+\[ \implies \sigma^{2} = n^{k-1} \frac{n+2}{n^{2(k-1)}} = \frac{n+2}{n^{k-1}} \approx \frac{1}{n^{k-2}}  \]
+\[ \Pr [ \exists a: \|Q^{a} - I\|_{op} \geq t ] \leq 2 k n \exp \left( \frac{-t^{2}/2}{1/n^{k-2} + t n/ n^{k-1}}  \right) = 2 k n \exp \left( \frac{- n^{k-2} t^{2}}{2(1 + t)} \right)  \]
+Choosing $t \approx \sqrt{\frac{\log n}{n^{k-2}}}$ gives the bound. Note this is not sufficient for any kind of analysis in the $k=2$ case. But this is for good reason:
+\[ \E \|\sum_{i} X_{i}\|_{op}^{2} = \E \|\sum_{i} X_{i}^{2} + \sum_{i \neq j} X_{i} X_{j}\|_{op} \geq \|\sum_{i} \E X_{i}^{2} + \sum_{i \neq j} \E X_{i} X_{j} \|_{op} \approx 1   \]
+\[ \Pr [ \exists a: \|Q^{a} - I\|_{F}^{2} \geq t^{2} ] \leq \Pr [ \exists a: \|Q^{a} - I\|_{op} \geq t/\sqrt{n} ] \leq 2kn \exp\left(\frac{-n^{k-3} t^{2}}{2(1+t/\sqrt{n})} \right) \]
+This again does not work for $k=3$, but we cannot hope for better:
+\[ \E\|Q^{a} - I\|_{F}^{2} = \sum_{i} \E (\frac{1}{m} \|g_{i}\|_{2}^{2} - 1)^{2} + \sum_{i \neq j} \E \frac{1}{m^{2}} \langle g_{i}, g_{j} \rangle^{2} \]
+\[ = \frac{1}{m^{2}} [ \sum_{i} \E \|g_{i}\|_{2}^{4} - (\E \|g_{i}\|_{2}^{2})^{2} + \sum_{i \neq j} \E \langle g_{i} g_{i}^{*}, g_{j} g_{j}^{*} ] \]
+\[ = \frac{n(3m + m(m-1) - m^{2}) + n(n-1)m}{m^{2}} = \frac{n(n+1)}{m} \approx \frac{1}{n^{k-3}}
+\]
+So it would be great if we had any $\|\cdot\|_{\infty}$ analysis for $k=3$. 
+
+
+For the expansion part, take $X = \sum_{i} \lambda_{i} v_{i} v_{i}^{*}, Y = \sum_{j} \mu_{j} u_{j} u_{j}^{*}$. Then 
+\[ \langle Q^{ab}, X \otimes Y \rangle = \sum_{ij} \lambda_{i} \mu_{j} (Q^{ab})_{ii,jj} = \sum_{ij} \lambda_{i} \mu_{j} \sum_{\vec{k} \in [n]^{k-2}} g_{ij\vec{k}}^{2}   \]
+This looks exactly like the classical setting. The only difference is that we have to now form a $\delta$-net over the $\|\cdot\|_{F}$ sphere instead of the Euclidean one. Therefore:
+\[ \Pr [ \exists a,b:  \sup_{X,Y \perp I} \frac{\langle Q^{ab}, X \otimes Y \rangle}{\|X\|_{F} \|Y\|_{F}} \geq t + \delta ] \leq 2 k^{2} \left( \frac{1}{\delta} \right)^{n^{2}} \exp \left( \frac{- n^{k} t^{2}}{4(1 + 2tn)} \right)    \]
+Choosing $t \approx \sqrt{\frac{\log nk}{k^{2} n^{k-2}}}, \delta \approx \sqrt{\frac{1}{k^{2} n^{k-2}}}$ gives the bound whp (inverse poly). Note this no longer gives anything meaningful for $k=2$. 
+
+\subsubsection{Conclusion}
+For $k \geq 4$, whp our input will have $\|\mu\|_{F}^{2} \ll \frac{\log n}{n^{k-3}}$. For $k=3$, our input will have $\|\mu\|_{op}^{2} \ll \frac{\log n}{n^{k-2}}$. And for $k \geq 3$, our input is $1 - \sqrt{\frac{\log nk}{n^{k-2}}}$ strongly convex. So the simple [Cole,Moitra] analysis works for $k \geq 4$ and the $k=3$ case is open.  
+
+\subsection{Well conditioned Marginals}
+
+\subsubsection{Plan}
+We will follow the analysis in the balanced case with a different norm. Let the desired marginals be $\{R_{a}^{2}\}$ all with $Tr[R_{a}^{2}] = 1$ and let $R := \otimes_{a} R_{a}$. Focusing on the Borel subgroup, the function we want to minimize is:
+\[ f(g) := \log \|g \cdot v\|_{2}^{2} - \sum_{a} \log \|g_{a} \cdot v_{a}\|_{2}^{2}  \]
+Here we have (improperly) defined $v_{a}$ so that $e^{tX} \cdot v_{a} = \exp(\langle X, R_{a}^{2} \rangle) v_{a}$. 
+
+Recall the gradient and Hessian calculations, now along the Borel subgroup. We will also drop all implied $I$ terms:
+\[ \partial_{t} f(e^{t X_{a}}) = 2 \langle \frac{v v^{*}}{\langle v v^{*}, e^{2tX_{a}} \rangle}, X_{a} e^{2tX_{a}} \rangle - 2t\langle X_{a}, R_{a}^{2} \rangle |_{t=0}  = 2\langle X_{a}, Q^{a} - R_{a}^{2} \rangle \]
+\[ \partial_{t}^{2} f(e^{t X_{a}}) = 4 \langle \frac{v v^{*}}{\langle v v^{*}, e^{2tX_{a}} \rangle}, X_{a}^{2} e^{2tX_{a}} \rangle -  \left( 2 \langle \frac{v v^{*}}{\langle v v^{*}, e^{2tX_{a}} \rangle}, X_{a} e^{2tX_{a}} \rangle  \right)^{2}    \]
+\[ \partial_{s,t=0} f(e^{tX_{a}} \otimes e^{sY_{a}}) = \partial_{s=0} 2 \langle \frac{v v^{*}}{\langle v v^{*}, e^{2sY_{b}} \rangle}, X_{a} \otimes e^{2sY_{b}} \rangle \]
+\[ = 4 \langle \frac{v v^{*}}{\|v\|_{2}^{2}}, X_{a} \otimes Y_{b} \rangle - 4 \left( \langle \frac{v v^{*}}{\|v\|_{2}^{2}}, X_{a} \rangle  \right) \left( \langle \frac{v v^{*}}{\|v\|_{2}^{2}}, Y_{b} \rangle  \right)   \]
+
+\begin{fact}
+The geodesic gradient and Hessian satisfy
+\[ \frac{1}{2} \langle \nabla, X \rangle = \sum_{a} \langle Q^{a} - R_{a}^{2}, X_{a} \rangle \]
+\[ \frac{1}{4} \langle X, H X \rangle = \sum_{a} \langle Q^{a}, X_{a}^{2} \rangle  + \sum_{a \neq b} \langle Q^{ab}, X_{a} \otimes Y_{b} \rangle - \left( \sum_{a} \langle Q^{a}, X_{a} \rangle \right)^{2}  \]
+\end{fact}
+
+\begin{definition}
+For desired marginals $\{R_{a}^{2}\}$, we define the $R$-norm:
+\[ \langle X, Y \rangle_{R_{a}} := \langle R_{a} X, R_{a} Y \rangle  \]
+\end{definition}
+
+\begin{fact}
+\[ \langle X, Y \rangle = \langle R X, R^{-1} Y \rangle \leq \|X\|_{R} \|Y\|_{R^{-1}}   \]
+\[ \|Y\|_{R^{-1}}^{2} = \langle R^{-1} Y R^{-1}, Y \rangle = \langle R^{-1} Y R^{-1}, R^{-1} Y R^{-1} \rangle_{R} = \|R^{-1} Y R^{-1}\|_{R}^{2}    \]
+\end{fact}
+
+Say we can show that the Hessian $H$ has the following property:
+\[ \forall \langle X, I \rangle_{R} = 0: \langle X, H X \rangle \geq \lambda \|X\|_{R}^{2} = \lambda \sum_{a} \|X_{a}\|_{R_{a}}^{2} \]
+i.e. the function is $\lambda$-strongly convex in the $R$-norm. Let's further assume (up to constants) that we can get the same $\lambda$ in a $\kappa$ $R$-ball around the current point by perturbation bounds. Let $e^{tX}$ be the geodesic towards the optimum with $\|X\|_{R}^{2} = 1$. Then define $g(t) := f(e^{tX})$:
+\[ \partial_{t=0} g(t) = \langle X, \nabla \rangle \geq - \|X\|_{R} \|\nabla\|_{R^{-1}}   \]
+\[ \partial_{t=T} g(t) = \partial_{t=0} g(t) + \int_{0}^{T} \partial_{s}^{2} g(s) \geq - \|\nabla\|_{R^{-1}} + \min\{\kappa, T\} \lambda  \]
+This quantity is positive for $T > \kappa$ if $\lambda \kappa \geq \|\nabla\|_{R^{-1}}$, which is a contradiction if the optimum is at $e^{TX}$. So we have a lower bound
+\[ f(X^{*}) - f(I) = g(T) - g(0) \geq \min_{s \in [0,T]} -s \|\nabla\|_{R^{-1}} + \frac{\lambda}{2} s^{2} \geq - \frac{1}{2 \lambda} \|\nabla\|_{R^{-1}}^{2}  \]
+
+
+Therefore the optimum must be in the $\kappa$ ball given these initial conditions. Again up to a constant factor we can assume a $\kappa$ ball around the optimum is $\lambda$-strongly convex in the $R$-norm. Now we want to show that if we make significant progress every step, the gradient must decrease geometrically. So further assume $\beta$-smoothness in the $R$-norm:
+\[ g(t) - g(0) \leq t \langle X, \nabla \rangle + \beta t^{2}/2 \|X\|_{R}^{2} = t \langle X, R^{-1} \nabla R^{-1} \rangle_{R} + \beta t^{2}\|X\|_{R}^{2}/2  \]
+Then choosing $X = -R^{-1} \nabla R^{-1}$ and optimizing step size to $t = \beta^{-1}$, we get
+\[ \leq - \frac{1}{2\beta} \|R^{-1} \nabla R^{-1}\|_{R}^{2}  \]
+Therefore by the lower bound from strong convexity, we have that $\|\nabla\|_{R^{-1}}$ must decrease by a constant factor in $O(\beta/\lambda)$ steps. 
+
+So in toto we need the following condition $\forall \langle X, I \rangle_{R} = 0$:
+\[ \langle X, H X \rangle = \sum_{a} \langle Q^{a}, X_{a}^{2} \rangle + \sum_{a \neq b} \langle Q^{ab}, X_{a} \otimes X_{b} \rangle \geq \Omega(1) \sum_{a} \|X_{a}\|_{R}^{2}  \]
+This condition should hold for $\|\log g\|_{R} \ll \kappa$. And initially,
+\[ \|\nabla\|_{R^{-1}}^{2} = \sum_{a} \|R_{a}^{-1} (Q^{a} - R_{a}^{2}) R_{a}^{-1} \|_{R_{a}}^{2} \leq \max_{a} \|R_{a}\|_{op}^{2} \sum_{a} \|R_{a}^{-1} Q^{a} R_{a}^{-1} - I\|_{F}^{2} \ll \kappa  \]
+
+\subsubsection{Concentration for gradient}
+It is helpful to first understand $\|R^{-1} \nabla R^{-1}\|_{R}$. This is because if everything goes according to plan, the strongly convex ball required will be of the same order as this quantity. 
+
+As of now we will simply bound $\|R^{-1} \nabla R^{-1}\|_{R} \leq \|R\|_{op} \|R^{-1} \nabla R^{-1}\|_{F}$, as then we can reuse the bounds for standard gaussians derived above. It may be possible to improve this. 
+
+\begin{theorem}
+For $g \sim N(0,(I/n)^{\otimes k})$:
+\[ \Pr[\|Q^{a} - \frac{I}{n}\|_{F} \geq \Tilde{O}(\sqrt{k^{-1} n^{-(k-2)}})] \leq poly(n^{-1},k^{-1})  \]
+\end{theorem}
+\begin{proof}
+For now we will assume that the component of error in the $I$ direction is a lower order term, as the norm of a gaussian concentrates very well. We will bound $\|\cdot\|_{F}$ by an $\epsilon$-net over the dual ball $\|\cdot\|_{F}$:
+\[ \E \langle Q^{a}, X \rangle = \E \langle g g^{*}, I \otimes ... X_{a} ... \otimes I \rangle = \frac{1}{n} \langle I, X \rangle  \]
+\[ \log \E \exp( t(\langle Q^{a} - \frac{1}{n} I, X \rangle)) \leq O \left( t^{2} \frac{1}{n^{k}} \|X\|_{F}^{2} \right)   \]
+\[ \Pr[\langle Q^{a} - \frac{1}{n} I, \frac{X}{\|X\|_{F}} \rangle \geq B] \leq \exp( - \Omega(n^{k} B^{2}) )  \]
+So by a union bound over $\exp(O(n^{2}))$ elements we get the bound whp.  
+\end{proof}
+
+\subsubsection{Concentration for Perturbation}
+Now we can analyze the mean of all the quantities we would like to bound. 
+
+\begin{fact}
+$ \E \langle g g^{*}, X \rangle = \E \langle R^{-1} g g^{*} R^{-1}, R X R \rangle = \prod_{a} \langle I, R_{a} X_{a} R_{a} \rangle = \prod_{a} \langle I, X_{a} \rangle_{R} $
+\end{fact}
+
+Note if any $\langle X_{a}, I \rangle_{R} = 0$, the whole expectation vanishes. Our goal is to show that any small $(\|\delta\|_{R} \leq \kappa)$ perturbation of any one or two-body marginal is near its expectation for the unperturbed gaussian. 
+
+\begin{lemma}
+For $X = I: \langle I, (I + \delta)X(I+\delta) \rangle_{R} = \|I+\delta\|_{R}^{2} \leq 1 + O(\|\delta\|_{R})$
+\\ For $\langle X, I \rangle_{R} = 0: \langle I, (I + \delta)X_{a}(I+\delta) \rangle_{R} \leq \frac{\lambda_{max}(R)}{\lambda_{min}(R)} O( \|X\|_{R} \|\delta\|_{R} )$
+\end{lemma}
+
+For concentration, we can use the formulas for $\chi$-squared variables:
+
+\begin{lemma}
+\[ \log \E \exp t( \langle g g^{*}, X \rangle - \E \langle g g^{*}, X \rangle ) \leq O \left( t^{2} \prod_{a} \|R_{a} X_{a} R_{a}\|_{F}^{2}  \right)  \]
+\end{lemma}
+
+
+\[ \langle Q^{ab}, X \otimes Y \rangle = \langle g g^{*}, I_{1} \otimes X \otimes Y ... \otimes I_{k} \rangle = \langle (R^{-1} g) (R^{-1} g)^{*}, ...  R_{a} X R_{a} \otimes R_{b} Y R_{b} ... \rangle   \]
+As mentioned before $R^{-1} g$ is a standard gaussian, so isotropic, so we can change the basis so the right hand side is diagonal. So the final distribution is
+\[ \sum_{ij} \sum_{\vec{k}} g_{ij\vec{k}}^{2} \lambda_{i} \mu_{j} (r^{\vec{k}})^{2}  \]
+where for brevity we have written $\lambda_{i} := \lambda_{i}(R_{a} X R_{a}), \mu_{j} := \lambda_{j}(R_{b} Y R_{b}), r^{\vec{k}} := (\otimes_{c \neq a,b} R_{c})_{\vec{k},\vec{k}}$. Further $g_{ij\vec{k}}^{2}$ is a standard $\chi$-squared with mean $\nu$. So the log mgf can be calculated
+\begin{align*}
+\log \E \exp (t \langle Q^{ab}, X \otimes Y \rangle) =  \sum_{ij,\vec{k}} \log (1 - 2t\nu \lambda_{i} \mu_{j} (r^{\vec{k}})^{2})^{-1/2} 
+\\ = t \langle R_{a} X R_{a}, I \rangle \langle R_{b} Y R_{b}, I \rangle \prod_{c \neq a,b} \langle R_{c}^{2}, I \rangle + ... 
+\\ = O \left( t^{2} \|R_{a} X R_{a}\|_{F}^{2} \|R_{b} Y R_{b}\|_{F}^{2} \prod_{c \neq a,b} \|R_{c}^{2}\|_{F}^{2}   \right)
+\end{align*} 
+Here in order for the first order term to vanish, we need $Tr[R_{a} X R_{a}] = 0$, $Tr[R_{b} Y R_{b}] = 0$. For this purpose we define a new norm: 
+\[ \langle X,Y \rangle_{R_{a}} := \langle R_{a} X R_{a}, Y \rangle \]
+Then by the above calculation we can use standard concentration inequalities to show that all crossterms will be small for the relevant subspace, and similarly all one-body marginals will be close to their expectation.  
+
+
+\section{Goal}
+
+\subsection{The Moment Map in Geometric Invariant Theory}
+
+The moment map has a definition in the setting of a Hamiltonian action of a compact group on a symplectic manifold. Our setting has some extra algebraic geometry structure which allows a simpler definition. In particular, our group is not compact, but is reductive and a complexification of a compact group, i.e. $\mathfrak{g} = \mathfrak{k} + i \mathfrak{k}$. This means local behavior encoded in a moment map of the compact group carries to the whole. Now we begin with a vector space $V$ with $K$-invariant inner product $\langle \cdot, \cdot \rangle$; and we are given a group representation $\pi : G \to GL(V)$ which induces an infinitesimal $\Pi : \mathfrak{g} \to \mathfrak{gl}(V)$. We will also consider the induced action on projective space $P(V)$. As of now, these notes switch between them willy-nilly because I'm not fully clear on the differences, but I'll fix this later if possible. 
+
+\begin{definition} 
+\[ f_{v \in V}(g \in G) := \|\pi(g) \cdot v\|_{2}^{2} \]
+\[ F_{v}(g \in G) := \log \|\pi(g) \cdot v\|_{2}  \]
+\end{definition}
+Note that they are left-$K$-invariant and right-$G$-equivariant:
+\[ \forall k \in K, g \in G: F_{v}(khg) = \log \|\pi(khg) v\|_{2} = \log \|\pi(h) \cdot (\pi(g) v)\|_{2} = F_{g \cdot v}(h)   \]
+Here we used the fact that the inner product and therefore the norm is $K$-invariant. The $G$-equivariance shows that local properties of $F$ at $I \in G$ carry through to the whole group. The $K$-invariance shows that $F$ is also a function on $K/G \sim \exp(i \mathfrak{k}) =: P$. These cosets can be thought of as the positive definite part of the polar decomposition. 
+
+\begin{definition} [Moment Map]
+There is a function $\mu : M \to \mathfrak{k}^{*} \sim i \mathfrak{k}^{*}$ defined for $M = V,P(V)$:
+\[ \langle \mu(v \in V), H \rangle := \partial_{t=0} f_{v}(e^{tH}) = \langle v v^{*}, \Pi(H) \rangle   \]
+\[ \langle \mu([v] \in P(V)), H \rangle := \partial_{t=0} F_{v}(e^{tH}) = \langle \frac{v v^{*}}{\|v\|_{2}^{2}}, \Pi(H) \rangle  \]
+\end{definition}
+
+\begin{definition}
+The Moment Polytope $\Delta(v)$ (which we will later show is in fact a polytope) is the image
+\[ \mu(\overline{G \cdot v}) \cap \mathfrak{t}_{+}   \]
+Here $\mathfrak{t}_{+}$ is the positive Weyl chamber of $G$ and can be thought of as choosing a canonical basis. The full Moment Polytope is $\Delta = \cup_{v} \Delta(v)$, and is in fact the Moment Polytope of a generic $v$, as we will also show later. 
+\end{definition}
+
+\subsection{Commutative Setting and Entropy}
+If $T$ is commutative, the definition becomes much simpler. This is because any representation of a commutative group can be jointly diagonalized:
+\[ t \cdot v = \sum_{\omega \in \Omega(\pi)} e^{\langle t, \omega \rangle} v_{\omega}   \]
+\[ \implies \mu(v) = \sum_{\omega \in \Omega(\pi)} v_{\omega}^{2} \omega    \]
+\[ \implies \mu([v]) = \sum_{\omega \in \Omega(\pi)} \frac{v_{\omega}^{2}}{\|v\|_{2}^{2}} \omega  \]
+Here $\Omega(\pi)$ index the eigenbasis of $V$ in which $\pi(T)$ are jointly diagonal. The representations act according to $\omega$ on these eigenspaces: $\Pi(H)v_{\omega} = \langle H, \omega \rangle v_{\omega}, \pi(e^{H})v_{\omega} = e^{\langle H, \omega \rangle} v_{\omega}$. 
+By the above, it is easy to see that $\Delta(v) \subseteq conv(\Omega(\pi))$. Let $\Omega(v) := conv\{\omega \mid v_{\omega} \neq 0\}$. The following convex program shows $\Delta(v) = \Omega(v)$:
+\[ \min_{q \geq 0, \sum_{\omega} q_{w} = 1} \sum_{\omega} q_{\omega} \log \frac{q_{\omega}}{p_{\omega}} \text{ s.t. } \sum_{\omega} q_{\omega} \omega = \lambda  \]
+\[ L(q,t,T) := D(q||p) + \langle t, \lambda - \sum_{\omega} q_{\omega} \omega \rangle + T (1 - \langle q, 1 \rangle)    \]
+\[ \nabla_{q,T} L = 0 \implies \forall \omega: 1 + \log q_{\omega} - \log p_{\omega} = \langle t, \omega \rangle + T  \]
+\[ \implies q_{\omega} \sim p_{\omega} e^{\langle t, \omega \rangle}; T - 1 = -\log \sum_{\omega} p_{\omega} e^{\langle t, \omega \rangle}  \]
+\[ g(t) := \sum_{\omega} q_{w} (\langle t, \omega \rangle + T - 1 \rangle) + \langle t, \lambda - \sum_{\omega} q_{\omega} \omega \rangle + T(1 - \langle q, 1 \rangle)  \]
+\[ = \langle t, \lambda \rangle - \log \sum_{\omega} p_{\omega} e^{\langle t, \omega \rangle}    \]
+\begin{remark}
+Note $\nabla_{t=0} g(t) = \lambda - \sum_{\omega} p_{\omega} \omega$. This is an instance of the "shifting trick" and also explains why in the commutative case we have a different but equivalent definition of capacity (as opposed norm minimization). 
+\end{remark}
+
+Take $\lambda \in \Omega(v)$ and write it as a convex combination of the vertices. This provides a feasible solution and the optimum provides a point $w$ in the orbit closure of $v$ such that $\mu(w) = x$. Further, if $\lambda \in \Omega(v)^{\circ}$, then this convex combination can be taken with full support, and this provides a strictly feasible solution, so the optimum is achieved and $w$ can be taken in the orbit. More concretely these are equivalences: $\mu(T \cdot v) = \Omega(v)^{\circ}$, and $\mu(\overline{T \cdot v}) = \Omega(v)$. 
+
+\begin{remark}
+The Moment polytope for the T action on $V$ just differs by a scalar, so in that case $\Delta(v) = cone(\Omega(v))$. 
+\end{remark}
+
+\begin{fact}
+Let $C := \sum_{k} \R_{\geq 0} \omega_{k}$ and $C^{\circ} := \sum_{k} \R_{> 0} \omega_{k}$. Then $0 \in C^{\circ}$ iff $C = C^{\circ}$. 
+\end{fact}
+\begin{proof}
+Let $0 = \sum_{k} a_{k} \omega_{k}$ for $a > 0$. Then $- a_{k} \omega_{k} = \sum_{j \neq k} a_{j} \omega_{j}$. Therefore any nonnegative combination $\sum_{k} b_{k} \omega_{k}$ can be rewritten to have full support. 
+\end{proof}
+
+\begin{theorem} [Hilbert-Mumford]
+For $u \in \overline{T_{\C} \cdot v}$, there is a way to drive $v \to u$:
+\[ \exists g \in T_{\C}, X \in i \mathfrak{t}: \lim_{t \to \infty} e^{tX} g \cdot v = u \]
+In particular, if $0 \in \overline{T_{\C} \cdot v}$, 
+\[ \exists X \in i \mathfrak{t}: \lim_{t \to \infty} e^{tX} \cdot v = 0 \]
+\end{theorem}
+\begin{proof}
+As shown above, $u \in \overline{T_{\C} \cdot v} \iff \mu(u) \in \Omega(v)$. In the polytope $\Omega(v)$, there is a maximal face $F$ such that $\mu(u) \in F^{\circ}$. It is enough to show that we can drive the image $\mu(v)$ to this face, as any point in $F$ is reachable from $u$ (since $\mu(T_{\C} \cdot u) = F^{\circ}$). To this end, let $X$ be the supporting hyperplane of $F$:
+\[ \forall \omega \in F: \langle X, \omega \rangle = 0; \forall \omega \in \Omega(v)/F: \langle X, \omega \rangle < 0  \]
+\[ \implies \lim_{t \to \infty} e^{tX} \cdot v = \sum_{\omega \in F} v_{\omega} + \sum_{\omega \in \Omega(v)/F} e^{t \langle X, \omega \rangle} v_{\omega} = \sum_{\omega \in F} v_{\omega} =: w \]
+Since $T_{\C}$ is commutative, if $u = g \cdot w$ then $u = \lim_{t \to \infty} e^{tX} g \cdot v$. Since $0$ is its own single point orbit, this extra $g$ is not required in that case. 
+\end{proof}
+
+\begin{corollary}
+$T_{\C} \cdot v$ is closed iff it intersects $\mu^{-1}(0)$
+\end{corollary}
+\begin{proof}
+If $T_{\C} \cdot v$ is closed, then the infimum of geodesically convex $f(t) := \|t \cdot v\|_{2}^{2}$ is attained, so at the optimum $\nabla f = \mu = 0$. 
+\\ Conversely if $0 \in \mu(T_{\C}(v)) = cone^{\circ}(\Omega(v))$, then by the above lemma the moment map image is closed which is equivalent to the orbit being closed. 
+\end{proof}
+
+
+\subsection{Generalization to Complex Reductive Groups}
+We return to the non-commutative setting, but specifically when $G$ is the complexification of $K$ its maximal compact subgroup (i.e. $\mathfrak{g} = \mathfrak{k} + i \mathfrak{k}$). 
+
+\begin{definition}
+On a variety (e.g. $V$ or $P(V)$ in our case) the Zariski Topology is defined by its closed sets generated by
+\[ V(\mathcal{P}) := \{v \in V \mid \forall p \in \mathcal{P}: p(v) = 0\}  \]
+where $\mathcal{P}$ is a set of polynomials. These are also known as algebraic sets. Equivalently, a Zariski open set is a complement of a Zariski closed set. 
+\end{definition}
+
+\begin{prop}
+\begin{enumerate}
+    \item Orbit closures $\overline{G \cdot v}$ for the usual Euclidean topology coincide with Zariski closures. 
+    \item A $G$ orbit is Zariski open in its closure. I.e. $\overline{G \cdot v}/ G \cdot v = \overline{G \cdot v} \cap \langle V(\mathcal{P}_{i}) \rangle$. This implies for any $u \in \overline{G \cdot v}/ G \cdot v$, the orbit $G \cdot u$ has strictly smaller dimension than $G \cdot v$.  
+    \item The algebra of invariant polynomials $\C[V]^{G}$ is finitely generated. 
+\end{enumerate}
+\end{prop}
+
+\begin{prop}
+For Zariski-closed, $G$-invariant $S \neq T$, $\exists p \in \C[V]^{G}$ such that $p(S) \neq p(T)$. As a corollary, the closure of an orbit contains exactly one closed orbit. 
+\end{prop}
+
+\begin{theorem} [Hilbert-Mumford]
+Let $G \cdot u$ be the unique closed orbit in $\overline{G \cdot v}$. Then there is a way to drive $v$ to this orbit: 
+\[ \exists X \in i \mathfrak{k}: \lim_{t \to \infty} e^{tX} \cdot v \in G \cdot u  \]
+\end{theorem}
+\begin{proof}
+It is enough to show $\exists k \in K: \overline{T_{\C} k \cdot v} \cap G \cdot u \neq \emptyset$. Then we can use the $T_{\C}$ version of the theorem to find $X \in i \mathfrak{t}$ and the fact that $k^{-1} e^{tX} k = e^{t Ad_{k^{-1}} \cdot X}$. So assume for contradiction, every $\overline{T_{\C} k \cdot v}$ is disjoint from $G \cdot u$. Notice both these sets are $T_{\C}$-invariant and Zariski closed, so we can use the above proposition to find a separating polynomial 
+\[ f_{k}(G \cdot u) = 0; f_{k}(\overline{T_{\C} k \cdot v}) = 1 \]
+\[ Z_{k} := f_{k}^{-1}(0); U_{k} := V/Z_{k} \]
+Then $G \cdot u \in \cap_{k \in K} Z_{k}$ and $\cup_{k \in K} U_{k}$ is an open cover of $K \cdot v$. But $K$ is a compact group, so $K \cdot v$ is a compact set, which means we can reduce to a finite subcover $K \cdot v \subseteq \cup_{i \in [N]} Z_{i}$. We want to use the Cartan Decomposition of Lie Group $G = K T_{\C} K$ to separate $\overline{G \cdot v}$ from $G \cdot u$ and arrive at the contradiction. So we define
+\[ f(z) := \sum_{i} f_{i}^{2}(z) \]
+By the above properties $G \cdot u subseteq f^{-1}(0)$. By the finite subcover, $\inf_{k \in K} f(k \cdot v) = \min_{i} f(k_{i} \cdot v)$ is achieved at $a > 0$. By the $T_{\C}$-invariance of each $f_{k}$, we also have $\overline{T_{\C} K \cdot v} \subseteq f^{-1}[a, \infty)$ and so is disjoint from $G \cdot u$. But clearly $G \cdot u$ is $K$-invariant and so $K\overline{T_{\C} K \cdot v} = \overline{G \cdot v}$ is disjoint from it and we are done. 
+\end{proof}
+
+\begin{corollary}
+If $T_{\C} \cdot v$ is closed for every maximal compact torus $T \subseteq K$, then $G \cdot v$ is closed. 
+\end{corollary}
+\begin{proof}
+Let $G \cdot u \subseteq \overline{G \cdot v}$ be the unique closed orbit. By the previous proof, $\exists k \in K: \overline{T_{\C} k \cdot v} = T_{\C} k \cdot v$ intersects $G \overline u$, which means $G \cdot v = G \cdot u$ is closed. 
+\\ 
+\end{proof}
+
+\begin{theorem}
+$G \cdot v$ is closed iff it intersects $\mu^{-1}(0)$. 
+\end{theorem}
+\begin{proof}
+This direction follows the same proof as the $T_{\C}$ case. If $G \cdot v$ is closed, then the infimum of geodesically convex $f(g) := \|g \cdot v\|_{2}^{2}$ is attained, so at the optimum $\nabla f = \mu = 0$. 
+\\ Conversely $\mu(v) = 0 \implies \mu_{T}(v) = 0$ for every compact torus (since $\mu_{T}$ is a projection of $\mu$). Therefore the $T_{\C}$ orbit is closed for every maximal compact torus T, which by the above corollary implies the $G$ orbit is closed. 
+\end{proof}
+
+\subsection{Kirwan-Mumford Convexity}
+For the commutative case, we had that the moment polytope is $\Delta(v) := conv(\Omega(v))$. The following well known theorem is a small generalization:
+
+\begin{example} [Schur-Horn Theorem]
+The set of diagonals of an Hermitian matrix with fixed eigenvalues $\vec{\lambda}$ is the convex hull of $\{\sigma \cdot \vec{\lambda} \mid \sigma \in S_{n}\}$
+\end{example}
+Why does this fit into the previous framework? We will consider the co-adjoint action of a compact Lie group $K$ on its algebra $\mathfrak{k}$, which is a vector space. In this case, it can be shown that $\mu(X \in \mathfrak{k}) = X$. Now fixing a maximal compact torus $(T,\mathfrak{t})$, we can consider $\mu_{T}(X)$ which is just the projection of $X$ onto $\mathfrak{t}$. Then it can be shown that for $X \in \mathfrak{t}: \mu_{T}(K \cdot X)$ is a convex polytope with vertices $W(X)$ the orbit of the Weyl group. This is the content of Kostant's Theorem. In our case we have $K = U(n), \mathfrak{k} = Herm(n)$, and $\mu_{T}(X) = diag(X)$ with $W = S_{n}$. 
+
+In general for non-commutative compact $K$, the moment polytope is not convex (consider the above example with $\mu_{K}(K \cdot X) = \{U X U^{*} \mid U \in U(n)\}$). But for a fixed torus $(T,\mathfrak{t})$, it is known that $\cup_{k \in K} Ad_{k}(\mathfrak{t})$ is a disjoint cover of $\mathfrak{k}$. Therefore the coadjoint orbit $Ad_{K}^{*}(X)$ intersects $\mathfrak{t}$ in exactly one point. And this is where the convexity lies:
+
+\begin{theorem} [Kirwan]
+For Hamiltonian action of $K$ on symplectic $M$, the following is a convex polytope: 
+\[ \mu_{K}(M) \cap \mathfrak{t}_{+} \]
+\end{theorem}
+
+We will show a stronger structural theorem in our simpler case of a complex reductive $G$ and $M = P(V)$. In fact we will relate the moment map to specific representations: let $R(V) = \oplus_{n} R_{n}(V)$ be the ring of polynomials on $V$ graded by degree. Then the vector space $R(V)$ provides a representation through the natural $G$-action:
+\[ (g \cdot p)(v) = p(g^{-1} \cdot v)  \]
+Therefore, since $K$ is reductive, we can decompose into $K$-irreps indexed by highest weights:
+\[ R_{n}(V) = \oplus_{\lambda \in \hat{K}} R_{\lambda}(V)   \]
+Let $\Omega_{n}(V) := \{\lambda \mid R_{\lambda}(V) \subseteq R_{n}(V) \}$, and normalize $\mathfrak{p}(V) := \bigcup_{n \geq 0} \dfrac{\Omega_{n}(V)}{n}$.
+
+\begin{prop}
+$\mathfrak{p}(V)$ is a convex hull of a finite set of vertices (over $\Q$). 
+\end{prop}
+\begin{proof}
+Let $p \in R_{\lambda}(V) \subseteq R_{n}(V), q \in R_{\mu}(V) \subseteq R_{m}(V)$ be highest weight vectors; and consider $r := p^{a} q^{b} \in R_{an + bm}$. By the product rule
+\[ (X \in \mathfrak{t}) \cdot r = (a \lambda + b \mu) r; (Y \in \mathfrak{n}_{+}) \cdot r = 0;   \]
+So $r$ is also a highest weight vector. Therefore $R_{a \lambda + b \nu} \subseteq R_{an + bm}$ so $\frac{a \lambda + b \nu}{an + bm} = \frac{\lambda}{n} \frac{an}{an + bm} + \frac{\mu}{m} \frac{bm}{an+bm} \in \mathfrak{p}(V)$. 
+\end{proof}
+
+\begin{example}
+Let $G = GL(V), K = U(V)$ and maximal torus the diagonal matrices. Note $V$ is an irrep of $G,K$. We have $R_{n}(V)$ is the set of homogenous degree $n$ polynomials on V, which can be identified with the dual of the symmetric subspace $V^{\vee n} \subseteq V^{\otimes n}$. Note the $G$-action on $V^{\otimes n}$ commutes with the natural permutation action of $S_{n}$ on the tensor pieces. This means the block diagonal decomposition into irreps must be the same. The symmetric subspace is clearly an invariant subspace of $S_{n}$, so we can associate it with the highest weight $(n, 0, ..., 0)$. The moment map of the $K$-action on $P(V)$ is:
+\[ \mu([v]) = \frac{v v^{*}}{\|v\|_{2}^{2}}  \]
+This intersects the canonical set of diagonal nonincreasing matrices at $E_{11} = (1,0, ...,0)$. Note in this case we have an equivalence:
+\[ \mu_{K}(P(V)) \cap \mathfrak{t}_{+} = E_{11} = \bigcup_{n \geq 0} \frac{n E_{11}}{n} = \mathfrak{p}(V)    \]
+\end{example}
+
+\begin{lemma}
+We can generalize this to any $G$-irrep $V_{\lambda}$:
+\[ \mu(P(V_{\lambda})) \cap \mathfrak{t}_{+} = \{\lambda\} = \bigcup_{n \geq 0} \frac{n \lambda}{n} = \mathfrak{p}(V) \]
+\end{lemma}
+\begin{proof}
+We have the decomposition $\mathfrak{g} = \mathfrak{n}_{-} \oplus \mathfrak{t} \oplus \mathfrak{n}_{+} = \mathfrak{n}_{-} \oplus \mathfrak{b}$, and let $v_{\lambda} \in V_{\lambda}$ be the highest weight vector of unit length: $\mathfrak{t} \cdot v_{\lambda} = \langle \lambda, \mathfrak{t} \rangle v_{\lambda}, \mathfrak{n}_{+} \cdot v_{\lambda} = 0$. 
+\\ Since $\mathfrak{g}$ is the complexification of $\mathfrak{k}$, complex conjugation on this decomposition gives the Cartan involution $\theta$ such that $(\mathfrak{k},i \mathfrak{k})$ are the eigenspaces of eigenvalue $(+1,-1)$ respectively. There is a further fact which states $\mathfrak{g} \ni Z = X + Y - \theta(Y)$ where $X \in \mathfrak{t}, Y \in \mathfrak{n}_{+}$:
+\[ \langle \mu([v_{\lambda}]), Z \rangle = \langle v_{\lambda} v_{\lambda}^{*}, X + Y - \theta(Y) \rangle \]
+But by definition of highest weight 
+\[ \langle X v_{\lambda}, v_{\lambda} \rangle = \langle \lambda, X \rangle \]
+\[ \langle (Y - \theta(Y)) v_{\lambda}, v_{\lambda} \rangle = \langle Y v_{\lambda}, v_{\lambda} \rangle + \langle v_{\lambda}, Y v_{\lambda} \rangle = 0 \]
+\[ \implies \mu([v_{\lambda}]) = \lambda \]
+I DONT KNOW WHY THIS IS TRUE ($Z = X + Y - \theta(Y)$ or $\theta(Y) = - Y^{*}$). 
+\\ Again since $V_{\lambda}$ is an irrep, $\mu(P(V_{\lambda})) \cap \mathfrak{t}_{+} = \mu([v_{\lambda}])$. 
+\\ Now we'd like to show that $\forall n: R_{n}(V_{\lambda}) = V_{n \lambda}^{*}$ so that the moment map image is equal to $\mathfrak{p}$. To show the first containment, consider the polynomial function
+\[ p(v) := \langle v_{-\lambda}, v \rangle^{n}   \]
+where $v_{-\lambda}$ is the lowest weight vector. Then by the product rule and the dual $G$-action on polynomials, this is a highest weight vector of weight $n \lambda$. Conversely let $p \in R_{n}(V_{\lambda})$ be a lowest weight vector, so a degree $n$ homogenous polynomial that is an eigenvector of the $N_{-}$-action. 
+\[ \forall X \in \mathfrak{t}: (e^{tX} \cdot p)(v_{\lambda}) = p(e^{-tX} \cdot v_{\lambda}) =  p(e^{-\langle \lambda, X \rangle} v_{\lambda}) = e^{-\langle n \lambda, X \rangle} p(v_{\lambda}) \]
+by $v_{\lambda}$ being a highest weight vector, and then homogeneity of $p$. So the weight of $p$ must be $-n \lambda$, which is the highest weight of $V_{n \lambda}^{*}$. 
+\end{proof}
+
+\begin{theorem} [Kirwan-Mumford Convexity]
+For $C \in \{V, G \cdot v\}$ a $G$-stable algebraic cone, 
+\[ \mu(P(C)) \cap \mathfrak{t}_{+}(\Q) = \mathfrak{p}(C)  \]
+\end{theorem}
+\begin{proof}
+We first show that $\mathfrak{p}(V) \subseteq \mu(P(V))$. Let $V_{\lambda} \in R^{n}(V)$ so $\frac{\lambda}{n} \in \mathfrak{p}(V)$. Then by Schur's lemma, there is an $G$-intertwining operator $T : V_{\lambda} \to R^{n}(V)$ that is injective. This means $q(x,v) := T(x \in V_{\lambda})(v \in V)$ is a nonzero polynomial that is linear in $x$ and degree $n$ homogenous in $v$ and invariant under the $G$-action:
+\[ g \cdot q(x,v) := q(g \cdot x, g^{-1} \cdot v) \]
+We add a $\C^{*}$-action $e^{c} \cdot (x,v) := (e^{nc} x, e^{-c} v)$ under which $q$ is also invariant. Now consider the $G \times \C^{*}$ action on $V \oplus V_{\lambda}$:
+\[ \langle \mu(x,v), (Y,c) \rangle = \partial_{t=0} 
+\left\langle 
+\begin{pmatrix} x x^{*} & x v^{*}
+\\              v x^{*} & v v^{*}
+\end{pmatrix},
+\begin{pmatrix} e^{t Y} e^{ntc} & 0
+\\              0        & e^{-t Y} e^{-t c}
+\end{pmatrix}
+\right\rangle \]
+\[ = \langle x x^{*} - v v^{*}, Y \rangle + c(n \|x\|_{2}^{2} - \|v\|_{2}^{2}) \] \[ \implies \mu(x,v) = (\mu(x) - \mu(v), n \|x\|_{2}^{2} - \|v\|_{2}^{2})  \]
+Now take any $v \in V$ such that $q(v,v_{\lambda}) \neq 0$ and find the $\inf$-norm point in its orbit closure $(w,x)$. By invariance $q(w,x) \neq 0$, which means $(w,x) \neq 0$. But by optimality $\mu(w,x) = 0$, so in fact the orbit is closed and $\exists (g,c) \in G \times \C^{*}: (g,c) \cdot (w,x) = (v,v_{\lambda})$. 
+\[ 0 = (g,c) \cdot \mu(x,w) = \mu(v_{\lambda},v) = (\lambda - \mu(v), n \|v_{\lambda}\|_{2}^{2} - \|v\|_{2}^{2})   \]
+\[ \implies \mu([v]) = \frac{\mu(v)}{\|v\|_{2}^{2}} = \frac{\mu(v_{\lambda})}{n \|v_{\lambda}\|_{2}^{2}} = \frac{\lambda}{n} \]
+
+Conversely, we will show $\mu(P(V)) \subseteq \mathfrak{p}(V)$. So assume $\mu([v]) = \mu(v) = \lambda \in \Q$. Let $\ell \lambda$ be an integral highest weight and consider the above $G \times \C$-action on $V_{\ell \lambda} \oplus V$:
+\[ (g, e^{c}) \cdot (x,v) := (e^{\ell c} g \cdot x, e^{-c} g^{-1} \cdot v)    \]
+\[ \mu(v_{\ell \lambda}, \sqrt{\ell} v) = (\mu(v_{\ell \lambda}) - \ell \mu(v), \ell \|v_{\ell \lambda}\|_{2}^{2} - \ell \|v\|_{2}^{2}) = (0,0) \]
+Therefore $(G \times \C^{*}) \cdot (v_{\ell \lambda}, \sqrt{\ell} v)$ is a closed orbit and disjoint from $(0,0)$; therefore we can find a $G \times \C^{*}$-invariant separating polynomial $q(0,0) = 0, q(v_{\ell \lambda}, \sqrt{\ell} v) = 1$. Clearly $q \neq 0$ implies there is some homogenous (in $V \oplus V_{\ell \lambda}$) part $q_{n} \neq 0$. Due to the $\C^{*}$-invariance, $q_{n}$ is in fact degree $n \ell$ homogenous in $V$; and degree $n$ homogenous in $V_{\ell \lambda}$ which is equivalent to being linear in $Sym^{n} V_{\ell \lambda} = V_{n \ell \lambda}$. Each restriction of $q_{n}(x \in V_{\ell \lambda}, \cdot)$ is a homogenous $G$-invariant polynomial on V. This furnishes a $G$-intertwining map $T : V_{n \ell \lambda}^{*} \to R_{n}(V)$, which from Schur's lemma is injective on its range. And therefore $V_{n \ell \lambda} \subseteq R_{n}(V)$. 
+\end{proof}
+
+One thing to note about the above is that $\lambda \in \Delta(v)$ iff there is some homogenous $G$-invariant polynomial $q$ of finite degree such that $q(v,v_{\ell \lambda}) \neq 0$ which effectively separates it from $0$. In fact any point $q(w,v_{\ell \lambda}) \neq 0$ is also separated from $0$ and therefore $\lambda \in \Delta(w)$ as well. Since $q$ is of finite degree, all but a countable number of points in $G \cdot v, K \cdot v$ are nonvanishing in q. Using the (tensor) shifting trick, there is a simple proof of convexity (not just for $\Q$): 
+\[ cap_{p}(v)^{\ell} := \inf_{g \in G} \|(\pi(g) v)^{\otimes \ell} \otimes (\pi_{\lambda^{*}}(g) v_{\lambda^{*}}) \|_{2}^{2}    \]
+If $cap_{p}(v) > 0$ then $p \in \Delta(v)$. The converse is not true, but the above shows $p \in \Delta(v)$ iff $cap_{p}(g \cdot v) > 0$ for generic $g \in G$. Therefore for any $p,q \in \Delta(v)$ there is some $g \in G$, in fact $k \in K$, such that $cap_{p},cap_{q} > 0$ for $w := k \cdot v$. Let's consider the following slightly simpler optimization problem
+\[ c_{p}(v) := \inf_{b \in B} \log \|\pi(b) v\|_{2}^{2} + \frac{1}{\ell} \log \|\pi_{\lambda^{*}}(b) v_{\lambda^{*}}) \|_{2}^{2} \]
+
+\begin{lemma}
+The Iwasawa decomposition $G = KAN = K B$ gives a simple way to calculate with highest weight vectors, since they are eigenvectors of $B$:
+\[ \|(k \in K) (e^{X} \in A) (e^{Y} \in N) v_{\lambda}\|_{2}^{2} = \|e^{X} v_{\lambda}\|_{2}^{2} = \exp(2 \langle X, \lambda \rangle) \|v_{\lambda}\|_{2}^{2}  \]
+\end{lemma}
+
+Letting $w = \pi(k) \cdot v$ as above, by an analogy to Fenchel duality this induces 
+\[ c^{*}(p) := \inf_{X \in \mathfrak{t},Y \in \mathfrak{n}_{+}} \log \|\pi(e^{X \oplus Y}) \cdot w\|_{2}^{2} - 2 \langle p, X \rangle  \]
+Since $c^{*}$ is an $\inf$ over linear functions (one for each fixed $(X,Y)$), it is concave in $p$. Since $cap_{p},cap_{q} > 0$, we have $c^{*}(p),c^{*}(q) > -\infty$, so by concavity 
+\[ \forall t \in [0,1]: c^{*}(tp + (1-t)q) \geq t c^{*}(p) + (1-t) c^{*}(q) > -\infty \]
+which implies $tp + (1-t)q \in \Delta(w) = \Delta(v)$. 
+
+\subsection{Non-commutative Duality}
+The irreps of $G$ can also be jointly diagonalized according to $T$. We have thus associated to each irrep of $G$ a subset of $\Omega(\pi)$. It is further known that there is a unique highest weight in this subset which identifies the irrep, so we can label these irreps $(\pi_{\lambda},V_{\lambda})$ where $\lambda \in \Omega(\pi)$ is a highest weight. 
+
+\begin{theorem} [Kempf-Ness]
+\[ cap(v) := \inf_{g \in G} \|g \cdot v\|_{2}^{2} > 0 
+ \iff \inf_{g \in G} \|\mu(g \cdot v)\|_{F}^{2} = 0 \]
+\end{theorem}
+From our perspective, this statement can be seen as a consequence of geodesic convexity of $F$. It will be quantitatively strengthened below. 
+
+\begin{definition} [Weight Norm]
+\[ N(\pi) := \max_{H \in i \mathfrak{k}} \frac{\|\Pi(H)\|_{op}}{\|H\|_{F}}   \]
+\end{definition}
+It is known that all maximal tori are conjugate under $K$-action and cover G ($\cup_{k \in K} k \mathfrak{t} k^{-1} = \mathfrak{g}$). This should be seen as a Lie algebra generalization of the spectral theorem for Hermitian matrices. Therefore the weight norm can be computed:
+\[ N(\pi) = \max \{ \|\omega\|_{F} \mid \omega \in \Omega(\pi) \} = \max \{ \|\lambda\|_{F} \mid V_{\lambda} \subseteq V \}   \]
+
+\begin{lemma}
+It can be shown (ADD PROOF LATER MAYBE) that the weight norm controls many important properties of $F$ related to convex optimization:
+\[ \forall H: \langle \mu(v), H \rangle = \langle \frac{v v^{*}}{\|v\|_{2}^{2}}, \Pi(H) \rangle \leq N(\pi) \|H\|_{F} \implies \|\mu(v)\|_{F} \leq N(\pi)  \]
+\[ \forall \|H\|_{F} = 1: 0 \leq \partial_{t=0}^{2} F_{v}(e^{tH}) \leq 2 N(\pi)^{2}  \]
+\[ \forall \|H\|_{F} = 1: \frac{|\partial_{t=0}^{3} F_{v}(e^{tH})|}{\partial_{t=0}^{2} F_{v}(e^{tH})} \leq 4 N(\pi)  \]
+\end{lemma}
+
+\begin{definition} [Weight Margin]
+\[ \gamma(\pi) := \min \{ d(0, conv(\Gamma)) \mid \Gamma \subseteq \Omega(\pi), 0 \not\in \Gamma \}   \]
+\end{definition}
+
+\begin{theorem}
+For $\|v\|_{2} = 1:$
+\[ 1 - \frac{\|\mu(v)\|_{F}}{\gamma(\pi)} \leq cap(v) \leq 1 - \frac{\|\mu(v)\|_{F}^{2}}{4 N(\pi)^{2}}   \]
+\end{theorem}
+This provides a quantitative strengthening of the Kempf-Ness theorem. 
+
+\begin{definition} [Moment Polytope]
+\[ \Delta(v) := \overline{\mu(G \cdot v)} \cap \mathcal{C}(G)  \]
+\[ \Delta := \cup_{v \in V} \Delta(v)   \]
+Here the positive Weyl chamber $\mathcal{C}(G)$ is the convex hull of all possible highest weights of G. If e.g. $G = GL$, then the above is just the set $spec^{\downarrow}(\overline{\mu(G \cdot v)})$. 
+\end{definition}
+
+The main problem in this field is giving an efficient membership oracle for $\Delta$. Due to some algebraic geometry reasons, $p \in \Delta \iff p \in \Delta(v)$ for generic $v \in V$. This is because if $p \in \Delta$, then the set of $v$ such that $p \not\in \Delta(v)$ is the zero set of some finite degree polynomials. So it is even interesting to find an algorithm that proves membership of $p \in \Delta(v)$ for some random distribution $v \sim V$ whp. Let's focus on certifying $0 \in \Delta(v)$. By the non-commutative duality statement, it is sufficient to find a point $w := g \cdot v$ with small moment map $\|\mu(w)\|_{F} < \gamma(\pi)$. Unfortunately, $\gamma$ could be exponentially small (though not arbitrarily so, again for some algebraic geometry reason). I will repeat the lower bound given in [Cole,Moitra] which shows why strong convexity is so effective for this problem:
+
+\begin{lemma}
+If $f$ is $\lambda$-strongly convex on the whole geodesic from $Z_{0}$ to $Z^{*}$, 
+\[ f(Z^{*}) \geq f(Z_{0}) -  \frac{\|\nabla f(Z_{0})\|_{F}^{2}}{2 \lambda}  \]
+\end{lemma}
+\begin{proof}
+Again let $Z_{t} := e^{tH} Z_{0}$ for $\|H\|_{F} = 1, Z_{T} = Z^{*}$ and $g(t) := f(Z_{t})$. If we assume $\|\nabla f(Z_{0})\|_{F} \leq \epsilon$:
+\[ f(Z^{*}) - f(Z_{0}) = \int_{t=0}^{T} g'(t) \geq \lambda T^{2}/2 - T \epsilon \]
+from which the lemma follows since $\inf_{T \geq 0} \lambda T^{2}/2 - T \epsilon = - \epsilon^{2}/2 \lambda$. 
+\end{proof}
+This means that any algorithm which maintains the property that it remains in a strongly convex zone around $Z^{*}$, and decreases $f$ by some quantity proportional to $\|\nabla f\|_{F}^{2} = \|\mu\|_{F}^{2}$ achieves linear convergence even for the moment map, which is enough to certify $0 \in \Delta(v)$ even for exponentially small $\gamma$. And since we have that our function $f$ is reasonably (poly) smooth, even simple gradient descent can accomplish this decrease. In our work, we analyzed the moment map directly to show linear convergence. This seems a bit more difficult as we require more conditions to maintain fast convergence. 
+
+\subsubsection{Kravtsov Example}
+The following is a simple of example of $\gamma \sim exp(-n)$. It is in fact in the commutative setting of $3$-tensors. Let $\eta := 2^{-(n-1)}$
+\[ \begin{pmatrix}
+     \eta  & 0
+\\   0     & 1-\eta
+   \end{pmatrix},
+   \begin{pmatrix}
+     0     & \eta & 0
+\\   \eta  & 0    & 0
+\\   0     & 0    & 1-2\eta
+   \end{pmatrix},
+   \begin{pmatrix}
+     0     & 0    & 2\eta & 0
+\\   0     & 0    & 0     & 0
+\\   2\eta & 0    & 0     & 0
+\\   0     & 0    & 0     & 1-4\eta
+   \end{pmatrix},
+   ...,
+   \begin{pmatrix}
+     0 & ... & \frac{1}{2}
+\\   \vdots & \ddots & \vdots
+\\   \frac{1}{2} & ... & 0
+   \end{pmatrix}
+\]
+Each matrix is appended with 0's to become $n \times n$. The $i$-th matrix represents the $2$-tensor associated with the $i$-th part. Note each marginal sums to $1$. Interestingly, there is no $3$-matching in the support. Further, it can be shown that this point is a vertex of the linear relaxation for $3$-matchings. Finally, note that if the $(1,1,1)$ entry is removed, then there is no longer any $3$-tensor with $(\vec{1},\vec{1},\vec{1})$ marginals in the support; but $ \|\mu\|_{2}^{2} = O(2^{-n})$. 
+
+\end{document}
