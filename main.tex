@@ -3,7 +3,7 @@
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amssymb}
-
+\usepackage{xcolor}
 \newtheorem{theorem}{Theorem}
 \newtheorem{corollary}{Corollary}
 \newtheorem{prop}{Proposition}
@@ -35,6 +35,7 @@
 \newcommand\GG{\mathcal{G}}
 \newcommand\TT{\mathcal{T}}
 \newcommand\PP{\mathcal{P}}
+\newcommand\tr{\operatorname{Tr}}
 \newcommand\RR{\mathcal{R}}
 \newcommand\CC{\mathcal{C}}
 \newcommand\BB{\mathcal{B}}
@@ -47,6 +48,7 @@
 \newcommand{\maps}{\colon}
 \newcommand{\ale}{\lesssim}
 \newcommand{\age}{\gtrsim}
+\newcommand{\CF}[1]{{\color{purple}[CF: #1]}}
 
 
 \title{Fast Tensor Scaling}
@@ -56,6 +58,10 @@
 \begin{document}
 
 \maketitle
+
+
+
+\section{Operator scaling}
 
 There are some small but important subtleties between the theorem proved in [Cole,Moitra] and the one proved in [Spectral Analysis]. 
 
@@ -640,5 +646,30 @@ The following is a simple of example of $\gamma \sim exp(-n)$. It is in fact in 
    \end{pmatrix}
 \]
 Each matrix is appended with 0's to become $n \times n$. The $i$-th matrix represents the $2$-tensor associated with the $i$-th part. Note each marginal sums to $1$. Interestingly, there is no $3$-matching in the support. Further, it can be shown that this point is a vertex of the linear relaxation for $3$-matchings. Finally, note that if the $(1,1,1)$ entry is removed, then there is no longer any $3$-tensor with $(\vec{1},\vec{1},\vec{1})$ marginals in the support; but $ \|\mu\|_{2}^{2} = O(2^{-n})$. 
+
+
+
+\section{Nonuniform}
+\CF{crappy cole section}
+Suppose we sample with target marginal $R \succeq 0$, $\tr R = 1$. We still seek to optimize $f_R$, for $f_R(P) = \log \langle v, P v \rangle - \chi_R(P)$ with $\chi_R$ defined as in [Burgisser et al]. 
+
+We know $f_R$ is geodesically convex and $O(1)$-geodesically smooth by [Burgisser et al]. Now we will define another metric and do gradient descent in that metric. Define the length of the geodesic $t\mapsto \sqrt{P}e^{Xt}\sqrt{P}$ for $t \in [0,1]$ for $X$ Hermitian to be $\langle X, X \rangle_R$, where 
+$$\langle X, Y \rangle_R := \tr \sqrt{R} X  \sqrt{R} Y. $$
+I guess we still need to verify that these are actually geodesics. 
+
+
+Define the gradient $\nabla^R f$ to be the Hermitian matrix such that 
+$$ \langle \nabla^R f, X \rangle_R = \frac{d}{dt } f(\sqrt{P} e^{tX} \sqrt{P}) |_{t = 0}.$$ 
+Because $\langle Y, X \rangle_R = \langle R^{1/2} YR^{1/2}, X \rangle,$
+Note that $\nabla^R f = R^{-1/2} \nabla f R^{-1/2}$. 
+
+
+
+%If $\langle \cdot , \cdot \rangle_P$ is the metric at a point $P$, then the new metric $\langle \cdot, \cdot \rangle_{R,P}$ will be given by 
+%$$ \langle X, Y \rangle_{R,P} = \langle R^{1/2} X R^{1/2}, R^{1/2} Y R^{1/2} \rangle_{P}.$$
+
+%At the identity the metric takes the form $\langle X, Y \rangle_R = \tr \sqrt{R} X  \sqrt{R} Y $. In particular the length of the geodesic $t\mapsto \sqrt{P}e^{Xt}\sqrt{P}$ for $t \in [0,1]$ is $\langle X, X \rangle_R$. 
+
+
 
 \end{document}
