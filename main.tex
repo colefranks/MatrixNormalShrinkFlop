@@ -186,12 +186,12 @@ We have the conditions $x,y \perp \vec{1}, \|x\|_{2}, \|y\|_{2} = 1$. Therefore 
 
 It was shown above that $(G^{a})_{i} = O(1)$ with very high probability. This is the row sum of $G^{ab}$ and so bounds the operator norm. So a shift of $\delta$ from arbitrary $x,y$ to the $\delta$-net leads only to an $O(\delta)$ loss in the bound. 
 \[ \Pr [ \exists a,b:  \sup_{x,y \perp 1} \frac{\langle x, G^{ab} y \rangle}{\|x\|_{2} \|y\|_{2}} \geq t + \delta ] \leq 2 k^{2} \left( \frac{1}{\delta} \right)^{2n} \exp \left( \frac{- n^{k} t^{2}}{4(1 + 2tn)} \right)    \]
-Choosing $t \approx \sqrt{\frac{\log nk}{k^{2} n^{k-1}}}, \delta \approx \sqrt{\frac{1}{k^{2} n^{k-1}}}$ gives the bound whp (inverse poly). 
+If $nt \gg 1$ then we are in the subgamma regime $\exp(-n^{k-1} t)$. So in particular for $k=2$, we cannot choose $t, \delta < 1$. For $k=3$ we can choose $t \approx \sqrt{\frac{1}{n^{2}}}$ to be in the subgaussian region, but then our $\delta \approx \sqrt{\frac{1}{n^{2}}}$ so our $\delta$-net becomes size $\exp(n \log n)$. In this case we can choose $t \approx \sqrt{\frac{\log^{2} n}{n^{2}}}$ to cancel out this large $\delta$-net, and still get $n^{3} t^{2} / nt \approx n \log n$ and we get the desired bound. For $k \geq 4$ we can choose $t,\delta \approx \sqrt{ \frac{\log nk}{k^{2} n^{k-1}}}$ and we are always in the subgaussian region, so there's no problem. 
 
 \subsubsection{Conclusion}
-For $k=2$, we have a $\sqrt{\frac{\log n}{n}}$-expander whp. We don't have strong enough concentration that $\|\nabla f\|_{2}$ is a small constant. But in this case, we have $\|\nabla f\|_{\infty} \ll \sqrt{\frac{\log n}{n}}$ whp, which is more than sufficient for the spectral analysis (ours) to conclude fast convergence. 
+For $k=2$, we don't have strong enough concentration for expansion to be a small constant. We also don't have strong enough concentration that $\|\nabla f\|_{2}$ is a small constant. But in this case, we have $\|\nabla f\|_{\infty} \ll \sqrt{\frac{\log n}{n}}$ whp. 
 
-For $k \geq 3$ we have all the concentration we need: the input is a $\sqrt{\frac{\log nk}{n^{k-1}}}$-expander whp and $\|\nabla f\|_{2} \ll \sqrt{\frac{\log nk}{n^{k-2}}}$ whp (should improve). So we can use the simple analysis [Cole,Moitra] to conclude fast convergence. 
+For $k \geq 3$ we have all the concentration we need: the input is a $\sqrt{\frac{poly\log nk}{n^{k-1}}}$-expander whp and $\|\nabla f\|_{2} \ll \sqrt{\frac{\log nk}{n^{k-2}}}$ whp (should improve). So we can use the simple analysis [Cole,Moitra] to conclude fast convergence. 
 
 
 \subsection{Quantum Setting}
@@ -211,7 +211,7 @@ So the goal is again to show some of the following
 Put another way, let $g_{\vec{j} \in [n]^{k-1}} = \{g_{1 \vec{j}}, ..., g_{n \vec{j}}\}$, then $Q^{a} = \sum_{\vec{j} \in [n]^{k-1}} g_{\vec{j}} g_{\vec{j}}^{*}$ where $g_{\vec{j}} \sim N(0,\frac{1}{n^{k-1}} I)$. 
 
 \begin{theorem}
-For random matrices $\E X_{k} = 0, \|X_{k}\|_{op} \leq R$, the variance parameter $\sigma^{2} := \|\sum_{k} X_{k}^{2} \|_{op}$ controls concentration:
+For random matrices $\E X_{k} = 0, \|X_{k}\|_{op} \leq R$, the variance parameter $\sigma^{2} := \|\E \sum_{k} X_{k}^{2} \|_{op}$ controls concentration:
 \[ \Pr [ \|\sum_{k} X_{k}\|_{op} \geq t ] \leq 2 d \exp \left( \frac{-t^{2}/2}{\sigma^{2} + Rt} \right)   \]
 \end{theorem}
 
@@ -234,7 +234,7 @@ For the expansion part, take $X = \sum_{i} \lambda_{i} v_{i} v_{i}^{*}, Y = \sum
 \[ \langle Q^{ab}, X \otimes Y \rangle = \sum_{ij} \lambda_{i} \mu_{j} (Q^{ab})_{ii,jj} = \sum_{ij} \lambda_{i} \mu_{j} \sum_{\vec{k} \in [n]^{k-2}} g_{ij\vec{k}}^{2}   \]
 This looks exactly like the classical setting. The only difference is that we have to now form a $\delta$-net over the $\|\cdot\|_{F}$ sphere instead of the Euclidean one. Therefore:
 \[ \Pr [ \exists a,b:  \sup_{X,Y \perp I} \frac{\langle Q^{ab}, X \otimes Y \rangle}{\|X\|_{F} \|Y\|_{F}} \geq t + \delta ] \leq 2 k^{2} \left( \frac{1}{\delta} \right)^{n^{2}} \exp \left( \frac{- n^{k} t^{2}}{4(1 + 2tn)} \right)    \]
-Choosing $t \approx \sqrt{\frac{\log nk}{k^{2} n^{k-2}}}, \delta \approx \sqrt{\frac{1}{k^{2} n^{k-2}}}$ gives the bound whp (inverse poly). Note this no longer gives anything meaningful for $k=2$. 
+Again for $k=2,3$ we will be in the subgamma region and cannot reach constant expansion. For $k = 4$, the best we can do is remain in the subgamma region by choosing $t,\delta \approx \sqrt{\frac{\log^{2} n}{n^{2}} }$. For $k \geq 5$, we are always in the subgaussian region by choosing $t \approx \sqrt{\frac{\log nk}{k^{2} n^{k-2}}}, \delta \approx \sqrt{\frac{1}{k^{2} n^{k-2}}}$ so there's no problem. 
 
 \subsubsection{Conclusion}
 For $k \geq 4$, whp our input will have $\|\mu\|_{F}^{2} \ll \frac{\log n}{n^{k-3}}$. For $k=3$, our input will have $\|\mu\|_{op}^{2} \ll \frac{\log n}{n^{k-2}}$. And for $k \geq 3$, our input is $1 - \sqrt{\frac{\log nk}{n^{k-2}}}$ strongly convex. So the simple [Cole,Moitra] analysis works for $k \geq 4$ and the $k=3$ case is open.  
@@ -294,30 +294,49 @@ It is helpful to first understand $\|R^{-1} \nabla R^{-1}\|_{R}$. This is becaus
 As of now we will simply bound $\|R^{-1} \nabla R^{-1}\|_{R} \leq \|R\|_{op} \|R^{-1} \nabla R^{-1}\|_{F}$, as then we can reuse the bounds for standard gaussians derived above. It may be possible to improve this. 
 
 \begin{theorem}
-For $g \sim N(0,(I/n)^{\otimes k})$:
-\[ \Pr[\|Q^{a} - \frac{I}{n}\|_{F} \geq \Tilde{O}(\sqrt{k^{-1} n^{-(k-2)}})] \leq poly(n^{-1},k^{-1})  \]
+For $g \sim N(0,I^{\otimes k})$:
+\[ \Pr[ \sum_{a} \|Tr_{\overline{a}}[g g^{*} - I^{\otimes k}]\|_{F}^{2} \geq \Tilde{O}(\sqrt{k^{-1} n^{-(k-2)}})] \leq poly(n^{-1},k^{-1})  \]
 \end{theorem}
 \begin{proof}
 For now we will assume that the component of error in the $I$ direction is a lower order term, as the norm of a gaussian concentrates very well. We will bound $\|\cdot\|_{F}$ by an $\epsilon$-net over the dual ball $\|\cdot\|_{F}$:
-\[ \E \langle Q^{a}, X \rangle = \E \langle g g^{*}, I \otimes ... X_{a} ... \otimes I \rangle = \frac{1}{n} \langle I, X \rangle  \]
-\[ \log \E \exp( t(\langle Q^{a} - \frac{1}{n} I, X \rangle)) \leq O \left( t^{2} \frac{1}{n^{k}} \|X\|_{F}^{2} \right)   \]
-\[ \Pr[\langle Q^{a} - \frac{1}{n} I, \frac{X}{\|X\|_{F}} \rangle \geq B] \leq \exp( - \Omega(n^{k} B^{2}) )  \]
-So by a union bound over $\exp(O(n^{2}))$ elements we get the bound whp.  
+\[ \E \langle Q^{a}, X \rangle = \E \langle g g^{*}, I \otimes ... X_{a} ... \otimes I \rangle = n^{k-1} \langle I, X \rangle  \]
+\[ \log \E \exp( t(\langle Q^{a} - n^{k-1} I, X \rangle)) \leq O \left( t^{2} n^{k-1} \|X\|_{F}^{2} \right)   \]
+\[ \Pr[\langle Q^{a} - n^{k-1} I, \frac{X}{\|X\|_{F}} \rangle \geq B] \leq \exp( - \Omega \left( \frac{B^{2}}{n^{k-1}} \right) )  \]
+So choosing $B^{2} = \Tilde{O}(n^{k+1})$ taking a union bound over $2^{O(k n^{2})}$ sized $\epsilon$-net gives the bound. 
 \end{proof}
 
-\subsubsection{Concentration for Perturbation}
-Now we can analyze the mean of all the quantities we would like to bound. 
+Now assuming everything goes according to plan and we have a constant condition number for the Hessian the whole time, then if $e^{\delta_{t}}$ is the step at time t:
+\[ \|\prod_{t} e^{\delta_{t}} - I\| \leq \sum_{t} \|\delta_{t}\| + O(1) \sum_{t} \|\delta_{t}\|^{2}   \]
+Since $\|\delta_{t}\|$ shrinks by a constant factor every constant number of iterations, this whole sum is $O(\|\delta_{0}\|)$, which shows that this is all the perturbation we need to deal with. 
+
+\subsubsection{Concentration for Hessian}
+Now we can analyze the mean of all the quantities for well conditioned Hessian we would like to bound. 
 
 \begin{fact}
 $ \E \langle g g^{*}, X \rangle = \E \langle R^{-1} g g^{*} R^{-1}, R X R \rangle = \prod_{a} \langle I, R_{a} X_{a} R_{a} \rangle = \prod_{a} \langle I, X_{a} \rangle_{R} $
 \end{fact}
 
-Note if any $\langle X_{a}, I \rangle_{R} = 0$, the whole expectation vanishes. Our goal is to show that any small $(\|\delta\|_{R} \leq \kappa)$ perturbation of any one or two-body marginal is near its expectation for the unperturbed gaussian. 
+Note if any $\langle X_{a}, I \rangle_{R} = 0$, the whole expectation vanishes. Our goal is to show that for any small perturbation, all one or two-body marginals are near its expectation for the unperturbed gaussian. 
 
 \begin{lemma}
 For $X = I: \langle I, (I + \delta)X(I+\delta) \rangle_{R} = \|I+\delta\|_{R}^{2} \leq 1 + O(\|\delta\|_{R})$
 \\ For $\langle X, I \rangle_{R} = 0: \langle I, (I + \delta)X_{a}(I+\delta) \rangle_{R} \leq \frac{\lambda_{max}(R)}{\lambda_{min}(R)} O( \|X\|_{R} \|\delta\|_{R} )$
 \end{lemma}
+\begin{proof}
+The first statement is clear. The second statement can most likely be improved:
+\[ \langle I, (I + \delta)X(I+\delta) \rangle_{R} = 0 + 2 \langle R \delta, R X \rangle + \langle R \delta, R \delta X \rangle  \]
+\[ \leq 2 \|\delta\|_{R} \|X\|_{R} + \|\delta\|_{R} \|\delta X\|_{R}   \]
+\[ \leq  \frac{\lambda_{max}(R)}{\lambda_{min}(R)} O( \|X\|_{R} \|\delta\|_{R} )   \]
+\end{proof}
+
+\begin{lemma}
+\[ \|R (I+\delta) X (I+\delta) R\|_{F}^{2} \leq     \]
+\end{lemma}
+\begin{proof}
+\[ \|RXR\|_{F} \leq \|R\|_{op} \|X\|_{R}   \]
+\[ \|R \delta X R\|_{F}^{2} = \langle \delta R^{2} \delta, X R^{2} X \rangle \leq \|\delta R\|_{op}^{2} \|X\|_{R}^{2} \leq \min\{\|R\|_{op}^{2} \|\delta\|_{op}^{2},  \|\delta\|_{R}^{2}\} \|X\|_{R}^{2}    \]
+\[ \|R \delta X \delta R\|_{F}^{2} =    \]
+\end{proof}
 
 For concentration, we can use the formulas for $\chi$-squared variables:
 
@@ -325,19 +344,44 @@ For concentration, we can use the formulas for $\chi$-squared variables:
 \[ \log \E \exp t( \langle g g^{*}, X \rangle - \E \langle g g^{*}, X \rangle ) \leq O \left( t^{2} \prod_{a} \|R_{a} X_{a} R_{a}\|_{F}^{2}  \right)  \]
 \end{lemma}
 
+So finally I think if we push $\frac{\lambda_{max}(R)}{\lambda_{min}(R)}$ into the size of our update, the whole time we have $\lambda \geq \Omega 1, \beta \leq O(1)$. 
 
-\[ \langle Q^{ab}, X \otimes Y \rangle = \langle g g^{*}, I_{1} \otimes X \otimes Y ... \otimes I_{k} \rangle = \langle (R^{-1} g) (R^{-1} g)^{*}, ...  R_{a} X R_{a} \otimes R_{b} Y R_{b} ... \rangle   \]
-As mentioned before $R^{-1} g$ is a standard gaussian, so isotropic, so we can change the basis so the right hand side is diagonal. So the final distribution is
-\[ \sum_{ij} \sum_{\vec{k}} g_{ij\vec{k}}^{2} \lambda_{i} \mu_{j} (r^{\vec{k}})^{2}  \]
-where for brevity we have written $\lambda_{i} := \lambda_{i}(R_{a} X R_{a}), \mu_{j} := \lambda_{j}(R_{b} Y R_{b}), r^{\vec{k}} := (\otimes_{c \neq a,b} R_{c})_{\vec{k},\vec{k}}$. Further $g_{ij\vec{k}}^{2}$ is a standard $\chi$-squared with mean $\nu$. So the log mgf can be calculated
-\begin{align*}
-\log \E \exp (t \langle Q^{ab}, X \otimes Y \rangle) =  \sum_{ij,\vec{k}} \log (1 - 2t\nu \lambda_{i} \mu_{j} (r^{\vec{k}})^{2})^{-1/2} 
-\\ = t \langle R_{a} X R_{a}, I \rangle \langle R_{b} Y R_{b}, I \rangle \prod_{c \neq a,b} \langle R_{c}^{2}, I \rangle + ... 
-\\ = O \left( t^{2} \|R_{a} X R_{a}\|_{F}^{2} \|R_{b} Y R_{b}\|_{F}^{2} \prod_{c \neq a,b} \|R_{c}^{2}\|_{F}^{2}   \right)
-\end{align*} 
-Here in order for the first order term to vanish, we need $Tr[R_{a} X R_{a}] = 0$, $Tr[R_{b} Y R_{b}] = 0$. For this purpose we define a new norm: 
-\[ \langle X,Y \rangle_{R_{a}} := \langle R_{a} X R_{a}, Y \rangle \]
-Then by the above calculation we can use standard concentration inequalities to show that all crossterms will be small for the relevant subspace, and similarly all one-body marginals will be close to their expectation.  
+
+\subsection{MLE for random Gaussians}
+In this section we'll focus on how many iid samples $\{g_{t \in [T]}\} $ are required to achieve fast convergence for $T^{-1} \sum_{t} g_{t} g_{t}^{*}$. 
+
+\subsubsection{$k \geq 4$}
+In this case, we already have sufficient concentration for $T=1$ to produce
+\[ \|\nabla\|_{F}^{2} \ll    \]
+\[ \lambda \ll \Tilde{O}(\sqrt{n^{-(k-2)}})   \]
+
+\subsubsection{$k=3$}
+We plan to take $O(1)$ many samples and show $\|\cdot\|_{F}$ is small and we have constant expansion. We will run a net over $\{X \mid \langle X, I \rangle = 0, \|X\|_{F}^{2} = 1\}$:
+\[ \log \E \exp ( t (\langle T^{-1} \sum_{t} g_{t} g_{t}^{*} - I, X \rangle) ) = \log \E \exp t \sum_{i} x_{i} (\chi_{1,n^{2}T} - 1)  \]
+Here we have a $\chi$-squared variable with mean $1$ and $n^{2} T$ degrees of freedom. Therefore:
+\[ \approx \frac{t^{2} \|X\|_{F}^{2}}{2 n^{2} T}  \]
+\[ \Pr[\max_{a} \|Q^{a} - I\|_{F}^{2} \geq (\lambda+\delta)^{2}] \leq 3 \left(\frac{1}{\delta} \right)^{n^{2}} \inf_{t < n^{2} T/\|X\|_{op}} \exp \left( \frac{t^{2}}{2 n^{2} T} - t \lambda \right) \]
+Choosing $\lambda, \delta \ll 1$ and $t = \lambda n^{2} T$ gives 
+\[ \leq \exp ( - \lambda^{2} n^{2} T ) = \exp ( - \Omega(n^{2})  )   )  \]
+For this $\delta$, the net is $\exp(n^{2})$ size so it all works out. 
+
+For expansion, we will run a net over $\{(X,Y) \mid \langle X, I \rangle = \langle Y, I \rangle = 0, \|X\|_{F}^{2} = \|Y\|_{F}^{2} = 1\}$
+\[ \log \E \exp ( t (\langle T^{-1} \sum_{t} g_{t} g_{t}^{*}, X \otimes Y \rangle) ) = \log \E \exp t \sum_{ij} x_{i} y_{j} (\chi_{1/n, nT} - 1/n) \]
+\[ \approx \frac{t^{2} \|X\|_{F}^{2} \|Y\|_{F}^{2}}{n^{3} T}  \]
+\[ \implies \Pr [ \langle T^{-1} \sum_{t} g_{t} g_{t}^{*}, X \otimes Y \rangle \geq \lambda ] \leq \exp \left( \frac{t^{2}}{n^{3} T} - t \lambda   \right)   \]
+Choosing $\lambda, \delta \approx \sqrt{\frac{\log n}{n}}$ and $t = \lambda n^{3} T$ we get
+\[ \leq \exp ( - \lambda^{2} n^{3} T ) \leq \exp ( - n^{2} \log n T )  \]
+This is enough to cancel out the $\exp(n^{2} \log n)$ sized $\delta$-net. 
+
+
+\subsubsection{$k=2$}
+In this case, we will use the $\|\cdot\|_{op}$ analysis. Any marginal looks like the iid sum $\sum_{t=1}^{T} \sum_{i=1}^{n} \frac{1}{nT} g_{it} g_{it}^{*}$ where each $g \sim N(0,I_{n})$ and each entry is from $N(0,1)$. So we define mean zero $X := \frac{1}{nT}(g g^{*} - I)$. With high probability, $\|X\|_{op} \leq \frac{\|g\|_{2}^{2}}{nT} \leq O(\log n T)/nT$. Further
+\[ \E (n T X)^{2} = \E \|g\|_{2}^{2} g g^{*} - I = (3 + n-1)I - I = (n+2) I  \]
+\[ \implies \sigma^{2} := \|\E \sum_{it} X_{it}^{2}\|_{op} = \frac{n+2}{nT} \approx T^{-1}  \]
+\[ \Pr[ \max\{\|Q^{1}\|_{op}, \|Q^{2}\|_{op}\} \geq O(1/\log n) ] \leq n \exp \left( \frac{-\log^{-2}(n)}{T^{-1} + \log^{2}(n T)/nT}  \right) \]
+which is as small as you want for $T \gg \log^{2} n$. 
+
+
 
 
 \section{Goal}
@@ -416,7 +460,6 @@ $T_{\C} \cdot v$ is closed iff it intersects $\mu^{-1}(0)$
 If $T_{\C} \cdot v$ is closed, then the infimum of geodesically convex $f(t) := \|t \cdot v\|_{2}^{2}$ is attained, so at the optimum $\nabla f = \mu = 0$. 
 \\ Conversely if $0 \in \mu(T_{\C}(v)) = cone^{\circ}(\Omega(v))$, then by the above lemma the moment map image is closed which is equivalent to the orbit being closed. 
 \end{proof}
-
 
 \subsection{Generalization to Complex Reductive Groups}
 We return to the non-commutative setting, but specifically when $G$ is the complexification of $K$ its maximal compact subgroup (i.e. $\mathfrak{g} = \mathfrak{k} + i \mathfrak{k}$). 
