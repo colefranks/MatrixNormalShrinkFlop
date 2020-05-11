@@ -63,10 +63,10 @@
 
 \section{Operator scaling}
 
-There are some small but important subtleties between the theorem proved in [Cole,Moitra] and the one proved in [Spectral Analysis]. 
+There are some small but important subtleties between the theorem proved in \cite{FM20} and the one proved in \cite{KLR19}. 
 
 The following is a general statement about geodesic convex optimization (wrt $f$).
-\begin{theorem} [Cole,Moitra]
+\begin{theorem}[\cite{FM20}]
 Say the current point $Z_{0}$ has a $\lambda$-strongly convex ball of size $\kappa$ around it. Then $\|\nabla f(Z_{0})\|_{F} \ll \lambda \kappa$ is a sufficient condition for linear convergence of any reasonable descent method. 
 \end{theorem}
 
@@ -78,7 +78,8 @@ For operator scaling, for $f(Z) := \log\det(\Phi(Z)) - \log\det(Z)$, if our curr
 we have fast convergence with any descent method. 
 \end{corollary}
 
-\begin{theorem} [Spectral Analysis]If current point is a $(1 - \lambda)$-expander and 
+\begin{theorem}[\cite{KLR19}]
+If current point is a $(1 - \lambda)$-expander and 
 \[  \|\nabla f(I,I)\|_{op} = \max{ \|\frac{s}{n} I - \Phi(I)\|_{op}, \|\frac{s}{n} I - \Phi^{*}(I) \|_{op} } \ll \frac{\lambda^{2}}{\log n}  \]
 the continuous gradient flow (and gradient descent with small enough discretization) converges fast. 
 \end{theorem}
@@ -368,10 +369,14 @@ For this $\delta$, the net is $\exp(n^{2})$ size so it all works out.
 For expansion, we will run a net over $\{(X,Y) \mid \langle X, I \rangle = \langle Y, I \rangle = 0, \|X\|_{F}^{2} = \|Y\|_{F}^{2} = 1\}$
 \[ \log \E \exp ( t (\langle T^{-1} \sum_{t} g_{t} g_{t}^{*}, X \otimes Y \rangle) ) = \log \E \exp t \sum_{ij} x_{i} y_{j} (\chi_{1/n, nT} - 1/n) \]
 \[ \approx \frac{t^{2} \|X\|_{F}^{2} \|Y\|_{F}^{2}}{n^{3} T}  \]
-\[ \implies \Pr [ \langle T^{-1} \sum_{t} g_{t} g_{t}^{*}, X \otimes Y \rangle \geq \lambda ] \leq \exp \left( \frac{t^{2}}{n^{3} T} - t \lambda   \right)   \]
-Choosing $\lambda, \delta \approx \sqrt{\frac{\log n}{n}}$ and $t = \lambda n^{3} T$ we get
-\[ \leq \exp ( - \lambda^{2} n^{3} T ) \leq \exp ( - n^{2} \log n T )  \]
-This is enough to cancel out the $\exp(n^{2} \log n)$ sized $\delta$-net. 
+\[ \implies \Pr [ \langle T^{-1} \sum_{t} g_{t} g_{t}^{*}, X \otimes Y \rangle \geq \lambda ] \leq \inf_{t < \frac{n^{2} T}{\|X\|_{op} \|Y\|_{op}}} \exp \left( \frac{t^{2}}{n^{3} T} - t \lambda   \right)   \]
+We choose the constrained optimum $t \approx n^{2} T$ and can then choose $\lambda, \delta$ a small constant to achieve 
+\[ \leq \exp ( - n T - n^{2} T \lambda ) \leq \exp ( - n^{2} T )  \]
+This is enough to cancel out the $\exp(n^{2})$ sized $\delta$-net. 
+
+\begin{remark}
+We lose out here because we can only use $\|X\|_{op} \|Y\|_{op} \leq 1$, so we cannot use the true optimum in the Chernoff parameter. This hopefully can be improved by considering a sharper net for each section $\|X\|_{op} \|Y\|_{op} \leq c$. The improvement is not necessary to achieve fast convergence here, but may be required for $k=2$. 
+\end{remark}
 
 
 \subsubsection{$k=2$}
@@ -713,6 +718,7 @@ Note that $\nabla^R f = R^{-1/2} \nabla f R^{-1/2}$.
 
 %At the identity the metric takes the form $\langle X, Y \rangle_R = \tr \sqrt{R} X  \sqrt{R} Y $. In particular the length of the geodesic $t\mapsto \sqrt{P}e^{Xt}\sqrt{P}$ for $t \in [0,1]$ is $\langle X, X \rangle_R$. 
 
-
+\bibliographystyle{alpha}
+\bibliography{refs}
 
 \end{document}
