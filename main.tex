@@ -20,6 +20,7 @@
 
 \newcommand{\R}{{\mathbb{R}}}
 \newcommand{\C}{{\mathbb{C}}}
+\newcommand{\ot}{\otimes}
 \newcommand{\Q}{{\mathbb{Q}}}
 \newcommand{\N}{{\mathbb{N}}}
 \newcommand{\Z}{{\mathbb{Z}}}
@@ -58,6 +59,32 @@
 \begin{document}
 
 \maketitle
+
+
+\section{Structured covariance estimation}
+We study covariance estimation in the tensor normal model, in which $X$ is sampled according to $N(0, \Sigma = \bigotimes_{i = 1}^{d_1} \Sigma_i)$ for $\Sigma_i$ a positive-semidefinite $d_i\times d_i$ matrix.
+
+Our main theorem is the following:
+
+\begin{theorem} The MLE for $\bigotimes_{i = 1}^{d_1} \Sigma_i$ from $n$ independent samples satisfies 
+$$ d(\hat{\Sigma}, \Sigma) = O(\CF{1/\sqrt{n}}). $$
+\CF{presumably there will be some dimension-dependent factors}.
+\end{theorem}
+
+\begin{proof}
+
+\end{proof}
+\CF{OUTLINE:}
+\begin{enumerate}
+\item Introduction 
+\item Structured covariance estimation
+\item Operator and Tensor scaling
+\item Strong convexity
+\item Fast convergence
+\end{enumerate}
+
+
+
 
 
 
@@ -497,7 +524,7 @@ It is enough to show $\exists k \in K: \overline{T_{\C} k \cdot v} \cap G \cdot 
 \[ Z_{k} := f_{k}^{-1}(0); U_{k} := V/Z_{k} \]
 Then $G \cdot u \in \cap_{k \in K} Z_{k}$ and $\cup_{k \in K} U_{k}$ is an open cover of $K \cdot v$. But $K$ is a compact group, so $K \cdot v$ is a compact set, which means we can reduce to a finite subcover $K \cdot v \subseteq \cup_{i \in [N]} Z_{i}$. We want to use the Cartan Decomposition of Lie Group $G = K T_{\C} K$ to separate $\overline{G \cdot v}$ from $G \cdot u$ and arrive at the contradiction. So we define
 \[ f(z) := \sum_{i} f_{i}^{2}(z) \]
-By the above properties $G \cdot u subseteq f^{-1}(0)$. By the finite subcover, $\inf_{k \in K} f(k \cdot v) = \min_{i} f(k_{i} \cdot v)$ is achieved at $a > 0$. By the $T_{\C}$-invariance of each $f_{k}$, we also have $\overline{T_{\C} K \cdot v} \subseteq f^{-1}[a, \infty)$ and so is disjoint from $G \cdot u$. But clearly $G \cdot u$ is $K$-invariant and so $K\overline{T_{\C} K \cdot v} = \overline{G \cdot v}$ is disjoint from it and we are done. 
+By the above properties $G \cdot u \subseteq f^{-1}(0)$. By the finite subcover, $\inf_{k \in K} f(k \cdot v) = \min_{i} f(k_{i} \cdot v)$ is achieved at $a > 0$. By the $T_{\C}$-invariance of each $f_{k}$, we also have $\overline{T_{\C} K \cdot v} \subseteq f^{-1}[a, \infty)$ and so is disjoint from $G \cdot u$. But clearly $G \cdot u$ is $K$-invariant and so $K\overline{T_{\C} K \cdot v} = \overline{G \cdot v}$ is disjoint from it and we are done. 
 \end{proof}
 
 \begin{corollary}

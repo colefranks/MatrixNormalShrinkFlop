@@ -1,0 +1,130 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{xcolor,cleveref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{prop}{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corol}[theorem]{Corollary}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{remark}{Remark}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+
+\newcommand{\junk}[1]{}
+
+
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\C}{{\mathbb{C}}}
+\newcommand{\ot}{\otimes}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\renewcommand{\S}{\mathbb{S}}
+
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\Pr}{\mathbb{P}}
+
+\newcommand\eps{\varepsilon}
+
+\newcommand\FF{\mathcal{F}}
+\newcommand\HH{\mathcal{H}}
+\newcommand\GG{\mathcal{G}}
+\newcommand\TT{\mathcal{T}}
+\newcommand\PP{\mathcal{P}}
+\newcommand\tr{\operatorname{Tr}}
+\newcommand\RR{\mathcal{R}}
+\newcommand\CC{\mathcal{C}}
+\newcommand\BB{\mathcal{B}}
+\newcommand\II{\mathcal{I}}
+\renewcommand\AA{\mathcal{A}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand\AP{\mathcal{AP}}
+
+\newcommand{\eqdef}{:=}
+\newcommand{\maps}{\colon}
+\newcommand{\ale}{\lesssim}
+\newcommand{\age}{\gtrsim}
+\newcommand{\CF}[1]{{\color{purple}[CF: #1]}}
+\newcommand{\AR}[1]{{\color{green}[AR: #1]}}
+\newcommand{\RMO}[1]{{\color{red}[RMO: #1]}}
+\newcommand{\TODO}[1]{{\color{blue}[TODO: #1]}}
+
+
+\title{Nearly constant sample complexity for dense tensor models}
+\author{Cole Franks, Rafael Oliveira, Akshay Ramachandran}
+\date{February 2020}
+
+\begin{document}
+
+\maketitle
+\TODO{
+\begin{enumerate}
+\item Copy pasta stuff from main.
+\item 
+\end{enumerate}
+
+}
+
+
+\section{Introduction}
+\CF{background, history; remark that we automatically know flip-flop works but our strong convexity will give efficient algorithms in this setting. } 
+
+\section{Structured covariance estimation}
+We study covariance estimation in the tensor normal model, in which $X$ is sampled according to $N(0, \Sigma = \bigotimes_{i = 1}^{k} \Sigma_i)$ for $\Sigma_i$ a positive-semidefinite $d_i\times d_i$ matrix.
+
+\begin{definition}\CF{the MLE for tensor models}
+
+\end{definition}
+
+Our main theorem is the following:
+
+\begin{theorem} The MLE for $\bigotimes_{i = 1}^{d_1} \Sigma_i$ from $n$ independent samples satisfies 
+$$ d(\hat{\Sigma}, \Sigma) = O(\TODO{}). $$
+with probability $\TODO{}$.
+\CF{presumably there will be some dimension-dependent factors}.
+\end{theorem}
+
+\begin{proof}
+\CF{cite the MLE paper and then our sections \cref{sec:g-convex,sec:scaling}.}
+\end{proof}
+
+\begin{theorem} If $\hat{\Sigma}$ denotes the MLE estimator for $\Sigma$, then provided $n \geq \TODO{}$ the flip-flop algorithm computes $\underline{\Sigma}$ 
+$$ d(\underline{\Sigma}, \hat{\Sigma}) = O(\TODO{1/\sqrt{n}}) $$
+in $O(\TODO{\log(1/\eps)})$ iterations with probability at least $\TODO{}$.
+\end{theorem}
+
+\begin{proof}
+\CF{cite the MLE paper and then our sections \cref{sec:g-convex,sec:scaling}.}
+\end{proof}
+
+
+
+\section{Geodesic convexity}\label{sec:g-convex}
+\TODO{Put these lemmas about how if you are geodesically convex on a ball, you get good condition number bounds/convergence rates for any descent method}
+
+\section{Operator and tensor scaling}\label{sec:scaling}
+\TODO{lower bound Hessian for operators and tensors for all different formats; we hope to get strong convexity with $\prod d_i /(d_1^2 + \dots + d_k^2)$ samples. I am concerned that a KLR19-style operator norm type theorem is needed to get $\tilde{O}$ of this, but we will do what we can with the Frobenius bounds for now; I'd expect to need at least $\max_i \sqrt{d_i}$ too many samples.}
+
+\section{Noise}
+\TODO{make sure things work under some error in the data}
+
+
+
+
+
+
+
+%If $\langle \cdot , \cdot \rangle_P$ is the metric at a point $P$, then the new metric $\langle \cdot, \cdot \rangle_{R,P}$ will be given by 
+%$$ \langle X, Y \rangle_{R,P} = \langle R^{1/2} X R^{1/2}, R^{1/2} Y R^{1/2} \rangle_{P}.$$
+
+%At the identity the metric takes the form $\langle X, Y \rangle_R = \tr \sqrt{R} X  \sqrt{R} Y $. In particular the length of the geodesic $t\mapsto \sqrt{P}e^{Xt}\sqrt{P}$ for $t \in [0,1]$ is $\langle X, X \rangle_R$. 
+
+\bibliographystyle{alpha}
+\bibliography{refs}
+
+\end{document}
