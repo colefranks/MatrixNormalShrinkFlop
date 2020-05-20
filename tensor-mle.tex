@@ -75,7 +75,7 @@
 \CF{background, history; remark that we automatically know flip-flop works but our strong convexity will give efficient algorithms in this setting. } 
 
 \section{Structured covariance estimation}
-We study covariance estimation in the tensor normal model, in which $X$ is sampled according to $N(0, \Sigma = \bigotimes_{i = 1}^{k} \Sigma_i)$ for $\Sigma_i$ a positive-semidefinite $d_i\times d_i$ matrix.
+We study covariance estimation in the tensor normal model, in which $X$ is sampled according to $N(0, \Sigma = \bigotimes_{a = 1}^{k} \Sigma_a)$ for $\Sigma_a$ a positive-semidefinite $d_a\times d_a$ matrix.
 
 \begin{definition}\CF{the MLE for tensor models}
 
@@ -83,7 +83,7 @@ We study covariance estimation in the tensor normal model, in which $X$ is sampl
 
 Our main theorem is the following:
 
-\begin{theorem} The MLE for $\bigotimes_{i = 1}^{d_1} \Sigma_i$ from $n$ independent samples satisfies 
+\begin{theorem} The MLE for $\bigotimes_{a = 1}^{k} \Sigma_a$ from $n$ independent samples satisfies 
 $$ d(\hat{\Sigma}, \Sigma) = O(\TODO{}). $$
 with probability $\TODO{}$.
 \CF{presumably there will be some dimension-dependent factors}.
@@ -110,6 +110,75 @@ in $O(\TODO{\log(1/\eps)})$ iterations with probability at least $\TODO{}$.
 \section{Operator and tensor scaling}\label{sec:scaling}
 \TODO{lower bound Hessian for operators and tensors for all different formats; we hope to get strong convexity with $\prod d_i /(d_1^2 + \dots + d_k^2)$ samples. I am concerned that a KLR19-style operator norm type theorem is needed to get $\tilde{O}$ of this, but we will do what we can with the Frobenius bounds for now; I'd expect to need at least $\max_i \sqrt{d_i}$ too many samples.}\\
 \TODO{It would also be nice to have that tight example for the $\log$ in KLR19...}
+
+We recall the moment map and Hessian calculations
+\[ \partial_{t=0} f(e^{tX_{a}}) = \langle \nabla_{a}, X \rangle = \langle Q^{a} - sI_{a}, X \rangle   \]
+\[ \partial_{t=0}^{2} f(e^{tX_{a}}) = \langle X, (\nabla^{2})_{aa} X \rangle = \langle Q^{a}, X^{2} \rangle  \]
+\[ \partial_{s=0} \partial_{t=0} f(e^{tX_{a}} \otimes e^{sY_{b}}) = \langle Y, (\nabla^{2})_{ab} X \rangle = \langle Q^{ab}, X \otimes Y \rangle   \]
+
+\section{Operator Scaling}
+In this section we have $T$ samples of $g \sim N(0,\frac{1}{T} (\frac{1}{d_{1}} I_{1}) \otimes (\frac{1}{d_{2}} I_{2}))$. We will denote $D := d_{1} d_{2}$. In order to use the KLR analysis, we will show that the one-body marginals have low error in $\|\cdot\|_{op}$ and the whole operator is a sufficient expander at the start. 
+
+\subsection{Moment map}
+This is proven using matrix concentration
+
+\begin{theorem} [Bernstein]
+Consider independent $\{X_{k}\}$ such that $\E X_{k} = 0$ and $\lambda_{max}(X_{k}) \leq R$ almost surely. Further let the variance be $\sigma^{2} := \|\sum_{k} \E X_{k}^{2} \|_{op}$. 
+\begin{eqnarray*} \Pr [ \lambda_{max} \left( \sum_{k} X_{k}  \right) \geq t ] & \leq & d \exp\left( - \frac{\Omega(t^{2})}{\sigma^{2} + t R} \right)
+\\ & \leq & \begin{cases} 
+d \exp ( - \Omega(t^{2}/\sigma^{2}) ) & \text{if $t \leq \sigma^{2}/R$ } 
+\\ d \exp ( - \Omega(t/R) )           & \text{if $t \geq \sigma^{2}/R$}
+\end{cases} 
+\end{eqnarray*}
+\end{theorem}
+
+In our setting, $Q^{a}$ is comprised of $N := \frac{TD}{d_{a}}$ copies of a rank one $g g^{*}$ where each gaussian is $g \sim \mathcal{N}(0, N^{-1} \frac{1}{d_{a}} I_{a} ) = \mathcal{N}(0, \frac{1}{TD} I_{a}) $. We will drop subscripts for $d_{a}, I_{a}$ etc when they can be understood from context. Therefore we define $X := g g^{*} - \frac{1}{TD} I_{a}$ and note the following parameters:
+\[ \lambda_{max}(X) = \|g\|_{2}^{2} - \frac{1}{TD} \hspace{10mm} \lambda_{min}(X) = - \frac{1}{TD}   \]
+While $\|g\|_{2}$ is unbounded, we can threshold our distribution with a small loss in probability. Since we will be using $\chi^{2}$ distributions much from now on, we will do a quick exercise to prove our threshold bounds:
+
+\begin{definition}
+$\chi(\mu,d)$ denotes the $\chi^{2}$ distribution with mean $\mu$ and $d$ degrees of freedom. Explicitly $X \sim \chi(\mu,d) \implies X = \frac{\mu}{d} \sum_{i=1}^{d} g_{i}^{2}$
+where $g \sim \mathcal{N}(0,1)$. 
+\end{definition}
+
+\begin{lemma}
+For $X \sim \chi(\mu,d)$ we have the following (explicit and approximate) formula for the MGF, $\forall \theta < \left(O(\frac{\mu}{d}) \right)^{-1}$:
+\begin{eqnarray*} \log \E \exp(\theta X) & = & - \frac{d}{2} \log \left(1 - 2 \theta \frac{\mu}{d} \right) 
+\\ & \leq & \theta \mu + \theta^{2} \frac{O(\mu^{2})}{2 d}
+\end{eqnarray*}
+\end{lemma}
+
+\begin{theorem} [Sub-exp variables]
+The above MGF bound gives tail decay:
+\[ \forall \theta < b^{-1}: \log \E \exp(\theta (X - \E X)) \leq \theta^{2} \frac{\sigma^{2}}{2} \]
+\[ \implies  \Pr[X - \mu \geq t] \leq \begin{cases}
+\exp( - \Omega(t^{2}/\sigma^{2}) ) & t \leq \sigma^{2}/b
+\\ \exp( - \Omega(t/b) ) & t \geq \sigma^{2}/b
+\end{cases}   \]
+\end{theorem}
+
+With these bounds in mind, note our variables $\|g\|_{2}^{2} \sim \chi(\frac{d_{a}}{TD},d_{a})$ so we have $\sigma^{2} = \frac{d}{(TD)^{2}}, b = \frac{1}{TD} \implies \sigma^{2}/b = \frac{d}{TD}$
+\[ \Pr[ \exists k: \lambda_{max}(X_{k}) \geq M \sqrt{\log N}\frac{d}{TD} ] \leq \exp( - \Omega(M^{2}) )  \]
+If we're happy with $1/poly$ failure probability we will take $M^{2} \sim \log D$, so in our matrix bound $R_{max} \leq \frac{d \log D}{TD}$
+
+\[ \E X^{2} = \E (g g^{*})^{2} - \frac{1}{(TD)^{2}} I = \E \|g\|_{2}^{4} \hat{g} \hat{g}^{*} - \frac{1}{(TD)^{2}} \]
+\[ = \frac{1}{(TD)^{2}} ( (3d + d(d-1)) \frac{1}{d} I - I ) = \frac{d+1}{(TD)^{2}} I   \]
+Here $\hat{g} := g / \|g\|_{2}$ and the calculation is done by independence of $\|g\|_{2}, \hat{g}$. So we also have the variance parameter
+\[ \sigma^{2} = N \|\E X^{2}\|_{op} = \frac{TD}{d} \frac{d+1}{(TD)^{2}} \sim \frac{1}{TD}  \]
+
+\begin{corollary}
+We have the following operator norm concentration
+\[ \Pr[ \|Q^{a} - sI_{a}\|_{op} \geq t ] \leq d \exp \left( - \frac{\Omega(t^{2} TD)}{1 + t d_{a} \log D }  \right)  \]
+Since we require $\|\cdot\|_{op}$ error $\ll \frac{1}{d_{a} \log D}$, if we are happy with $1/poly$ failure probability we require $TD \gg \max_{a} d_{a}^{2} \log^{3} D$. 
+\end{corollary}
+
+\begin{remark} Note I'm using $\min_{a} d_{a} < \max_{a} d_{a} < D$ in a couple places so the $\log$ term may be slightly sharpened. But the exponent is tight as we require $TD > \max_{a} d_{a}^{2}$ samples for existence/ uniqueness of the solution. 
+\end{remark}
+
+
+\subsection{Pisier's proof of Expansion}
+
+
 
 \section{Noise}
 \TODO{make sure things work under some error in the data}
