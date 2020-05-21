@@ -250,7 +250,92 @@ Choose $X$ to be the geodesic towards the optimum and $g(t) := f(e^{tX})$ with t
 \[ g'(1) = \int_{0}^{1} g''(t) + g'(0) \geq \lambda \sum_{a} \frac{\|X\|_{F}^{2}}{d_{a}} - |\langle \nabla_{a}, X_{a} \rangle| \]
 \[ \geq \sum_{a} \frac{\|X_{a}\|_{F}}{\sqrt{d_{a}}} \left( \lambda \frac{\|X_{a}\|_{F}}{\sqrt{d_{a}}} - \sqrt{d_{a}} \|\nabla_{a}\|_{F}  \right)  \]
 \[ \geq \sqrt{\sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}}} \left( \lambda \sqrt{\sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}}} - \sqrt{\sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2}} \right)  \]
-This is $> 0$ if $\forall a: \lambda > d_{a} \frac{\|\nabla_{a}\|_{F}}{\|X_{a}\|_{F}}$ or $\lambda^{2} > \frac{ \sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2} }{\sum_{a} d_{a}^{-1} \|X_{a}\|_{F}^{2}} $
+This is $> 0$ if $\forall a: \lambda > d_{a} \frac{\|\nabla_{a}\|_{F}}{\|X_{a}\|_{F}}$ or $\lambda^{2} > \frac{ \sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2} }{\sum_{a} d_{a}^{-1} \|X_{a}\|_{F}^{2}} $. 
+
+
+\subsection{$\chi^{2}$ Concentration}
+We will be running various bounds and concentration inequalities in the following setting. For $g \sim \frac{1}{TD} \otimes_{a} I_{a}$:
+\[ \E \langle \sum_{t} g_{t} g_{t}^{*}, \otimes_{a} X_{a} \rangle  = \prod_{a} \langle \frac{1}{d_{a}} I_{a}, X_{a} \rangle \]
+\[ \log \E \exp \theta \langle \sum_{t} g_{t} g_{t}^{*}, \otimes_{a} X_{a} \rangle =   \]
+
+
+\subsection{Moment Map}
+For $g \sim \frac{1}{TD} \otimes_{a} I_{a}$, we want to bound $\|Q^{a} - sI_{a}\|_{F}$ using a net:
+\[ \E \langle \sum_{t} g_{t} g_{t}^{*}, X_{a} \rangle = \sum_{i} x_{i} \chi(\frac{1}{d_{a}}, \frac{TD}{d_{a}}) = \langle \frac{1}{d_{a}} I_{a}, X \rangle = 0 \]
+\[ \log \E \exp \theta \langle \sum_{t} g_{t} g_{t}^{*}, X_{a} \rangle = \log \E \exp \theta \sum_{i} x_{i} \chi(\frac{1}{d_{a}}, \frac{TD}{d_{a}})  \]
+\[ = \sum_{i} \frac{-TD}{2 d_{a}} \log \left( 1 - 2 \theta \frac{x_{i}}{TD} \right)   \]
+\[ \lesssim \theta^{2} \frac{\|X\|_{F}^{2}}{2 d_{a} TD} \hspace{10mm} \forall \theta < \left( \frac{\|X\|_{op}}{TD} \right)^{-1}  \]
+\[ \implies \Pr[ \langle \sum_{t} g_{t} g_{t}^{*}, X_{a} \rangle \geq \epsilon \|X\|_{F} ] \leq 
+\begin{cases} 
+\exp( - \Omega(\epsilon^{2} TD d_{a}) ) & \epsilon  < \frac{\|X\|_{F}}{d_{a} \|X\|_{op}} 
+\\ \exp ( - \Omega(\epsilon TD) \frac{\|X\|_{F}}{\|X\|_{op}} ) & \epsilon \geq \frac{\|X\|_{F}}{d_{a} \|X\|_{op}}
+\end{cases}
+\]
+We will need the following settings of $\epsilon$ in future:
+\[ \epsilon \approx \frac{1}{\sqrt{d_{a}}} \implies \Pr [ d_{a} \|Q^{a} - sI_{a}\|_{F}^{2} \gtrsim c ] \leq \exp(d_{a}^{2} \log d_{a} - c \frac{TD}{\sqrt{d_{a}}})  \]
+For which we need $TD \gtrsim \max_{a} d_{a}^{\frac{5}{2}} \log d_{a}$.
+\[ \epsilon \approx \frac{1}{d_{a}} \implies \Pr [ d_{a} \|Q^{a} - sI_{a}\|_{F}^{2} \gtrsim \frac{c}{d_{a}} ] \leq \exp(d_{a}^{2} \log d_{a} - c^{2} \frac{TD}{d_{a}})   \]
+For which we need $TD \gtrsim \max_{a} d_{a}^{3} \log d_{a}$.
+
+\begin{remark}
+Note we lose out on the subgaussian part of the bound only when $\frac{d_{a} \|X\|_{op}^{2}}{\|X\|_{F}^{2}}$ is large. It is quite possible that for our setting, we can bound e.g. the condition number or stable rank of is small w.h.p. In particular if we can show the only relevant part of the net has $s \|X\|_{F}^{2} \geq d \|X\|_{op}$ then we only incur a $\sqrt{s}$ loss in required samples. 
+\end{remark}
+
+\subsection{$\delta$-net proof of Expansion}
+\[ \E \langle \sum_{t} g_{t} g_{t}^{*}, X_{a} \otimes Y_{b} \rangle = \sum_{ij} x_{i} y_{j} \chi(\frac{1}{d_{a} d_{b}}, \frac{TD}{d_{a} d_{b}}) = \langle \frac{1}{d_{a}} I_{a}, X \rangle \langle \frac{1}{d_{b}} I_{b}, Y \rangle = 0 \]
+
+\[ \log \E \exp \theta \langle \sum_{t} g_{t} g_{t}^{*}, X_{a} \otimes Y_{b} \rangle = \log \E \exp \theta \sum_{ij} x_{i} y_{j} \chi(\frac{1}{d_{a} d_{b}}, \frac{TD}{d_{a} d_{b}})  \]
+\[ = \sum_{ij} \frac{-TD}{2 d_{a} d_{b}} \log \left( 1 - 2 \theta \frac{x_{i} y_{j}}{TD} \right)   \]
+\[ \lesssim \theta^{2} \frac{\|X\|_{F}^{2} \|Y\|_{F}^{2}}{2 d_{a} d_{b} TD} \hspace{10mm} \forall \theta < \left( \frac{\|X\|_{op} \|Y\|_{op}}{TD} \right)^{-1}  \]
+\[ \Pr[ \langle \sum_{t} g_{t} g_{t}^{*}, X_{a} \rangle \geq \lambda \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}} ] \leq 
+\begin{cases} 
+\exp( - \lambda^{2} TD ) \hspace{7mm} \lambda  < \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}} \|X\|_{op} \|Y\|_{op}} 
+\\ \exp ( - \lambda TD \frac{\|X\|_{F} \|Y\|_{F}}{ \sqrt{d_{a} d_{b}} \|X\|_{op} \|Y\|_{op}} )
+\end{cases}
+\]
+So for $\lambda \approx \frac{1}{k}$ we need $TD \gtrsim \max_{a} d_{a}^{3} \log D > \max_{a,b} \sqrt{d_{a} d_{b}} (d_{a}^{2} + d_{b}^{2}) \log D$
+
+\begin{remark}
+Note again we lose out when $\frac{d \|X\|_{op}^{2}}{\|X\|_{F}^{2}}$ is large. So we would like to show that w.h.p. the singular vectors of our bipartite operator have e.g. small condition number or large stable rank. Again if we can show the relevant part of the net has $s \|X\|_{F}^{2} \geq d \|X\|_{op}^{2}$ then we incur an $s$ factor loss in samples. This is reminiscent of the fact that eigenvectors for random matrices have many delocalization properties, so will look into that. 
+\end{remark}
+
+
+
+\subsection{Robust proof of Expansion}
+In this section we will show expansion under perturbations of the form $\otimes_{a} e^{\delta_{a}}$. Note if $\|\delta\|_{op} \ll 1$ then we can approximate $e^{\delta} - I \approx O(\delta)$. 
+\[ \mu := \E \langle \sum_{t} g_{t} g_{t}^{*}, e^{\delta_{a}} X e^{\delta_{a}} \otimes e^{\delta_{b}} Y e^{\delta_{b}} \otimes_{c} e^{2\delta_{c}} \rangle = \langle \frac{e^{2\delta_{a}}}{d_{a}} , X \rangle \langle \frac{e^{2\delta_{b}}}{d_{b}}, Y \rangle \prod_{c \neq a,b} Tr[\frac{e^{2\delta_{c}}}{d_{c}} ]  \]
+\[ \log \E \exp \theta \langle \sum_{t} g_{t} g_{t}^{*}, e^{\delta_{a}} X e^{\delta_{a}} \otimes e^{\delta_{b}} Y e^{\delta_{b}} \otimes_{c \neq a,b} e^{2\delta_{c}} \rangle = \log \E \exp \theta \sum_{\vec{i}} x^{\vec{i}} \chi(\frac{1}{D},T)   \]
+\[ \leq \theta \mu + \theta^{2} \frac{\|e^{\delta_{a}} X e^{\delta_{a}}\|_{F}^{2} \|e^{\delta_{b}} Y e^{\delta_{b}}\|_{F}^{2} \prod_{c} \|e^{2\delta_{c}}\|_{F}^{2}}{2 TD^{2}} \]
+\[ \forall \theta < \left( \frac{\|e^{\delta_{a}} X e^{\delta_{a}}\|_{op} \|e^{\delta_{b}} Y e^{\delta_{b}}\|_{op} \prod_{c} \|e^{2\delta_{c}}\|_{op}}{TD} \right)^{-1}    \]
+
+\begin{lemma}
+For $\|\delta\|_{op} \ll 1$
+\[ \frac{1}{d} Tr[e^{2\delta}] \leq 1 + O(\|\delta\|_{op})  \]
+\[ \langle \frac{1}{d} I, e^{\delta} X e^{\delta} - X \rangle \leq \frac{O(\|\delta\|_{op})}{\sqrt{d}} \|X\|_{F}   \]
+\[ \|e^{\delta} X e^{\delta}\|_{F}^{2} \leq (1 + O(\|\delta\|_{op})) \|X\|_{F}^{2}   \]
+\end{lemma}
+\begin{proof}
+Let $\delta := e^{\delta'} - I$ and note $\|\delta\|_{op} \approx \|\delta'\|_{op}$ for small $\delta'$. So we bound
+\[ Tr[e^{2\delta'} - I] = \langle I, e^{2\delta'} - I \rangle \leq d \|2\delta + \delta^{2}\|_{op} \leq d O(\|\delta\|_{op})   \]
+For the second line we use Cauchy Schwarz $\|X\|_{1} \leq \sqrt{d} \|X\|_{F}$
+\[ \langle I, (I + \delta) X (I + \delta') - X \rangle = \langle 2 \delta + \delta^{2}, X \rangle \leq O(\|\delta\|_{op}) \|X\|_{1} \leq O(\|\delta\|_{op}) \sqrt{d} \|X\|_{F}  \]
+The second line is similar but simpler using $\|AB\|_{F} \leq \|A\|_{op} \|B\|_{F}$
+\end{proof}
+
+So using the above lemma, we have bounds for $\langle X, I_{a} \rangle = \langle Y, I_{b} \rangle = 0$:
+\[ \mu \leq \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}} O(\|\delta_{a}\|_{op} \|\delta_{b}\|_{op}) \prod_{c} (1 + O(\|\delta_{c}\|_{op})  \]
+\[ \log \E \exp \theta (... - \mu) \leq \theta^{2} \frac{\|X\|_{F}^{2} \|Y\|_{F}^{2}}{2TD} \prod_{c} (1 + O(\|\delta_{c}\|_{op}))  \]
+\[ \forall \theta < \left( \frac{\|X\|_{op}\|Y\|_{op}}{TD} \right)^{-1} \prod_{c} (1 - O(\|\delta_{c}\|_{op}))  \]
+So basically, as long as $\|\delta\|_{op} \ll 1$ everything is of the same order as in the unperturbed case, and therefore if we run a net on all parts simultaneously (of size $\exp(\sum_{a} d_{a}^{2})$) we get roughly the same probabilistic bounds as the start. 
+
+This creates a bottleneck though as in general the inequality $\|X\|_{op} \leq \|X\|_{F}$ could be tight, so in order to guarantee a small enough perturbation we can only move in the ball $\|X\|_{F} \ll 1$. This is why we wrote out the conditions required for $\|\nabla_{a}\|_{F} \ll \frac{1}{d_{a}}$, as therefore we can assume $\|X_{a}\|_{F} \ll 1$ and require $\lambda \approx 1$. 
+
+\begin{remark}
+Here is where we definitely would like a KLR style analysis to exploit the fact that we actually have robustness in $\|\cdot\|_{op}$. 
+\end{remark}
+
+\subsection{Conclusion}
+At the end of the day we require $TD \gtrsim \max_{a} d_{a}^{3} \log D$ to get small enough $\nabla$ and robust expansion. Note this is $d \log D$ away from the existence/ uniqueness threshold for the solution. 
 
 \section{Noise}
 \TODO{make sure things work under some error in the data}
