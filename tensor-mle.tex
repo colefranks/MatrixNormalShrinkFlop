@@ -239,6 +239,19 @@ By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b}
 \end{corollary}
 
 
+\section{Tensor Scaling}
+We will maintain similar notation. We have T samples of $g \sim \mathcal{N}(0,\frac{1}{T} \otimes_{a} \frac{1}{d_{a}} I_{a})$ with $D := \prod_{a} d_{a}$. We don't have a KLR style analysis a the moment, but strong convexity is enough by the FM analysis, and this can be proven by just controlling each bipartite piece. So the operator scaling analysis does give us very good bounds for $\|\mu\|_{op}$ and expansion with $TD \gg \max_{a} d_{a}^{2} \log^{c}(D)$. These bounds are not enough though, so in this section we will follow the FM analysis to give the requirements, then show the required strong convexity, and show how to maintain this under perturbation. 
+
+\subsection{FM Analysis}
+Recall that $\forall a: Q^{a} \approx \frac{1}{d_{a}} I_{a}$, so if we can show $\forall a \neq b: \langle Q^{ab}, X \otimes Y \rangle \lesssim \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}}$ then we have strong convexity with $\langle X, \nabla^{2} X \rangle \gtrsim \sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}}$, i.e. the Hessian is strongly diagonally dominant. We will derive our requirements on strong convexity, perturbation bounds, and initial error. Assume we have the following strong convexity 
+\[ \forall X: \sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}} \leq \kappa^{2}: \langle Y, \nabla^{2}_{e^{X}}, Y \rangle \geq \lambda \sum_{a} \frac{\|Y_{a}\|_{F}^{2}}{d_{a}}  \]
+
+Choose $X$ to be the geodesic towards the optimum and $g(t) := f(e^{tX})$ with the opt at $t=1$:
+\[ g'(1) = \int_{0}^{1} g''(t) + g'(0) \geq \lambda \sum_{a} \frac{\|X\|_{F}^{2}}{d_{a}} - |\langle \nabla_{a}, X_{a} \rangle| \]
+\[ \geq \sum_{a} \frac{\|X_{a}\|_{F}}{\sqrt{d_{a}}} \left( \lambda \frac{\|X_{a}\|_{F}}{\sqrt{d_{a}}} - \sqrt{d_{a}} \|\nabla_{a}\|_{F}  \right)  \]
+\[ \geq \sqrt{\sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}}} \left( \lambda \sqrt{\sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}}} - \sqrt{\sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2}} \right)  \]
+This is $> 0$ if $\forall a: \lambda > d_{a} \frac{\|\nabla_{a}\|_{F}}{\|X_{a}\|_{F}}$ or $\lambda^{2} > \frac{ \sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2} }{\sum_{a} d_{a}^{-1} \|X_{a}\|_{F}^{2}} $
+
 \section{Noise}
 \TODO{make sure things work under some error in the data}
 
