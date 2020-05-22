@@ -322,6 +322,27 @@ So for $\lambda \approx \frac{1}{k}$ we need $TD \gtrsim \max_{a} d_{a}^{3} \log
 Note again we lose out when $\frac{d \|X\|_{op}^{2}}{\|X\|_{F}^{2}}$ is large. So we would like to show that w.h.p. the singular vectors of our bipartite operator have e.g. small condition number or large stable rank. Again if we can show the relevant part of the net has $s \|X\|_{F}^{2} \geq d \|X\|_{op}^{2}$ then we incur an $s$ factor loss in samples. This is reminiscent of the fact that eigenvectors for random matrices have many delocalization properties, so will look into that. 
 \end{remark}
 
+\subsection{Delocalization}
+I have a few claims which, if true, would give another proof (along with Pisier's) of constant expansion at the start with $1/poly$ failure probability. Unfortunately to make this robust we would either need a robust form of delocalization, which I think is false in general, or exponential failure probability, which again may be false in general.
+
+Recall $M^{ab}$ is the operator defined by the off-diagonal block of the Hessian. For every choice of bases (torus) $U,V$ we have a matrix $M^{ab}_{UV}$ where each entry is $\chi(\frac{1}{d_{a}d_{b}}, \frac{TD}{d_{a}d_{b}})$. In particular each entry is of exponential type. 
+
+\begin{claim}
+Let $U,V$ be the (random) basis for the optimizers of $\|M\|_{op}$. Then $(U,V)$ and $M_{UV}$ are distributionally independent. 
+\end{claim}
+
+\begin{theorem} [Informal]
+For $M$ populated by iid variables $X$ such that $\E X = 0, \E X^{2} = 1$ and $X$ is of exponential type, we have delocalization of eigenvectors with $1/poly$ failure probability:
+\[ v \in S^{n-1}, \|v\|_{\infty} \gtrsim \frac{\log^{c} n}{\sqrt{n}} \implies \forall \lambda \in \C: \|Mv - \lambda v\|_{2} \gtrsim \frac{1}{\sqrt{n}}   \]
+\end{theorem}
+
+%https://arxiv.org/pdf/1306.2887.pdf
+%https://arxiv.org/pdf/1306.3099.pdf
+%https://arxiv.org/pdf/1601.03678.pdf
+
+\begin{corollary}
+Conditioned on the above delocalization event, our net only has to cover $\{X \mid d \|X\|_{op}^{2} \lesssim \log^{c}(d) \|X\|_{F}^{2}$, and so we only require $TD \gtrsim d_{a}^{2} \log^{c} D$.
+\end{corollary}
 
 
 \subsection{Robust proof of Expansion}
