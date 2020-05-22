@@ -89,7 +89,7 @@ If we are only interested in estimating $\Sigma$ only up to a constant, we may i
 \begin{gather}\tilde{L}(\Sigma^{-1}) = \log \sum_{i = 1}^n \langle X_i,  \Sigma X_i\rangle - \frac{1}{D} \log\det \Sigma. \label{eq:projective-likelihood}\end{gather}
 and the solutions will differ only by a constant.
 
-\begin{remark}[Projective space] One may think of \cref{eq:projective-likelihood} as the MLE for $[\Sigma]$, the equivalence class of $\Sigma$ in projective space.
+\begin{remark}[Projective space] One may think of \cref{eq:projective-likelihood} as the MLE for $\Sigma$ after recieving $[X_1, \dots, X_n]$, the equivalence class of the samples in projective space.
 \end{remark}
 Restricting $\tilde{L}$ to $\Sigma$ of the form $\bigotimes_{a = 1}^{k} \Sigma_a$, we are led to consider the minima of the following function. \CF{actually, this interpretation isn't quite right. Nonetheless the function below is what we want.}
 \begin{definition}[Projective likelihood function]
