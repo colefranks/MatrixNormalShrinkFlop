@@ -2,8 +2,9 @@
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{amsthm}
-\usepackage{amssymb}
-\usepackage{xcolor,cleveref}
+\usepackage{amssymb,bm}
+\usepackage{xcolor}
+\usepackage[capitalize]{cleveref}
 \newtheorem{theorem}{Theorem}
 \newtheorem{corollary}{Corollary}
 \newtheorem{prop}{Proposition}
@@ -21,8 +22,10 @@
 \newcommand{\R}{{\mathbb{R}}}
 \newcommand{\C}{{\mathbb{C}}}
 \newcommand{\ot}{\otimes}
+\newcommand{\mat}{\operatorname{Mat}}
 \newcommand{\Q}{{\mathbb{Q}}}
 \newcommand{\N}{{\mathbb{N}}}
+\renewcommand{\vec}{\bm}
 \newcommand{\Z}{{\mathbb{Z}}}
 \renewcommand{\S}{\mathbb{S}}
 
@@ -34,6 +37,9 @@
 \newcommand\FF{\mathcal{F}}
 \newcommand\HH{\mathcal{H}}
 \newcommand\GG{\mathcal{G}}
+\newcommand\SL{\operatorname{SL}}
+\newcommand\PD{\operatorname{PD}}
+\newcommand\GL{\operatorname{GL}}
 \newcommand\TT{\mathcal{T}}
 \newcommand\PP{\mathcal{P}}
 \newcommand\tr{\operatorname{Tr}}
@@ -55,7 +61,7 @@
 \newcommand{\TODO}[1]{{\color{blue}[TODO: #1]}}
 
 
-\title{Logarithmic sample complexity for dense tensor models}
+\title{Logarithmic sample complexity for dense matrix models}
 \author{Cole Franks, Rafael Oliveira, Akshay Ramachandran}
 \date{February 2020}
 
@@ -75,11 +81,23 @@
 \CF{background, history; remark that we automatically know flip-flop works but our strong convexity will give efficient algorithms in this setting, as opposed to just converging algorithms. } 
 
 \section{Structured covariance estimation}
-We study covariance estimation in the tensor normal model, in which $X$ is sampled according to $N(0, \Sigma = \bigotimes_{a = 1}^{k} \Sigma_a)$ for $\Sigma_a$ a positive-semidefinite $d_a\times d_a$ matrix.
+We study covariance estimation in the tensor normal model, in which $X$ is sampled according to $N(0, \Sigma = \bigotimes_{a = 1}^{k} \Sigma_a)$ for $\Sigma_a$ a positive-semidefinite $d_a\times d_a$ matrix. Let $D = \prod_{i = 1}^k d_i$. 
 
-\begin{definition}\CF{the MLE for tensor models}
+First, recall the maximum-likelihood estimator for $\Sigma$ without any structure. If $X_1, \dots, X_n \in \R^D$ are the samples from $N(0, \Sigma)$, then the log-likelihood for $\Sigma$ is (up to an additive constant) given by the function 
+$$L(\Sigma^{-1}) = \sum_{i = 1}^n \langle X_i,  \Sigma X_i\rangle - \CF{sg} \log\det \Sigma.$$
+If we are only interested in estimating $\Sigma$ only up to a constant, we may instead maximize 
+\begin{gather}\tilde{L}(\Sigma^{-1}) = \log \sum_{i = 1}^n \langle X_i,  \Sigma X_i\rangle - \frac{1}{D} \log\det \Sigma. \label{eq:projective-likelihood}\end{gather}
+and the solutions will differ only by a constant.
 
+\begin{remark}[Projective space] One may think of \cref{eq:projective-likelihood} as the MLE for $[\Sigma]$, the equivalence class of $\Sigma$ in projective space.
+\end{remark}
+Restricting $\tilde{L}$ to $\Sigma$ of the form $\bigotimes_{a = 1}^{k} \Sigma_a$, we are led to consider the minima of the following function. \CF{actually, this interpretation isn't quite right. Nonetheless the function below is what we want.}
+\begin{definition}[Projective likelihood function]
+Given $\vec{X} = (X_1, \dots, X_n)$, let the function $f_{\vec X}:\bigoplus_{i} \PD(d_i) \to \R$ be given by 
+\begin{gather}f_{\vec X}(\Sigma_1, \dots, \Sigma_n) = \log \sum_{i = 1}^n \left\langle X_i,  \bigotimes_{i = 1}^k \Sigma_i X_i\right\rangle - \sum_{i = 1}^k \frac{1}{d_i} \log\det \Sigma_i. \label{eq:projective-likelihood}\end{gather}
 \end{definition}
+
+
 
 Our main theorem is the following:
 
@@ -240,7 +258,7 @@ By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b}
 
 
 \section{Tensor Scaling}
-We will maintain similar notation. We have T samples of $g \sim \mathcal{N}(0,\frac{1}{T} \otimes_{a} \frac{1}{d_{a}} I_{a})$ with $D := \prod_{a} d_{a}$. We don't have a KLR style analysis a the moment, but strong convexity is enough by the FM analysis, and this can be proven by just controlling each bipartite piece. So the operator scaling analysis does give us very good bounds for $\|\mu\|_{op}$ and expansion with $TD \gg \max_{a} d_{a}^{2} \log^{c}(D)$. These bounds are not enough though, so in this section we will follow the FM analysis to give the requirements, then show the required strong convexity, and show how to maintain this under perturbation. 
+We will maintain similar notation. We have T samples of $g \sim \mathcal{N}(0,\frac{1}{T} \otimes_{a} \frac{1}{d_{a}} I_{a})$ with $D := \prod_{a} d_{a}$. We don't have a KLR style analysis at the moment, but strong convexity is enough by the FM analysis, and this can be proven by just controlling each bipartite piece. So the operator scaling analysis does give us very good bounds for $\|\mu\|_{op}$ and expansion with $TD \gg \max_{a} d_{a}^{2} \log^{c}(D)$. These bounds are not enough though, so in this section we will follow the FM analysis to give the requirements, then show the required strong convexity, and show how to maintain this under perturbation. 
 
 \subsection{FM Analysis}
 Recall that $\forall a: Q^{a} \approx \frac{1}{d_{a}} I_{a}$, so if we can show $\forall a \neq b: \langle Q^{ab}, X \otimes Y \rangle \lesssim \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}}$ then we have strong convexity with $\langle X, \nabla^{2} X \rangle \gtrsim \sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}}$, i.e. the Hessian is strongly diagonally dominant. We will derive our requirements on strong convexity, perturbation bounds, and initial error. Assume we have the following strong convexity 
