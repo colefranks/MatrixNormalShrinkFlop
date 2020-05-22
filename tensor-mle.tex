@@ -273,7 +273,7 @@ For $g \sim \frac{1}{TD} \otimes_{a} I_{a}$, we want to bound $\|Q^{a} - sI_{a}\
 \]
 We will need the following settings of $\epsilon$ in future:
 \[ \epsilon \approx \frac{1}{\sqrt{d_{a}}} \implies \Pr [ d_{a} \|Q^{a} - sI_{a}\|_{F}^{2} \gtrsim c ] \leq \exp(d_{a}^{2} \log d_{a} - c \frac{TD}{\sqrt{d_{a}}})  \]
-For which we need $TD \gtrsim \max_{a} d_{a}^{\frac{5}{2}} \log d_{a}$.
+For which we need $TD \gtrsim \max_{a} d_{a}^{5/2} \log d_{a}$.
 \[ \epsilon \approx \frac{1}{d_{a}} \implies \Pr [ d_{a} \|Q^{a} - sI_{a}\|_{F}^{2} \gtrsim \frac{c}{d_{a}} ] \leq \exp(d_{a}^{2} \log d_{a} - c^{2} \frac{TD}{d_{a}})   \]
 For which we need $TD \gtrsim \max_{a} d_{a}^{3} \log d_{a}$.
 
@@ -283,7 +283,7 @@ Note we lose out on the subgaussian part of the bound only when $\frac{d_{a} \|X
 
 Actually there seems to be a simpler way to prove these statements using the $\|\cdot\|_{op}$ bounds derived earlier. 
 \[ \|Q^{a} - sI_{a}\|_{op} \leq \frac{\sqrt{f(d)}}{d} \implies d_{a} \|Q^{a} - sI_{a}\|_{F}^{2} \leq f(d)  \]
-So this means in the first case, we need $TD \gtrsim \max_{a} d_{a}^{2} \log D$ and the second case we need $TD \gtrsim \max_{a} d_{a}^{3} \log D$. 
+So this means in the first case, we need $TD \gtrsim \max_{a} d_{a}^{2} \log D$ and the second case we need $TD \gtrsim \max_{a} d_{a}^{3} \log D$. But by this analysis we only get $1/poly$ failure probability. 
 
 
 \subsection{$\delta$-net proof of Expansion}
