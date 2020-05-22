@@ -281,6 +281,11 @@ For which we need $TD \gtrsim \max_{a} d_{a}^{3} \log d_{a}$.
 Note we lose out on the subgaussian part of the bound only when $\frac{d_{a} \|X\|_{op}^{2}}{\|X\|_{F}^{2}}$ is large. It is quite possible that for our setting, we can bound e.g. the condition number or stable rank of is small w.h.p. In particular if we can show the only relevant part of the net has $s \|X\|_{F}^{2} \geq d \|X\|_{op}$ then we only incur a $\sqrt{s}$ loss in required samples. 
 \end{remark}
 
+Actually there seems to be a simpler way to prove these statements using the $\|\cdot\|_{op}$ bounds derived earlier. 
+\[ \|Q^{a} - sI_{a}\|_{op} \leq \frac{\sqrt{f(d)}}{d} \implies d_{a} \|Q^{a} - sI_{a}\|_{F}^{2} \leq f(d)  \]
+So this means in the first case, we need $TD \gtrsim \max_{a} d_{a}^{2} \log D$ and the second case we need $TD \gtrsim \max_{a} d_{a}^{3} \log D$. 
+
+
 \subsection{$\delta$-net proof of Expansion}
 \[ \E \langle \sum_{t} g_{t} g_{t}^{*}, X_{a} \otimes Y_{b} \rangle = \sum_{ij} x_{i} y_{j} \chi(\frac{1}{d_{a} d_{b}}, \frac{TD}{d_{a} d_{b}}) = \langle \frac{1}{d_{a}} I_{a}, X \rangle \langle \frac{1}{d_{b}} I_{b}, Y \rangle = 0 \]
 
