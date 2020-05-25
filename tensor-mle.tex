@@ -271,12 +271,6 @@ Choose $X$ to be the geodesic towards the optimum and $g(t) := f(e^{tX})$ with t
 This is $> 0$ if $\forall a: \lambda > d_{a} \frac{\|\nabla_{a}\|_{F}}{\|X_{a}\|_{F}}$ or $\lambda^{2} > \frac{ \sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2} }{\sum_{a} d_{a}^{-1} \|X_{a}\|_{F}^{2}} $. 
 
 
-\subsection{$\chi^{2}$ Concentration}
-We will be running various bounds and concentration inequalities in the following setting. For $g \sim \frac{1}{TD} \otimes_{a} I_{a}$:
-\[ \E \langle \sum_{t} g_{t} g_{t}^{*}, \otimes_{a} X_{a} \rangle  = \prod_{a} \langle \frac{1}{d_{a}} I_{a}, X_{a} \rangle \]
-\[ \log \E \exp \theta \langle \sum_{t} g_{t} g_{t}^{*}, \otimes_{a} X_{a} \rangle =   \]
-
-
 \subsection{Moment Map}
 For $g \sim \frac{1}{TD} \otimes_{a} I_{a}$, we want to bound $\|Q^{a} - sI_{a}\|_{F}$ using a net:
 \[ \E \langle \sum_{t} g_{t} g_{t}^{*}, X_{a} \rangle = \sum_{i} x_{i} \chi(\frac{1}{d_{a}}, \frac{TD}{d_{a}}) = \langle \frac{1}{d_{a}} I_{a}, X \rangle = 0 \]
@@ -332,13 +326,17 @@ Let $U,V$ be the (random) basis for the optimizers of $\|M\|_{op}$. Then $(U,V)$
 \end{claim}
 
 \begin{theorem} [Informal]
-For $M$ populated by iid variables $X$ such that $\E X = 0, \E X^{2} = 1$ and $X$ is of exponential type, we have delocalization of eigenvectors with $1/poly$ failure probability:
+For $M \in \R^{n \times n}$ populated by iid variables $X$ such that $\E X = 0, \E X^{2} = 1$ and $X$ is of exponential type, we have delocalization of eigenvectors with $1/poly$ failure probability:
 \[ v \in S^{n-1}, \|v\|_{\infty} \gtrsim \frac{\log^{c} n}{\sqrt{n}} \implies \forall \lambda \in \C: \|Mv - \lambda v\|_{2} \gtrsim \frac{1}{\sqrt{n}}   \]
 \end{theorem}
 
 %https://arxiv.org/pdf/1306.2887.pdf
 %https://arxiv.org/pdf/1306.3099.pdf
 %https://arxiv.org/pdf/1601.03678.pdf
+
+\begin{claim}
+The above informal claim can be extended to singular vectors. 
+\end{claim}
 
 \begin{corollary}
 Conditioned on the above delocalization event, our net only has to cover $\{X \mid d \|X\|_{op}^{2} \lesssim \log^{c}(d) \|X\|_{F}^{2}$, and so we only require $TD \gtrsim d_{a}^{2} \log^{c} D$.
