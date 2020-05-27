@@ -137,7 +137,7 @@ We recall the moment map and Hessian calculations
 \section{Operator Scaling}
 In this section we have $T$ samples of $g \sim N(0,\frac{1}{T} (\frac{1}{d_{1}} I_{1}) \otimes (\frac{1}{d_{2}} I_{2}))$. We will denote $D := d_{1} d_{2}$. In order to use the KLR analysis, we will show that the one-body marginals have low error in $\|\cdot\|_{op}$ and the whole operator is a sufficient expander at the start. 
 
-\subsection{Moment map}
+\subsection{Bernstein Proof of $\|\mu\|_{op}$}
 This is proven using matrix concentration
 
 \begin{theorem} [Bernstein]
@@ -192,6 +192,32 @@ Since we require $\|\cdot\|_{op}$ error $\ll \frac{1}{d_{a} \log D}$, if we are 
 
 \begin{remark} Note I'm using $\min_{a} d_{a} < \max_{a} d_{a} < D$ in a couple places so the $\log$ term may be slightly sharpened. But the exponent is tight as we require $TD > \max_{a} d_{a}^{2}$ samples for existence/ uniqueness of the solution. 
 \end{remark}
+
+
+\subsection{Gaussian proof of $\|\mu\|_{op}$}
+The above method of first thresholding the gaussians then using Bernstein-style concentration on a bounded random matrix feels a bit square-peg round-hole - y. Turns out there are better results specifically for the case of gaussian matrices. Recall again that in our setting $Q^{a}$ is the sum of $N := \frac{TD}{d_{a}}$ copies of $g g^{*}$ where $g \sim \mathcal{N}(0,\frac{1}{TD} I_{a})$. Note first the following fact which allows us to use these specialized inequalities
+
+\begin{fact}
+$\sum_{i=1}^{N} g_{i} g_{i}^{*} \equiv G G^{*} $ where $G := \{g_{1}, ..., g_{N}\}$. 
+This means if we denote $\{\lambda_{1}, ..., \lambda_{d}\}$ the spectrum of $\sum_{i=1}^{N} g_{i} g_{i}^{*}$, this is the same as $\{s_{1}^{2}, ..., s_{d}^{2}\}$ where $s_{j} := s_{j}(G)$ the $j$-th singular value. We therefore have
+\[ \max\{|s_{1} - \frac{1}{\sqrt{d}}|, |\frac{1}{\sqrt{d}} - s_{d}|\} \leq t \iff \|Q^{a} - \frac{1}{d_{a}} I_{a}\|_{op} \leq t^{2}   \]
+\end{fact}
+
+% https://arxiv.org/pdf/1011.3027.pdf
+
+\begin{corollary} [Corollary 5.35]
+Let $G_{d,N} \in \R^{d \times N}$ for $d < N$ have independent standard gaussian entries. Then for $t \geq 0$, the following occurs with $\leq 2 \exp(-t^{2}/2)$ failure probability:
+\[ \sqrt{N} - \sqrt{d} - t \leq s_{d}(G) \leq s_{1}(G) \leq \sqrt{N} + \sqrt{d} + t  \]
+\end{corollary}
+
+\begin{corollary}
+If $TD \gtrsim d_{a}^{2} \log d_{a}$ then $\|Q^{a} - \frac{1}{d_{a}} I_{a} \|_{op} \ll \frac{1}{d_{a} \log d_{a}}$ with failure probability $\leq \exp( - \Omega(d_{a}))$
+\end{corollary}
+\begin{proof}
+We have the following with $\leq 2 \exp(-t^{2}/2)$ failure probability:
+\[ s_{1},s_{d}\left( \frac{1}{\sqrt{TD}} G_{d,N} \right) \in \frac{1}{\sqrt{TD}} \left( \frac{\sqrt{TD}}{d_{a}} \pm (\sqrt{d_{a}} + t) \right) = \frac{1}{\sqrt{d_{a}}} \pm \left( \frac{\sqrt{d_{a}} + t}{\sqrt{TD}}  \right)  \]
+Choosing $t \sim \sqrt{d_{a}}$ and $TD \gtrsim d_{a}^{2} \log d_{a}$ gives the required bound. 
+\end{proof}
 
 
 \subsection{Pisier's proof of Expansion}
