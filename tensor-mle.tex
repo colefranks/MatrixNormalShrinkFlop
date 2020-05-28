@@ -199,8 +199,8 @@ The above method of first thresholding the gaussians then using Bernstein-style 
 
 \begin{fact}
 $\sum_{i=1}^{N} g_{i} g_{i}^{*} \equiv G G^{*} $ where $G := \{g_{1}, ..., g_{N}\}$. 
-This means if we denote $\{\lambda_{1}, ..., \lambda_{d}\}$ the spectrum of $\sum_{i=1}^{N} g_{i} g_{i}^{*}$, this is the same as $\{s_{1}^{2}, ..., s_{d}^{2}\}$ where $s_{j} := s_{j}(G)$ the $j$-th singular value. We therefore have
-\[ \max\{|s_{1} - \frac{1}{\sqrt{d}}|, |\frac{1}{\sqrt{d}} - s_{d}|\} \leq t \iff \|Q^{a} - \frac{1}{d_{a}} I_{a}\|_{op} \leq t^{2}   \]
+This means if we denote $\{\lambda_{1}, ..., \lambda_{d}\}$ the spectrum of $\sum_{i=1}^{N} g_{i} g_{i}^{*}$, this is the same as $\{s_{1}^{2}, ..., s_{d}^{2}\}$ where $s_{j} := s_{j}(G)$ the $j$-th singular value. By Taylor expansion of $\sqrt{1+x}$ we have:
+\[ \lambda_{1},\lambda_{d}(GG^{*}) \in \frac{1}{d_{a}} \left( 1 \pm \frac{1}{\log d_{a}} \right) \iff s_{1},s_{d}(G) \in  \frac{1}{\sqrt{d_{a}}} \left( 1 \pm \frac{1}{\log d_{a}} \right)  \]
 \end{fact}
 
 % https://arxiv.org/pdf/1011.3027.pdf
@@ -211,12 +211,12 @@ Let $G_{d,N} \in \R^{d \times N}$ for $d < N$ have independent standard gaussian
 \end{corollary}
 
 \begin{corollary}
-If $TD \gtrsim d_{a}^{2} \log d_{a}$ then $\|Q^{a} - \frac{1}{d_{a}} I_{a} \|_{op} \ll \frac{1}{d_{a} \log d_{a}}$ with failure probability $\leq \exp( - \Omega(d_{a}))$
+If $TD \gtrsim d_{a}^{2} \log^{2} d_{a}$ then $\|Q^{a} - \frac{1}{d_{a}} I_{a} \|_{op} \ll \frac{1}{d_{a} \log d_{a}}$ with failure probability $\leq \exp( - \Omega(d_{a}))$
 \end{corollary}
 \begin{proof}
 We have the following with $\leq 2 \exp(-t^{2}/2)$ failure probability:
-\[ s_{1},s_{d}\left( \frac{1}{\sqrt{TD}} G_{d,N} \right) \in \frac{1}{\sqrt{TD}} \left( \frac{\sqrt{TD}}{d_{a}} \pm (\sqrt{d_{a}} + t) \right) = \frac{1}{\sqrt{d_{a}}} \pm \left( \frac{\sqrt{d_{a}} + t}{\sqrt{TD}}  \right)  \]
-Choosing $t \sim \sqrt{d_{a}}$ and $TD \gtrsim d_{a}^{2} \log d_{a}$ gives the required bound. 
+\[ s_{1},s_{d}\left( \frac{1}{\sqrt{TD}} G_{d,N} \right) \in \frac{1}{\sqrt{TD}} \left( \sqrt{\frac{TD}{d_{a}}} \pm (\sqrt{d_{a}} + t) \right) = \frac{1}{\sqrt{d_{a}}}\left( 1 \pm \frac{d_{a} + t \sqrt{d_{a}}}{\sqrt{TD}}  \right)  \]
+Choosing $t \sim \sqrt{d_{a}}$ and $TD \gtrsim d_{a}^{2} \log^{2} d_{a}$ gives the required bound. 
 \end{proof}
 
 
@@ -230,6 +230,8 @@ We denote a random gaussian matrix $Y \in \R^{m \times n}$ (for $m < n$) with $Y
 \[ \E \|Y\|_{op} \leq \sqrt{m} + \sqrt{n} \]
 \end{theorem}
 
+% 
+
 \begin{theorem} [Pisier]
 For any Banach space $\sigma_{B}^{2} := \sup \{ \E \langle Y, \xi \rangle^{2} \mid \|\xi\|_{*} \leq 1 \} $
 \[ \implies \Pr [ | \|Y\| - \E \|Y\| | \geq t ] \leq \exp \left( - \frac{\Omega(t^{2})}{\sigma^{2}} \right)   \]
@@ -239,6 +241,8 @@ For any Banach space $\sigma_{B}^{2} := \sup \{ \E \langle Y, \xi \rangle^{2} \m
 \[ (\E \|Y\|^{p})^{\frac{1}{p}} \leq \E \|Y\| + O \left( \sqrt{\frac{p}{\sigma^{2}}} \right)   \]
 \end{corollary}
 
+% Appendix - https://arxiv.org/abs/1209.2059
+% Theorem 16.6 - https://arxiv.org/pdf/1101.4195.pdf 
 \begin{theorem}
 Let $P$ denote the projection onto $(\vec{I_{n}},\vec{I_{m}})$, then the following holds with $1/poly(mn)$ failure probability
 \[ \|\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i} (I - P) \|_{op} \leq O \left( \sqrt{\sum_{i} \alpha_{i}^{2}} \right) \left( \E \|Y\|_{op} \right)^{2} \]
