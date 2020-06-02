@@ -245,7 +245,7 @@ There are absolute constants $c, C$ such that the following holds for all $d_1 \
 To do this, we first define the Cheeger constant of an operator $\Phi:\mat(d_1) \to \mat(d_2)$. This is similar to a concept defined in \cite{H07}.
 \begin{definition}
 Let $\Phi : \mat(d_1) \to \mat(d_2)$ be a completely positive map. The Cheeger constant $\ch(\Phi)$ of the weighted bipartite graph associated to $B$ is given by 
-$$\ch(\Phi):=\min_{\Pi_1, \Pi_2: \rk \Pi_1 \leq d_1/2} \phi(\Pi_1,\Pi_2)$$
+$$\ch(\Phi):=\min_{\Pi_1, \Pi_2: \vol(\Pi_1, \Pi_2) \leq \tr \Phi} \phi(\Pi_1,\Pi_2)$$
 where $\Pi_1: \C^{d_1} \to \C^{d_1}$ and $\Pi_1: \C^{d_2} \to \C^{d_2}$ are orthogonal projections and the \emph{conductance} $\phi$ of the cut $\Pi_1, \Pi_2$ is defined to be
 $$\phi(\Pi_1,\Pi_2) := \frac{\cut(\Pi_1, \Pi_2)}{\min\{\vol(\Pi_1,\Pi_2), \vol(I_{d_1} - \Pi_1, I_{d_2} - \Pi_2)\}}$$
 where 
