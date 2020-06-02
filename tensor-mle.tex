@@ -438,6 +438,10 @@ Choose $X$ to be the geodesic towards the optimum and $g(t) := f(e^{tX})$ with t
 \[ \geq \sqrt{\sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}}} \left( \lambda \sqrt{\sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}}} - \sqrt{\sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2}} \right)  \]
 This is $> 0$ if $\forall a: \lambda > d_{a} \frac{\|\nabla_{a}\|_{F}}{\|X_{a}\|_{F}}$ or $\lambda^{2} > \frac{ \sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2} }{\sum_{a} d_{a}^{-1} \|X_{a}\|_{F}^{2}} $. 
 
+Since standard perturbation bounds ($e^{X} \approx I + X$) only work for small $X$, we will require
+\[ \forall a: \|\nabla_{a}\|_{F} \ll \frac{1}{d_{a}} \]
+\[ \forall a: \|X_{a}\|_{F}^{2} \ll 1 \implies \langle Y, \nabla_{e^{X}}^{2}, Y \rangle \geq \Omega(1) \sum_{a} \frac{\|Y_{a}\|_{F}^{2}}{d_{a}}   \]
+
 
 \subsection{Moment Map}
 For $g \sim \frac{1}{TD} \otimes_{a} I_{a}$, we want to bound $\|Q^{a} - sI_{a}\|_{F}$ using a net:
@@ -543,6 +547,51 @@ This creates a bottleneck though as in general the inequality $\|X\|_{op} \leq \
 \begin{remark}
 Here is where we definitely would like a KLR style analysis to exploit the fact that we actually have robustness in $\|\cdot\|_{op}$. 
 \end{remark}
+
+
+\subsection{Deterministic Robust Proof of Expansion}
+
+We follow Michael's write-up in our setting. We can assume we have sufficiently strong expansion initially, and we would like to show that any scaling ($e^{Y} \cdot g$ with $\forall a: \|Y_{a}\|_{F} \ll 1$) only changes the Hessian by a small amount. 
+\begin{fact}
+Recall the formula for Hessian at $v$:
+\[ \langle X, \nabla_{v}^{2}, X \rangle = \langle \frac{v v^{*}}{\|v\|_{2}^{2}}, \left( \sum_{a} X_{a} \otimes I_{\overline{a}}  \right)^{2} \rangle - \left( \sum_{a} \langle \frac{v v^{*}}{\|v\|_{2}^{2}}, X_{a} \otimes I_{\overline{a}} \rangle  \right)^{2}  \]
+\end{fact}
+
+\begin{lemma}
+\[ \|\sum_{a} X_{a} \otimes I_{\overline{a}}\|_{op} \leq \sum_{a} \|X_{a}\|_{op} \leq \sum_{a} \|X_{a}\|_{F} \]
+All inequalities can be tight, say at $X_{a} = E_{11}$. In Michael's notation, for standard tensor rep 
+\[ N(\pi_{\otimes k})^{2} := \sup_{X} \frac{\|\Pi(X)\|_{op}^{2}}{\|X\|_{F}^{2}} = \sup_{X} \frac{\|\sum_{a} X_{a} \otimes I_{\overline{a}}\|_{op}^{2}}{\sum_{a} \|X_{a}\|_{F}^{2}} = k  \]
+\end{lemma}
+
+\begin{theorem}
+For $\|v\|_{2} = 1$ and $w := e^{Y} \cdot v / \|e^{Y} \cdot v\|_{2}$ with perturbation $\|\sum_{a} Y_{a} \otimes I_{\overline{a}}\|_{op} = \|\Pi(Y)\|_{op} \ll 1$: 
+\[ \forall X: |\langle X, \nabla_{w}^{2}, X \rangle - \langle X, \nabla_{v}^{2}, X \rangle| \leq O(k \|X\|_{F}^{2} \|\Pi(Y)\|_{op}) \leq O(k \sqrt{k} \|X\|_{F}^{2} \|Y\|_{F})  \]
+\end{theorem}
+\begin{proof}
+Assume wlog $\sum_{a} \|X_{a}\|_{F}^{2} = 1$:
+\[ |\langle X, \nabla_{v}^{2}, X \rangle - \langle X, \nabla_{w}^{2}, X \rangle| \]
+\[ \leq |\langle w w^{*} - v v^{*}, \left( \sum_{a} X_{a} \right)^{2} \rangle| + |\langle w w^{*}, \sum_{a} X_{a} \rangle^{2} - \langle v v^{*}, \sum_{a} X_{a} \rangle^{2}| \]
+\[ = |\langle w w^{*} - v v^{*}, \Pi(X)^{2} \rangle| + |\langle w w^{*} + v v^{*}, \Pi(X) \rangle \langle w w^{*} - v v^{*}, \Pi(X) \rangle|    \]
+\[ \leq \|w w^{*} - v v^{*}\|_{1} \|\Pi(X)\|_{op}^{2} + 2 \|\Pi(X)\|_{op} \|w w^{*} - v v^{*}\|_{1} \|\Pi(X)\|_{op}  \]
+\[ = 3 k \|w w - v v^{*}\|_{1}   \]
+Now we just have to bound perturbations of rank one matrices:
+\[ \|w w^{*} - v v^{*}\|_{1} \leq \sqrt{2} \|w w^{*} - v v^{*}\|_{F} \leq 2 \sqrt{2} \|w - v\|_{2}  \]
+Finally we can just bound the action of $Y$:
+\[ \|w - v\|_{2} \leq \|\frac{e^{Y} \cdot v}{\|e^{Y} \cdot v\|_{2}} - e^Y \cdot v\|_{2} + \|e^{Y} \cdot v - v\|_{2}  \]
+\[ \leq |1 - \|e^{Y} \cdot v\|_{2}| \|w\|_{2} + \|e^{Y} - I\|_{op} \|v\|_{2} \leq 2 \|e^{Y} - I\|_{op} \leq O(1) \|\Pi(Y)\|_{op} \]
+\end{proof}
+
+\begin{claim}
+For unit vectors $v,w: \|v v^{*} - w w^{*}\|_{F}^{2} \leq 2 \|v - w\|_{2}^{2}$
+\end{claim}
+\begin{proof}
+Assume wlog $v = e_{1}, w = (x,y) \in \R^{2}$ and note
+\[ v v^{*} - w w^{*} = \begin{pmatrix} 1 - x^{2} & -xy \\ -xy & -y^{2} \end{pmatrix}  \]
+has $Tr = 1 - x^{2} - y^{2} = 0$ and $\det = (1-x^{2})(-y^{2}) - x^{2} y^{2} = - y^{2}$; so the eigenvalues are $\pm y$. 
+\[ \implies \|v v^{*} - w w^{*}\|_{F}^{2} = 2 y^{2} \]
+\[ \|v - w\|_{2}^{2} = (1-x)^{2} + y^{2} = 2(1-x) \]
+Finally note $y^{2} = 1 - x^{2}$ is concave in $x$ and $2(1-x)$ is a tangent line at $x=1$. 
+\end{proof}
 
 \subsection{Conclusion}
 At the end of the day we require $TD \gtrsim \max_{a} d_{a}^{3} \log D$ to get small enough $\nabla$ and robust expansion. Note this is $d \log D$ away from the existence/ uniqueness threshold for the solution. 
