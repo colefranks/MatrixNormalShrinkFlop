@@ -2,7 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{amsthm,mathtools,braket}
-\usepackage{amssymb,bm}
+\usepackage{amssymb,bm, hyperref}
 \usepackage{xcolor}
 \usepackage[capitalize]{cleveref}
 \newtheorem{theorem}{Theorem}
@@ -32,6 +32,9 @@
 \newcommand{\C}{{\mathbb{C}}}
 \newcommand{\ot}{\otimes}
 \newcommand{\mat}{\operatorname{Mat}}
+\newcommand{\ch}{\operatorname{ch}}
+\newcommand{\cut}{\operatorname{cut}}
+\newcommand{\vol}{\operatorname{vol}}
 \newcommand{\Q}{{\mathbb{Q}}}
 \newcommand{\N}{{\mathbb{N}}}
 \renewcommand{\vec}{\bm}
@@ -52,6 +55,7 @@
 \newcommand\TT{\mathcal{T}}
 \newcommand\PP{\mathcal{P}}
 \newcommand\tr{\operatorname{Tr}}
+\newcommand\rk{\operatorname{rk}}
 \newcommand\RR{\mathcal{R}}
 \newcommand\CC{\mathcal{C}}
 \newcommand\BB{\mathcal{B}}
@@ -77,9 +81,10 @@
 \begin{document}
 
 \maketitle
+\tableofcontents
 \TODO{
 \begin{enumerate}
-\item Copy pasta stuff from main.
+\item Use $n$ instead of $T$ for number of samples.
 \item 
 \end{enumerate}
 
@@ -130,134 +135,6 @@ in $O(\TODO{\log(1/\eps)})$ iterations with probability at least $\TODO{}$.
 \end{proof}
 
 
-
-\section{Geodesic convexity}\label{sec:g-convex}
-\TODO{Put these lemmas about how if you are geodesically convex on a ball, you get good condition number bounds/convergence rates for any descent method}
-
-\subsection{Perturbation bound}
-In applying what follows to the tensor action, we'll have
-\begin{enumerate}
-\item $G$ is the set of $k$-tuples of invertible matrices. 
-\item $\pi$ is just the action $(g_1, \dots, g_k) \to g_1 \ot \dots \ot g_k$
-\item $P$ is the set of $k$-tuples of PSD matrices.
-\item $K$ is the set of $k$-tuples of unitaries.
-\item $N(\pi)$ is $\sqrt{3}$.
-\end{enumerate}
-
-%Let's first just look at the Hessian at the identity. Since we are looking at the function $\log \langle v, P v \rangle$ over $P$ positive-definite, we want to compute$$ H_{I, v}(X, X) := \partial_t^2 \langle v, \pi(e^{tX}) v \rangle_{t = 0}$$ for $X = (X_1, \dots, X_k)$ a tuple of Hermitians. $e^{t(X)}$ is then a tuple of PSD's, and $\pi$ is just the action $(g_1, \dots, g_k) \to g_1 \ot \dots \ot g_3$. Let $\Pi$ denote the Lie algebra action, which here for e.g. $k = 3$ is $(X_1, \dots, X_3)\mapsto X_1 \ot I \ot I + I \ot X_2 \ot I + I \ot I \ot X_3. $ 
-
-
-
-\subsubsection{Michael's write-up}
-\CF{I'm literally copy-pasting from Michael's write-up of our calculation, so obviously we can't include this as-is.}\\
-As usual, $G \subseteq \GL(n)$ is Zariski closed and $G = G^\dagger$, so that $K = G \cap U(n)$ is maximally compact and $G = K^{\mathbb C}$.
-Let $P := \exp(i\Lie(K))$. Then $G/K \cong P$ via $g \mapsto g^\dagger g$.
-Geodesics through $p\in P$ take the form $\gamma(t) = \sqrt p e^{Xt} \sqrt p$ for $X\in i\Lie(K)$.
-We write $B_\delta(p) = \{ \sqrt p e^X \sqrt p : \norm{X}_F \leq \delta \}$ for the geodesic $\delta$-ball about~$p$.
-Let $\pi\colon G \to \GL(V)$ be a representation of~$G$ with $K$-invariant inner product and $\Pi\colon\Lie(G)\to\Lin(V)$ the Lie algebra representation.
-The \emph{weight norm} of $\pi$ is defined as
-\begin{align*}
-  N(\pi) := \norm{\Pi}_{F\to\ope} = \max \left\{ \norm{\Pi(X)}_{\ope} : X \in i\Lie(K), \norm{X}_F \leq 1 \right\}.
-\end{align*}
-
-We consider the problem of minimizing the Kempf-Ness function associated with a vector $0\neq v\in V$:
-\begin{align*}
-  f_v \colon P \to \R, \quad p \mapsto \log \ip{v, \pi(p) v}
-\end{align*}
-% Note that
-% \begin{align*}
-%   \partial_t f_v(\sqrt p e^{Xt} \sqrt p)
-% = \partial_t \log \braket{\pi(\sqrt p) v, e^{\Pi(X)t} \pi(\sqrt p) v}
-% = \frac {\braket{\pi(\sqrt p) v, \Pi(X) e^{\Pi(X)t} \pi(\sqrt p) v}} {\braket{\pi(\sqrt p) v, e^{\Pi(X)t} \pi(\sqrt p) v}}
-% \end{align*}
-% and
-% \begin{align*}
-%   \partial_t^2 f_v(\sqrt p e^{Xt} \sqrt p)
-% % &= \partial_t \frac {\braket{\pi(\sqrt p) v, \Pi(X) e^{\Pi(X)t} \pi(\sqrt p) v}} {\braket{\pi(\sqrt p) v, e^{\Pi(X)t} \pi(\sqrt p) v}} \\
-% &= \frac {\braket{\pi(\sqrt p) v, \Pi(X)^2 e^{\Pi(X)t} \pi(\sqrt p) v} \times \braket{\pi(\sqrt p) v, e^{\Pi(X)t} \pi(\sqrt p) v} - \braket{\pi(\sqrt p) v, \Pi(X) e^{\Pi(X)t} \pi(\sqrt p) v}^2} {\braket{\pi(\sqrt p) v, e^{\Pi(X)t} \pi(\sqrt p) v}^2}.
-% \end{align*}
-Its differential and geodesic Hessian are given by
-\begin{align}
-\label{eq:d}
-  Df_v(p)[X]
-= \partial_{t=0} f_v(\sqrt p e^{Xt} \sqrt p)
-&= \braket{w, \Pi(X) w}, \\
-\label{eq:d2}
-  D^2f_v(p)[X,X]
-= \partial^2_{t=0} f_v(\sqrt p e^{Xt} \sqrt p)
-&= \braket{w, \Pi(X)^2 w} - \braket{w, \Pi(X) w}^2 \\
-\nonumber
-&= \braket{w, \bigl(\Pi(X) - \braket{w, \Pi(X) w}\bigr)^2 w} \geq 0
-\end{align}
-where $w = \frac {\pi(\sqrt p) v}{\norm{\pi(\sqrt p) v}}$.
-We say that a function $f\colon P\to\R$ is \emph{$L$-geodesically smooth} at $p$ if
-\begin{align*}
-  D^2f(p)[X,X] \leq L \norm{X}_F^2
-\end{align*}
-for all $X\in i\Lie(K)$.
-\Cref{eq:d2} shows that $f_v$ is $4N(\pi)^2$-smooth.
-Finally, recall the moment map which assigns to any $v$ the gradient of $f_v$ at $p=I$:
-\begin{align*}
-  \mu\colon V\setminus\{0\}\to i\Lie(K), \quad \tr[\mu(v)X] = Df_v(I)[X].
-\end{align*}
-
-\paragraph{Strong convexity.}
-We say that a function $f\colon P\to\RR$ is \emph{$\lambda$-geodesically strongly convex} at $p$ if
-\begin{align*}
-  D^2f_v(p)[X,X] \geq \lambda \norm{X}_F^2
-\end{align*}
-for all $X\in i\Lie(K)$.
-We now show that for the function~$f_v$ this notion is stable.
-
-\begin{lemma}\label{lem:hessian stable}
-Let $0\neq v\in V$ such that $f_v$ is $\lambda$-geodesically strongly convex at~$q$ for some~$0<\lambda < 4N(\pi)^2$.
-Then, $f_v$ is $\lambda/2$-geodesically strongly convex on $B_\delta(q)$, where $\delta = {c\lambda / N(\pi)^3}$ and $c = 1/(12\sqrt{2} e)$.
-\end{lemma}
-\begin{proof}
-We assume without loss of generality that $\norm{v}=1$ and $q=I$.
-% For the second claim, use that $f_v(\sqrt p e^H \sqrt p) = f_{\pi(\sqrt p) v}(e^H)$.
-Let $p = e^H\in P$ and $w = \frac {\pi(\sqrt p) v}{\norm{\pi(\sqrt p) v}}$.
-Then, using \cref{eq:d2}, we find that, for all $X\in i\Lie(K)$,
-\begin{equation}\label{eq:hess first}
-\begin{aligned}
-&\quad \abs[\big]{D^2f_v(p)[X,X] - D^2f_v(I)[X,X]} \\
-&\leq \abs[\big]{\braket{w, \Pi(X)^2 w} - \braket{v, \Pi(X)^2 v}} + \abs[\big]{\braket{w, \Pi(X) w}^2 - \braket{v, \Pi(X) v}^2} \\
-&\leq \abs[\big]{\braket{w, \Pi(X)^2 w} - \braket{v, \Pi(X)^2 v}} + \abs[\big]{\braket{w, \Pi(X) w} - \braket{v, \Pi(X) v}}\abs[\big]{\braket{w, \Pi(X) w} + \braket{v, \Pi(X) v}} \\
-&\leq \norm{ww^\dagger - vv^\dagger}_{\tr} \norm{\Pi(X)^2}_{\ope} + 2 \norm{ww^\dagger - vv^\dagger}_{\tr} \norm{\Pi(X)}_{\ope}^2 \\
-&= 3 \norm{ww^\dagger - vv^\dagger}_{\tr} \norm{\Pi(X)}^2_{\ope} \\
-&\leq 3 N(\pi)^2 \norm{ww^\dagger - vv^\dagger}_{\tr} \norm{X}_F^2
-\end{aligned}
-\end{equation}
-In the second to last step, we used that $\Pi(X) = \Pi(X)^\dagger$ and $\norm{Y^\dagger Y}_{\ope} = \norm{Y}_{\ope}^2$ for any $Y\in\Lin(V)$.
-Next,
-\begin{align*}
-  \norm{ww^\dagger - vv^\dagger}_{\tr}
-&= \sqrt2 \norm{ww^\dagger - vv^\dagger}_F
-\leq 2 \sqrt2 \norm{w - v}
-\leq 2 \sqrt2 \bigl( \underbrace{\norm{w - \pi(\sqrt p) v}}_{=\abs[\big]{1 - \norm{\pi(\sqrt p) v}}} + \norm{\pi(\sqrt p) v - v} \bigr) \\
-&\leq 4 \sqrt2 \norm{\pi(\sqrt p) - I}_{\ope}
-= 4 \sqrt2 \norm{e^{\Pi(H)/2} - I}_{\ope}.
-\end{align*}
-This can be bounded using the fact that $\abs{e^x - 1} \leq e \abs x$ for $x\in\R$ with $\abs x \leq 1$, which translates immediately into a similar bound for the operator norm.
-Thus, assuming $\norm{H}_F \leq 2 / N(\pi)$, which implies that $\norm{\Pi(H)/2}_{\ope} \leq N(\pi) \norm{H}_F / 2 \leq 1$, we have
-\begin{align*}
-  \norm{ww^\dagger - vv^\dagger}_{\tr}
-\leq 4 \sqrt2 e \norm{\Pi(H)/2}_{\ope}
-\leq 2 \sqrt2 e N(\pi) \norm{H}_F.
-\end{align*}
-If we plug this into \cref{eq:hess first} and use that $\delta \leq 2/N(\pi)$ then we find that, for all $p \in B_\delta(I)$,
-%     c\lambda / N(\pi)^3 \leq 2/N(\pi)
-% <=> \lambda \leq 24 sqrt(2) e N(\pi)^2
-% <=  \lambda \leq 4 N(\pi)^2
-\begin{align*}
-  \abs[\big]{D^2f_v(p)[X,X] - D^2f_v(I)[X,X]}
-% \leq 6\sqrt{2} e N(\pi)^3 \norm{H}_F \norm{X}_F^2
-\leq 6\sqrt{2} e N(\pi)^3 \delta \norm{X}_F^2
-\leq \frac\lambda2 \norm{X}_F^2.
-\end{align*}
-Therefore, if $f_v$ is $\lambda$-geodesically strongly convex at~$I$ then it is $\lambda/2$-geodesically strongly convex on~$B_\delta(I)$.
-This concludes the proof.
-\end{proof}
 
 
 %One can calculate $$ H_{I, v}(X, X) = \langle w, \Pi(X)^2 w \rangle - \langle w, \Pi(X) w \rangle^2 $$ where $w = v/\|v\|$. We may calculate the Hessian $H_{P,v}$ using $H_{P, v} = H_{I, \sqrt{P}v}$. 
@@ -358,10 +235,99 @@ Choosing $t \sim \sqrt{d_{a}}$ and $TD \gtrsim d_{a}^{2} \log^{2} d_{a}$ gives t
 \end{proof}
 
 
-\subsection{Pisier's proof of Expansion}
+\subsection{Cheeger proof of Expansion}
+\CF{I am putting this in the operator language; perhaps it would be more direct in tensor language.}
+Here we show that the Hessian at the identity is bounded below by a constant with inverse exponential failure probability. 
+\begin{theorem}\label{thm:operator-cheeger}
+There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. If the entries of the $n$ Kraus operators of $\Phi$ are drawn from standard Gaussians, then $\Phi$ is $C\sqrt{d_1/d_2}$-balanced and a $c - C (d_1/d_2)$ quantum expander with probability $e^{ - c n d_1}$ provided $n \geq C\max\{\log (d_1 d_2),  d_2/d_1\}$. 
+\end{theorem}
+
+To do this, we first define the Cheeger constant of an operator $\Phi:\mat(d_1) \to \mat(d_2)$. This is similar to a concept defined in \cite{H07}.
+\begin{definition}
+Let $\Phi : \mat(d_1) \to \mat(d_2)$ be a completely positive map. The Cheeger constant $\ch(\Phi)$ of the weighted bipartite graph associated to $B$ is given by 
+$$\ch(\Phi):=\min_{\Pi_1, \Pi_2: \rk \Pi_1 \leq d_1/2} \phi(\Pi_1,\Pi_2)$$
+where $\Pi_1: \C^{d_1} \to \C^{d_1}$ and $\Pi_1: \C^{d_2} \to \C^{d_2}$ are orthogonal projections and the \emph{conductance} $\phi$ of the cut $\Pi_1, \Pi_2$ is defined to be
+$$\phi(\Pi_1,\Pi_2) := \frac{\cut(\Pi_1, \Pi_2)}{\min\{\vol(\Pi_1,\Pi_2), \vol(I_{d_1} - \Pi_1, I_{d_2} - \Pi_2)\}}$$
+where 
+%$$ \vol(\Pi_1,\Pi_2):= \sum_{i \in T, j \in [d_2]} b_{ij} + \sum_{i \in [d_1], j \in S} b_{ij}\textrm{ and } \cut(S, T):= \sum_{i \not\in T, j  \in S} b_{ij} + \sum_{i \in T, j \not\in S} b_{ij}.$$
+$$ \vol(\Pi_1,\Pi_2):= 
+\tr \Phi(\Pi_1) + \tr \Phi^*(\Pi_2)$$ 
+and $$ \cut(\Pi_1, \Pi_2):= \tr \Pi_2 \Phi(I_{d_1} - \Pi_1) + \tr (I_{d_2} - \Pi_2) \Phi(\Pi_1).$$
+\end{definition}
+
+We now cite a slight generalization of \cite{FM20}. 
+%Recall the function $$f^{\Phi}:X \mapsto \frac{d_1}{d_2} \log\det(\Phi(X)) - \log\det (X).$$
+
+\begin{lemma} [\cite{FM20}, \cite{KLR19}]\label{lem:op-cheeger} There exist absolute constants $c, C$ such if $\eps < c \ch(\Phi)^2$ and $\Phi$ is $\eps$-balanced, then $\Phi$ is a 
+$$ \max\left\{1/2, 1 -  \ch(\Phi)^2 + C \frac{\eps}{\ch(\Phi)^2} \right\}$$
+quantum expander.
+\end{lemma}
+
+We proceed to bound the Cheeger constant of a random operator. The Cheeger constant of an operator is scale-invariant, so for convenience we let $\Phi$ have Kraus operators $A_1, \dots, A_n$, each drawn from $N(0,  I_{d_1} \ot I_{d_2}).$ Our main observation is the following. 
+\begin{fact}\label{fact:chi} Let $\Pi_1:\C^{d_1} \to \C^{d_1}, \Pi_2: \C^{d_2} \to \C^{d_2}$ be orthogonal projections, of rank $r_1, r_2$, respectively. Then $\cut(\Pi_1, \Pi_2), \vol(\Pi_1, \Pi_2), \vol(I_{d_1}, I_{d_2})$ is jointly distributed as 
+$$ X, X + 2Y, 2X + 2 Y + 2Z$$ where 
+$X, Y, Z$ are independent $\chi^2$ random variables with $F_1:=n r_1(d_2 - r_2) + n r_2(d_1-r_1), F_2:= n r_1r_2, F_3:= n(d_1 - r_1)(d_2 - r_2)$ degrees of freedom, respectively. 
+\end{fact} 
+\begin{proof} As the distribution of $\Phi$ is invariant under the action of unitaries, the distribution of $\cut(\Pi_1, \Pi_2), \vol(\Pi_1, \Pi_2)$ depends only on the rank of $\Pi_1, \Pi_2$. Thus we may compute in the case that $\Pi_1, \Pi_2$ are coordinate projections, in which case one may verify the fact straightforwardly. 
+\end{proof}
+
+
+ We show a sufficient condition for the Cheeger constant being bounded away from $1$ that is amenable to the previous distributional description.
+\begin{lemma}\label{lem:suff}
+Let $r_1, r_2$ be the ranks of projections $\Pi_1: \C^{d_1} \to \C^{d_1}, \Pi_2: \C^{d_2} \to \C^{d_2}$, and let $F_1:= n r_1(d_2 - r_2) + n r_2(d_1-r_1)$ and $F_2:=n r_1r_2.$ If 
+\begin{itemize}
+\item for all $\Pi_1, \Pi_2$ such that $F_2 \geq (4/9) n d_1 d_2$ we have 
+\begin{gather}\vol(\Pi_1, \Pi_2) \geq \frac{1}{2} \vol(I_{d_1}, I_{d_2}),\label{eq:vol}\end{gather} and
+\item for all $\Pi_1, \Pi_2$ such that $F_2 < (4/9) n d_1 d_2$, we have 
+\begin{gather} \vol(\Pi_1, \Pi_2) \leq (4/3)(F_1 + 2 F_2) \textrm{ and } \cut(\Pi_1, \Pi_2) \geq (2/3) F_1,\label{eq:cut} \end{gather}
+\end{itemize}
+then $\ch(\Phi) \geq 1/6$. 
+\end{lemma}
+\begin{proof} By the first assumption, it remains to show that $F_1/(F_1 + 2 F_2) \geq 1/3$ provided $F_2 < (4/9) n d_1 d_2$, or $r_1 r_2 < (4/9) d_1 d_2$. Indeed, 
+\begin{align*}F_1/(F_1 + 2 F_2) &= \frac{r_1 d_2 + r_2 d_1 - 2 r_1 r_2}{r_1 d_2 + r_2 d_1}\\
+ &= 1 -2 \sqrt\frac{ r_1 r_2}{d_1 d_2} \frac{1}{ \sqrt{ r_1 d_2/r_2 d_1} + \sqrt{r_2 d_1/ r_1 d_2}} \\
+ &\geq 1 - \sqrt{4/9} = 1/3.
+\end{align*}
+
+In the last inequality we used that $a + a^{-1} \geq 2$ for all $a \in \R_+$ and that $r_1 r_2 < (4/9) d_1 d_2$. \end{proof}
+
+
+Next we use this to show that for fixed $\Pi_1, \Pi_2$, with high probability the events in \cref{lem:suff} hold. 
+\begin{lemma}
+Let $r_1, r_2$ be the ranks of projections $\Pi_1: \C^{d_1} \to \C^{d_1}, \Pi_2: \C^{d_2} \to \C^{d_2}$, and let $F_1:= n r_1(d_2 - r_2) + n r_2(d_1-r_1)$ and $F_2 = n r_1 r_2$. Then 
+\begin{itemize}
+\item if $F_2 \geq (4/9) n d_1 d_2$, then \cref{eq:vol} holds with probability at least $1 - e^{-c n d_1 d_2}$. 
+\item else, \cref{eq:cut} holds with probability at least $1 - e^{-c F_2}$. 
+\end{itemize}
+\end{lemma}
+
+
+\begin{proof}
+Recall from \cref{fact:chi} that, $\cut(\Pi_1, \Pi_2), \vol(\Pi_1, \Pi_2), \vol(I_{d_1}, I_{d_2})$ are jointly distributed as $X, X + 2Y, 2X + 2Y + 2Z$ for $X, Y, Z$ independent $\chi^2$ random variables with $F_1, F_2, F_3$ degrees of freedom, respectively. Thus it is enough to show that if
+\begin{itemize}
+\item If $nr_1 r_2 \geq (4/9) n d_1 d_2$, then with probability $1 - e^{- c n d_1 d_2}$ we have $Y > Z$, and 
+\item if $nr_1 r_2 \leq (2/3) n d_1 d_2$, then with probability $1 - e^{- cF_1}$ we have $X \geq (2/3) F_1$ and $X + 2Y \leq (4/3) (F_1 + 2 F_2).$ 
+\end{itemize}
+Both follow from standard results for concentration of $\chi^2$ random variables \cite{W19}. To prove the first item, first note that $F_1 + 2 F_2 \geq (4/3)(F_1 + F_2 + F_3)$, because 
+\begin{align*}
+(F_1 + 2 F_2)/( F_1 + F_2 + F_3) &= \frac{r_1}{d_1} + \frac{r_2}{d_2}\\
+ &= \sqrt{ \frac{r_1 r_2}{d_1 d_2}}\left( \sqrt{ \frac{r_1 d_2}{r_2 d_1}} + \sqrt{ \frac{r_2 d_1}{r_1 d_2}}\right) \geq (2/3) \cdot 2 \geq 4/3.
+\end{align*}
+In particular, $F_2 \geq (2/3)(F_2 + F_3)$. Thus, with probability $1 - e^{- c F_2}$, $Y \geq (5/9) (F_2 + F_3)$ and $Y + Z \leq (10/9) (F _2 + F_3),$ so $Y > Z$ with probability $1 - e^{- c F_2} \geq 1 - e^{- c n d_1 d_2}$. The second item is straightfoward. 
+\end{proof}
+Finally, we show using an epsilon net that the Cheeger constant is high for \emph{all} projections. 
+\begin{lemma}[\cite{FM20}]\label{lem:net} There is a $\delta$-net $N$ of the rank $r$ orthogonal projections $\Pi: \C^d \to \C^d$ with $|N| = \exp(O(d r |\ln \delta|))$.
+\end{lemma}
+As a corollary, the number of pairs of projections $\Pi_1, \Pi_2$ of rank $r_1, r_2$ has a $\delta$-net of size on the order of $(r_1 d_1 + r_2 d_2) |\ln \delta|$. 
+
+\CF{finish proof of \cref{thm:operator-cheeger}; the plan is to use that when $r_1 r_2 < (4/9) d_1 d_2$, the size of the net is $O(\log \delta)$ times the degrees of freedom when $n = 1$. On the other hand if $r_1 r_2 < (4/9) d_1 d_2$ then the failure probability is on the order of $e^{-n d_1 d_2}$, which is also small enough. So making $n = O(\log \delta)$ suffices; finally we need to show that $\cut$ and $\vol$ are lipschitz-continuous enough that we may choose $\delta = poly(d_1,d_2)^{-1}$. Both steps seem relatively straightforward.}
+
+
+
+\subsection{Pisier's proof of expansion}
 We have shown above that the diagonal blocks $(\nabla^{2})_{aa} \approx \frac{1}{d_{a}} I_{a}$. Therefore to show strong convexity we would like to bound the off diagonal blocks 
 \[ \forall X,Y:  \langle Q^{ab}, X \otimes Y \rangle \leq \lambda \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}}   \]
-Pisier's method of proof uses the trace method along gaussian concentration in Banach spaces. 
+Pisier's method of proof uses the trace method along with Gaussian concentration in Banach spaces. 
 
 \begin{theorem}
 We denote a random gaussian matrix $Y \in \R^{m \times n}$ (for $m < n$) with $Y_{ij} \sim \mathcal{N}(0,1)$, we have the following bound
