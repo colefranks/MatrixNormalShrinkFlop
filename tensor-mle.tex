@@ -604,20 +604,35 @@ For unit vectors $v,w: \|v v^{*} - w w^{*}\|_{F}^{2} \leq 2 \|v - w\|_{2}^{2}$
 Assume wlog $v = e_{1}, w = (x,y) \in \R^{2}$ and note
 \[ v v^{*} - w w^{*} = \begin{pmatrix} 1 - x^{2} & -xy \\ -xy & -y^{2} \end{pmatrix}  \]
 has $Tr = 1 - x^{2} - y^{2} = 0$ and $\det = (1-x^{2})(-y^{2}) - x^{2} y^{2} = - y^{2}$; so the eigenvalues are $\pm y$. 
-\[ \implies \|v v^{*} - w w^{*}\|_{F}^{2} = 2 y^{2} \]
+\[ \implies \|v v^{*} - w w^{*}\|_{F}^{2} = 2 y^{2} = 2(1-x^{2}) \]
 \[ \|v - w\|_{2}^{2} = (1-x)^{2} + y^{2} = 2(1-x) \]
-Finally note $y^{2} = 1 - x^{2}$ is concave in $x$ and $2(1-x)$ is a tangent line at $x=1$. 
+Finally note $1 - x^{2}$ is concave and $2(1-x)$ is a tangent line at $x=1$. 
 \end{proof}
 
-\begin{corollary}
 Recall the sufficient condition for $\lambda = \Omega(1)$-expansion
 \[ \sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2} \lesssim \sum_{a} d_{a}^{-1} \|Y_{a}\|_{F}^{2}  \]
-So we require $\langle X, \nabla_{e^{Y}}, X \rangle \gtrsim \|X\|^{2}$. We can get this bound for all $\|\Pi(Y)\|_{op} \ll (\sum_{a} d_{a})^{-1}$. Therefore we can get a proper perturbation bound for $\forall a: \|Y_{a}\|_{F} \ll (\sum_{a} d_{a})^{-1}$ which implies $\|Y\|^{2} \ll (\max_{a} d_{a})^{-3}$, so we require $\forall a: \|\nabla_{a}\|_{F} \ll (\max_{a} d_{a})^{-2}$
-\end{corollary}
+So we require $\langle X, \nabla_{e^{Y}}, X \rangle \gtrsim \|X\|^{2}$. We can get this bound for all $\|\Pi(Y)\|_{op} \ll (\sum_{a} d_{a})^{-1}$. Therefore we can get a proper perturbation bound for $\forall a: \|Y_{a}\|_{F} \ll (\sum_{a} d_{a})^{-1}$ which implies $\|Y\|^{2} \ll (\max_{a} d_{a})^{-3}$, so we require $\forall a: \|\nabla_{a}\|_{F} \ll (\max_{a} d_{a})^{-2}$. This is worse than the requirement from the larger net argument above. 
 
 \subsection{Conclusion}
 At the end of the day we require $TD \gtrsim \max_{a} d_{a}^{3} \log D$ to get small enough $\nabla$ and robust expansion. Note this is $d \log D$ away from the existence/ uniqueness threshold for the solution. 
 
+\subsection{Ideas for KLR style analysis}
+\begin{enumerate}
+    \item The delocalization type arguments may be helpful since we know the movement is spread out. 
+    \item Follow gradient flow and show we have strong convergence for $\Omega(\log \max_{a} d_{a})$ time, after which the operator norm of the gradient can never be bigger than the initial one. Therefore if we have the first point, it is enough to cover the $O(1)$-size operator norm ball. 
+    \item Even if we get that perturbations come from $O(1)$-size operator norm ball, without some improved delocalization (or something) we would still need an extra $d$ factor. 
+    \item One important lemma in KLR is that the operator norm of moment map is roughly monotone decreasing over all time (where the fudge is of the order of the change in objective function $\|v\|_{2}^{2}$ over time). This is not true for $k=3$. But we have some extra structure e.g.: the error of a row and column are positively correlated. 
+    \item Let $\epsilon(t) := \max_{a} d_{a} \|\nabla_{a}(t)\|_{op}$. Maybe we can show 
+    \[ T_{\epsilon} := \inf \{ t \mid \epsilon(t) > 100 t \epsilon(0) \}  \]
+    is large enough. In particular by the argument above $T_{\epsilon}$ cannot be larger than $\log d$. Maybe there's some contradiction whereby we can always increase $T_{\epsilon}$. 
+\end{enumerate}
+
+Recall the gradient flow is 
+\[ \partial_{t} v(t) = \sum_{a} I_{\overline{a}} \otimes X_{a} \cdot v(t)   \]
+where $X_{a} := d_{a} \mu_{a}(t)$. Then we have
+\[ \partial_{t} \sum_{a} d_{a} \|\mu_{a}(t)\|_{F}^{2} = \sum_{a} d_{a}^{2} \langle Q^{a}, \mu_{a}^{2} \rangle + \sum_{a \neq b} d_{a} d_{b} \langle Q^{ab}, \mu_{a} \otimes \mu_{b} \rangle  \]
+\[ \geq (1-\epsilon) \sum_{a} d_{a}^{2} \frac{\|\mu_{a}\|_{F}^{2}}{d_{a}} - \lambda \sum_{a \neq b} d_{a} d_{b} \frac{\|\mu_{a}\|_{F} \|\mu_{b}\|_{F}}{\sqrt{d_{a} d_{b}}}   \]
+\[ \geq (1-\epsilon') \sum_{a} d_{a} \|\mu_{a}\|_{F}^{2}   \]
 \section{Noise}
 \TODO{make sure things work under some error in the data}
 
