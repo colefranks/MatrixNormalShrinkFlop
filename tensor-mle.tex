@@ -487,7 +487,7 @@ So this means in the first case, we need $TD \gtrsim \max_{a} d_{a}^{2} \log D$ 
 \[ \log \E \exp \theta \langle \sum_{t} g_{t} g_{t}^{*}, X_{a} \otimes Y_{b} \rangle = \log \E \exp \theta \sum_{ij} x_{i} y_{j} \chi(\frac{1}{d_{a} d_{b}}, \frac{TD}{d_{a} d_{b}})  \]
 \[ = \sum_{ij} \frac{-TD}{2 d_{a} d_{b}} \log \left( 1 - 2 \theta \frac{x_{i} y_{j}}{TD} \right)   \]
 \[ \lesssim \theta^{2} \frac{\|X\|_{F}^{2} \|Y\|_{F}^{2}}{2 d_{a} d_{b} TD} \hspace{10mm} \forall \theta < \left( \frac{\|X\|_{op} \|Y\|_{op}}{TD} \right)^{-1}  \]
-\[ \Pr[ \langle \sum_{t} g_{t} g_{t}^{*}, X_{a} \rangle \geq \lambda \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}} ] \leq 
+\[ \Pr[ \langle \sum_{t} g_{t} g_{t}^{*}, X \otimes Y \rangle \geq \lambda \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}} ] \leq 
 \begin{cases} 
 \exp( - \lambda^{2} TD ) \hspace{7mm} \lambda  < \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}} \|X\|_{op} \|Y\|_{op}} 
 \\ \exp ( - \lambda TD \frac{\|X\|_{F} \|Y\|_{F}}{ \sqrt{d_{a} d_{b}} \|X\|_{op} \|Y\|_{op}} )
@@ -562,29 +562,34 @@ Here is where we definitely would like a KLR style analysis to exploit the fact 
 
 \subsection{Deterministic Robust Proof of Expansion}
 
-We follow Michael's write-up in our setting. We can assume we have sufficiently strong expansion initially, and we would like to show that any scaling ($e^{Y} \cdot g$ with $\forall a: \|Y_{a}\|_{F} \ll 1$) only changes the Hessian by a small amount. 
+We follow Michael's write-up in our setting. We can assume we have sufficiently strong expansion initially and we would like to show that any scaling ($e^{Y} \cdot g$ with $\forall a: \|Y_{a}\|_{F} \ll 1$) only changes the Hessian by a small amount. 
 \begin{fact}
 Recall the formula for Hessian at $v$:
 \[ \langle X, \nabla_{v}^{2}, X \rangle = \langle \frac{v v^{*}}{\|v\|_{2}^{2}}, \left( \sum_{a} X_{a} \otimes I_{\overline{a}}  \right)^{2} \rangle - \left( \sum_{a} \langle \frac{v v^{*}}{\|v\|_{2}^{2}}, X_{a} \otimes I_{\overline{a}} \rangle  \right)^{2}  \]
 \end{fact}
 
+Initially, we have expansion of the form
+\[ \langle X, \nabla^{2}, X \rangle \geq (1-\epsilon) \sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}} - \lambda \sum_{a \neq b} \frac{\|X_{a}\|_{F} \|X_{b}\|_{F}}{\sqrt{d_{a} d_{b}}} \geq (1-\epsilon') \sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}}   \]
+So for how large of a perturbation can we show that every quadratic form changes $<< \sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}} =: \|X\|^{2}$?  
+
 \begin{lemma}
-\[ \|\sum_{a} X_{a} \otimes I_{\overline{a}}\|_{op} \leq \sum_{a} \|X_{a}\|_{op} \leq \sum_{a} \|X_{a}\|_{F} \]
-All inequalities can be tight, say at $X_{a} = E_{11}$. In Michael's notation, for standard tensor rep 
-\[ N(\pi_{\otimes k})^{2} := \sup_{X} \frac{\|\Pi(X)\|_{op}^{2}}{\|X\|_{F}^{2}} = \sup_{X} \frac{\|\sum_{a} X_{a} \otimes I_{\overline{a}}\|_{op}^{2}}{\sum_{a} \|X_{a}\|_{F}^{2}} = k  \]
+\[ \|\sum_{a} X_{a} \otimes I_{\overline{a}}\|_{op} \leq \sum_{a} \|X_{a}\|_{op} \leq \sum_{a} \|X_{a}\|_{F} \leq \sqrt{ \left( \sum_{a} d_{a} \right) \left( \sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}}  \right)} \]
+All inequalities can be tight, say at $X_{a} = \sqrt{d_{a}} E_{11}$. In Michael's notation, for standard tensor rep 
+\[ \sup_{X} \frac{\|\Pi(X)\|_{op}}{\sum_{a} \|X_{a}\|_{F}} = k  \text{  ;  } \hspace{7mm}
+\sup_{X} \frac{\|\Pi(X)\|_{op}^{2}}{\|X\|^{2}} = \sum_{a} d_{a}  \]
 \end{lemma}
 
 \begin{theorem}
 For $\|v\|_{2} = 1$ and $w := e^{Y} \cdot v / \|e^{Y} \cdot v\|_{2}$ with perturbation $\|\sum_{a} Y_{a} \otimes I_{\overline{a}}\|_{op} = \|\Pi(Y)\|_{op} \ll 1$: 
-\[ \forall X: |\langle X, \nabla_{w}^{2}, X \rangle - \langle X, \nabla_{v}^{2}, X \rangle| \leq O(k \|X\|_{F}^{2} \|\Pi(Y)\|_{op}) \leq O(k \sqrt{k} \|X\|_{F}^{2} \|Y\|_{F})  \]
+\[ |\langle X, \nabla_{w}^{2}, X \rangle - \langle X, \nabla_{v}^{2}, X \rangle| \leq O(\sum_{a} d_{a}) \|X\|^{2} \|\Pi(Y)\|_{op}   \]
 \end{theorem}
 \begin{proof}
-Assume wlog $\sum_{a} \|X_{a}\|_{F}^{2} = 1$:
+Assume wlog $\sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}} = 1$:
 \[ |\langle X, \nabla_{v}^{2}, X \rangle - \langle X, \nabla_{w}^{2}, X \rangle| \]
 \[ \leq |\langle w w^{*} - v v^{*}, \left( \sum_{a} X_{a} \right)^{2} \rangle| + |\langle w w^{*}, \sum_{a} X_{a} \rangle^{2} - \langle v v^{*}, \sum_{a} X_{a} \rangle^{2}| \]
 \[ = |\langle w w^{*} - v v^{*}, \Pi(X)^{2} \rangle| + |\langle w w^{*} + v v^{*}, \Pi(X) \rangle \langle w w^{*} - v v^{*}, \Pi(X) \rangle|    \]
 \[ \leq \|w w^{*} - v v^{*}\|_{1} \|\Pi(X)\|_{op}^{2} + 2 \|\Pi(X)\|_{op} \|w w^{*} - v v^{*}\|_{1} \|\Pi(X)\|_{op}  \]
-\[ = 3 k \|w w - v v^{*}\|_{1}   \]
+\[ = 3 (\sum_{a} d_{a}) \|w w - v v^{*}\|_{1}   \]
 Now we just have to bound perturbations of rank one matrices:
 \[ \|w w^{*} - v v^{*}\|_{1} \leq \sqrt{2} \|w w^{*} - v v^{*}\|_{F} \leq 2 \sqrt{2} \|w - v\|_{2}  \]
 Finally we can just bound the action of $Y$:
@@ -603,6 +608,12 @@ has $Tr = 1 - x^{2} - y^{2} = 0$ and $\det = (1-x^{2})(-y^{2}) - x^{2} y^{2} = -
 \[ \|v - w\|_{2}^{2} = (1-x)^{2} + y^{2} = 2(1-x) \]
 Finally note $y^{2} = 1 - x^{2}$ is concave in $x$ and $2(1-x)$ is a tangent line at $x=1$. 
 \end{proof}
+
+\begin{corollary}
+Recall the sufficient condition for $\lambda = \Omega(1)$-expansion
+\[ \sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2} \lesssim \sum_{a} d_{a}^{-1} \|Y_{a}\|_{F}^{2}  \]
+So we require $\langle X, \nabla_{e^{Y}}, X \rangle \gtrsim \|X\|^{2}$. We can get this bound for all $\|\Pi(Y)\|_{op} \ll (\sum_{a} d_{a})^{-1}$. Therefore we can get a proper perturbation bound for $\forall a: \|Y_{a}\|_{F} \ll (\sum_{a} d_{a})^{-1}$ which implies $\|Y\|^{2} \ll (\max_{a} d_{a})^{-3}$, so we require $\forall a: \|\nabla_{a}\|_{F} \ll (\max_{a} d_{a})^{-2}$
+\end{corollary}
 
 \subsection{Conclusion}
 At the end of the day we require $TD \gtrsim \max_{a} d_{a}^{3} \log D$ to get small enough $\nabla$ and robust expansion. Note this is $d \log D$ away from the existence/ uniqueness threshold for the solution. 
