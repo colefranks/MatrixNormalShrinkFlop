@@ -222,6 +222,28 @@ For $k=2$, we don't have strong enough concentration for expansion to be a small
 For $k \geq 3$ we have all the concentration we need: the input is a $\sqrt{\frac{poly\log nk}{n^{k-1}}}$-expander whp and $\|\nabla f\|_{2} \ll \sqrt{\frac{\log nk}{n^{k-2}}}$ whp (should improve). So we can use the simple analysis [Cole,Moitra] to conclude fast convergence. 
 
 
+\subsection{Explicit derivative calculations}
+We will calculate geodesic gradient and Hessian of the standard tensor representation for the two functions:
+\[ f_{v}\{g_{a}\} := \|(\otimes_{a} g_{a}) \cdot v\|_{2}^{2} = \langle v v^{*},\otimes_{a} g_{a}^{*} g_{a} \rangle ; \hspace{10mm}  F_{v} := \log f_{v}  \]
+\[ \partial_{t=0} f(I_{\overline{a}} \otimes e^{tX}) = \langle v v^{*}, I_{\overline{a}} \otimes e^{2tX} 2 X \rangle |_{t=0} = \langle v v^{*}, I_{\overline{a}} \otimes X \rangle   \]
+\[ \partial_{s=0} \partial_{t=0} f(I_{\overline{ab}} \otimes e^{tX} \otimes e^{sY}) = 2 \partial_{s=0} \langle (I_{\overline{b}} \otimes e^{sY}) v v^{*} (I_{\overline{b}} \otimes e^{sY})^{*}, I_{\overline{a}} \otimes X \rangle \]
+\[ = \langle v v^{*}, (I_{\overline{b}} \otimes Y) (I_{\overline{a}} \otimes X) + (I_{\overline{a}} \otimes X) (I_{\overline{b}} \otimes Y) \rangle
+\]
+For simplicity, in this part we denote $Q = v v^{*}, s := Tr[Q]$ and marginals $Q^{S} := Tr_{\overline{S}}[Q]$. We will only need $\{Q^{a}\},\{Q^{ab}\}$
+\[ \langle (\nabla f)_{a}, X \rangle = 2 \langle Q^{a} - \frac{s}{d_{a}} I_{a}, X \rangle  \]
+\[ \langle X, (\nabla^{2} f)_{aa}, X \rangle = 2 \langle Q^{a}, X^{2} \rangle   \]
+\[ \langle Y, (\nabla^{2} f)_{ab}, X \rangle = 2 \langle Q^{ab}, X \otimes Y \rangle   \]
+
+Now to calculate the same for $F_{v}$, note $\nabla F = \frac{\nabla f}{f}$ and $\nabla^{2} F = \frac{\nabla^{2} f}{f} - \frac{(\nabla f)(\nabla f)^{*}}{f^{2}}$. For simplicity we'll denote $\tilde{v} := \frac{v}{\|v\|_{2}}$ and abuse notation by keeping $Q = \tilde{v} \tilde{v}^{*}$ and marginals likewise. 
+\[ \langle (\nabla F)_{a}, X \rangle = 2 \langle Q^{a} - \frac{1}{d_{a}} I_{a}, X \rangle   \]
+\[ \langle X, (\nabla^{2} f)_{aa}, X \rangle = 2 \langle Q^{a}, X^{2} \rangle - 4 \langle Q^{a} - \frac{1}{d_{a}} I_{a}, X \rangle^{2} \]
+\[ \langle Y, (\nabla^{2} f)_{ab}, X \rangle = 2 \langle Q^{ab}, X \otimes Y \rangle  - 4 \langle Q^{a} - \frac{1}{d_{a}} I_{a}, X \rangle \langle Q^{b} - \frac{1}{d_{b}} I_{a}, Y \rangle  \]
+
+By the following Cauchy-Schwarz, in the regime we care about for unit vector $v$, the two functions will be effectively the same:
+\[ \frac{1}{4}\partial_{t=0}^{2} (F(\otimes_{a} e^{tX_{a}}) - f(\otimes_{a} e^{tX_{a}})) = \left( \sum_{a} \langle \nabla_{a}, X_{a} \rangle \right)^{2}   \]
+\[ \leq \left( \sum_{a} \|\nabla_{a}\|_{F} \|X_{a}\|_{F} \right)^{2} \leq \left( \sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2} \right) \left( \sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}} \right)   \]
+\[ \leq \left( \sum_{a} \|\nabla_{a}\|_{op} \|X_{a}\|_{F} \sqrt{d_{a}} \right)^{2} \leq \left( \sum_{a} (d_{a} \|\nabla_{a}\|_{op})^{2} \right) \left( \sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}} \right)  \]
+
 \subsection{Quantum Setting}
 The plan is just about the same using matrix concentration. In this setting, we have the same $\{g_{\vec{i}}\}_{\vec{i} \in [n]^{k}}$, but now our function is
 \[ f_{g}(A_{1}, ..., A_{k}) := \|A \cdot g\|_{2}^{2} = Tr[ ( \otimes_{a} A_{a} g) ( \otimes_{a} A_{a} g)^{*} ] =: \langle Q, \otimes_{a} A_{a}^{2} \rangle   \]
