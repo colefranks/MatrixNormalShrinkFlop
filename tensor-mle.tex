@@ -586,32 +586,32 @@ Conditioned on the above delocalization event, our net only has to cover $\{X \m
 
 \subsection{Robust proof of Expansion}
 In this section we will show expansion under perturbations of the form $\otimes_{a} e^{\delta_{a}}$. Note if $\|\delta\|_{op} \ll 1$ then we can approximate $e^{\delta} - I \approx O(\delta)$. 
-\[ \mu := \E \langle \sum_{t} g_{t} g_{t}^{*}, e^{\delta_{a}} X e^{\delta_{a}} \otimes e^{\delta_{b}} Y e^{\delta_{b}} \otimes_{c} e^{2\delta_{c}} \rangle = \langle \frac{e^{2\delta_{a}}}{d_{a}} , X \rangle \langle \frac{e^{2\delta_{b}}}{d_{b}}, Y \rangle \prod_{c \neq a,b} Tr[\frac{e^{2\delta_{c}}}{d_{c}} ]  \]
-\[ \log \E \exp \theta \langle \sum_{t} g_{t} g_{t}^{*}, e^{\delta_{a}} X e^{\delta_{a}} \otimes e^{\delta_{b}} Y e^{\delta_{b}} \otimes_{c \neq a,b} e^{2\delta_{c}} \rangle = \log \E \exp \theta \sum_{\vec{i}} x^{\vec{i}} \chi(\frac{1}{D},T)   \]
-\[ \leq \theta \mu + \theta^{2} \frac{\|e^{\delta_{a}} X e^{\delta_{a}}\|_{F}^{2} \|e^{\delta_{b}} Y e^{\delta_{b}}\|_{F}^{2} \prod_{c} \|e^{2\delta_{c}}\|_{F}^{2}}{2 TD^{2}} \]
-\[ \forall \theta < \left( \frac{\|e^{\delta_{a}} X e^{\delta_{a}}\|_{op} \|e^{\delta_{b}} Y e^{\delta_{b}}\|_{op} \prod_{c} \|e^{2\delta_{c}}\|_{op}}{TD} \right)^{-1}    \]
+\[ \mu := \E \langle Q, e^{\delta_{a}} Z e^{\delta_{a}} \otimes e^{\delta_{b}} Y e^{\delta_{b}} \otimes_{c} e^{2\delta_{c}} \rangle = \langle \frac{e^{2\delta_{a}}}{d_{a}} , Z \rangle \langle \frac{e^{2\delta_{b}}}{d_{b}}, Y \rangle \prod_{c \neq a,b} Tr[\frac{e^{2\delta_{c}}}{d_{c}} ]  \]
+\[ \log \E \exp \theta \langle Q, e^{\delta_{a}} Z e^{\delta_{a}} \otimes e^{\delta_{b}} Y e^{\delta_{b}} \otimes_{c \neq a,b} e^{2\delta_{c}} \rangle = \log \E \exp \theta \sum_{\vec{i}} x^{\vec{i}} \chi(\frac{1}{D},T)   \]
+\[ \leq \theta \mu + \theta^{2} \frac{\|e^{\delta_{a}} Z e^{\delta_{a}}\|_{F}^{2} \|e^{\delta_{b}} Y e^{\delta_{b}}\|_{F}^{2} \prod_{c} \|e^{2\delta_{c}}\|_{F}^{2}}{2 TD^{2}} \]
+\[ \forall \theta < \left( \frac{\|e^{\delta_{a}} Z e^{\delta_{a}}\|_{op} \|e^{\delta_{b}} Y e^{\delta_{b}}\|_{op} \prod_{c} \|e^{2\delta_{c}}\|_{op}}{TD} \right)^{-1}    \]
 
 \begin{lemma}
 For $\|\delta\|_{op} \ll 1$
 \[ \frac{1}{d} Tr[e^{2\delta}] \leq 1 + O(\|\delta\|_{op})  \]
-\[ \langle \frac{1}{d} I, e^{\delta} X e^{\delta} - X \rangle \leq \frac{O(\|\delta\|_{op})}{\sqrt{d}} \|X\|_{F}   \]
-\[ \|e^{\delta} X e^{\delta}\|_{F}^{2} \leq (1 + O(\|\delta\|_{op})) \|X\|_{F}^{2}   \]
+\[ \langle \frac{1}{d} I, e^{\delta} Z e^{\delta} - Z \rangle \leq \frac{O(\|\delta\|_{op})}{\sqrt{d}} \|Z\|_{F}   \]
+\[ \|e^{\delta} Z e^{\delta}\|_{F}^{2} \leq (1 + O(\|\delta\|_{op})) \|Z\|_{F}^{2}   \]
 \end{lemma}
 \begin{proof}
 Let $\delta := e^{\delta'} - I$ and note $\|\delta\|_{op} \approx \|\delta'\|_{op}$ for small $\delta'$. So we bound
 \[ Tr[e^{2\delta'} - I] = \langle I, e^{2\delta'} - I \rangle \leq d \|2\delta + \delta^{2}\|_{op} \leq d O(\|\delta\|_{op})   \]
-For the second line we use Cauchy Schwarz $\|X\|_{1} \leq \sqrt{d} \|X\|_{F}$
-\[ \langle I, (I + \delta) X (I + \delta') - X \rangle = \langle 2 \delta + \delta^{2}, X \rangle \leq O(\|\delta\|_{op}) \|X\|_{1} \leq O(\|\delta\|_{op}) \sqrt{d} \|X\|_{F}  \]
+For the second line we use Cauchy Schwarz $\|Z\|_{1} \leq \sqrt{d} \|Z\|_{F}$
+\[ \langle I, (I + \delta) Z (I + \delta') - Z \rangle = \langle 2 \delta + \delta^{2}, Z \rangle \leq O(\|\delta\|_{op}) \|X\|_{1} \leq O(\|\delta\|_{op}) \sqrt{d} \|Z\|_{F}  \]
 The second line is similar but simpler using $\|AB\|_{F} \leq \|A\|_{op} \|B\|_{F}$
 \end{proof}
 
-So using the above lemma, we have bounds for $\langle X, I_{a} \rangle = \langle Y, I_{b} \rangle = 0$:
-\[ \mu \leq \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}} O(\|\delta_{a}\|_{op} \|\delta_{b}\|_{op}) \prod_{c} (1 + O(\|\delta_{c}\|_{op})  \]
-\[ \log \E \exp \theta (... - \mu) \leq \theta^{2} \frac{\|X\|_{F}^{2} \|Y\|_{F}^{2}}{2TD} \prod_{c} (1 + O(\|\delta_{c}\|_{op}))  \]
-\[ \forall \theta < \left( \frac{\|X\|_{op}\|Y\|_{op}}{TD} \right)^{-1} \prod_{c} (1 - O(\|\delta_{c}\|_{op}))  \]
+So using the above lemma, we have bounds for $\langle Z, I_{a} \rangle = \langle Y, I_{b} \rangle = 0$:
+\[ \mu \leq \frac{\|Z\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}} O(\|\delta_{a}\|_{op} \|\delta_{b}\|_{op}) \prod_{c} (1 + O(\|\delta_{c}\|_{op})  \]
+\[ \log \E \exp \theta (... - \mu) \leq \theta^{2} \frac{\|Z\|_{F}^{2} \|Y\|_{F}^{2}}{2TD} \prod_{c} (1 + O(\|\delta_{c}\|_{op}))  \]
+\[ \forall \theta < \left( \frac{\|Z\|_{op}\|Y\|_{op}}{TD} \right)^{-1} \prod_{c} (1 - O(\|\delta_{c}\|_{op}))  \]
 So basically, as long as $\|\delta\|_{op} \ll 1$ everything is of the same order as in the unperturbed case, and therefore if we run a net on all parts simultaneously (of size $\exp(\sum_{a} d_{a}^{2})$) we get roughly the same probabilistic bounds as the start. 
 
-This creates a bottleneck though as in general the inequality $\|X\|_{op} \leq \|X\|_{F}$ could be tight, so in order to guarantee a small enough perturbation we can only move in the ball $\|X\|_{F} \ll 1$. This is why we wrote out the conditions required for $\|\nabla_{a}\|_{F} \ll \frac{1}{d_{a}}$, as therefore we can assume $\|X_{a}\|_{F} \ll 1$ and require $\lambda \approx 1$. 
+This creates a bottleneck though as in general the inequality $\|X\|_{op} \leq \|X\|_{F}$ could be tight, so in order to guarantee a small enough perturbation we can only move in the ball $\|X\|_{F} \ll 1$. This is why we wrote out the conditions required for $\|\nabla_{a}\|_{F} \ll \frac{1}{d_{a}}$, as therefore we can assume $\|Z_{a}\|_{F} \ll 1$ and require $\lambda \approx 1$. 
 
 \begin{remark}
 Here is where we definitely would like a KLR style analysis to exploit the fact that we actually have robustness in $\|\cdot\|_{op}$. 
@@ -674,7 +674,7 @@ So we require $\langle X, \nabla_{e^{Y}}, X \rangle \gtrsim \|X\|^{2}$. We can g
 \CF{cole agrees - needs $D > d_a^5!$}
 
 \subsection{Conclusion}
-At the end of the day we require $TD \gtrsim \max_{a} d_{a}^{3} \log D$ to get small enough $\nabla$ and robust expansion. Note this is $d \log D$ away from the existence/ uniqueness threshold for the solution. 
+At the end of the day we require $nD \gtrsim \max_{a} d_{a}^{3} \log D$ to get small enough $\nabla$ and robust expansion. Note this is $d \log D$ away from the existence/ uniqueness threshold for the solution. 
 
 \subsection{Ideas for KLR style analysis}
 \begin{enumerate}
