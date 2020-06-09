@@ -207,7 +207,7 @@ We recall the moment map and Hessian calculations
 \[ \partial_{s=0} \partial_{t=0} f(e^{tX_{a}} \otimes e^{sY_{b}}) = \langle Y, (\nabla^{2})_{ab} X \rangle = \langle Q^{ab}, X \otimes Y \rangle   \]
 
 \section{Operator Scaling}
-In this section we have $T$ samples of $g \sim N(0,\frac{1}{T} (\frac{1}{d_{1}} I_{1}) \otimes (\frac{1}{d_{2}} I_{2}))$. We will denote $D := d_{1} d_{2}$. In order to use the KLR analysis, we will show that the one-body marginals have low error in $\|\cdot\|_{op}$ and the whole operator is a sufficient expander at the start. 
+In this section we have $n$ samples of $X \sim N(0,\frac{1}{n} (\frac{1}{d_{1}} I_{1}) \otimes (\frac{1}{d_{2}} I_{2}))$. We will denote $D := d_{1} d_{2}$. In order to use the KLR analysis, we will show that the one-body marginals have low error in $\|\cdot\|_{op}$ and the whole operator is a sufficient expander at the start. 
 
 \subsection{Bernstein Proof of $\|\mu\|_{op}$}
 This is proven using matrix concentration
@@ -267,11 +267,11 @@ Since we require $\|\cdot\|_{op}$ error $\ll \frac{1}{d_{a} \log D}$, if we are 
 
 
 \subsection{Gaussian proof of $\|\mu\|_{op}$}
-The above method of first thresholding the gaussians then using Bernstein-style concentration on a bounded random matrix feels a bit square-peg round-hole - y. Turns out there are better results specifically for the case of gaussian matrices. Recall again that in our setting $Q^{a}$ is the sum of $N := \frac{TD}{d_{a}}$ copies of $g g^{*}$ where $g \sim \mathcal{N}(0,\frac{1}{TD} I_{a})$. Note first the following fact which allows us to use these specialized inequalities
+The above method of first thresholding the gaussians then using Bernstein-style concentration on a bounded random matrix feels a bit square-peg round-hole - y. Turns out there are better results specifically for the case of gaussian matrices. Recall again that in our setting $Q^{a}$ is the sum of $N := \frac{nD}{d_{a}}$ copies of $X X^{*}$ where $X \sim \mathcal{N}(0,\frac{1}{nD} I_{a})$. Note first the following fact which allows us to use these specialized inequalities
 
 \begin{fact}
-$\sum_{i=1}^{N} g_{i} g_{i}^{*} \equiv G G^{*} $ where $G := \{g_{1}, ..., g_{N}\}$. 
-This means if we denote $\{\lambda_{1}, ..., \lambda_{d}\}$ the spectrum of $\sum_{i=1}^{N} g_{i} g_{i}^{*}$, this is the same as $\{s_{1}^{2}, ..., s_{d}^{2}\}$ where $s_{j} := s_{j}(G)$ the $j$-th singular value. By Taylor expansion of $\sqrt{1+x}$ we have:
+$\sum_{i=1}^{N} X_{i} X_{i}^{*} \equiv G G^{*} $ where $G := \{X_{1}, ..., X_{N}\}$. 
+This means if we denote $\{\lambda_{1}, ..., \lambda_{d}\}$ the spectrum of $\sum_{i=1}^{N} X_{i} X_{i}^{*}$, this is the same as $\{s_{1}^{2}, ..., s_{d}^{2}\}$ where $s_{j} := s_{j}(G)$ the $j$-th singular value. By Taylor expansion of $\sqrt{1+x}$ we have:
 \[ \lambda_{1},\lambda_{d}(GG^{*}) \in \frac{1}{d_{a}} \left( 1 \pm \frac{1}{\log d_{a}} \right) \iff s_{1},s_{d}(G) \in  \frac{1}{\sqrt{d_{a}}} \left( 1 \pm \frac{1}{\log d_{a}} \right)  \]
 \end{fact}
 
@@ -283,12 +283,12 @@ Let $G_{d,N} \in \R^{d \times N}$ for $d < N$ have independent standard gaussian
 \end{corollary}
 
 \begin{corollary}
-If $TD \gtrsim d_{a}^{2} \log^{2} d_{a}$ then $\|Q^{a} - \frac{1}{d_{a}} I_{a} \|_{op} \ll \frac{1}{d_{a} \log d_{a}}$ with failure probability $\leq \exp( - \Omega(d_{a}))$
+If $nD \gtrsim d_{a}^{2} \log^{2} d_{a}$ then $\|Q^{a} - \frac{1}{d_{a}} I_{a} \|_{op} \ll \frac{1}{d_{a} \log d_{a}}$ with failure probability $\leq \exp( - \Omega(d_{a}))$
 \end{corollary}
 \begin{proof}
 We have the following with $\leq 2 \exp(-t^{2}/2)$ failure probability:
-\[ s_{1},s_{d}\left( \frac{1}{\sqrt{TD}} G_{d,N} \right) \in \frac{1}{\sqrt{TD}} \left( \sqrt{\frac{TD}{d_{a}}} \pm (\sqrt{d_{a}} + t) \right) = \frac{1}{\sqrt{d_{a}}}\left( 1 \pm \frac{d_{a} + t \sqrt{d_{a}}}{\sqrt{TD}}  \right)  \]
-Choosing $t \sim \sqrt{d_{a}}$ and $TD \gtrsim d_{a}^{2} \log^{2} d_{a}$ gives the required bound. 
+\[ s_{1},s_{d}\left( \frac{1}{\sqrt{nD}} G_{d,N} \right) \in \frac{1}{\sqrt{nD}} \left( \sqrt{\frac{nD}{d_{a}}} \pm (\sqrt{d_{a}} + t) \right) = \frac{1}{\sqrt{d_{a}}}\left( 1 \pm \frac{d_{a} + t \sqrt{d_{a}}}{\sqrt{nD}}  \right)  \]
+Choosing $t \sim \sqrt{d_{a}}$ and $nD \gtrsim d_{a}^{2} \log^{2} d_{a}$ gives the required bound. 
 \end{proof}
 
 
@@ -494,25 +494,25 @@ By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b}
 
 
 \section{Tensor Scaling}
-We will maintain similar notation. We have T samples of $g \sim \mathcal{N}(0,\frac{1}{T} \otimes_{a} \frac{1}{d_{a}} I_{a})$ with $D := \prod_{a} d_{a}$. We don't have a KLR style analysis at the moment, but strong convexity is enough by the FM analysis, and this can be proven by just controlling each bipartite piece. So the operator scaling analysis does give us very good bounds for $\|\mu\|_{op}$ and expansion with $TD \gg \max_{a} d_{a}^{2} \log^{c}(D)$. These bounds are not enough though, so in this section we will follow the FM analysis to give the requirements, then show the required strong convexity, and show how to maintain this under perturbation. 
+We will maintain similar notation. We have $n$ samples of $X \sim \mathcal{N}(0,\frac{1}{n} \otimes_{a} \frac{1}{d_{a}} I_{a})$ with $D := \prod_{a} d_{a}$. We don't have a KLR style analysis at the moment, but strong convexity is enough by the FM analysis, and this can be proven by just controlling each bipartite piece. So the operator scaling analysis does give us very good bounds for $\|\mu\|_{op}$ and expansion with $nD \gg \max_{a} d_{a}^{2} \log^{c}(D)$. These bounds are not enough though, so in this section we will follow the FM analysis to give the requirements, then show the required strong convexity, and show how to maintain this under perturbation. 
 
 \subsection{FM Analysis}
-Recall that $\forall a: Q^{a} \approx \frac{1}{d_{a}} I_{a}$, so if we can show $\forall a \neq b: \langle Q^{ab}, X \otimes Y \rangle \lesssim \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}}$ then we have strong convexity with $\langle X, \nabla^{2} X \rangle \gtrsim \sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}}$, i.e. the Hessian is strongly diagonally dominant. We will derive our requirements on strong convexity, perturbation bounds, and initial error. Assume we have the following strong convexity 
-\[ \forall X: \sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}} \leq \kappa^{2}: \langle Y, \nabla^{2}_{e^{X}}, Y \rangle \geq \lambda \sum_{a} \frac{\|Y_{a}\|_{F}^{2}}{d_{a}}  \]
+Recall that $\forall a: Q^{a} \approx \frac{1}{d_{a}} I_{a}$, so if we can show $\forall a \neq b: \langle Q^{ab}, Z \otimes Y \rangle \lesssim \frac{\|Z\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}}$ then we have strong convexity with $\langle Z, \nabla^{2} Z \rangle \gtrsim \sum_{a} \frac{\|Z_{a}\|_{F}^{2}}{d_{a}}$, i.e. the Hessian is strongly diagonally dominant. We will derive our requirements on strong convexity, perturbation bounds, and initial error. Assume we have the following strong convexity 
+\[ \forall Z: \sum_{a} \frac{\|Z_{a}\|_{F}^{2}}{d_{a}} \leq \kappa^{2}: \langle Y, \nabla^{2}_{e^{Z}}, Y \rangle \geq \lambda \sum_{a} \frac{\|Y_{a}\|_{F}^{2}}{d_{a}}  \]
 
-Choose $X$ to be the geodesic towards the optimum and $g(t) := f(e^{tX})$ with the opt at $t=1$:
-\[ g'(1) = \int_{0}^{1} g''(t) + g'(0) \geq \lambda \sum_{a} \frac{\|X\|_{F}^{2}}{d_{a}} - |\langle \nabla_{a}, X_{a} \rangle| \]
-\[ \geq \sum_{a} \frac{\|X_{a}\|_{F}}{\sqrt{d_{a}}} \left( \lambda \frac{\|X_{a}\|_{F}}{\sqrt{d_{a}}} - \sqrt{d_{a}} \|\nabla_{a}\|_{F}  \right)  \]
-\[ \geq \sqrt{\sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}}} \left( \lambda \sqrt{\sum_{a} \frac{\|X_{a}\|_{F}^{2}}{d_{a}}} - \sqrt{\sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2}} \right)  \]
-This is $> 0$ if $\forall a: \lambda > d_{a} \frac{\|\nabla_{a}\|_{F}}{\|X_{a}\|_{F}}$ or $\lambda^{2} > \frac{ \sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2} }{\sum_{a} d_{a}^{-1} \|X_{a}\|_{F}^{2}} $. 
+Choose $X$ to be the geodesic towards the optimum and $g(t) := f(e^{tZ})$ with the opt at $t=1$:
+\[ g'(1) = \int_{0}^{1} g''(t) + g'(0) \geq \lambda \sum_{a} \frac{\|Z\|_{F}^{2}}{d_{a}} - |\langle \nabla_{a}, Z_{a} \rangle| \]
+\[ \geq \sum_{a} \frac{\|Z_{a}\|_{F}}{\sqrt{d_{a}}} \left( \lambda \frac{\|Z_{a}\|_{F}}{\sqrt{d_{a}}} - \sqrt{d_{a}} \|\nabla_{a}\|_{F}  \right)  \]
+\[ \geq \sqrt{\sum_{a} \frac{\|Z_{a}\|_{F}^{2}}{d_{a}}} \left( \lambda \sqrt{\sum_{a} \frac{\|Z_{a}\|_{F}^{2}}{d_{a}}} - \sqrt{\sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2}} \right)  \]
+This is $> 0$ if $\forall a: \lambda > d_{a} \frac{\|\nabla_{a}\|_{F}}{\|Z_{a}\|_{F}}$ or $\lambda^{2} > \frac{ \sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2} }{\sum_{a} d_{a}^{-1} \|Z_{a}\|_{F}^{2}} $. 
 
-Since standard perturbation bounds ($e^{X} \approx I + X$) only work for small $X$, we will require
+Since standard perturbation bounds ($e^{Z} \approx I + Z$) only work for small $Z$, we will require
 \[ \forall a: \|\nabla_{a}\|_{F} \ll \frac{1}{d_{a}} \]
-\[ \forall a: \|X_{a}\|_{F}^{2} \ll 1 \implies \langle Y, \nabla_{e^{X}}^{2}, Y \rangle \geq \Omega(1) \sum_{a} \frac{\|Y_{a}\|_{F}^{2}}{d_{a}}   \]
+\[ \forall a: \|Z_{a}\|_{F}^{2} \ll 1 \implies \langle Y, \nabla_{e^{Z}}^{2}, Y \rangle \geq \Omega(1) \sum_{a} \frac{\|Y_{a}\|_{F}^{2}}{d_{a}}   \]
 
 
 \subsection{Moment Map}
-For $g \sim \frac{1}{TD} \otimes_{a} I_{a}$, we want to bound $\|Q^{a} - sI_{a}\|_{F}$ using a net:
+For $g \sim \frac{1}{nD} \otimes_{a} I_{a}$, we want to bound $\|Q^{a} - sI_{a}\|_{F}$ using a net:
 \[ \E \langle \sum_{t} g_{t} g_{t}^{*}, X_{a} \rangle = \sum_{i} x_{i} \chi(\frac{1}{d_{a}}, \frac{TD}{d_{a}}) = \langle \frac{1}{d_{a}} I_{a}, X \rangle = 0 \]
 \[ \log \E \exp \theta \langle \sum_{t} g_{t} g_{t}^{*}, X_{a} \rangle = \log \E \exp \theta \sum_{i} x_{i} \chi(\frac{1}{d_{a}}, \frac{TD}{d_{a}})  \]
 \[ = \sum_{i} \frac{-TD}{2 d_{a}} \log \left( 1 - 2 \theta \frac{x_{i}}{TD} \right)   \]
@@ -538,19 +538,20 @@ Actually there seems to be a simpler way to prove these statements using the $\|
 So this means in the first case, we need $TD \gtrsim \max_{a} d_{a}^{2} \log D$ and the second case we need $TD \gtrsim \max_{a} d_{a}^{3} \log D$. But by this analysis we only get $1/poly$ failure probability. 
 
 
-\subsection{$\delta$-net proof of Expansion}
-\[ \E \langle \sum_{t} g_{t} g_{t}^{*}, X_{a} \otimes Y_{b} \rangle = \sum_{ij} x_{i} y_{j} \chi(\frac{1}{d_{a} d_{b}}, \frac{TD}{d_{a} d_{b}}) = \langle \frac{1}{d_{a}} I_{a}, X \rangle \langle \frac{1}{d_{b}} I_{b}, Y \rangle = 0 \]
+\subsection{Net proof of Expansion}
+Recall again we have $Q := \sum_{i \in [n]} X_{i} X_{i}^{*}$ with i.i.d $X \sim \mathcal{N}(0,\frac{1}{n} \otimes_{a} \frac{1}{d_{a}} I_{a})$. For symmetric test matrices $Z,Y$ with eigenvalues $\{z_{i}\},\{y_{j}\}$ respectively:
+\[ \E \langle Q, Z_{a} \otimes Y_{b} \rangle = \sum_{ij} z_{i} y_{j} \chi(\frac{1}{d_{a} d_{b}}, \frac{nD}{d_{a} d_{b}}) = \langle \frac{1}{d_{a}} I_{a}, Z \rangle \langle \frac{1}{d_{b}} I_{b}, Y \rangle = 0 \]
 
-\[ \log \E \exp \theta \langle \sum_{t} g_{t} g_{t}^{*}, X_{a} \otimes Y_{b} \rangle = \log \E \exp \theta \sum_{ij} x_{i} y_{j} \chi(\frac{1}{d_{a} d_{b}}, \frac{TD}{d_{a} d_{b}})  \]
-\[ = \sum_{ij} \frac{-TD}{2 d_{a} d_{b}} \log \left( 1 - 2 \theta \frac{x_{i} y_{j}}{TD} \right)   \]
-\[ \lesssim \theta^{2} \frac{\|X\|_{F}^{2} \|Y\|_{F}^{2}}{2 d_{a} d_{b} TD} \hspace{10mm} \forall \theta < \left( \frac{\|X\|_{op} \|Y\|_{op}}{TD} \right)^{-1}  \]
-\[ \Pr[ \langle \sum_{t} g_{t} g_{t}^{*}, X \otimes Y \rangle \geq \lambda \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}} ] \leq 
+\[ \log \E \exp \theta \langle Q, Z_{a} \otimes Y_{b} \rangle = \log \E \exp \theta \sum_{ij} z_{i} y_{j} \chi(\frac{1}{d_{a} d_{b}}, \frac{nD}{d_{a} d_{b}})  \]
+\[ = \sum_{ij} \frac{-nD}{2 d_{a} d_{b}} \log \left( 1 - 2 \theta \frac{z_{i} y_{j}}{nD} \right)   \]
+\[ \lesssim \theta^{2} \frac{\|Z\|_{F}^{2} \|Y\|_{F}^{2}}{2 d_{a} d_{b} nD} \hspace{10mm} \forall \theta < \left( \frac{\|Z\|_{op} \|Y\|_{op}}{TD} \right)^{-1}  \]
+\[ \Pr[ \langle Q, X \otimes Y \rangle \geq \lambda \frac{\|Z\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}} ] \leq 
 \begin{cases} 
-\exp( - \lambda^{2} TD ) \hspace{7mm} \lambda  < \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}} \|X\|_{op} \|Y\|_{op}} 
-\\ \exp ( - \lambda TD \frac{\|X\|_{F} \|Y\|_{F}}{ \sqrt{d_{a} d_{b}} \|X\|_{op} \|Y\|_{op}} )
+\exp( - \lambda^{2} nD ) \hspace{7mm} \lambda  < \frac{\|Z\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}} \|Z\|_{op} \|Y\|_{op}} 
+\\ \exp ( - \lambda nD \frac{\|Z\|_{F} \|Y\|_{F}}{ \sqrt{d_{a} d_{b}} \|Z\|_{op} \|Y\|_{op}} )
 \end{cases}
 \]
-So for $\lambda \approx \frac{1}{k}$ we need $TD \gtrsim \max_{a} d_{a}^{3} \log D > \max_{a,b} \sqrt{d_{a} d_{b}} (d_{a}^{2} + d_{b}^{2}) \log D$
+So for $\lambda \approx \frac{1}{k}$ we need $nD \gtrsim \max_{a} d_{a}^{3} \log D > \max_{a,b} \sqrt{d_{a} d_{b}} (d_{a}^{2} + d_{b}^{2}) \log D$
 
 \begin{remark}
 Note again we lose out when $\frac{d \|X\|_{op}^{2}}{\|X\|_{F}^{2}}$ is large. So we would like to show that w.h.p. the singular vectors of our bipartite operator have e.g. small condition number or large stable rank. Again if we can show the relevant part of the net has $s \|X\|_{F}^{2} \geq d \|X\|_{op}^{2}$ then we incur an $s$ factor loss in samples. This is reminiscent of the fact that eigenvectors for random matrices have many delocalization properties, so will look into that. 
