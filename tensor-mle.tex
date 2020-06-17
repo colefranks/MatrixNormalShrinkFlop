@@ -94,8 +94,20 @@
 
 \section{Introduction}
 \CF{background, history; remark that we automatically know flip-flop works but our strong convexity will give efficient algorithms in this setting, as opposed to just converging algorithms. } 
+The covariance matrix $\Sigma$ of a Gaussian random variable $X$ on $\R^D$ is a fundamental object in statistics, and its estimation is a central task in data analysis. If the number of samples is comparable to the dimension, the sample covariance matrix approximates $\Sigma$ well in spectral norm. However, one can still often obtain useful estimates of $\Sigma$ with far fewer samples under the assumption that $\Sigma$ is structured. Performing this task under various structural assumptions such as sparsity, rank constraints, bandedness, and many more is a well-studied problem\CF{cite}. Here we consider the family of distributions, known as the \emph{tensor normal model}, with covariance matrices that are Kronecker products of some matrices of known dimensions $d_1, \dots, d_k$ with $d_1d_2\dots d_k = D$.
 
+Perhaps the best-known case is the case $k = 2$, called the \emph{matrix normal model} or  \emph{matrix normal variate model} \CF{cite drton, etc}. This model applies when each sample can be viewed as a matrix and the covariance between entries can be modeled as a product of a inter-row factor and a inter-column factor, such as data indexed by both space and time in magnetoencephalography \CF{cite}. \CF{figure out some uses for the tensor normal models}. 
 
+Much research has been devoted to estimating the covariance in matrix and tensor normal models. Authors have proven that the MLE exists uniquely under mild assumptions \CF{cite}, and there is an iterative algorithm (known as the \emph{flip-flop} algorithm) that converges quickly to the MLE in practice \CF{dutilleul}. Through recent connections noted in \CF{cite philipp et al} it follows that the flip-flop algorithm converges whenever the MLE exists. Estimators with good performance have been shown to exist under the assumption that the true covariance matrix is highly sparse. 
+
+Nonetheless, to our knowledge there exist no nonasymptotic bounds on convergence of the MLE, or any other tractable estimator, in the dense case. Moreover, it has not been proven that the flip-flop algorithm converges \emph{quickly} to the MLE, or even that there is a polynomial time to compute the MLE or any other \CF{asymptotically consistent?} estimator. We make significant progress on both of these open questions. As an informal summary, we show the following:
+\begin{enumerate}
+\item The MLE for the matrix normal model is close to the covariance in spectral norm for a number of samples that is \CF{check}
+$$O(\max \{d_1/d_2, d_2/d_1\} \log \max \{d_1/d_2, d_2/d_1\}),$$ which is tight up to logarithmic factors.
+\item The MLE for the tensor normal model converges is close to the covariance in Frobenius norm for a number of samples that is $O(\max_{i \in [k]} D/d_i^3)$. This result is tight.
+\item Under the same sample requirements as above, the flip-flop algorithm converges exponentially quickly to the MLE with high probability. As a corollary, there is an algorithm to compute the  MLE with polynomial expected runtime.
+\end{enumerate}
+It remains an open question to show tight bounds for convergence of the MLE in spectral norm for the tensor normal model. 
 \subsection{Notation}
 \CF{temporary}
 \begin{itemize}
@@ -103,6 +115,7 @@
 \item $X$ for the tensor random variable, $X_1, \dots, X_n$ for the samples, $\vec X = (X_1, \dots, X_n)$ for the tuple of samples. 
 \item $f_{\vec X}$ for the function in \cref{dfn:function}. 
 \item $\PD_d$ for $d \times d$ pd's, $\Herm_d$ for $d \times d$ Hermitians. I don't think stats folks use this, I just really like them. Other suggestions welcome.
+\item I'm going to call $G = \oplus \GL_{d_i}, P = \oplus \PD_{d_i}, H = \oplus \Herm_{d_i}$. Explain somewhere how H is the tangent space.
 \item $\nabla, \nabla^2$ seems fine for geodesic Hessians and gradients. We'll explicitly mention that this is different than the usual ones.
 \item anything else we think of. 
 \end{itemize}
@@ -110,63 +123,152 @@
 
 \CF{Enough background material to state \cref{thm:matrix-normal,thm:tensor-frobenius,thm:matrix-flipflop,thm:tensor-flipflop}; maybe make some of these into 2-parters, explanation of tightness of results.}
 
+We use the following notions of distance. The first arises naturally because it is within a constant factor of the total variation distance (assuming both are small enough constants), and the second because bounds on it typically strengthen bounds on the first. 
+
 \begin{definition}[Distance]
 Define 
 \begin{align}d_{F}(\Sigma_1, \Sigma_2) = \| I - \Sigma_2^{1/2} \Sigma_1^{-1} \Sigma_2^{1/2}\|_F\\
 d_{op}(\Sigma_1, \Sigma_2) = \| I - \Sigma_2^{1/2} \Sigma_1^{-1} \Sigma_2^{1/2}\|_{op}
 \end{align}
 \end{definition}
-\begin{theorem}[Matrix normal model spectral error]\label{thm:matrix-normal} The MLE for $\Sigma_1, \Sigma_2$ from $n$ independent samples satisfies 
-$$ d_{op}(\hat{\Sigma}, \Sigma) = O(\TODO{}). $$
-with probability $\TODO{}$.
+We may now state precisely our results for the matrix and tensor normal models.
+\begin{theorem}[Matrix normal model spectral error]\label{thm:matrix-normal} The MLE $(\hat{\Sigma}_1,\hat{\Sigma}_2) $ for $(\Sigma_1, \Sigma_2)$ from $n$ independent samples satisfies 
+$$ d_{op}(\hat{\Sigma}_i, \Sigma_i) = O(\TODO{}) $$
+for $i = \{1,2\}$ with probability $\TODO{}$.
 \CF{presumably there will be some dimension-dependent factors}.
 \end{theorem}
 
-\begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius} The MLE for $\bigotimes_{a = 1}^{k} \Sigma_a$ from $n$ independent samples satisfies 
-$$ d_F(\hat{\Sigma}, \Sigma) = O(\TODO{}). $$
-with probability $\TODO{}$.
+\begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius} The MLE $(\hat{\Sigma}_1, \dots, \hat{\Sigma}_k) $ for $(\Sigma_1, \dots \Sigma_k)$ from $n$ independent samples satisfies 
+$$ d_{op}(\hat{\Sigma}_i, \Sigma_i) = O(\TODO{}) $$
+for $i \in [k]$ with probability $\TODO{}$.
 \CF{presumably there will be some dimension-dependent factors}.
 \end{theorem}
 
 
-\begin{theorem}[Matrix flip-flop]\label{thm:matrix-flipflop} If $\hat{\Sigma}$ denotes the MLE estimator for $\Sigma$, then provided $n \geq \TODO{}$ the flip-flop algorithm computes $\underline{\Sigma}$ with 
-$$ d_F(\underline{\Sigma}, \hat{\Sigma}) \leq \eps $$
-in $O(\TODO{\log(1/\eps)})$ iterations with probability at least $\TODO{}$.
+\begin{theorem}[Matrix flip-flop]\label{thm:matrix-flipflop} If $(\hat{\Sigma}_1, \hat{\Sigma}_2) $ denotes the MLE estimator for for $(\Sigma_1, \Sigma_2)$, then provided $n \geq \TODO{}$ the flip-flop algorithm computes $(\underline{\Sigma}_1, \underline{\Sigma}_2)$ with 
+$$ d_F(\underline{\Sigma}_i, \hat{\Sigma}_i) \leq \eps $$
+for $i \in \{1,2\}$ in $O(\TODO{\log(1/\eps)})$ iterations with probability at least $\TODO{}$.
 \end{theorem}
 
-
+\CF{make the same changes to the other guys - make sure it's the right thing}.
 
 \begin{theorem}[Tensor flip-flop]\label{thm:tensor-flipflop} If $\hat{\Sigma}$ denotes the MLE estimator for $\Sigma$, then provided $n \geq \TODO{}$ the flip-flop algorithm computes $\underline{\Sigma}$ with 
 $$ d_F(\underline{\Sigma}, \hat{\Sigma}) \leq \eps $$
 in $O(\TODO{\log(1/\eps)})$ iterations with probability at least $\TODO{}$.
 \end{theorem}
+One may wonder why in the above theorems we consider the distances for the individual tensor factors and not the covariance matrix itself, but tight bounds for the covariance matrix itself follow from the above bounds (apart from the logarithmic factor in the matrix normal case and a constant factor in general).
 
 
-
-\section{Structured covariance estimation}
+\section{Tensor normal models}
 \CF{the precise definitions of MLE's}
 \CF{Show that we can reduce to the identity case for all these models}
 \CF{give high level overview of proofs complete enough to motivate the next two subsections} 
-We study covariance estimation in the tensor normal model, in which $X$ is sampled according to $N(0, \Sigma = \bigotimes_{a = 1}^{k} \Sigma_a)$ for $\Sigma_a$ a positive-semidefinite $d_a\times d_a$ matrix. Let $D = \prod_{a \in [k]} d_a$. 
+We now give a precise definition of the MLE in the tensor normal model, in which $X$ is sampled according to $N(0, \Sigma = \bigotimes_{a = 1}^{k} \Sigma_a)$ for $\Sigma_a$ a positive-semidefinite $d_a\times d_a$ matrix. Let $D = \prod_{a \in [k]} d_a$. The matrix normal model is the case $k = 2$.
 
 First, recall the maximum-likelihood estimator for $\Sigma$ without any structure. If $X_1, \dots, X_n \in \R^D$ are the samples from $N(0, \Sigma)$, then the log-likelihood for $\Sigma$ is (up to an additive constant) given by the function 
-$$L(\Sigma^{-1}) = \sum_{i = 1}^n \langle X_i,  \Sigma X_i\rangle - \CF{sg} \log\det \Sigma.$$
+$$L(\Sigma^{-1}) = \sum_{i = 1}^n \langle X_i,  \Sigma X_i\rangle - \frac{1}{D} \log\det \Sigma.$$
 If we are only interested in estimating $\Sigma$ only up to a constant, we may instead maximize 
 \begin{gather}\tilde{L}(\Sigma^{-1}) = \log \sum_{i = 1}^n \langle X_i,  \Sigma X_i\rangle - \frac{1}{D} \log\det \Sigma. \label{eq:projective-likelihood}\end{gather}
-and the solutions will differ only by a constant.
-
-\begin{remark}[Projective space] One may think of \cref{eq:projective-likelihood} as the MLE for $\Sigma$ after recieving $[X_1, \dots, X_n]$, the equivalence class of the samples in projective space.
+and the solutions will differ only by a constant. Both likelihoods are geodesically convex, as will be defined precisely in the next section, but only the latter has geodesically Lipschitz gradients, i.e. is geodesically smooth \CF{cite bfg+}. This suggests it is more amenable to geodesically convex optimization, our main tool in this work.
+\begin{remark}[Projective space] One may think of \cref{eq:projective-likelihood} as the MLE for $\Sigma$ after recieving $[X_1, \dots, X_n]$, the equivalence class of the tuple of samples in projective space.
 \end{remark}
-Restricting $\tilde{L}$ to $\Sigma$ of the form $\bigotimes_{a = 1}^{k} \Sigma_a$, we are led to consider the minima of the following function. \CF{actually, this interpretation isn't quite right. Nonetheless the function below is what we want.}
+Restricting $\tilde{L}$ to $\Sigma$ of the form $\bigotimes_{a = 1}^{k} \Sigma_a$, we are led to consider the minima of the following function. 
 \begin{definition}[Projective likelihood function]\label{dfn:function}
-Given $\vec{X} = (X_1, \dots, X_n)$, let the function $f_{\vec X}:\bigoplus_{i} \PD(d_i) \to \R$ be given by 
+Given $\vec{X} = (X_1, \dots, X_n)$, let the function $f_{\vec X}:\bigoplus_{i} \PD_{d_i} \to \R$ be given by 
 \begin{gather}f_{\vec X}(\Sigma_1, \dots, \Sigma_n) = \log \sum_{i = 1}^n \left\langle X_i,  \bigotimes_{i = 1}^k \Sigma_i X_i\right\rangle - \sum_{i = 1}^k \frac{1}{d_i} \log\det \Sigma_i. \label{eq:projective-likelihood}\end{gather}
+define $\widehat{\Sigma}$ to be the minimizer of $f_{\vec X}$ in $\bigoplus_{i} \PD_{d_i}^1$ if it exists and is unique.
 \end{definition}
+When $\vec X$ is clear from context we will drop it. 
+The choice of the coefficient $1/d_i$ is a matter of convenience and, because renormalizing $\Sigma_i$ changes $\Sigma$ only by a constant factor, does does not change the optima.
 
-\subsection{Concentration}
-%The above method of first thresholding the gaussians then using Bernstein-style concentration on a bounded random matrix feels a bit square-peg round-hole - y. Turns out there are better results specifically for the case of gaussian matrices. 
 
-Recall again that in our setting $Q^{a}$ is the sum of $N := \frac{nD}{d_{a}}$ copies of $X X^{*}$ where $X \sim \mathcal{N}(0,\frac{1}{nD} I_{a})$. Note first the following fact which allows us to use these specialized inequalities
+\subsection{Sample complexity from goedesic convexity} Following \cite{FM20}, and in spirit also \CF{cite weisel}, we use geodesic convexity to prove \cref{thm:tensor-frobenius}. \cref{thm:matrix-normal}, proven later in \cref{sec:matrix-normal}, requires the stronger notion of \emph{quantum expansion}.
+
+
+We first define our notion of convexity. The function $f_{\vec X}$ has a property called \emph{geodesic convexity} \CF{cite bfg+}. 
+\begin{definition}[Geodesic convexity]\CF{define $P,G,H$ before here} A function $f:P \to \R$ is said to be geodesically convex if  
+$$f(A^\dagger e^{t Z} A)$$ is convex in $t$ for all $Z \in H$ and $A\in G$. Say $f$ is $\lambda$-geodesically \emph{strongly convex} if $\partial^2_t f(A^\dagger e^{t Z} A) \geq \lambda \|Z\|_F$. 
+\end{definition} 
+With this definition in place, we are able to state the rather simple plan. 
+\begin{enumerate}
+\item \textbf{Reduce to identity: } Firstly, note that $\widehat{\Sigma}(\vec X) = \Sigma^{1/2} \hat{\Sigma}(\Sigma^{-1/2} \vec X) \Sigma^{1/2}$. As $\Sigma^{-1/2} \vec X$ is distributed as $n$ samples from $\Sigma^{-1/2}X$ which is a standard Gaussian, the distance 
+$$ d(\hat{\Sigma}(\vec X), I)$$
+for $X$ standard Gaussian is distributed exactly as $d(\hat{\Sigma}(\vec X), \Sigma)$ for $X$ with covariance matrix $\Sigma$. This means it is enough to bound $d(\hat{\Sigma}(\vec X), I)$ assuming $\vec X$ is a standard Gaussian.
+\item \textbf{Bound the gradient: } Show that $\nabla f_{\vec X} (I) $ is small with high probability. 
+\item \textbf{Show strong convexity: } Show that, with high probability, $f_{\vec X}$ is $\lambda$-geodesically strongly convex near $I$ for some constant $\lambda$.
+\end{enumerate}
+These together imply the sample complexity bounds - as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far. Furthermore, like in the Euclidean case, if a function is strongly geodesically convex in a region and one can prove a \emph{descent lemma} for a sequence in the region, then it must converge exponentially quickly to an optimizer. It is well-known that $f_{\vec X}$ satisfies such a descent lemma \CF{cite bfg+}.
+
+We now proceed to state the lemma from geodesically convex optimization we will need to prove the \cref{thm:tensor-frobenius}.
+
+%\begin{definition}[Geodesic gradient]\TODO{definition of geodesic gradient and Hessian}\end{definition}
+
+
+
+\begin{lemma} If $f$ is $\lambda$-geodesically strongly convex on a ball of radius $\lambda/2$ about $I$ and the geodesic gradient $\nabla f(I)$ satisfies $\|\nabla f(I)\|_F \leq \eps \leq c \lambda^2$, then there is an optimizer $Z$ such that $\|\log Z\|_F \leq \eps/\lambda$. 
+\end{lemma}
+\begin{proof}
+\TODO{basic}.
+\end{proof}
+Next, we state the two theorems that allow us to apply this lemma. We prove them in the next two sections.
+\begin{lemma}\label{lemma:gradient-bound} Suppose the number of samples is at least \TODO{}. Then with probability \TODO{}, 
+$$\| \nabla f(I)\|_{op} \leq \TODO{}$$
+as a consequence, $\|\nabla f(I)\|_F \leq \TODO{}$. 
+\end{lemma}
+
+\begin{theorem}\label{thm:tensor-convexity}
+Suppose the number of samples is at least \TODO{}. Then with probability \TODO{}, $f_X$ is $\TODO{\lambda}$-strongly convex. 
+\end{theorem}
+These two theorems immediately yield \cref{thm:tensor-frobenius}. 
+\begin{proof}[Proof of \cref{thm:tensor-frobenius}]
+\CF{TODO}.
+
+\end{proof}
+
+
+
+\subsection{Gradients and Hessians}
+
+We now proceed to compute the gradient and Hessian of $f$, and then to prove the bound \cref{lemma:gradient-bound} on the gradient using basic matrix concentration results. 
+
+
+
+\begin{fact}
+The geodesic gradient and Hessians of $f_{\vec X}$ are as follows:
+\begin{align}
+\nabla f_{\vec X}(I), \nabla^2 f_{\vec X}(I) = \TODO{ \text{put whatever bound we'll be using so this can be black-boxed.}}
+\end{align}
+\end{fact}
+\CF{I put all the blood and guts inside a proof environment. What ever is outside proof environments should be pretty readable.}
+\begin{proof}
+We will calculate geodesic gradient and Hessian of the standard tensor representation for the two functions: \TODO{make the notation match the function $f_{\vec X}$. Maybe swap $F$ and $f$ what follows to be consistent.}. 
+\[ f_{v}\{g_{a}\} := \|(\otimes_{a} g_{a}) \cdot v\|_{2}^{2} = \langle v v^{*},\otimes_{a} g_{a}^{*} g_{a} \rangle ; \hspace{10mm}  F_{v} := \log f_{v}  \]
+\[ \partial_{t=0} f(I_{\overline{a}} \otimes e^{tZ}) = \langle v v^{*}, I_{\overline{a}} \otimes e^{2tZ} 2 Z \rangle |_{t=0} = \langle v v^{*}, I_{\overline{a}} \otimes Z \rangle   \]
+\[ \partial_{s=0} \partial_{t=0} f(I_{\overline{ab}} \otimes e^{tZ} \otimes e^{sY}) = 2 \partial_{s=0} \langle (I_{\overline{b}} \otimes e^{sY}) v v^{*} (I_{\overline{b}} \otimes e^{sY})^{*}, I_{\overline{a}} \otimes Z \rangle \]
+\[ = \langle v v^{*}, (I_{\overline{b}} \otimes Y) (I_{\overline{a}} \otimes Z) + (I_{\overline{a}} \otimes Z) (I_{\overline{b}} \otimes Y) \rangle
+\]
+For simplicity, in this part we denote $Q = v v^{*}, s := Tr[Q]$ and marginals $Q^{S} := Tr_{\overline{S}}[Q]$. We will only need $\{Q^{a}\},\{Q^{ab}\}$
+\[ \langle (\nabla f)_{a}, Z \rangle = 2 \langle Q^{a} - \frac{s}{d_{a}} I_{a}, Z \rangle  \]
+\[ \langle Z, (\nabla^{2} f)_{aa}, Z \rangle = 2 \langle Q^{a}, Z^{2} \rangle   \]
+\[ \langle Y, (\nabla^{2} f)_{ab}, Z \rangle = 2 \langle Q^{ab}, Z \otimes Y \rangle   \]
+
+Now to calculate the same for $F_{v}$, note $\nabla F = \frac{\nabla f}{f}$ and $\nabla^{2} F = \frac{\nabla^{2} f}{f} - \frac{(\nabla f)(\nabla f)^{*}}{f^{2}}$. For simplicity we'll denote $\tilde{v} := \frac{v}{\|v\|_{2}}$ and abuse notation by keeping $Q = \tilde{v} \tilde{v}^{*}$ and marginals likewise. 
+\[ \langle (\nabla F)_{a}, Z \rangle = 2 \langle Q^{a} - \frac{1}{d_{a}} I_{a}, Z \rangle   \]
+\[ \langle X, (\nabla^{2} f)_{aa}, X \rangle = 2 \langle Q^{a}, Z^{2} \rangle - 4 \langle Q^{a} - \frac{1}{d_{a}} I_{a}, Z \rangle^{2} \]
+\[ \langle Y, (\nabla^{2} f)_{ab}, Z \rangle = 2 \langle Q^{ab}, Z \otimes Y \rangle  - 4 \langle Q^{a} - \frac{1}{d_{a}} I_{a}, Z \rangle \langle Q^{b} - \frac{1}{d_{b}} I_{a}, Y \rangle  \]
+
+By the following Cauchy-Schwarz, in the regime we care about for unit vector $v$, the two functions will be effectively the same:
+\[ \frac{1}{4}\partial_{t=0}^{2} (F(\otimes_{a} e^{tZ_{a}}) - f(\otimes_{a} e^{tZ_{a}})) = \left( \sum_{a} \langle \nabla_{a}, Z_{a} \rangle \right)^{2}   \]
+\[ \leq \left( \sum_{a} \|\nabla_{a}\|_{F} \|Z_{a}\|_{F} \right)^{2} \leq \left( \sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2} \right) \left( \sum_{a} \frac{\|Z_{a}\|_{F}^{2}}{d_{a}} \right)   \]
+\[ \leq \left( \sum_{a} \|\nabla_{a}\|_{op} \|Z_{a}\|_{1} \right)^{2} \leq \left( \sum_{a} (d_{a} \|\nabla_{a}\|_{op})^{2} \right) \left( \sum_{a} \frac{\|Z_{a}\|_{F}^{2}}{d_{a}} \right)  \]
+
+\end{proof}
+
+
+
+
+
+ Recall again that in our setting $Q^{a}$ is the sum of $N := \frac{nD}{d_{a}}$ copies of $X X^{*}$ where $X \sim \mathcal{N}(0,\frac{1}{nD} I_{a})$. Note first the following fact which allows us to use these specialized inequalities
 
 \begin{fact}
 $\sum_{i=1}^{N} X_{i} X_{i}^{*} \equiv G G^{*} $ where $G := \{X_{1}, ..., X_{N}\}$. 
@@ -189,39 +291,18 @@ We have the following with $\leq 2 \exp(-t^{2}/2)$ failure probability:
 \[ s_{1},s_{d}\left( \frac{1}{\sqrt{nD}} G_{d,N} \right) \in \frac{1}{\sqrt{nD}} \left( \sqrt{\frac{nD}{d_{a}}} \pm (\sqrt{d_{a}} + t) \right) = \frac{1}{\sqrt{d_{a}}}\left( 1 \pm \frac{d_{a} + t \sqrt{d_{a}}}{\sqrt{nD}}  \right)  \]
 Choosing $t \sim \sqrt{d_{a}}$ and $nD \gtrsim d_{a}^{2} \log^{2} d_{a}$ gives the required bound. 
 \end{proof}
-\subsection{Gradients and Hessians}
-We will calculate geodesic gradient and Hessian of the standard tensor representation for the two functions:
-\[ f_{v}\{g_{a}\} := \|(\otimes_{a} g_{a}) \cdot v\|_{2}^{2} = \langle v v^{*},\otimes_{a} g_{a}^{*} g_{a} \rangle ; \hspace{10mm}  F_{v} := \log f_{v}  \]
-\[ \partial_{t=0} f(I_{\overline{a}} \otimes e^{tZ}) = \langle v v^{*}, I_{\overline{a}} \otimes e^{2tZ} 2 Z \rangle |_{t=0} = \langle v v^{*}, I_{\overline{a}} \otimes Z \rangle   \]
-\[ \partial_{s=0} \partial_{t=0} f(I_{\overline{ab}} \otimes e^{tZ} \otimes e^{sY}) = 2 \partial_{s=0} \langle (I_{\overline{b}} \otimes e^{sY}) v v^{*} (I_{\overline{b}} \otimes e^{sY})^{*}, I_{\overline{a}} \otimes Z \rangle \]
-\[ = \langle v v^{*}, (I_{\overline{b}} \otimes Y) (I_{\overline{a}} \otimes Z) + (I_{\overline{a}} \otimes Z) (I_{\overline{b}} \otimes Y) \rangle
-\]
-For simplicity, in this part we denote $Q = v v^{*}, s := Tr[Q]$ and marginals $Q^{S} := Tr_{\overline{S}}[Q]$. We will only need $\{Q^{a}\},\{Q^{ab}\}$
-\[ \langle (\nabla f)_{a}, Z \rangle = 2 \langle Q^{a} - \frac{s}{d_{a}} I_{a}, Z \rangle  \]
-\[ \langle Z, (\nabla^{2} f)_{aa}, Z \rangle = 2 \langle Q^{a}, Z^{2} \rangle   \]
-\[ \langle Y, (\nabla^{2} f)_{ab}, Z \rangle = 2 \langle Q^{ab}, Z \otimes Y \rangle   \]
+We may finally prove the bound on the gradient.
+\begin{proof}[Proof of \cref{lemma:gradient-bound}]
+\TODO{put guts here}.
+\end{proof}
 
-Now to calculate the same for $F_{v}$, note $\nabla F = \frac{\nabla f}{f}$ and $\nabla^{2} F = \frac{\nabla^{2} f}{f} - \frac{(\nabla f)(\nabla f)^{*}}{f^{2}}$. For simplicity we'll denote $\tilde{v} := \frac{v}{\|v\|_{2}}$ and abuse notation by keeping $Q = \tilde{v} \tilde{v}^{*}$ and marginals likewise. 
-\[ \langle (\nabla F)_{a}, Z \rangle = 2 \langle Q^{a} - \frac{1}{d_{a}} I_{a}, Z \rangle   \]
-\[ \langle X, (\nabla^{2} f)_{aa}, X \rangle = 2 \langle Q^{a}, Z^{2} \rangle - 4 \langle Q^{a} - \frac{1}{d_{a}} I_{a}, Z \rangle^{2} \]
-\[ \langle Y, (\nabla^{2} f)_{ab}, Z \rangle = 2 \langle Q^{ab}, Z \otimes Y \rangle  - 4 \langle Q^{a} - \frac{1}{d_{a}} I_{a}, Z \rangle \langle Q^{b} - \frac{1}{d_{b}} I_{a}, Y \rangle  \]
+\subsection{Strong convexity}
+\TODO{Pisier + perturbation bound}
 
-By the following Cauchy-Schwarz, in the regime we care about for unit vector $v$, the two functions will be effectively the same:
-\[ \frac{1}{4}\partial_{t=0}^{2} (F(\otimes_{a} e^{tZ_{a}}) - f(\otimes_{a} e^{tZ_{a}})) = \left( \sum_{a} \langle \nabla_{a}, Z_{a} \rangle \right)^{2}   \]
-\[ \leq \left( \sum_{a} \|\nabla_{a}\|_{F} \|Z_{a}\|_{F} \right)^{2} \leq \left( \sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2} \right) \left( \sum_{a} \frac{\|Z_{a}\|_{F}^{2}}{d_{a}} \right)   \]
-\[ \leq \left( \sum_{a} \|\nabla_{a}\|_{op} \|Z_{a}\|_{1} \right)^{2} \leq \left( \sum_{a} (d_{a} \|\nabla_{a}\|_{op})^{2} \right) \left( \sum_{a} \frac{\|Z_{a}\|_{F}^{2}}{d_{a}} \right)  \]
-\section{Matrix normal models}
+\section{Matrix normal models}\label{sec:matrix-normal}
 \TODO{Proof of \cref{thm:matrix-normal}. Prove bounds on $d_{op}(\hat{\Sigma}, I)$ assuming $X$ standard normal.}
-
 \subsection{Quantum expansion}
 \TODO{Cheeger proof of expansion, also cite Pisier}
-
-
-\section{Tensor normal models}
-\TODO{Proof of \cref{thm:tensor-frobenius}. Prove bounds on $d_{F}(\hat{\Sigma}, I)$ assuming $X$ standard normal.}
-\subsection{Strong convexity}
-
-
 
 \section{Convergence of flip-flop algorithms}
 \TODO{General descent-lemma + strong convexity folklore}
@@ -230,8 +311,25 @@ By the following Cauchy-Schwarz, in the regime we care about for unit vector $v$
 \subsection{Matrix flip-flop convergence}
 \TODO{Proof of \cref{thm:matrix-flipflop}}
 \CF{prove that flip-flop works as soon as estimation in operator norm works. This goes by using KLR to show strong convexity holds in a ball about the optimizer}.
+
+
+
+
+
+
+
+
+
 \section{Open problems}
 \TODO{$d_{op}$} for tensors??
+
+
+
+
+
+
+
+
 \appendix 
 
 
