@@ -111,7 +111,7 @@ It remains an open question to show tight bounds for convergence of the MLE in s
 \subsection{Notation}
 \CF{temporary}
 \begin{itemize}
-\item Number of samples $n$, dimensions $d_1, \dots, d_k$. Whatever works for product of these, etc. 
+\item Number of samples $n$, dimensions $d_1, \dots, d_k$. $D$ for product of these. 
 \item $X$ for the tensor random variable, $X_1, \dots, X_n$ for the samples, $\vec X = (X_1, \dots, X_n)$ for the tuple of samples. 
 \item $f_{\vec X}$ for the function in \cref{dfn:function}. 
 \item $\PD_d$ for $d \times d$ pd's, $\Herm_d$ for $d \times d$ Hermitians. I don't think stats folks use this, I just really like them. Other suggestions welcome.
@@ -160,9 +160,6 @@ One may wonder why in the above theorems we consider the distances for the indiv
 
 
 \section{Tensor normal models}
-\CF{the precise definitions of MLE's}
-\CF{Show that we can reduce to the identity case for all these models}
-\CF{give high level overview of proofs complete enough to motivate the next two subsections} 
 We now give a precise definition of the MLE in the tensor normal model, in which $X$ is sampled according to $N(0, \Sigma = \bigotimes_{a = 1}^{k} \Sigma_a)$ for $\Sigma_a$ a positive-semidefinite $d_a\times d_a$ matrix. Let $D = \prod_{a \in [k]} d_a$. The matrix normal model is the case $k = 2$.
 
 First, recall the maximum-likelihood estimator for $\Sigma$ without any structure. If $X_1, \dots, X_n \in \R^D$ are the samples from $N(0, \Sigma)$, then the log-likelihood for $\Sigma$ is (up to an additive constant) given by the function 
