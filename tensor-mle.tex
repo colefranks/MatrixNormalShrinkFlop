@@ -205,19 +205,23 @@ We now proceed to state the lemma from geodesically convex optimization we will 
 
 
 
-\begin{lemma} If $f$ is $\lambda$-geodesically strongly convex on a ball of radius $\lambda/2$ about $I$ and the geodesic gradient $\nabla f(I)$ satisfies $\|\nabla f(I)\|_F \leq \eps \leq c \lambda^2$, then there is an optimizer $Z$ such that $\|\log Z\|_F \leq \eps/\lambda$. 
+\begin{lemma} If $f$ is geodesically convex everywhere, and $\lambda$-geodesically strongly convex on a ball of radius $\kappa$ about $I$ and the geodesic gradient $\nabla f(I)$ satisfies $\|\nabla f(I)\|_F = \eps < \lambda \kappa$, then there is an optimizer $e^{Z^{*}}$ such that $\|Z^{*}\|_F \leq \eps/\lambda$. 
 \end{lemma}
 \begin{proof}
-\TODO{basic}.
+Take geodesic $e^{t Z}$ towards the optimum with speed $\|Z\|_{F} = 1$ so the optimizer is $e^{T Z}$; and let $g(t) := f(e^{tZ})$. 
+\[ g'(0) = \langle \nabla f(I), Z \rangle \geq - \|\nabla f(I)\|_{F} \|Z\|_{F} \geq - \eps   \]
+\[ 0 = g'(T) = \int_{t=0}^{T} g''(t) dt + g'(0) \geq \lambda \min\{\kappa,T\} - \eps     \]
+Now if $T \geq \kappa$ we have a contradiction as the final expression is $> 0$. So it must be the case that the optimizer is within a $\eps/\lambda$ geodesic ball. 
 \end{proof}
 Next, we state the two theorems that allow us to apply this lemma. We prove them in the next two sections.
-\begin{lemma}\label{lemma:gradient-bound} Suppose the number of samples is at least \TODO{}. Then with probability \TODO{}, 
-$$\| \nabla f(I)\|_{op} \leq \TODO{}$$
-as a consequence, $\|\nabla f(I)\|_F \leq \TODO{}$. 
+
+\begin{lemma}\label{lemma:gradient-bound} Suppose the number of samples is at least $\max_{a} d_{a}^{2} / D \epsilon^{2} $. Then with failure probability $\leq k \exp(-\Omega(\max_{a} d_{a}))$, 
+$$\forall a: \| d_{a} (\nabla f(I))_{a} \|_{op} \leq \epsilon $$
+as a consequence, $ \sum_{a} d_{a} \|(\nabla f(I))_{a} \|_{F}^{2} \leq k \epsilon^{2}$. 
 \end{lemma}
 
 \begin{theorem}\label{thm:tensor-convexity}
-Suppose the number of samples is at least \TODO{}. Then with probability \TODO{}, $f_X$ is $\TODO{\lambda}$-strongly convex. 
+Suppose the number of samples is at least $k^{2} \max_{a} d_{a}^{2}/D$. Then with failure probability $\leq 1/poly(D)$, $f_X$ is $\Omega(1)$-strongly convex. 
 \end{theorem}
 These two theorems immediately yield \cref{thm:tensor-frobenius}. 
 \begin{proof}[Proof of \cref{thm:tensor-frobenius}]
@@ -298,6 +302,28 @@ We may finally prove the bound on the gradient.
 
 \subsection{Strong convexity}
 \TODO{Pisier + perturbation bound}
+
+\begin{theorem}
+Let $P$ denote the projection onto $(\vec{I_{n}},\vec{I_{m}})$, then the following holds with $1/poly(mn)$ failure probability
+\[ \|\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i} (I - P) \|_{op} \leq O \left( \sqrt{\sum_{i} \alpha_{i}^{2}} \right) \left( \E \|Y\|_{op} \right)^{2} \]
+\end{theorem}
+
+\begin{corollary}
+For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kraus operator is of the form $\frac{1}{\sqrt{TD}} Y$, and our off-diagonal operator is
+\[ \sum_{k=1}^{TD/d_{a}d_{b}} \frac{1}{TD} Y_{k} \otimes Y_{k}   \]
+By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is of the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} TD}}$, so for constant expansion it suffices that $TD \gg \max_{a} d_{a}^{2}$
+\end{corollary}
+
+\begin{proof} [Proof of \cref{thm:tensor-convexity}]
+Take any quadratic form of the Hessian for $\{Z_{a} \perp I_{a}\}$:
+\[ \partial_{t=0}^{2} f(e^{t Z}) = \sum_{a} \langle Q^{a}, Z_{a}^{2} \rangle + \sum_{a \neq b} \langle Q^{ab}, Z_{a} \otimes Z_{b}    \]
+\[ \geq \sum_{a} \lambda_{\min}(Q^{a}) \|Z_{a}\|_{F}^{2} - \sum_{a \neq b} \|Q^{ab} (I-P_{ab})\|_{op} \|Z_{a}\|_{F} \|Z_{b}\|_{F}    \]
+Now we can use our high probability bounds derived above:
+\[ \forall a: Q^{a} \succeq \frac{1-\epsilon}{d_{a}} I_{a}; \hspace{10mm} 
+\forall a \neq b: \|Q^{ab} (I-P_{ab})\|_{op} < \frac{\lambda}{k \sqrt{d_{a} d_{b}}}   \]
+\[ \implies \partial_{t=0}^{2} f(e^{t Z}) > \sum_{a} \frac{1-\eps - \lambda}{d_{a}} \|Z_{a}\|_{F}^{2}   \]
+Choosing $\eps,\lambda$ small enough gives the theorem. 
+\end{proof}
 
 \section{Matrix normal models}\label{sec:matrix-normal}
 \TODO{Proof of \cref{thm:matrix-normal}. Prove bounds on $d_{op}(\hat{\Sigma}, I)$ assuming $X$ standard normal.}
@@ -604,17 +630,15 @@ Note we've gotten rid of the projection $(I-P)$, but now the left and right Krau
 \[ \E \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}\|_{2p}^{2p} \]
 \[ = \E Tr [ \left( \sum_{ij} \alpha_{i} \alpha_{j} Y_{i}^{*} Y_{j} \otimes Z_{i}^{*} Z_{j} \right)^{p} ]  \]
 \[ = \sum_{\vec{i},\vec{j} \in [N]^{p}} \alpha^{\vec{i}} \alpha^{\vec{j}} \E_{Y,Z} Tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} \otimes Z_{i_{1}}^{*} Z_{j_{1}} ... Z_{i_{p}}^{*} Z_{j_{p}}  ]   \]
-\[ = \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{Y} Tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] )^{2}  \]
-Here we used independence of $(Y,Z)$ so that we have $(\E Tr [ \cdot ] )^{2}$ instead of $\E Tr[ \cdot ^{2}]$. We eventually want to charge to a term $\E \|\sum_{i} \alpha_{i} Y_{i}\|_{op}$. To this end we notice that since any expectations of polynomials of gaussians with positive coefficients are nonnegative and positive iff the polynomial is even; therefore $\alpha^{\vec{i}} \alpha^{\vec{j}}$ is also positive for all non-vanishing terms. So we can upper bound the term individually by the nc-Holder inequality below
-\[ \leq  \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} \E_{Y} Tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] \E_{Z} \|Z_{i_{1}}^{*}\|_{2p} ... \|Z_{j_{p}}\|_{2p}   \]
-\[ = \sum_{\vec{i},\vec{j}} \E_{Z} \prod_{l=1}^{p} \alpha_{i_{l}} \alpha_{j_{l}} \|Z_{i_{l}}\|_{2p} \|Z_{j_{l}}\|_{2p} \E_{Y} Tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ]  \]
-\[ \leq \E_{Y} \|\sum_{i} \alpha_{i} \E_{Z} \|Z_{i}\|_{2p} Y_{i} \|_{2p}^{2p}   \]
-Finally, since $\{Y_{i},Z_{i}\}$ are all mutually independent:
-\[ = \|\alpha\|_{2}^{2p} ( \E \|Y\|_{2p}^{2p} )^{2} = \|\alpha\|_{2}^{2p} ( \E \|Y^{*} Y\|_{p}^{p} )^{2}  \]
+\[ = \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{Y} Tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) (\E_{Z} Tr [ Z_{i_{1}}^{*} Z_{j_{1}} ... Z_{i_{p}}^{*} Z_{j_{p}} ] )  \]
+Here we used independence of $(Y,Z)$. We eventually want to charge to a term $\E \|\sum_{i} \alpha_{i} Y_{i}\|_{op}$. To this end we notice that since any expectations of polynomials of gaussians with positive coefficients are nonnegative and positive iff the polynomial is even; therefore $\alpha^{\vec{i}} \alpha^{\vec{j}}$ is also positive for all non-vanishing terms. So we can upper bound the term individually by the nc-Holder inequality below
+\[ \leq  \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{Y} Tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) ( \E_{Z} \|Z_{i_{1}}^{*}\|_{2p} ... \|Z_{j_{p}}\|_{2p} )  \]
+\[ = \E_{Y,Z} \left\|\sum_{i} \alpha_{i} \|Z_{i}\|_{2p} Y_{i} \right\|_{2p}^{2p}   \]
+\[ = \E_{Z} \left( \sum_{i} \alpha_{i}^{2} \|Z_{i}\|_{2p}^{2} \right)^{p} \E_{Y} \|Y\|_{2p}^{2p}    \]
 Finally we can bound $\|\cdot\|_{op}$ by the trace method. Assume wlog (by homogeneity) that $\|\alpha\|_{2} = 1$:
 \[ \E_{Y,Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} \|_{op}^{2p} \leq \E_{Y,Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} \|_{2p}^{2p} \]
 \[ \leq ( \E \|Y\|_{2p}^{2p} )^{2} \leq ( m \E \|Y\|_{op}^{2p} )^{2} \leq m^{2} (\E \|Y\|_{op} + O(\sqrt{\frac{2p}{m+n}}))^{4p} \]
-So choosing $p \sim \log m$ and using Markov's on the $2p$-th moment gives the bound. 
+So choosing $p \sim \log m$ gives the bound. 
 \end{proof}
 
 \begin{theorem}
