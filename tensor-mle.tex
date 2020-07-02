@@ -878,6 +878,17 @@ where $X_{a} := d_{a} \mu_{a}(t)$. Then we have
 \[ \partial_{t} \sum_{a} d_{a} \|\mu_{a}(t)\|_{F}^{2} = \sum_{a} d_{a}^{2} \langle Q^{a}, \mu_{a}^{2} \rangle + \sum_{a \neq b} d_{a} d_{b} \langle Q^{ab}, \mu_{a} \otimes \mu_{b} \rangle  \]
 \[ \geq (1-\epsilon) \sum_{a} d_{a}^{2} \frac{\|\mu_{a}\|_{F}^{2}}{d_{a}} - \lambda \sum_{a \neq b} d_{a} d_{b} \frac{\|\mu_{a}\|_{F} \|\mu_{b}\|_{F}}{\sqrt{d_{a} d_{b}}}   \]
 \[ \geq (1-\epsilon') \sum_{a} d_{a} \|\mu_{a}\|_{F}^{2}   \]
+
+
+
+\subsection{Experiments}
+\begin{enumerate}
+    \item Check $\|\mu(t)\|_{op}$ is (close to) monotone decreasing
+    \item Check $\int_{0}^{T} \|\mu(t)\|_{op} \gg \|\int_{0}^{T} \mu(t)\|_{op}$. I'm assumming this last term is roughly the operator norm of the scaling, but can check that too: what is the operator norm of log of the scaling at time $T$?
+    \item Plot $d \|\mu(t)\|_{op}^{2} / \|\mu(t)\|_{F}^{2}$. Should be $\Tilde{O}(1)$ for some amount of time. 
+\end{enumerate}
+
+
 \section{Noise}
 \TODO{make sure things work under some error in the data}
 
