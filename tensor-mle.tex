@@ -865,12 +865,18 @@ For perturbation $v \to \otimes_{a} e^{\delta_{a}} \cdot v =: w$ where $\forall 
 The same is true for the diagonal blocks. 
 \end{lemma}
 \begin{proof}
-Let $M^{a}, M^{ab}$ be the matrix versions of the bipartite operators:
-\[ \langle vec(X), M_{v}^{a} (vec(X)) \rangle := \langle Q_{a}, X^{2} \rangle    \]
-\[ \langle vec(X), M_{w}^{a} (vec(X)) \rangle := \langle Q_{a}, X^{2} \rangle    \]
+To lower bound the diagonal block, we just need a spectral lower bound on $\{Q_{a}\}$, since $\langle vec(X), M^{a} (vec(X)) \rangle := \langle Q_{a}, X^{2} \rangle$. 
+\[ \| e^{\delta_{a}} Q_{a} e^{\delta_{a}} - Q_{a}\|_{op} \leq O(\|\delta_{a}\|_{op}) \|Q_{a}\|_{op}   \]
+Now we address a perturbation on $b \neq a$. For a spectral lower bound, we choose test $Z \succeq 0$ and let $\delta := e^{2\delta_{b}} - I$:
+\[ \langle e^{\delta_{b}} v v^{*} e^{\delta_{b}} - v v^{*}, I_{\overline{a}} \otimes Z_{a} \rangle 
+= \langle v v^{*}, \delta \otimes Z \rangle = \langle Z, V^{*} \delta V \rangle   \]
+Here $V \in \R^{d_{b} \times d_{a}}$ is the matricized version of $v$. But now since $Z \succeq 0$, the argument is clear
+\[ \leq \langle Z, V^{*} |\delta| V \rangle \leq \|\delta\|_{op} \langle Z, V^{*} I V \rangle = \|\delta\|_{op} \langle v v^{*}, I_{\overline{a}} \otimes Z \rangle     \]
+
+The argument for the off-diagonal blocks is similar. We first argue the change of $\sigma^{ab}$ is small under perturbations where $\forall c \neq a,b: \delta_{c} = 0$. Let $M^{ab}$ be the matrix versions of the bipartite operators:
 \[ \langle vec(Y), M_{v}^{ab}(vec(Z)) \rangle := \langle v v^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle \] 
 \[ \langle vec(Y), M_{w}^{ab}(vec(Z)) \rangle := \langle w w^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle\]
-We first argue the change of $\sigma^{ab}$ is small under perturbations where $\forall c \neq a,b: \delta_{c} = 0$.
+
 \[ \implies M_{w} = (e^{\delta_{b}} \otimes e^{\delta_{b}}) M_{v} (e^{\delta_{a}} \otimes e^{\delta_{a}})   \]
 \[ \implies \|M_{w} - M_{v}\|_{op} \leq O(\|\delta_{a}\|_{op} + \|\delta_{b}\|_{op}) \|M_{v}\|_{op}   \]
 where in the last step we used $\delta \ll 1$. 
