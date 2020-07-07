@@ -100,7 +100,7 @@ Perhaps the best-known case is the case $k = 2$, called the \emph{matrix normal 
 
 Much research has been devoted to estimating the covariance in matrix and tensor normal models. Authors have proven that the MLE exists uniquely under mild assumptions \CF{cite}, and there is an iterative algorithm (known as the \emph{flip-flop} algorithm) that converges quickly to the MLE in practice \CF{dutilleul}. Through recent connections noted in \CF{cite philipp et al} it follows that the flip-flop algorithm converges whenever the MLE exists. Estimators with good performance have been shown to exist under the assumption that the true covariance matrix is highly sparse. 
 
-Nonetheless, to our knowledge there exist no nonasymptotic bounds on convergence of the MLE, or any other tractable estimator, in the dense case. Moreover, it has not been proven that the flip-flop algorithm converges \emph{quickly} to the MLE, or even that there is a polynomial time to compute the MLE or any other \CF{asymptotically consistent?} estimator. We make significant progress on both of these open questions. As an informal summary, we show the following:
+Nonetheless, to our knowledge there exist no nonasymptotic bounds on convergence of the MLE, or any other tractable estimator, in the dense case \CF{actually, tsiligkaridis do this in frobenius norm}. Moreover, it has not been proven that the flip-flop algorithm converges \emph{quickly} to the MLE, or even that there is a polynomial time to compute the MLE or any other \CF{asymptotically consistent?} estimator. We make significant progress on both of these open questions. As an informal summary, we show the following:
 \begin{enumerate}
 \item The MLE for the matrix normal model is close to the covariance in spectral norm for a number of samples that is \CF{check}
 $$O(\max \{d_1/d_2, d_2/d_1\} \log \max \{d_1/d_2, d_2/d_1\}),$$ which is tight up to logarithmic factors.
@@ -192,7 +192,7 @@ With this definition in place, we are able to state the rather simple plan.
 $$ d(\hat{\Sigma}(\vec X), I)$$
 for $X$ standard Gaussian is distributed exactly as $d(\hat{\Sigma}(\vec X), \Sigma)$ for $X$ with covariance matrix $\Sigma$. This means it is enough to bound $d(\hat{\Sigma}(\vec X), I)$ assuming $\vec X$ is a standard Gaussian.
 \item \textbf{Show strong convexity: } Show that, with high probability, $f_{\vec X}$ is $\Omega(1)$-geodesically strongly convex near $I$ w.r.t. a specific norm $\|\cdot\|$.
-\item \textbf{Bound the gradient: } Show that $\nabla f_{\vec X} (I) $ is small with high probability (w.r.t. the dual norm $\|\cdot\|_{*}$). 
+\item \textbf{Bound the gradient: } Show that $\nabla f_{\vec X} (I) $ is small with high probability (w.r.t. the dual norm $\|\cdot\|_{*}$). \CF{Probably need to say something about why geodesic distance and $d$ are comparable.}
 
 \end{enumerate}
 These together imply the sample complexity bounds - as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far. Furthermore, like in the Euclidean case, if a function is strongly geodesically convex in a region and one can prove a \emph{descent lemma} for a sequence in the region, then it must converge exponentially quickly to an optimizer. It is well-known that various optimization algorithms applied to $f_{\vec X}$ satisfy such a descent lemma \CF{cite bfg+}.
