@@ -859,14 +859,18 @@ So we require $\langle X, \nabla_{e^{Y}}, X \rangle \gtrsim \|X\|^{2}$. We can g
 \CF{cole agrees - needs $D > d_a^5!$}
 
 \subsection{Better Deterministic Robustness}
-\begin{theorem}
+\begin{lemma}
 For perturbation $v \to \otimes_{a} e^{\delta_{a}} \cdot v =: w$ where $\forall a: \|\delta_{a}\|_{op} \ll 1$, and let $\{\sigma_{1}^{ab}, \sigma_{2}^{ab}\}$ be the $\|\cdot\|_{F} \to \|\cdot\|_{F}$ norm and norm $\perp$ to $(I,I)$ for each bipartite part respectively:
 \[ \forall a,b: \sigma_{2}^{ab}(w w^{*}) - \sigma_{2}^{ab}(v v^{*}) \leq O \left( \sum_{a} \|\delta_{a}\|_{op}  \right) \sigma_{1}^{ab}(v v^{*})   \]
-\end{theorem}
+The same is true for the diagonal blocks. 
+\end{lemma}
 \begin{proof}
-We first argue the change of $\sigma^{ab}$ is small under perturbations where $\forall c \neq a,b: \delta_{c} = 0$. Let $M^{ab}$ be the matrix versions of the bipartite operators:
+Let $M^{a}, M^{ab}$ be the matrix versions of the bipartite operators:
+\[ \langle vec(X), M_{v}^{a} (vec(X)) \rangle := \langle Q_{a}, X^{2} \rangle    \]
+\[ \langle vec(X), M_{w}^{a} (vec(X)) \rangle := \langle Q_{a}, X^{2} \rangle    \]
 \[ \langle vec(Y), M_{v}^{ab}(vec(Z)) \rangle := \langle v v^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle \] 
 \[ \langle vec(Y), M_{w}^{ab}(vec(Z)) \rangle := \langle w w^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle\]
+We first argue the change of $\sigma^{ab}$ is small under perturbations where $\forall c \neq a,b: \delta_{c} = 0$.
 \[ \implies M_{w} = (e^{\delta_{b}} \otimes e^{\delta_{b}}) M_{v} (e^{\delta_{a}} \otimes e^{\delta_{a}})   \]
 \[ \implies \|M_{w} - M_{v}\|_{op} \leq O(\|\delta_{a}\|_{op} + \|\delta_{b}\|_{op}) \|M_{v}\|_{op}   \]
 where in the last step we used $\delta \ll 1$. 
