@@ -187,17 +187,18 @@ The choice of the coefficient $1/d_i$ is a matter of convenience and, because re
 
 We first define our notion of convexity. The function $f_{\vec X}$ has a property called \emph{geodesic convexity} \CF{cite bfg+}. 
 \begin{definition}[Geodesic convexity]\CF{define $P,G,H$ before here} A function $f:P \to \R$ is said to be geodesically convex if  
-$$f(A^\dagger e^{t Z} A)$$ is convex in $t$ for all $Z \in H$ and $A\in G$. Say $f$ is $\lambda$-geodesically \emph{strongly convex} if $\partial^2_t f(A^\dagger e^{t Z} A) \geq \lambda \|Z\|_F$. 
+$$f(A^\dagger e^{t Z} A)$$ is convex in $t$ for all $Z \in H$ and $A\in G$. Say $f$ is $\lambda$-geodesically \emph{strongly convex} w.r.t norm $\|\cdot\|$ if $\partial^2_t f(A^\dagger e^{t Z} A) \geq \lambda \|Z\|^{2}$. 
 \end{definition} 
 With this definition in place, we are able to state the rather simple plan. 
 \begin{enumerate}
 \item \textbf{Reduce to identity: } Firstly, note that $\widehat{\Sigma}(\vec X) = \Sigma^{1/2} \hat{\Sigma}(\Sigma^{-1/2} \vec X) \Sigma^{1/2}$. As $\Sigma^{-1/2} \vec X$ is distributed as $n$ samples from $\Sigma^{-1/2}X$ which is a standard Gaussian, the distance 
 $$ d(\hat{\Sigma}(\vec X), I)$$
 for $X$ standard Gaussian is distributed exactly as $d(\hat{\Sigma}(\vec X), \Sigma)$ for $X$ with covariance matrix $\Sigma$. This means it is enough to bound $d(\hat{\Sigma}(\vec X), I)$ assuming $\vec X$ is a standard Gaussian.
-\item \textbf{Bound the gradient: } Show that $\nabla f_{\vec X} (I) $ is small with high probability. 
-\item \textbf{Show strong convexity: } Show that, with high probability, $f_{\vec X}$ is $\lambda$-geodesically strongly convex near $I$ for some constant $\lambda$.
+\item \textbf{Show strong convexity: } Show that, with high probability, $f_{\vec X}$ is $\Omega(1)$-geodesically strongly convex near $I$ w.r.t. a specific norm $\|\cdot\|$.
+\item \textbf{Bound the gradient: } Show that $\nabla f_{\vec X} (I) $ is small with high probability (w.r.t. the dual norm $\|\cdot\|_{*}$). 
+
 \end{enumerate}
-These together imply the sample complexity bounds - as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far. Furthermore, like in the Euclidean case, if a function is strongly geodesically convex in a region and one can prove a \emph{descent lemma} for a sequence in the region, then it must converge exponentially quickly to an optimizer. It is well-known that $f_{\vec X}$ satisfies such a descent lemma \CF{cite bfg+}.
+These together imply the sample complexity bounds - as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far. Furthermore, like in the Euclidean case, if a function is strongly geodesically convex in a region and one can prove a \emph{descent lemma} for a sequence in the region, then it must converge exponentially quickly to an optimizer. It is well-known that various optimization algorithms applied to $f_{\vec X}$ satisfy such a descent lemma \CF{cite bfg+}.
 
 We now proceed to state the lemma from geodesically convex optimization we will need to prove the \cref{thm:tensor-frobenius}.
 
@@ -205,23 +206,23 @@ We now proceed to state the lemma from geodesically convex optimization we will 
 
 
 
-\begin{lemma} If $f$ is geodesically convex everywhere, and $\lambda$-geodesically strongly convex on a ball of radius $\kappa$ about $I$ and the geodesic gradient $\nabla f(I)$ satisfies $\|\nabla f(I)\|_F = \eps < \lambda \kappa$, then there is an optimizer $e^{Z^{*}}$ such that $\|Z^{*}\|_F \leq \eps/\lambda$. 
+\begin{lemma} Let $f$ is geodesically convex everywhere, and $\lambda$-geodesically strongly convex w.r.t. norm $\|\cdot\|$ on a ball of radius $\kappa$ about $I$; further assume the geodesic gradient satisfies $\|\nabla f(I)\|_{*} = \eps < \lambda \kappa$. Then there is an optimizer within a $\|\cdot\|$-ball of radius $\eps/\lambda$. 
 \end{lemma}
 \begin{proof}
-Take geodesic $e^{t Z}$ towards the optimum with speed $\|Z\|_{F} = 1$ so the optimizer is $e^{T Z}$; and let $g(t) := f(e^{tZ})$. 
-\[ g'(0) = \langle \nabla f(I), Z \rangle \geq - \|\nabla f(I)\|_{F} \|Z\|_{F} \geq - \eps   \]
+Take geodesic $e^{t Z}$ towards the optimum with normalized speed $\|Z\| = 1$ so the optimizer is $e^{T Z}$. Let $g(t) := f(e^{tZ})$, which is $\lambda$-strongly convex in $t$. 
+\[ g'(0) = \langle \nabla f(I), Z \rangle \geq - \|\nabla f(I)\|_{*} \|Z\| \geq - \eps   \]
 \[ 0 = g'(T) = \int_{t=0}^{T} g''(t) dt + g'(0) \geq \lambda \min\{\kappa,T\} - \eps     \]
-Now if $T \geq \kappa$ we have a contradiction as the final expression is $> 0$. So it must be the case that the optimizer is within a $\eps/\lambda$ geodesic ball. 
+Now if $T \geq \kappa$ we have a contradiction as $\lambda \kappa - \epsilon > 0$. Therefore we must have $\lambda T < \lambda \kappa \leq \eps$, and the conclusion follows by rearranging. 
 \end{proof}
 Next, we state the two theorems that allow us to apply this lemma. We prove them in the next two sections.
 
-\begin{lemma}\label{lemma:gradient-bound} Suppose the number of samples is at least $\max_{a} d_{a}^{2} / D \epsilon^{2} $. Then with failure probability $\leq k \exp(-\Omega(\max_{a} d_{a}))$, 
+\begin{lemma}\label{lemma:gradient-bound} Suppose the number of samples is at least $\max_{a} d_{a}^{2} / D \epsilon^{2} $. Then with failure probability $\leq \sum_{a} \exp(-\Omega(d_{a}))$, 
 $$\forall a: \| d_{a} (\nabla f(I))_{a} \|_{op} \leq \epsilon $$
-as a consequence, $ \sum_{a} d_{a} \|(\nabla f(I))_{a} \|_{F}^{2} \leq k \epsilon^{2}$. 
+as a consequence, $\|\nabla f(I)\|_{*}^{2} := \sum_{a} d_{a} \|(\nabla f(I))_{a} \|_{F}^{2} \leq k \epsilon^{2}$. 
 \end{lemma}
 
 \begin{theorem}\label{thm:tensor-convexity}
-Suppose the number of samples is at least $k^{2} \max_{a} d_{a}^{2}/D$. Then with failure probability $\leq 1/poly(D)$, $f_X$ is $\Omega(1)$-strongly convex. 
+Suppose the number of samples is at least $k^{2} \max_{a} d_{a}^{2}/D$. Then with failure probability $\leq 1/poly(D)$, $f_X$ is $\Omega(1)$-strongly convex w.r.t. norm $\|Z\|^{2} := \sum_{a} d_{a} \|Z_{a}\|_{F}^{2}$. 
 \end{theorem}
 These two theorems immediately yield \cref{thm:tensor-frobenius}. 
 \begin{proof}[Proof of \cref{thm:tensor-frobenius}]
