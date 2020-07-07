@@ -222,7 +222,7 @@ as a consequence, $\|\nabla f(I)\|_{*}^{2} := \sum_{a} d_{a} \|(\nabla f(I))_{a}
 Suppose the number of samples is at least $k^{2} \max_{a} d_{a}^{2}/D$. Then with failure probability $\leq 1/poly(D)$, $f_X$ is $\Omega(1)$-strongly convex at $I$ w.r.t. norm $\|Z\|^{2} := \sum_{a} d_{a} \|Z_{a}\|_{F}^{2}$. 
 \end{theorem}
 
-\begin{lemma}
+\begin{lemma}\label{lem:perturbation}
 If $f$ is $\lambda$-strongly convex at $I$, then at perturbation $\otimes_{a} e^{Z_{a}}$ bounded by $\forall a: \|Z_{a}\|_{op} \leq \delta \ll 1$, $f$ $\lambda - O(k\delta)$-strongly convex. 
 \end{lemma}
 
@@ -301,7 +301,7 @@ Choosing $t \sim \sqrt{d_{a}}$ and $nD \gtrsim d_{a}^{2} \log^{2} d_{a}$ gives t
 We may finally prove the bound on the gradient.
 \begin{proof}[Proof of \cref{lemma:gradient-bound}]
 \TODO{put guts here}.
-\AR{This mostly depends on notation, so I'll leave this for now and you guys can decide what the right notation is. }
+\AR{This mostly depends on notation, so I'll leave this for now and you guys can decide what the right notation is. }\CF{just use \cref{eq:projective-likelihood} as the definition, we can fix the notation later as long as we are proving the right thing.}
 \end{proof}
 
 \subsection{Strong convexity}
@@ -346,6 +346,45 @@ Now we can again use the high-probability bounds derived above:
 \[ \preceq \sum_{a} E_{aa} \otimes \frac{1+\eps+(k-1)\lambda}{d_{a}} I_{a}  \]
 The same sequence of inequalities can be reversed to show a lower bound. So in fact we can show the above bounds on blocks shows $O(\eps + k \lambda)$-condition number bound on the Hessian in norm $\|\cdot\|$. 
 \end{proof}
+We now move to prove \cref{lem:perturbation}, which shows that the Hessian remains strongly convex in an operator norm ball about the origin. We require an intermediate lemma showing that each block of the Hessian changes fairly little on the operator ball.
+
+
+\begin{lemma}\label{lem:block-perturbation}
+For perturbation $v \to \otimes_{a} e^{\delta_{a}} \cdot v =: w$ where $\forall a: \|\delta_{a}\|_{op} \ll 1$, and let $\{\sigma_{1}^{ab}, \sigma_{2}^{ab}\}$ be the $\|\cdot\|_{F} \to \|\cdot\|_{F}$ norm and norm $\perp$ to $(I,I)$ for each bipartite part respectively:
+\[ \forall a,b: \sigma_{2}^{ab}(w w^{*}) - \sigma_{2}^{ab}(v v^{*}) \leq O \left( \sum_{a} \|\delta_{a}\|_{op}  \right) \sigma_{1}^{ab}(v v^{*})   \]
+The same is true for the diagonal blocks. 
+\end{lemma}
+\begin{proof}
+To lower bound the diagonal block, we just need a spectral lower bound on $\{Q_{a}\}$, since $\langle vec(X), M^{a} (vec(X)) \rangle := \langle Q_{a}, X^{2} \rangle$. 
+\[ \| e^{\delta_{a}} Q_{a} e^{\delta_{a}} - Q_{a}\|_{op} \leq O(\|\delta_{a}\|_{op}) \|Q_{a}\|_{op}   \]
+Now we address a perturbation on $b \neq a$. For a spectral lower bound, we choose test $Z \succeq 0$ and let $\delta := e^{2\delta_{b}} - I$:
+\[ \langle e^{\delta_{b}} v v^{*} e^{\delta_{b}} - v v^{*}, I_{\overline{a}} \otimes Z_{a} \rangle 
+= \langle v v^{*}, \delta \otimes Z \rangle = \langle Z, V^{*} \delta V \rangle   \]
+Here $V \in \R^{d_{b} \times d_{a}}$ is the matricized version of $v$. But now since $Z \succeq 0$, the argument is clear
+\[ \leq \langle Z, V^{*} |\delta| V \rangle \leq \|\delta\|_{op} \langle Z, V^{*} I V \rangle = \|\delta\|_{op} \langle v v^{*}, I_{\overline{a}} \otimes Z \rangle     \]
+
+The argument for the off-diagonal blocks is similar. We first argue the change of $\sigma^{ab}$ is small under perturbations where $\forall c \neq a,b: \delta_{c} = 0$. Let $M^{ab}$ be the matrix versions of the bipartite operators:
+\[ \langle vec(Y), M_{v}^{ab}(vec(Z)) \rangle := \langle v v^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle \] 
+\[ \langle vec(Y), M_{w}^{ab}(vec(Z)) \rangle := \langle w w^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle\]
+
+\[ \implies M_{w} = (e^{\delta_{b}} \otimes e^{\delta_{b}}) M_{v} (e^{\delta_{a}} \otimes e^{\delta_{a}})   \]
+\[ \implies \|M_{w} - M_{v}\|_{op} \leq O(\|\delta_{a}\|_{op} + \|\delta_{b}\|_{op}) \|M_{v}\|_{op}   \]
+where in the last step we used $\delta \ll 1$. 
+
+The more difficult part of the argument to see (at least for me) is how $\sigma^{ab}$ changes if some other part $c \neq a,b$ is changed, i.e. $\forall d \neq c: \delta_{d} = 0$. First we define $\delta := e^{2 \delta_{c}} - I$, and test vectors $Z,Y$:
+\[ \langle w w^{*} - v v^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle = \langle v v^{*}, \delta \otimes Z \otimes Y \rangle  = \langle Z \otimes Y, V^{*} \delta V \rangle \]
+Here $V \in \R^{d_{c} \times d_{a}d_{b}}$ is the matricized version of $v$, i.e. the $k$-th element of $ij$-th column is $(V_{ij})_{k} := v_{ijk}$. Now in order to use our operator norm bounds, we need to deal with cancelations, so we split into positive and negative parts $Z := Z_{+} - Z_{-}, Y := Y_{+} - Y_{-}$:
+\[ |\langle Z \otimes Y, V^{*} \delta V \rangle| \leq |\langle Z_{\pm} \otimes Y_{\pm}, V^{*} \delta V \rangle |  \]
+Now we analyze one of these terms (by abuse of notation $Z, Y \succ 0$):
+\[ \leq \langle Z \otimes Y, V^{*} |\delta| V \rangle \leq \|\delta\|_{op} \langle Z \otimes Y, V^{*} V \rangle = \|\delta\|_{op} \langle v v^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle   \]
+Each of these terms we can bound by $\sigma^{ab}_{1} \|Z\|_{F} \|Y\|_{F}$. (Note we can save a $2$-factor on these four terms since they are decompositions of $Z,Y$). So by iterating this argument over all $c$, we get the desired bound. 
+\end{proof}
+
+
+\begin{proof}[Proof of \cref{lem:perturbation}]
+\TODO{Akshay prove }
+\end{proof}
+
 
 \section{Matrix normal models}\label{sec:matrix-normal}
 \TODO{Proof of \cref{thm:matrix-normal}. Prove bounds on $d_{op}(\hat{\Sigma}, I)$ assuming $X$ standard normal.}
@@ -859,7 +898,7 @@ So we require $\langle X, \nabla_{e^{Y}}, X \rangle \gtrsim \|X\|^{2}$. We can g
 \CF{cole agrees - needs $D > d_a^5!$}
 
 \subsection{Better Deterministic Robustness}
-\begin{lemma}
+\begin{lemma}\label{lem:block-perturbation-appendix}
 For perturbation $v \to \otimes_{a} e^{\delta_{a}} \cdot v =: w$ where $\forall a: \|\delta_{a}\|_{op} \ll 1$, and let $\{\sigma_{1}^{ab}, \sigma_{2}^{ab}\}$ be the $\|\cdot\|_{F} \to \|\cdot\|_{F}$ norm and norm $\perp$ to $(I,I)$ for each bipartite part respectively:
 \[ \forall a,b: \sigma_{2}^{ab}(w w^{*}) - \sigma_{2}^{ab}(v v^{*}) \leq O \left( \sum_{a} \|\delta_{a}\|_{op}  \right) \sigma_{1}^{ab}(v v^{*})   \]
 The same is true for the diagonal blocks. 
