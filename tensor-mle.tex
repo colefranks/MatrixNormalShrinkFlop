@@ -100,7 +100,7 @@ Perhaps the best-known case is the case $k = 2$, called the \emph{matrix normal 
 
 Much research has been devoted to estimating the covariance in matrix and tensor normal models. Authors have proven that the MLE exists uniquely under mild assumptions \CF{cite}, and there is an iterative algorithm (known as the \emph{flip-flop} algorithm) that converges quickly to the MLE in practice \CF{dutilleul}. Through recent connections noted in \CF{cite philipp et al} it follows that the flip-flop algorithm converges whenever the MLE exists. Estimators with good performance have been shown to exist under the assumption that the true covariance matrix is highly sparse. 
 
-Nonetheless, to our knowledge there exist no nonasymptotic bounds on convergence of the MLE, or any other tractable estimator, in the dense case \CF{actually, tsiligkaridis do this in frobenius norm}. Moreover, it has not been proven that the flip-flop algorithm converges \emph{quickly} to the MLE, or even that there is a polynomial time to compute the MLE or any other \CF{asymptotically consistent?} estimator. We make significant progress on both of these open questions. As an informal summary, we show the following:
+Nonetheless, to our knowledge there exist no nonasymptotic bounds on convergence of the MLE, or any other tractable estimator, in the dense case \CF{actually, tsiligkaridis do this in frobenius norm for matrix models but they are not tight for every value of $d_1, d_2$.}. Moreover, it has not been proven that the flip-flop algorithm converges \emph{quickly} to the MLE, or even that there is a polynomial time to compute the MLE or any other \CF{asymptotically consistent?} estimator. We make significant progress on both of these open questions. As an informal summary, we show the following:
 \begin{enumerate}
 \item The MLE for the matrix normal model is close to the covariance in spectral norm for a number of samples that is \CF{check}
 $$O(\max \{d_1/d_2, d_2/d_1\} \log \max \{d_1/d_2, d_2/d_1\}),$$ which is tight up to logarithmic factors.
@@ -203,7 +203,7 @@ We now proceed to state the lemma from geodesically convex optimization we will 
 
 
 
-\begin{lemma} Let $f$ is geodesically convex everywhere, and $\lambda$-geodesically strongly convex w.r.t. norm $\|\cdot\|$ on a ball of radius $\kappa$ about $I$; further assume the geodesic gradient satisfies $\|\nabla f(I)\|_{*} = \eps < \lambda \kappa$. Then there is an optimizer within a $\|\cdot\|$-ball of radius $\eps/\lambda$. 
+\begin{lemma} Let $f$ be geodesically convex everywhere, and $\lambda$-geodesically strongly convex w.r.t. norm $\|\cdot\|$ on a ball of radius $\kappa$ about $I$; further assume the geodesic gradient satisfies $\|\nabla f(I)\|_{*} = \eps < \lambda \kappa$. Then there is an optimizer within a $\|\cdot\|$-ball of radius $\eps/\lambda$. 
 \end{lemma}
 \begin{proof}
 Take geodesic $e^{t Z}$ towards the optimum with normalized speed $\|Z\| = 1$ so the optimizer is $e^{T Z}$. Let $g(t) := f(e^{tZ})$, which is $\lambda$-strongly convex in $t$. 
@@ -240,36 +240,37 @@ We now proceed to compute the gradient and Hessian of $f$, and then to prove the
 
 
 
-\begin{fact}
-The geodesic gradient and Hessians of $f_{\vec X}$ are as follows:
+\begin{fact}[Geodesic gradients]
+Let $\rho$ denote $\frac{\vec X \vec X^\dagger}{\|\vec X\|^2}$, and for $S \subset [k]$ let $\rho^S$ denote the partial trace 
+$$\tr_{\bar{S}} \rho \in \bigotimes_{i \in S} \PD(d_i).$$
+The geodesic gradient $\nabla f := (\nabla_1 f, \dots, \nabla_k f) \in P $ at the identity is given by
 \begin{align}
-\nabla f_{\vec X}(I), \nabla^2 f_{\vec X}(I) = \TODO{ \text{put whatever bound we'll be using so this can be black-boxed.}}
+\nabla_a f &= \rho^a - \frac{1}{d_{a}} I_{a}
 \end{align}
+for $a \in [k]$. 
+The geodesic Hessian $\nabla^2 f$ is given by 
+\begin{align}\langle Y, (\nabla^{2}_{aa} f) Y \rangle &=  \langle \rho^{a}, Y^{2} \rangle - \left\langle \nabla_a f, Y \right\rangle^{2} \\
+\langle Z, (\nabla^{2}_{ab} f) Y \rangle &= \langle \rho^{ab}, Z \otimes Y \rangle  - \langle \nabla_a f, Y \rangle \langle \nabla_b f, Z \rangle
+\end{align}
+for $a \neq b \in [k]$, $Y \in \Herm(d_a), Z \in \Herm(d_b)$. 
 \end{fact}
-\CF{I put all the blood and guts inside a proof environment. What ever is outside proof environments should be pretty readable.}
 \begin{proof}
-We will calculate geodesic gradient and Hessian of the standard tensor representation for the two functions: \TODO{make the notation match the function $f_{\vec X}$. Maybe swap $F$ and $f$ what follows to be consistent.}. 
-\[ f_{v}\{g_{a}\} := \|(\otimes_{a} g_{a}) \cdot v\|_{2}^{2} = \langle v v^{*},\otimes_{a} g_{a}^{*} g_{a} \rangle ; \hspace{10mm}  F_{v} := \log f_{v}  \]
-\[ \partial_{t=0} f(I_{\overline{a}} \otimes e^{tZ}) = \langle v v^{*}, I_{\overline{a}} \otimes e^{2tZ} 2 Z \rangle |_{t=0} = \langle v v^{*}, I_{\overline{a}} \otimes Z \rangle   \]
-\[ \partial_{s=0} \partial_{t=0} f(I_{\overline{ab}} \otimes e^{tZ} \otimes e^{sY}) = 2 \partial_{s=0} \langle (I_{\overline{b}} \otimes e^{sY}) v v^{*} (I_{\overline{b}} \otimes e^{sY})^{*}, I_{\overline{a}} \otimes Z \rangle \]
-\[ = \langle v v^{*}, (I_{\overline{b}} \otimes Y) (I_{\overline{a}} \otimes Z) + (I_{\overline{a}} \otimes Z) (I_{\overline{b}} \otimes Y) \rangle
-\]
-For simplicity, in this part we denote $Q = v v^{*}, s := Tr[Q]$ and marginals $Q^{S} := Tr_{\overline{S}}[Q]$. We will only need $\{Q^{a}\},\{Q^{ab}\}$
-\[ \langle (\nabla f)_{a}, Z \rangle = 2 \langle Q^{a} - \frac{s}{d_{a}} I_{a}, Z \rangle  \]
-\[ \langle Z, (\nabla^{2} f)_{aa}, Z \rangle = 2 \langle Q^{a}, Z^{2} \rangle   \]
-\[ \langle Y, (\nabla^{2} f)_{ab}, Z \rangle = 2 \langle Q^{ab}, Z \otimes Y \rangle   \]
+Let $\tilde{\rho}:= \|\vec X\|_F^2\rho$ and let
+\[ F(\Theta) := \tr  \Theta \tilde{\rho}; \hspace{10mm} \]
+so that 
+\[ \partial_{t=0} F(I_{\overline{a}} \otimes e^{tY}) = \tr  (I_{\overline{a}} \otimes e^{tY}  Y)\tilde{\rho}  |_{t=0} = \tr  (I_{\overline{a}} \otimes Y) \tilde{\rho}  \]
+and \CF{does the next line make sense when $a=b$?}
+\begin{align*}\partial_{s=0} \partial_{t=0} F(I_{\overline{ab}} \otimes e^{sY} \otimes e^{tZ}) &=  \partial_{s=0} \tr  (I_{\overline{b}} \otimes e^{sY}) (I_{\overline{a}} \otimes Z) \tilde{\rho} \\
+&= \tr (I_{\overline{b}} \otimes Y) (I_{\overline{a}} \otimes Z) \tilde{\rho}
+\end{align*}
+Thus, 
+%For simplicity, in this part we denote $Q = v v^{*}, s := Tr[Q]$ and marginals $Q^{S} := Tr_{\overline{S}}[Q]$. We will only need $\{Q^{a}\},\{Q^{ab}\}.$
+\[ \langle \nabla_a F, Z \rangle = \langle \tilde{\rho}^a, Z \rangle  \]
+and 
+\begin{align*} \langle Z, (\nabla^{2}_{aa}) F Z \rangle &=  \langle \tilde{\rho}^a, Z^{2} \rangle  \\
+ \langle Y, (\nabla^{2} F) Z \rangle &= \langle \tilde{\rho}^{ab}, Z \otimes Y \rangle  \end{align*}
 
-Now to calculate the same for $F_{v}$, note $\nabla F = \frac{\nabla f}{f}$ and $\nabla^{2} F = \frac{\nabla^{2} f}{f} - \frac{(\nabla f)(\nabla f)^{*}}{f^{2}}$. For simplicity we'll denote $\tilde{v} := \frac{v}{\|v\|_{2}}$ and abuse notation by keeping $Q = \tilde{v} \tilde{v}^{*}$ and marginals likewise. 
-\[ \langle (\nabla F)_{a}, Z \rangle = 2 \langle Q^{a} - \frac{1}{d_{a}} I_{a}, Z \rangle   \]
-\[ \langle X, (\nabla^{2} f)_{aa}, X \rangle = 2 \langle Q^{a}, Z^{2} \rangle - 4 \langle Q^{a} - \frac{1}{d_{a}} I_{a}, Z \rangle^{2} \]
-\[ \langle Y, (\nabla^{2} f)_{ab}, Z \rangle = 2 \langle Q^{ab}, Z \otimes Y \rangle  - 4 \langle Q^{a} - \frac{1}{d_{a}} I_{a}, Z \rangle \langle Q^{b} - \frac{1}{d_{b}} I_{a}, Y \rangle  \]
-
-By the following Cauchy-Schwarz, in the regime we care about for unit vector $v$, the two functions will be effectively the same:
-\[ \frac{1}{4}\partial_{t=0}^{2} (F(\otimes_{a} e^{tZ_{a}}) - f(\otimes_{a} e^{tZ_{a}})) = \left( \sum_{a} \langle \nabla_{a}, Z_{a} \rangle \right)^{2}   \]
-\[ \leq \left( \sum_{a} \|\nabla_{a}\|_{F} \|Z_{a}\|_{F} \right)^{2} \leq \left( \sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2} \right) \left( \sum_{a} \frac{\|Z_{a}\|_{F}^{2}}{d_{a}} \right)   \]
-\[ \leq \left( \sum_{a} \|\nabla_{a}\|_{op} \|Z_{a}\|_{1} \right)^{2} \leq \left( \sum_{a} (d_{a} \|\nabla_{a}\|_{op})^{2} \right) \left( \sum_{a} \frac{\|Z_{a}\|_{F}^{2}}{d_{a}} \right)  \]
-
-\end{proof}
+Now to calculate the same for $f$, note that $f = \log F - \sum_{a \in [k]} \frac1{d_a} \log\det(\Theta_a)$. Further note that $\nabla \log F = \frac{\nabla F}{F}$, $\nabla^{2} f = \frac{\nabla^{2} F}{F} - \frac{(\nabla F)(\nabla F)^{\dagger}}{F^{2}}$, and that the geodesic gradient of $\log \det \Theta_a$ is $I_{a}$ and the geodesic Hessian is zero. This completes the proof. \end{proof}
 
 
 
@@ -300,12 +301,17 @@ Choosing $t \sim \sqrt{d_{a}}$ and $nD \gtrsim d_{a}^{2} \log^{2} d_{a}$ gives t
 \end{proof}
 We may finally prove the bound on the gradient.
 \begin{proof}[Proof of \cref{lemma:gradient-bound}]
-\TODO{put guts here}.
 \AR{This mostly depends on notation, so I'll leave this for now and you guys can decide what the right notation is. }\CF{just use \cref{eq:projective-likelihood} as the definition, we can fix the notation later as long as we are proving the right thing.}
+
+By the following Cauchy-Schwarz, in the regime we care about for unit vector $v$, the two functions will be effectively the same:
+\[ \frac{1}{4}\partial_{t=0}^{2} (F(\otimes_{a} e^{tZ_{a}}) - f(\otimes_{a} e^{tZ_{a}})) = \left( \sum_{a} \langle \nabla_{a}, Z_{a} \rangle \right)^{2}   \]
+\[ \leq \left( \sum_{a} \|\nabla_{a}\|_{F} \|Z_{a}\|_{F} \right)^{2} \leq \left( \sum_{a} d_{a} \|\nabla_{a}\|_{F}^{2} \right) \left( \sum_{a} \frac{\|Z_{a}\|_{F}^{2}}{d_{a}} \right)   \]
+\[ \leq \left( \sum_{a} \|\nabla_{a}\|_{op} \|Z_{a}\|_{1} \right)^{2} \leq \left( \sum_{a} (d_{a} \|\nabla_{a}\|_{op})^{2} \right) \left( \sum_{a} \frac{\|Z_{a}\|_{F}^{2}}{d_{a}} \right)  \]
 \end{proof}
 
 \subsection{Strong convexity}
 \TODO{Pisier + perturbation bound}
+
 
 \begin{theorem}
 Let $P$ denote the projection onto $(\vec{I_{n}},\vec{I_{m}})$, then the following holds with $1/poly(mn)$ failure probability
