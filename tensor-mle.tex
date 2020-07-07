@@ -219,9 +219,14 @@ as a consequence, $\|\nabla f(I)\|_{*}^{2} := \sum_{a} d_{a} \|(\nabla f(I))_{a}
 \end{lemma}
 
 \begin{theorem}\label{thm:tensor-convexity}
-Suppose the number of samples is at least $k^{2} \max_{a} d_{a}^{2}/D$. Then with failure probability $\leq 1/poly(D)$, $f_X$ is $\Omega(1)$-strongly convex w.r.t. norm $\|Z\|^{2} := \sum_{a} d_{a} \|Z_{a}\|_{F}^{2}$. 
+Suppose the number of samples is at least $k^{2} \max_{a} d_{a}^{2}/D$. Then with failure probability $\leq 1/poly(D)$, $f_X$ is $\Omega(1)$-strongly convex at $I$ w.r.t. norm $\|Z\|^{2} := \sum_{a} d_{a} \|Z_{a}\|_{F}^{2}$. 
 \end{theorem}
-These two theorems immediately yield \cref{thm:tensor-frobenius}. 
+
+\begin{lemma}
+If $f$ is $\lambda$-strongly convex at $I$, then at perturbation $\otimes_{a} e^{Z_{a}}$ bounded by $\forall a: \|Z_{a}\|_{op} \leq \delta \ll 1$, $f$ $\lambda - O(k\delta)$-strongly convex. 
+\end{lemma}
+
+These lemmas immediately yield \cref{thm:tensor-frobenius}. 
 \begin{proof}[Proof of \cref{thm:tensor-frobenius}]
 \CF{TODO}.
 
@@ -296,6 +301,7 @@ Choosing $t \sim \sqrt{d_{a}}$ and $nD \gtrsim d_{a}^{2} \log^{2} d_{a}$ gives t
 We may finally prove the bound on the gradient.
 \begin{proof}[Proof of \cref{lemma:gradient-bound}]
 \TODO{put guts here}.
+This mostly depends on notation, so I'll leave this for now and you guys can decide what the right notation is. 
 \end{proof}
 
 \subsection{Strong convexity}
@@ -314,13 +320,31 @@ By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b}
 
 \begin{proof} [Proof of \cref{thm:tensor-convexity}]
 Take any quadratic form of the Hessian for $\{Z_{a} \perp I_{a}\}$:
-\[ \partial_{t=0}^{2} f(e^{t Z}) = \sum_{a} \langle Q^{a}, Z_{a}^{2} \rangle + \sum_{a \neq b} \langle Q^{ab}, Z_{a} \otimes Z_{b}    \]
+\[ \partial_{t=0}^{2} f(e^{t Z}) = \sum_{a} \langle Q^{a}, Z_{a}^{2} \rangle + \sum_{a \neq b} \langle Q^{ab}, Z_{a} \otimes Z_{b} \rangle   \]
 \[ \geq \sum_{a} \lambda_{\min}(Q^{a}) \|Z_{a}\|_{F}^{2} - \sum_{a \neq b} \|Q^{ab} (I-P_{ab})\|_{op} \|Z_{a}\|_{F} \|Z_{b}\|_{F}    \]
 Now we can use our high probability bounds derived above:
 \[ \forall a: Q^{a} \succeq \frac{1-\epsilon}{d_{a}} I_{a}; \hspace{10mm} 
-\forall a \neq b: \|Q^{ab} (I-P_{ab})\|_{op} < \frac{\lambda}{k \sqrt{d_{a} d_{b}}}   \]
-\[ \implies \partial_{t=0}^{2} f(e^{t Z}) > \sum_{a} \frac{1-\eps - \lambda}{d_{a}} \|Z_{a}\|_{F}^{2}   \]
+\forall a \neq b: \|Q^{ab} (I-P_{ab})\|_{op} < \frac{\lambda}{\sqrt{d_{a} d_{b}}}   \]
+\[ \implies \partial_{t=0}^{2} f(e^{t Z}) \geq \sum_{a} \frac{1-\eps}{d_{a}} \|Z_{a}\|_{F}^{2} - \sum_{a \neq b} \frac{\lambda}{\sqrt{d_{a} d_{b}}} \|Z_{a}\|_{F} \|Z_{b}\|_{F}  \]
+\[ \geq \sum_{a} \frac{1-\eps+\lambda}{d_{a}} \|Z_{a}\|_{F}^{2} - \lambda \left( \sum_{a} \frac{1}{\sqrt{d_{a}}} \|Z_{a}\|_{F}   \right)^{2}   \]
+\[ \geq \sum_{a} \frac{1-\eps+\lambda}{d_{a}} \|Z_{a}\|_{F}^{2} - k\lambda \sum_{a} \frac{1}{d_{a}} \|Z_{a}\|_{F}^{2} \]
+\[ = (1-\eps-(k-1)\lambda) \|Z\|^{2}    \]
 Choosing $\eps,\lambda$ small enough gives the theorem. 
+\end{proof}
+
+\begin{proof}
+We can in fact show that $\nabla^{2}$ is well-conditioned using the following:
+\[ -\begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} 
+\preceq \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}
+\preceq \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
+\]
+We can rewrite the Hessian using shorthand $\{M_{a}\}$ for the diagonal blocks and $\{M_{ab}\}$ for off-diagonal blocks:
+\[ \nabla^{2} = \sum_{a} E_{aa} \otimes M_{a} + \sum_{a \neq b} E_{ab} \otimes M_{ab}  \]
+Now we can again use the high-probability bounds derived above:
+\[ M_{a} \in \frac{1 \pm \eps}{d_{a}} I_{a}; \hspace{5mm} \forall a \neq b: \|M_{ab}\|_{op} \leq \frac{\lambda}{\sqrt{d_{a} d_{b}}}   \]
+\[ \nabla^{2} \preceq \sum_{a} E_{aa} \otimes \left( \frac{1+\eps}{d_{a}} I_{a} \right) + \sum_{a < b} E_{aa} \otimes \left( \frac{\lambda}{d_{a}} I_{a} \right) + E_{bb} \otimes \left( \frac{\lambda}{d_{b}} I_{b} \right)    \]
+\[ \preceq \sum_{a} E_{aa} \otimes \frac{1+\eps+(k-1)\lambda}{d_{a}} I_{a}  \]
+The same sequence of inequalities can be reversed to show a lower bound. So in fact we can show the above bounds on blocks shows $O(\eps + k \lambda)$-condition number bound on the Hessian in norm $\|\cdot\|$. 
 \end{proof}
 
 \section{Matrix normal models}\label{sec:matrix-normal}
