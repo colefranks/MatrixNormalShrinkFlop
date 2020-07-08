@@ -220,7 +220,7 @@ As a consequence, $\|\nabla f(I)\|_{*}^{2} := \sum_{a} d_{a} \|\nabla_a f \|_{F}
 \end{lemma}
 
 \begin{theorem}\label{thm:tensor-convexity}
-Suppose the number of samples is at least $k^{2} \max_{a} d_{a}^{2}/D$. Then with failure probability $\leq 1/poly(D)$, $f_X$ is $\Omega(1)$-strongly convex at $I$ w.r.t. norm $\|Z\|^{2} := \sum_{a} d_{a} \|Z_{a}\|_{F}^{2}$. 
+Suppose the number of samples is at least $k^{2} \max_{a} d_{a}^{2}/D$. Then with failure probability $\leq 1/poly(D)$, $f_X$ is $\Omega(1)$-strongly convex at $I$ w.r.t. norm $\|Z\|^{2} := \sum_{a} \frac{1}{d_{a}} \|Z_{a}\|_{F}^{2}$. 
 \end{theorem}
 
 \begin{lemma}\label{lem:perturbation}
