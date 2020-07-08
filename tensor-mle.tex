@@ -223,7 +223,7 @@ Suppose the number of samples is at least $k^{2} \max_{a} d_{a}^{2}/D$. Then wit
 \end{theorem}
 
 \begin{lemma}\label{lem:perturbation}
-If $f$ is $\lambda$-strongly convex at $I$, then at perturbation $\otimes_{a} e^{Z_{a}}$ bounded by $\forall a: \|Z_{a}\|_{op} \leq \delta \ll 1$, $f$ $\lambda - O(k\delta)$-strongly convex. 
+If $f$ is $\lambda$-strongly convex at $I$ and $\forall a: d_{a} \|(\nabla f)_{a}\|_{op} \leq \eps \ll 1/k$, then for $Z$ such that $\forall a: \|Z_{a}\|_{op} \leq \delta_{a} \ll 1/k$, the function $f$ at $e^{Z}$ is $\lambda - O(k \sum_{a} \delta_{a})$ strongly convex. 
 \end{lemma}
 
 These lemmas immediately yield \cref{thm:tensor-frobenius}. 
@@ -249,8 +249,8 @@ The geodesic gradient $\nabla f := (\nabla_1 f, \dots, \nabla_k f) \in P $ at th
 \end{align}
 for $a \in [k]$. 
 The geodesic Hessian $\nabla^2 f$ is given by 
-\begin{align}\langle Y, (\nabla^{2}_{aa} f) Y \rangle &=  \langle \rho^{a}, Y^{2} \rangle - \left\langle \nabla_a f, Y \right\rangle^{2} \\
-\langle Z, (\nabla^{2}_{ab} f) Y \rangle &= \langle \rho^{ab}, Z \otimes Y \rangle  - \langle \nabla_a f, Y \rangle \langle \nabla_b f, Z \rangle
+\begin{align}\langle Y, (\nabla^{2}_{aa} f) Y \rangle &=  \langle \rho^{a}, Y^{2} \rangle - \left\langle \rho^{a}, Y \right\rangle^{2} \\
+\langle Z, (\nabla^{2}_{ab} f) Y \rangle &= \langle \rho^{ab}, Z \otimes Y \rangle  - \langle \rho^{a}, Y \rangle \langle \rho^{b}, Z \rangle
 \end{align}
 for $a \neq b \in [k]$, $Y \in \Herm_{d_a}, Z \in \Herm_{d_b}$. 
 \end{fact}
@@ -354,9 +354,16 @@ The same sequence of inequalities can be reversed to show a lower bound. So in f
 \end{proof}
 We now move to prove \cref{lem:perturbation}, which shows that the Hessian remains strongly convex in an operator norm ball about the origin. We require an intermediate lemma showing that each block of the Hessian changes fairly little on the operator ball.
 
+\begin{lemma} [Lemma 3.6 in KLR]
+\[ \|M^{ab}\|_{F \to F}^{2} \leq \|M^{a}\|_{F \to F} \|M^{b}\|_{F \to F}   \]
+\end{lemma}
+\begin{proof}
+We have a simple proof of this: by convexity we know $\begin{pmatrix} M^{a} & M^{ab} \\ M^{ba} & M^{b}  \end{pmatrix} \succeq 0$. 
+\end{proof}
+
 
 \begin{lemma}\label{lem:block-perturbation}
-For perturbation $v \to \otimes_{a} e^{\delta_{a}} \cdot v =: w$ where $\forall a: \|\delta_{a}\|_{op} \ll 1$, and let $\{\sigma_{1}^{ab}, \sigma_{2}^{ab}\}$ be the $\|\cdot\|_{F} \to \|\cdot\|_{F}$ norm and norm $\perp$ to $(I,I)$ for each bipartite part respectively:
+For perturbation $v \to \otimes_{a} e^{\delta_{a}} \cdot v =: w$ where $\forall a: \|\delta_{a}\|_{op} \ll 1$, and let $\{\sigma_{1}^{ab}, \sigma_{2}^{ab}\}$ be the matrix norm $\|\cdot\|_{F} \to \|\cdot\|_{F}$ and matrix norm on subspace $\perp$ to $(I,I)$ for each bipartite part respectively:
 \[ \forall a,b: \sigma_{2}^{ab}(w w^{*}) - \sigma_{2}^{ab}(v v^{*}) \leq O \left( \sum_{a} \|\delta_{a}\|_{op}  \right) \sigma_{1}^{ab}(v v^{*})   \]
 The same is true for the diagonal blocks. 
 \end{lemma}
@@ -367,7 +374,7 @@ Now we address a perturbation on $b \neq a$. For a spectral lower bound, we choo
 \[ \langle e^{\delta_{b}} v v^{*} e^{\delta_{b}} - v v^{*}, I_{\overline{a}} \otimes Z_{a} \rangle 
 = \langle v v^{*}, \delta \otimes Z \rangle = \langle Z, V^{*} \delta V \rangle   \]
 Here $V \in \R^{d_{b} \times d_{a}}$ is the matricized version of $v$. But now since $Z \succeq 0$, the argument is clear
-\[ \leq \langle Z, V^{*} |\delta| V \rangle \leq \|\delta\|_{op} \langle Z, V^{*} I V \rangle = \|\delta\|_{op} \langle v v^{*}, I_{\overline{a}} \otimes Z \rangle     \]
+\[ \leq \langle Z, V^{*} |\delta| V \rangle \leq \|\delta\|_{op} \langle Z, V^{*} I V \rangle = \|\delta\|_{op} \langle v v^{*}, I_{\overline{a}} \otimes Z \rangle \leq \|\delta\|_{op} \|Q_{a}\|_{op} \|Z\|_{1}    \]
 
 The argument for the off-diagonal blocks is similar. We first argue the change of $\sigma^{ab}$ is small under perturbations where $\forall c \neq a,b: \delta_{c} = 0$. Let $M^{ab}$ be the matrix versions of the bipartite operators:
 \[ \langle vec(Y), M_{v}^{ab}(vec(Z)) \rangle := \langle v v^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle \] 
@@ -388,7 +395,12 @@ Each of these terms we can bound by $\sigma^{ab}_{1} \|Z\|_{F} \|Y\|_{F}$. (Note
 
 
 \begin{proof}[Proof of \cref{lem:perturbation}]
-\TODO{Akshay prove }
+By the condition on gradient, we have that 
+\[ \forall a,b: \|M^{ab}\|_{op}^{2} \leq \|M^{a}\|_{op} \|M^{b}\|_{op} \leq \frac{1+\eps}{d_{a} d_{b}}   \]
+We apply the perturbation lemma to each part sucessively, and if $\delta$ are small enough we can assume this bound holds in weaker form $1+\epsilon \leq 2$ for all iterations. The above lemma shows for each part and any test vectors 
+\[ \langle w w^{*} - v v^{*}, I_{\overline{ab}} \otimes \frac{Z}{\|Z\|_{F}} \otimes \frac{Y}{\|Y\|_{F}} \rangle \leq \frac{O( \sum_{a} \delta_{a} )}{\sqrt{d_{a} d_{b}}} =: \frac{\delta}{\sqrt{d_{a} d_{b}}}   \]
+Here the suppressed constants are $\leq 7$. Therefore the difference between Hessians can be bounded
+\[ |\langle Y, \nabla^{2} f(e^{Z}) - \nabla^{2} f(I), Y \rangle|  \leq \delta \left( \sum_{a} \frac{\|Y_{a}\|_{F}^{2}}{d_{a}} + \sum_{a \neq b} \frac{\|Y_{a}\|_{F} \|Y_{b}\|_{F}}{\sqrt{d_{a} d_{b}}} \right) \leq k \delta \|Y\|^{2}   \]
 \end{proof}
 
 
@@ -905,13 +917,13 @@ So we require $\langle X, \nabla_{e^{Y}}, X \rangle \gtrsim \|X\|^{2}$. We can g
 
 \subsection{Better Deterministic Robustness}
 \begin{lemma}\label{lem:block-perturbation-appendix}
-For perturbation $v \to \otimes_{a} e^{\delta_{a}} \cdot v =: w$ where $\forall a: \|\delta_{a}\|_{op} \ll 1$, and let $\{\sigma_{1}^{ab}, \sigma_{2}^{ab}\}$ be the $\|\cdot\|_{F} \to \|\cdot\|_{F}$ norm and norm $\perp$ to $(I,I)$ for each bipartite part respectively:
+For perturbation $v \to \otimes_{a} e^{\delta_{a}} \cdot v =: w$ where $\forall a: \|\delta_{a}\|_{op} \ll 1$, and let $\{\sigma_{1}^{ab}, \sigma_{2}^{ab}\}$ be the matrix $\|\cdot\|_{F} \to \|\cdot\|_{F}$ norm and matrix norm on subspace $\perp$ to $(I,I)$ for each bipartite part respectively:
 \[ \forall a,b: \sigma_{2}^{ab}(w w^{*}) - \sigma_{2}^{ab}(v v^{*}) \leq O \left( \sum_{a} \|\delta_{a}\|_{op}  \right) \sigma_{1}^{ab}(v v^{*})   \]
 The same is true for the diagonal blocks. 
 \end{lemma}
 \begin{proof}
 To lower bound the diagonal block, we just need a spectral lower bound on $\{Q_{a}\}$, since $\langle vec(X), M^{a} (vec(X)) \rangle := \langle Q_{a}, X^{2} \rangle$. 
-\[ \| e^{\delta_{a}} Q_{a} e^{\delta_{a}} - Q_{a}\|_{op} \leq O(\|\delta_{a}\|_{op}) \|Q_{a}\|_{op}   \]
+\[ \| e^{\delta_{a}} Q_{a} e^{\delta_{a}} - Q_{a}\|_{op} = \leq O(\|\delta_{a}\|_{op}) \|Q_{a}\|_{op}   \]
 Now we address a perturbation on $b \neq a$. For a spectral lower bound, we choose test $Z \succeq 0$ and let $\delta := e^{2\delta_{b}} - I$:
 \[ \langle e^{\delta_{b}} v v^{*} e^{\delta_{b}} - v v^{*}, I_{\overline{a}} \otimes Z_{a} \rangle 
 = \langle v v^{*}, \delta \otimes Z \rangle = \langle Z, V^{*} \delta V \rangle   \]
