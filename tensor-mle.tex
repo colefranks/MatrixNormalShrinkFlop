@@ -204,7 +204,7 @@ We now proceed to state the lemma from geodesically convex optimization we will 
 
 
 
-\begin{lemma} Let $f$ be geodesically convex everywhere, and $\lambda$-geodesically strongly convex w.r.t. norm $\|\cdot\|$ on a ball of radius $\kappa$ about $I$; further assume the geodesic gradient satisfies $\|\nabla f(I)\|_{*} = \eps < \lambda \kappa$. Then there is an optimizer within a $\|\cdot\|$-ball of radius $\eps/\lambda$. 
+\begin{lemma}\label{lem:convex-ball} Let $f$ be geodesically convex everywhere, and $\lambda$-geodesically strongly convex w.r.t. norm $\|\cdot\|$ on a ball of radius $\kappa$ about $I$; further assume the geodesic gradient satisfies $\|\nabla f(I)\|_{*} = \eps < \lambda \kappa$. Then there is an optimizer within a $\|\cdot\|$-ball of radius $\eps/\lambda$. 
 \end{lemma}
 \begin{proof}
 Take geodesic $e^{t Z}$ towards the optimum with normalized speed $\|Z\| = 1$ so the optimizer is $e^{T Z}$. Let $g(t) := f(e^{tZ})$, which is $\lambda$-strongly convex in $t$. 
@@ -214,9 +214,9 @@ Now if $T \geq \kappa$ we have a contradiction as $\lambda \kappa - \epsilon > 0
 \end{proof}
 Next, we state the two theorems that allow us to apply this lemma. We prove them in the next two sections.
 
-\begin{lemma}\label{lemma:gradient-bound} Suppose the number of samples is at least $\max_{a} d_{a}^{2} / D \epsilon^{2} $. Then with failure probability $\leq \sum_{a} \exp(-\Omega(d_{a}))$, 
-$$\forall a: \| d_{a} \nabla_a f \|_{op} \leq \epsilon $$
-as a consequence, $\|\nabla f(I)\|_{*}^{2} := \sum_{a} d_{a} \|(\nabla f(I))_{a} \|_{F}^{2} \leq k \epsilon^{2}$. 
+\begin{lemma}\label{lemma:gradient-bound} Let $N_a := n D/d_a$, and suppose $N_a \geq C d_a/\eps^2$ for all $a \in [k]$. Then with probability at least $1 -  \sum_{a \in [k]} e^{-\Omega(N_a)},$ for all $a \in [k]$ we have 
+$$\| \nabla_a f \|_{op} \leq \epsilon/d_a.$$
+As a consequence, $\|\nabla f(I)\|_{*}^{2} := \sum_{a} d_{a} \|\nabla_a f \|_{F}^{2} \leq k \epsilon^{2}$. 
 \end{lemma}
 
 \begin{theorem}\label{thm:tensor-convexity}
@@ -229,7 +229,8 @@ If $f$ is $\lambda$-strongly convex at $I$ and $\forall a: d_{a} \|(\nabla f)_{a
 
 These lemmas immediately yield \cref{thm:tensor-frobenius}. 
 \begin{proof}[Proof of \cref{thm:tensor-frobenius}]
-\CF{TODO}.
+\cref{lem:perturbation} shows that $f$ is $\Omega(1)$ strongly convex for $e^{Z}$ with 
+We may apply \cref{lem:convex-ball} with $\kappa = $ \CF{finish once dual norms straightened out}
 
 \end{proof}
 
@@ -279,7 +280,7 @@ Now to calculate the same for $f$, note that $f = \log F - \sum_{a \in [k]} \fra
 
 
 
-
+Recall that $\nabla_a f = \rho^a - I_a/d_a$, where $\rho^a$ is distributed as $Y Y^\dagger/\|Y\|_F^2$, where $Y$ is a $d \times N$ matrix with independent Gaussian entries. This motivates the next lemma on the singular values of random Gaussian matrices.
 % https://arxiv.org/pdf/1011.3027.pdf
 
 \begin{theorem} [Corollary 5.35 of \CF{\cite{vershinyn}}]\label{cor:vershynin}
@@ -287,17 +288,17 @@ Let $Y \in \R^{d \times N}$ for $d < N$ have independent standard gaussian entri
 \[ \sqrt{N} - \sqrt{d} - t \leq s_{d}(Y) \leq s_{1}(Y) \leq \sqrt{N} + \sqrt{d} + t  \]
 \end{theorem}
 
-\begin{proof}[Proof of \cref{lemma:gradient-bound}]Let $N = n D/d_a$ and $d = d_a$. Recall that $\nabla_a f = \rho^a - I_a/d_a$. $\rho^a$ is distributed as $Y Y^\dagger/\|Y\|_F^2$, where $Y$ is a $d \times N$ matrix with independent Gaussian entries.
+\begin{proof}[Proof of \cref{lemma:gradient-bound}]Let $N = n D/d_a$ and $d = d_a$. Again, $\nabla_a f = \rho^a - I_a/d_a$ where $\rho^a$ is distributed as $Y Y^\dagger/\|Y\|_F^2$, where $Y$ is a $d \times N$ matrix with independent Gaussian entries.
 By \cref{cor:vershynin}, we have the following with $\leq 2 \exp(-t^{2}/2)$ failure probability:
 \[\sqrt{N} \left( 1 -  \frac{\sqrt{d} + t }{\sqrt{N}}  \right)\leq  s_{1} \left( Y \right) \leq s_{d}\left( Y \right) \leq  \sqrt{N} \left( 1 + \frac{\sqrt{d} + t }{\sqrt{N}}  \right)  \]
-Let $t = \sqrt{N}/\log d$. Because $nD \geq C d_{a}^{2} \log^{2} d_{a}$, both largest and least singular values are
-$\sqrt{N} \left( 1 + c/\log d  \right)$. 
+Let $t = c \sqrt{N} \eps$. Because $d \leq c N \eps^2$, both largest and least singular values are
+$\sqrt{N} \left( 1 + c \cdot \eps   \right)$. 
 
 Provided $c$ is small enough we then have 
- $$\lambda_1(YY^\dagger), \lambda_{d}(YY^\dagger) \in N(1 + c/\log d).$$ 
- Next, observe that $\|\vec X\|_F^2$ is a $\chi$-squared distribution with $Nd$ degrees of freedom, and thus satisfies $\| \vec X\|_F^2 - Nd \leq t N d$ with probability $1 - 2e^{- Nd t^2/8}$ for $t \leq 1$ \CF{\cite{wainwright}}. Thus 
-  $$\lambda_1(\rho^a), \lambda_2(\rho^a) \in  N(1 \pm c/\log d)/ Nd(1 \pm c/\log d)$$ 
-with probability $1 - 2 e^{-  N/\log^2 d}- 2 e^{- c Nd /\log d} = 1 - 4 e^{- N/\log^2 d}.$ Provided $c$ is small enough, the bound is proven.\end{proof}
+ $$\lambda_1(YY^\dagger), \lambda_{d}(YY^\dagger) \in N(1 + c \cdot \eps).$$ 
+ Next, observe that $\|Y\|_F^2$ is a $\chi$-squared distribution with $Nd$ degrees of freedom, and thus satisfies $\| Y\|_F^2 - Nd \leq t N d$ with probability $1 - 2e^{- Nd t^2/8}$ for $t \leq 1$ \CF{\cite{wainwright}}. Thus 
+  $$\lambda_1(\rho^a), \lambda_2(\rho^a) \in  N(1 \pm c \cdot \eps)/ Nd(1 \pm c \cdot \eps) \in \frac{1}{d}(1 \pm \eps)$$ 
+with probability $1 - 2 e^{- c N \eps^2}- 2 e^{- c Nd \eps^2} = 1 - 4 e^{- N\eps^2},$ provided $c$ is small enough. Applying the union bound over $[k]$ completes the proof of the lemma.\end{proof}
  
 % Both $\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a$ and $\| \vec X\|_F^2 - Nd_a \leq .5 N d_a$ hold with probability \CF{blah}$. Now  $$ \|\rho^a - I_a/d_a\|_{op} \leq \|\rho^a - N I_{d_a}/ \|\vec X\|_F\|_{op} + $$
 
