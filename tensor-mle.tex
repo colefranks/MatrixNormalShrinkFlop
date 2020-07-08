@@ -204,7 +204,7 @@ We now proceed to state the lemma from geodesically convex optimization we will 
 
 
 
-\begin{lemma}\label{lem:convex-ball} Let $f$ be geodesically convex everywhere, and $\lambda$-geodesically strongly convex w.r.t. norm $\|\cdot\|$ on a ball of radius $\kappa$ about $I$; further assume the geodesic gradient satisfies $\|\nabla f(I)\|_{*} = \eps < \lambda \kappa$. Then there is an optimizer within a $\|\cdot\|$-ball of radius $\eps/\lambda$. 
+\begin{lemma}\label{lem:convex-ball} Let $f$ be geodesically convex everywhere, and $\lambda$-geodesically strongly convex w.r.t. norm $\|\cdot\|$ on a $\| \cdot \|$-ball of radius $\kappa$ about $I$; further assume the geodesic gradient satisfies $\|\nabla f(I)\|_{*} = \eps < \lambda \kappa$. Then there is an optimizer within a $\|\cdot\|$-ball of radius $\eps/\lambda$. 
 \end{lemma}
 \begin{proof}
 Take geodesic $e^{t Z}$ towards the optimum with normalized speed $\|Z\| = 1$ so the optimizer is $e^{T Z}$. Let $g(t) := f(e^{tZ})$, which is $\lambda$-strongly convex in $t$. 
@@ -229,9 +229,7 @@ If $f$ is $\lambda$-strongly convex at $I$ and $\forall a: d_{a} \|(\nabla f)_{a
 
 These lemmas immediately yield \cref{thm:tensor-frobenius}. 
 \begin{proof}[Proof of \cref{thm:tensor-frobenius}]
-\cref{lem:perturbation} shows that $f$ is $\Omega(1)$ strongly convex for $e^{Z}$ with 
-We may apply \cref{lem:convex-ball} with $\kappa = $ \CF{finish once dual norms straightened out}
-
+Let $\delta_a = \|Z_a\|_{op}$. Then $k \sum_a  \delta_a \leq k^{3/2} \max \sqrt{d_a} \|Z\|$. \cref{thm:tensor-convexity} tells us $f$ is $\Omega(1)$-strongly convex in a $\kappa:=\Omega(1/\sqrt{k^{3}\max d_a} )$ radius $\| \cdot \|$ ball about $I$ with inverse polynomial failure probability. By \cref{lemma:gradient-bound}, with failure probabilty at most $\sum_a \exp ( - N_a \eps^2)$, $\| \nabla f\|_* \leq \eps \sqrt{k}$. Provided $\eps = c/k^2 \max \sqrt{d_a}$, \cref{lem:convex-ball} shows there is an optimizer $\Theta$ of $f$ in a $\| \cdot \|$ ball of radius $\eps$. As $\|Z_a\|_{op} \leq c$ on the $\kappa$ ball, we have $\|I - \Theta_a\|_F \leq \| \log \Theta_a\|_F \leq \|\log \Theta\|/\sqrt{d_a}$. \CF{I got that the things are $\eps/\sqrt{d_a}$ close in Frobenius norm for $\eps \leq 1/k^2 \max \sqrt{d_a}$.}
 \end{proof}
 
 
