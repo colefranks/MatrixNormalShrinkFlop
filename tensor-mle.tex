@@ -315,6 +315,62 @@ with probability $1 - 2 e^{- c N \eps^2}- 2 e^{- c Nd \eps^2} = 1 - 4 e^{- N\eps
  
 % Next, observe that $\|\vec X\|_F^2$ is a $\chi$-squared distribution with $Nd_a$ degrees of freedom, and thus satisfies $\| \vec X\|_F^2 - Nd_a \leq .5 N d_a$ with probability $1 - 2e^{- c N d_a}$. Both $\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a$ and $\| \vec X\|_F^2 - Nd_a \leq .5 N d_a$ hold with probability \CF{blah}$. Now  $$ \|\rho^a - I_a/d_a\|_{op} \leq \|\rho^a - N I_{d_a}/ \|\vec X\|_F\|_{op} + $$
 
+\subsection{Different Inner Product}
+
+\begin{definition}
+For desired marginals $\{R_{a}^{2}\}_{a \in [k]}$ (assume for now $R$ are Hermitian though we can pick different square roots if required), define inner product
+\[ \langle Z, Y \rangle_{R} := \sum_{a} \langle R_{a} Z R_{a}^{*}, Y \rangle \]
+\[ \|Z\|_{R}^{2} := \langle Z, Z \rangle_{R} = \sum_{a} \|R_{a} Z_{a}\|_{F}^{2}   \]
+\end{definition}
+
+We restate the projective likelihood function and define gradient and Hessian in this metric:
+
+\begin{definition} 
+\[ f_{\vec X}(\Theta_1, \dots, \Theta_n) = \log \left\langle \sum_{i \in [n]} X_{i} X_{i}^{*},  \bigotimes_{a \in [k]} \Theta_a \right\rangle - \sum_{a \in [k]} \frac{1}{d_a} \log\det \Theta_a  \]
+Also $\rho := \sum_{i} X_{i} X_{i}^{*}$ and $\{\rho^{S}\}_{S \subseteq [k]}$ are marginals. 
+\end{definition}
+
+\begin{fact}
+\[ (\nabla f(I))_{a} = d_{a} \rho^{a} - I_{a}  \]
+\end{fact}
+\begin{proof}
+We can define $\nabla f$ dually as $\forall Z: \langle \nabla f(I), Z \rangle_{R} := \partial_{t=0} f(e^{tZ})$
+\[ \partial_{t=0} f(e^{t Z_{a}}) = \partial_{t=0} \langle \rho, I_{\overline{a}} \otimes e^{tZ_{a}}  \rangle - \partial_{t=0} \frac{1}{d_{a}} \log\det e^{t Z_{a}}  \]
+\[ = \left\langle \rho^{a} - \frac{1}{d_{a}} I_{a}, Z_{a} e^{t Z_{a}} \right\rangle|_{t=0} = \left\langle R_{a}^{-1} \left( \rho^{a} - \frac{1}{d_{a}} I_{a} \right) R_{a}^{-1}, Z_{a} \right\rangle_{R}   \]
+
+Similarly we define the Hessian as 
+\[ \partial_{s=t=0} f(e^{tZ_{a} + sY_{b}}) = \langle \rho, \{ I_{\overline{a}} \otimes Z_{a}, I_{\overline{b}} \otimes Y_{b} \} \rangle   \]
+\[ \implies (\nabla^{2} f(I))_{aa} = \langle R_{a}^{-1} \rho^{a} R_{a}^{-1}, \{Z, Y\} \rangle_{R}    \]
+\[ \implies (\nabla^{2} f(I))_{ab} = \langle \rho^{ab}, Z \otimes Y \rangle   \]
+\end{proof}
+
+\AR{Not sure how to define Hessian. I think I'd like the Hessian to be 
+\[  \sum_{a} E_{aa} \otimes (1 \pm \epsilon) I + \sum_{a \neq b} E_{ab} \otimes \pm \lambda  \]
+for some small $\epsilon,\lambda$. Then the Hessian will be $1-\epsilon - (k-1) \lambda$-strongly convex. }
+
+
+
+\begin{lemma} [Restatement of \cref{lem:convex-ball}]
+Let $f$ be geodesically convex everywhere. All the below quantities are wrt metric $\langle \cdot, \cdot \rangle_{R}$. Assume $f$ and $\lambda$-geodesically strongly convex ball of radius $\kappa$ about $I$; further assume the geodesic gradient satisfies $\|\nabla f(I)\|_{R} = \eps < \lambda \kappa$. Then there is an optimizer within an $\eps/\lambda$-ball. 
+\end{lemma}
+\begin{proof} [Proof of \cref{lem:convex-ball}]
+The proof is exactly the same except the following:
+\[ g'(0) = \langle \nabla f(I), Z \rangle_{R} \geq - \|\nabla f(I)\|_{R} \|Z\|_{R} \geq - \eps     \]
+\end{proof}
+
+\begin{remark}
+Note the perturbation lemma then gives the following strategy. By Cole's lemma, we have that $c \|\nabla f(I)\|_{R} \geq \|\nabla f(I)\|_{op}$. If we can say the same thing for the optimizer $Z$, then it is enough for $\lambda \kappa \geq \Omega(1/c) > \eps$ and we can improve sample complexity to $nD > c \max_{a} d_{a}^{2}$. 
+
+A similar thing is true if we can show the above inequality for the gradient flow for $\log \max_{a} d_{a}$ time. 
+\end{remark}
+
+\begin{lemma}
+$\lambda$-strong convexity is a sufficient condition for fast convergence of the gradient flow:
+\[ - \partial_{t=0} \|\nabla f(e^{-t\nabla f(I)})\|_{R}^{2} = -\partial_{t=0}^{2} f(e^{-t\nabla f(I)}) = \langle \nabla^{2} f, \nabla f \otimes \nabla f \rangle \geq \lambda \|\nabla f\|_{R}^{2}    \]
+\AR{Not sure how to write the third term above, the inner product with Hessian}
+\end{lemma}
+
+
 \subsection{Strong convexity}
 \TODO{Pisier + perturbation bound}
 
