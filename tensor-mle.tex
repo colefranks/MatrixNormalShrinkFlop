@@ -1031,6 +1031,53 @@ where $X_{a} := d_{a} \mu_{a}(t)$. Then we have
 \[ \geq (1-\epsilon') \sum_{a} d_{a} \|\mu_{a}\|_{F}^{2}   \]
 
 
+\subsection{Incoherence}
+
+\begin{definition}
+For two orthonormal bases $\{u_{i}\},\{v_{i}\} \subseteq \R^{d}$, the coherence between them is 
+\[ \gamma(U,V) := \sqrt{d} \max_{i,j} |\langle u_{i}, v_{j} \rangle|  \]
+\end{definition}
+
+Let $(\epsilon/d_{a},u)$ be the eigenpair associated with operator norm of $\mu_{a}$ and recall that under gradient flow we move in direction $X := -\sum_{a} e_{a} \otimes d_{a} \mu_{a}\}$
+\[ -\partial_{t=0} \|\mu_{a}\|_{op} = -\langle e_{a} \otimes uu^{*}, \nabla^{2} X \rangle     \]
+\[ = \langle \rho^{a}, d_{a} \mu_{a} u u^{*} \rangle + \sum_{b \neq a} \langle \rho^{ab}, u u^{*} \otimes d_{b} \mu_{b} \rangle    \]
+\[ = \frac{1}{d_{a}} (1+\eps) d_{a} \frac{1}{d_{a}} \eps + \sum_{b \neq a} d_{b} \langle \rho^{ab}, u u^{*} \otimes \mu_{b} \rangle   \]
+
+Let's focus on a single $(a,b)$ term, and denote $T : L(\R^{d_{b}}) \to L(\R^{d_{a}})$ as
+\[ \langle T(Y_{b}), X_{a} \rangle := \langle \rho^{ab}, X_{a} \otimes Y_{b} \rangle \]
+So the term we are analyzing is $\langle T(\mu_{b}), u u^{*} \rangle$, which can be viewed as a diagonal of the matrix $T(\mu_{b})$. We have good bounds on this matrix:
+\[ \langle I_{a}, T(\mu_{b}) \rangle = \langle \rho^{ab}, I_{a} \otimes \mu_{b} \rangle = \|\mu_{b}\|_{F}^{2}  \]
+Now define $Y := T(\mu_{b}) - \frac{\|\mu_{b}\|_{F}^{2}}{d_{a}} I_{a}$ to be projection orthogonal to the identity:
+\[ \|Y\|_{F} = \sup_{X} \frac{ \langle Y,X \rangle }{\|X\|_{F}} = \sup_{X \perp I} \frac{ \langle Y, X \rangle }{\|X\|_{F}} = \sup_{X \perp I, \|X\|_{F} = 1} \langle \rho^{ab}, X \otimes \mu_{b} \rangle \leq \frac{\lambda}{\sqrt{d_{a} d_{b}}} \|\mu_{b}\|_{F}     \]
+Now if $Y = \sum_{i} y_{i} v_{i} v_{i}^{*}$ is the eigendecomposition, we have a bound on the variance of the eigenvalues. Let $\mu_{a} = \sum_{i} x_{i} u_{i} u_{i}^{*}$, and if we have a bound on the coherence of $U,V$, we can bound the competing term:
+\[ d_{b} \langle \rho^{ab}, u u^{*} \otimes \mu_{b} \rangle = d_{b} \langle \rho^{ab}, \frac{1}{d_{a}} I_{a} \otimes \mu_{b} + (u u^{*} - \frac{1}{d_{a}} I_{a}) \otimes \mu_{b} \rangle    \]
+\[ = \frac{d_{b} \|\mu_{b}\|_{F}^{2}}{d_{a}} + d_{b} \langle Y, u u^{*} \rangle  
+= \frac{d_{b} \|\mu_{b}\|_{F}^{2}}{d_{a}} + d_{b} \sum_{i} y_{i} \langle u, v_{i} \rangle^{2}    \]
+\[ \leq \frac{d_{b} \|\mu_{b}\|_{F}^{2}}{d_{a}} + d_{b} \left( \sum_{i} y_{i}^{2} \langle u, v_{i} \rangle^{2}  \right)^{1/2} \left( \sum_{i} \langle u, v_{i} \rangle^{2} \right)^{1/2}   \]
+\[ \leq \frac{d_{b} \|\mu_{b}\|_{F}^{2}}{d_{a}} + d_{b} \frac{\gamma(U,V)}{\sqrt{d_{a}}} \|Y\|_{F} 
+\leq \frac{d_{b} \|\mu_{b}\|_{F}^{2}}{d_{a}} + \lambda \gamma \frac{\sqrt{d_{b}} \|\mu_{b}\|_{F}}{d_{a}}    \]
+
+So adding up all these terms, we get a competing force of 
+\[ \sum_{b \neq a} \frac{d_{b}}{d_{a}} \|\mu_{b}\|_{F}^{2} + \frac{\lambda \gamma}{d_{a}}  \sqrt{d_{b}} \|\mu_{b}\|_{F} < \frac{1}{d_{a}} \left[ \|\mu\|_{*}^{2} + \lambda \gamma \sqrt{k} \|\mu\|_{*}   \right]   \]
+Now the $a$-th part is pushing $\approx \eps_{a}/d_{a} = \|\mu_{a}\|_{op}$. For comparison, if $\epsilon_{b} := d_{b} \|\mu_{b}\|_{op}$, then we have the bound
+\[ \|\mu\|_{*}^{2} = \sum_{b} d_{b} \|\mu_{b}\|_{F}^{2} \leq \sum_{b} d_{b}^{2} \|\mu_{b}\|_{op}^{2} = \sum_{b} \epsilon_{b}^{2}   \]
+So the above says if $\lambda \gamma \ll 1/k$, any eigenvalue that is on the same order as the average will be shrinking in magnitude. 
+
+\begin{fact}
+Random unitaries are very incoherent:
+\[ \max_{ij} \langle u_{i}, e_{j} \rangle^{2} \leq \frac{\log d}{d}    \]
+with $1/poly(d)$ failure probability. 
+\end{fact}
+
+\begin{claim}
+The eigenbases of $\{\mu_{a}\}, \{T_{ba}(\mu_{b})\}$ are roughly as incoherent as random unitaries. This is true even after running gradient flow for some time. 
+\end{claim}
+
+The problem remaining is that eigenvectors are not continuous objects, so a bound on incoherence at various discrete times does not imply a bound for all continuous times. 
+
+
+
+
 
 \subsection{Experiments}
 \begin{enumerate}
