@@ -257,17 +257,6 @@ We next bound $\kappa$. By \cref{thm:tensor-convexity}, with failure probability
 By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\max_a \sqrt{d_a} $ there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$. The inequality follows from our second assumption on $\eps$. Because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) = O( \|\log \widehat{\Theta}\|_{\vec d} \sqrt{d_a})  \leq C \delta \sqrt{k d_a}.$ Applying $\eps = \delta \sqrt{k \max d_a}$ completes the proof.
 \end{proof}
 
-\begin{proof}[Proof of \cref{thm:tensor-frobenius}] By \cref{lemma:gradient-bound}, we have 
-\[ \forall a: \|(\nabla f)_{a}\|_{op} \leq \frac{\eps}{d_{a}} \implies \|\nabla f\|^{2} = \sum_{a} d_{a} \|(\nabla f)_{a}\|_{F}^{2} \leq k \eps^{2}  \]
-By \cref{thm:tensor-convexity} we have that $f$ is $1-o_{d}(1)$ strongly convex in norm $\|\cdot\|_{\vec d}$, and further by \cref{lem:perturbation} $f$ is $\Omega(1)$ (for concreteness say $1/2$) strongly convex at any point $e^{Z}$ with $\forall a: \|Z_{a}\|_{op} \leq \delta \ll 1/k$. 
-We can show that this region of strong convexity contains a large ball in the norm $\|\cdot\|_{\vec d}$:
-\[ \exists a: \|Z_{a}\|_{op} > \delta \implies \|Z\|_{\vec d}^{2} \geq \frac{1}{d_{a}} \|Z_{a}\|_{F}^{2} \geq \frac{\delta^{2}}{d_{a}}  \]
-Now to apply \cref{lem:convex-ball}, we need $\lambda \kappa > \eps$, where $\lambda$ is the strong convexity we can maintain in a $\kappa$-ball, and $\epsilon$ is the size of the gradient in the dual norm. We have shown above that we can maintain $\Omega(1)$-strong convexity in norm $\|\cdot\|$ in a ball of size $\Omega(1/\max_{a} \sqrt{d_{a}})$ again in norm $\|\cdot\|$. Therefore we need $\epsilon^{2} = \|\nabla f\|_{*}^{2} < O(1/\max_{a} d_{a})$. By concentration, to achieve this bound we need $nD \gg \frac{\max_{a} d_{a}^{2}}{\min_{a} 1/d_{a}} = \max_{a} d_{a}^{3}$. So applying \cref{lem:convex-ball} we get that the optimizer $\Theta$ is in a ball of size $O(\eps)$ in the norm $\|\cdot\|$. In other words, $\|\log \Theta\| = O(\eps)$. As $\|\Theta_a\|_{op} \leq c$ because $\Theta$ is in the $\kappa$ ball, we have $\|I - \Theta_a\|_F = O( \| \log \Theta_a\|_F) = O( \|\log \Theta\| \sqrt{d_a}) = O( \eps \sqrt{d_a}).$\end{proof}
-
-
-\CF{
-Let $\delta_a = \|Z_a\|_{op}$. Then $k \sum_a  \delta_a \leq k^{3/2} \max \sqrt{d_a} \|Z\|$. \cref{thm:tensor-convexity} tells us $f$ is $\Omega(1)$-strongly convex in a $\kappa:=\Omega(1/\sqrt{k^{3}\max d_a} )$ radius $\| \cdot \|$ ball about $I$ with inverse polynomial failure probability. By \cref{lemma:gradient-bound}, with failure probabilty at most $\sum_a \exp ( - N_a \eps^2)$, $\| \nabla f\|_* \leq \eps \sqrt{k}$. Provided $\eps = c/k^2 \max \sqrt{d_a}$, \cref{lem:convex-ball} shows there is an optimizer $\Theta$ of $f$ in a $\| \cdot \|$ ball of radius $\eps$. }
-%As $\|Z_a\|_{op} \leq c$ on the $\kappa$ ball, we have $\|I - \Theta_a\|_F \leq \| \log \Theta_a\|_F \leq \|\log \Theta\|/\sqrt{d_a}$. }
 
 
 
