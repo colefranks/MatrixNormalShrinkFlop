@@ -113,6 +113,7 @@ It remains an open question to show tight bounds for convergence of the MLE in s
 \begin{itemize}
 \item Number of samples $n$, dimensions $d_1, \dots, d_k$. $D$ for product of these. 
 \item $X$ for the tensor random variable, $X_1, \dots, X_n$ for the samples, $\vec X = (X_1, \dots, X_n)$ for the tuple of samples. $\rho = \vec X \vec X^\dagger/\|\vec X\|_F^2$.
+\item $\langle \cdot, \cdot \rangle_{\vec d}$ denotes the modified inner product, $\langle \cdot, \cdot \rangle$ the usual Hilbert-Schmidt inner product. 
 \item $f_{\vec X}$ for the function in \cref{dfn:function}, mostly drop $\vec X$.
 \item $\PD_d$ for $d \times d$ pd's, $\Herm_d$ for $d \times d$ Hermitians. I don't think stats folks use this, I just really like them. Other suggestions welcome. $\Theta$ for big tensor product psd, $\Theta_a$ for individual psd's.
 \item I'm going to call $G = \oplus \GL_{d_i}, P = \oplus \PD_{d_i}, H = \oplus \Herm_{d_i}$. Explain somewhere how H is the tangent space.
@@ -180,20 +181,20 @@ When $\vec X$ is clear from context we will drop it.
 The choice of the coefficient $1/d_i$ is a matter of convenience and, because renormalizing $\Sigma_i$ changes $\Sigma$ only by a constant factor, does does not change the optima.
 
 
-\subsection{Sample complexity from goedesic convexity} Following \cite{FM20}, and in spirit also \CF{cite weisel}, we use geodesic convexity to prove \cref{thm:tensor-frobenius}. \cref{thm:matrix-normal}, proven later in \cref{sec:matrix-normal}, requires the stronger notion of \emph{quantum expansion}.
+\subsection{Sample complexity from goedesic convexity}\label{subsec:outline} Following \cite{FM20}, and in spirit also \CF{cite weisel}, we use geodesic convexity to prove \cref{thm:tensor-frobenius}. \cref{thm:matrix-normal}, proven later in \cref{sec:matrix-normal}, requires the stronger notion of \emph{quantum expansion}.
 
 
 We first define our notion of convexity. The function $f_{\vec X}$ has a property called \emph{geodesic convexity} \CF{cite bfg+}. 
 \begin{definition}[Geodesic convexity]\CF{define $P,G,H$ before here} A function $f:P \to \R$ is said to be geodesically convex if  
-$$f(A^\dagger e^{t Z} A)$$ is convex in $t$ for all $Z \in H$ and $A\in G$. Say $f$ is $\lambda$-geodesically \emph{strongly convex} w.r.t norm $\|\cdot\|$ if $\partial^2_t f(A^\dagger e^{t Z} A) \geq \lambda \|Z\|^{2}$. We will use the norm $\| \cdot\|$ given by the inner product $\langle X, Y \rangle = \sum_{a \in [k]} \frac{1}{d_a} \tr X_a Y_a $ for $X, Y \in H$. 
+$$f(A^\dagger e^{t Z} A)$$ is convex in $t$ for all $Z \in H$ and $A\in G$. Say $f$ is $\lambda$-geodesically \emph{strongly convex} w.r.t norm $\|\cdot\|$ if $\partial^2_t f(A^\dagger e^{t Z} A) \geq \lambda \|Z\|^{2}$. We will use the norm $\| \cdot\|_{\vec d}$ given by the inner product $\langle X, Y \rangle_{\vec d} = \sum_{a \in [k]} \frac{1}{d_a} \tr X_a Y_a $ for $X, Y \in H$. 
 \end{definition} 
 With this definition in place, we are able to state the rather simple plan. \CF{change $\Sigma$ to $\Theta$ in what follows}
 \begin{enumerate}
-\item \textbf{Reduce to identity: } Firstly, note that $\widehat{\Sigma}(\vec X) = \Sigma^{1/2} \hat{\Sigma}(\Sigma^{-1/2} \vec X) \Sigma^{1/2}$. As $\Sigma^{-1/2} \vec X$ is distributed as $n$ samples from $\Sigma^{-1/2}X$ which is a standard Gaussian, the distance 
-$$ d(\hat{\Sigma}(\vec X), I)$$
-for $X$ standard Gaussian is distributed exactly as $d(\hat{\Sigma}(\vec X), \Sigma)$ for $X$ with covariance matrix $\Sigma$. This means it is enough to bound $d(\hat{\Sigma}(\vec X), I)$ assuming $\vec X$ is a standard Gaussian.
-\item \textbf{Show strong convexity: } Show that, with high probability, $f_{\vec X}$ is $\Omega(1)$-geodesically strongly convex near $I$ w.r.t. $\|\cdot\|$.
-\item \textbf{Bound the gradient: } Show that $\| \nabla f_{\vec X} (I) \|$ is small with high probability.
+\item\label{it:reduce} \textbf{Reduce to identity: } Firstly, note that $\widehat{\Theta}(\vec X) = \Theta^{1/2} \hat{\Theta}(\Theta^{-1/2} \vec X) \Theta^{1/2}$. As $\Theta^{-1/2} \vec X$ is distributed as $n$ samples from $\Theta^{-1/2}X$ which is a standard Gaussian, the distance 
+$$ d(\hat{\Theta}(\vec X), I)$$
+for $X$ standard Gaussian is distributed exactly as $d(\hat{\Theta}(\vec X), \Theta)$ for $X$ with covariance matrix $\Theta$. This means it is enough to bound $d(\hat{\Theta}(\vec X), I)$ assuming $\vec X$ is a standard Gaussian.
+\item \textbf{Show strong convexity: } Show that, with high probability, $f_{\vec X}$ is $\Omega(1)$-geodesically strongly convex near $I$ w.r.t. $\|\cdot\|_{\vec d}$.
+\item \textbf{Bound the gradient: } Show that $\| \nabla f_{\vec X} (I) \|_{\vec d}$ is small with high probability.
 %(w.r.t. the dual norm $\|\cdot\|_{*}$). \CF{Probably need to say something about why geodesic distance and $d$ are comparable.}
 
 \end{enumerate}
@@ -213,28 +214,55 @@ Take geodesic $e^{t Z}$ towards the optimum with normalized speed $\|Z\| = 1$ so
 \[ 0 = g'(T) = \int_{t=0}^{T} g''(t) dt + g'(0) \geq \lambda \min\{\kappa,T\} - \eps     \]
 Now if $T \geq \kappa$ we have a contradiction as $\lambda \kappa - \epsilon > 0$. Therefore we must have $\lambda T < \lambda \kappa \leq \eps$, and the conclusion follows by rearranging. 
 \end{proof}
-Next, we state the two theorems that allow us to apply this lemma. We prove them in the next two sections. \CF{probably need to define geodesic gradient}
+Next, we state the two results that allow us to apply this lemma. \begin{definition}[Geodesic gradient and Hessian]
+For $Q \in P$, the geodesic gradient $\nabla f(Q)$ is the unique element in $H$ such that 
+$$\langle Z, H \rangle_{\vec d} = \partial_t f(\sqrt{Q}e^{Zt}\sqrt{Q})|_{t = 0}$$
+for all $Z \in H$. We define $\nabla f = \nabla f(I)$, and we write $\nabla f = (\nabla_1 f, \dots, \nabla_k f).$
+
+The Hessian $\nabla^2 f(Q)$ is the linear operator on $H$ such that 
+$$\langle Y,  \nabla^2 f(Q) Z \rangle_{\vec d} = \partial_s \partial_t f(\sqrt{Q}e^{Zs + Yt}\sqrt{Q})|_{s,t = 0}$$
+for all $Z, Y \in H$. Similarly, $\nabla^2 f$ denotes $\nabla^2 f(I)$, and as a block matrix
+$$\nabla^2 f = \begin{bmatrix} 
+\nabla_{11}^2 f &  \dots &  \nabla^2_{1k} f \\
+\vdots &  \ddots &  \vdots\\
+ \nabla_{k1}^2 f &  \dots &  \nabla_{kk}^2 f 
+ \end{bmatrix}$$
+\end{definition}
 
 \begin{lemma}\label{lemma:gradient-bound} Let $N_a := n D/d_a$, and suppose $N_a \geq C d_a/\eps^2$ for all $a \in [k]$. Then with probability at least $1 -  \sum_{a \in [k]} e^{-\Omega(N_a \eps^2)},$ for all $a \in [k]$ we have 
-$$\| \nabla_a f \|_{op} \leq \eps/d_a.$$
-As a consequence, $\|\nabla f(I)\|^{2} = \sum_{a} d_{a} \|\nabla_a f \|_{F}^{2} \leq k \eps^{2}$. 
+$$\| \nabla_a f \|_{op} \leq \eps$$
+As a consequence, $\|\nabla f(I)\|_{\vec d} ^{2} = \sum_{a}\frac{1}{d_a} \|\nabla_a f \|_{F}^{2} \leq k \eps^{2}$. 
 \end{lemma}
 
 \begin{theorem}\label{thm:tensor-convexity}
-Suppose the number of samples is at least $k^{2} \max_{a} d_{a}^{2}/D$. Then with failure probability $\leq 1/poly(D)$, $f_X$ is $\Omega(1)$-strongly convex at $I$ w.r.t. $\|\cdot \|$.
+Suppose the number of samples is at least $k^{2} \max_{a} d_{a}^{2}/D$. Then with failure probability $\leq 1/poly(D)$, $f$ is $\Omega(1)$-strongly convex at $I$ w.r.t. $\|\cdot \|_{\vec d}$.
 \end{theorem}
 
 \begin{lemma}\label{lem:perturbation}
 If $f$ is $\lambda$-strongly convex at $I$ and $\forall a: d_{a} \|(\nabla f)_{a}\|_{op} \leq \eps \ll 1/k$, then for $Z$ such that $\forall a: \|Z_{a}\|_{op} \leq \delta_{a} \ll 1/k$, the function $f$ at $e^{Z}$ is $\lambda - O(k \sum_{a} \delta_{a})$ strongly convex. 
 \end{lemma}
+\CF{fix after fixing lemma 6}
+
+\begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius} Suppose $\eps \leq c$ and the number of samples satisfies $n \geq C k \max d_{a}^3/D\eps^2$. The MLE $(\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) $ for $(\Theta_1, \dots \Theta_k)$ from $n$ independent samples satisfies 
+$$ d_{F}(\widehat{\Theta}_i, \Theta_i) \leq \eps $$
+for $i \in [k]$ with probability $1 - \CF{1/poly(D)}$.
+\end{theorem}
 
 These lemmas immediately yield \cref{thm:tensor-frobenius}. 
+\begin{proof}[Proof of \cref{thm:tensor-frobenius}]By \cref{it:reduce} in \cref{subsec:outline}, it is enough to prove the theorem assuming $\Theta = I$. 
+We seek to apply \cref{lem:convex-ball}, so we need $\lambda \kappa > \|\nabla f\|_{\vec d}$, where $\lambda$ is the strong convexity we can maintain in a $\kappa$-ball. Set $\delta = \eps/\max \sqrt{k d_a}$; by our first assumption on $\eps$, we have $N_a \geq C d_a/\delta^2$ for all $a \in [k]$, we may apply \cref{lemma:gradient-bound}. Thus, with failure probability $O\left( \sum_a \exp ( - N_a \delta^2)\right)$ we have $\|(\nabla f)_{a}\|_{op} \leq \frac{\delta}{d_{a}}$ for all $a \in [k]$ and so
+\[  \|\nabla f\|_{\vec d}^{2} = \sum_{a} d_{a} \|(\nabla f)_{a}\|_{F}^{2} \leq  k \delta^{2}.  \]
+We next bound $\kappa$. By \cref{thm:tensor-convexity}, with failure probability $\CF{1/poly(D)}$ we have that $f$ is $1-o_{d}(1)$ strongly convex in norm $\|\cdot\|_{\vec d}$ at $I$, and further by \cref{lem:perturbation} $f$ is $1/2$ strongly convex at any point $e^{Z}$ with $\forall a: \|Z_{a}\|_{op} \leq  c/k$ for $c$ a small enough constant. Because $\|Z_a\|_{op} \leq \|Z_a\|_F \leq \sqrt{d_a} \|Z\|_{\vec d},$ we may take $\kappa = c/\max_a \sqrt{d_a}$ and $\lambda = 1/2$.
+
+By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\max_a \sqrt{d_a} $ there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$. The inequality follows from our second assumption on $\eps$. Because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) = O( \|\log \widehat{\Theta}\|_{\vec d} \sqrt{d_a})  \leq C \delta \sqrt{k d_a}.$ Applying $\eps = \delta \sqrt{k \max d_a}$ completes the proof.
+\end{proof}
+
 \begin{proof}[Proof of \cref{thm:tensor-frobenius}] By \cref{lemma:gradient-bound}, we have 
 \[ \forall a: \|(\nabla f)_{a}\|_{op} \leq \frac{\eps}{d_{a}} \implies \|\nabla f\|^{2} = \sum_{a} d_{a} \|(\nabla f)_{a}\|_{F}^{2} \leq k \eps^{2}  \]
-By \cref{thm:tensor-convexity} we have that $f$ is $1-o_{d}(1)$ strongly convex in norm $\|\cdot\|$, and further by \cref{lem:perturbation} $f$ is $\Omega(1)$ (for concreteness say $1/2$) strongly convex at any point $e^{Z}$ with $\forall a: \|Z_{a}\|_{op} \leq \delta \ll 1/k$. 
-We can show that this region of strong convexity contains a large ball in the norm $\|\cdot\|$:
-\[ \exists a: \|Z_{a}\|_{op} > \delta \implies \|Z\|^{2} \geq \frac{1}{d_{a}} \|Z_{a}\|_{F}^{2} \geq \frac{\delta^{2}}{d_{a}}  \]
-Now to apply \cref{lem:convex-ball}, we need $\lambda \kappa > \eps$, where $\lambda$ is the strong convexity we can maintain in a $\kappa$-ball, and $\epsilon$ is the size of the gradient in the dual norm. We have shown above that we can maintian $\Omega(1)$-strong convexity in norm $\|\cdot\|$ in a ball of size $\Omega(1/\max_{a} \sqrt{d_{a}})$ again in norm $\|\cdot\|$. Therefore we need $\epsilon^{2} = \|\nabla f\|_{*}^{2} < O(1/\max_{a} d_{a})$. By concentration, to achieve this bound we need $nD \gg \frac{\max_{a} d_{a}^{2}}{\min_{a} 1/d_{a}} = \max_{a} d_{a}^{3}$. So applying \cref{lem:convex-ball} we get that the optimizer $\Theta$ is in a ball of size $O(\eps)$ in the norm $\|\cdot\|$. In other words, $\|\log \Theta\| = O(\eps)$. As $\|\Theta_a\|_{op} \leq c$ because $\Theta$ is in the $\kappa$ ball, we have $\|I - \Theta_a\|_F = O( \| \log \Theta_a\|_F) = O( \|\log \Theta\| \sqrt{d_a}) = O( \eps \sqrt{d_a}).$\end{proof}
+By \cref{thm:tensor-convexity} we have that $f$ is $1-o_{d}(1)$ strongly convex in norm $\|\cdot\|_{\vec d}$, and further by \cref{lem:perturbation} $f$ is $\Omega(1)$ (for concreteness say $1/2$) strongly convex at any point $e^{Z}$ with $\forall a: \|Z_{a}\|_{op} \leq \delta \ll 1/k$. 
+We can show that this region of strong convexity contains a large ball in the norm $\|\cdot\|_{\vec d}$:
+\[ \exists a: \|Z_{a}\|_{op} > \delta \implies \|Z\|_{\vec d}^{2} \geq \frac{1}{d_{a}} \|Z_{a}\|_{F}^{2} \geq \frac{\delta^{2}}{d_{a}}  \]
+Now to apply \cref{lem:convex-ball}, we need $\lambda \kappa > \eps$, where $\lambda$ is the strong convexity we can maintain in a $\kappa$-ball, and $\epsilon$ is the size of the gradient in the dual norm. We have shown above that we can maintain $\Omega(1)$-strong convexity in norm $\|\cdot\|$ in a ball of size $\Omega(1/\max_{a} \sqrt{d_{a}})$ again in norm $\|\cdot\|$. Therefore we need $\epsilon^{2} = \|\nabla f\|_{*}^{2} < O(1/\max_{a} d_{a})$. By concentration, to achieve this bound we need $nD \gg \frac{\max_{a} d_{a}^{2}}{\min_{a} 1/d_{a}} = \max_{a} d_{a}^{3}$. So applying \cref{lem:convex-ball} we get that the optimizer $\Theta$ is in a ball of size $O(\eps)$ in the norm $\|\cdot\|$. In other words, $\|\log \Theta\| = O(\eps)$. As $\|\Theta_a\|_{op} \leq c$ because $\Theta$ is in the $\kappa$ ball, we have $\|I - \Theta_a\|_F = O( \| \log \Theta_a\|_F) = O( \|\log \Theta\| \sqrt{d_a}) = O( \eps \sqrt{d_a}).$\end{proof}
 
 
 \CF{
@@ -247,31 +275,22 @@ Let $\delta_a = \|Z_a\|_{op}$. Then $k \sum_a  \delta_a \leq k^{3/2} \max \sqrt{
 
 We now proceed to compute the gradient and Hessian of $f$, and then to prove the bound \cref{lemma:gradient-bound} on the gradient using basic matrix concentration results. 
 
-\begin{definition}[Geodesic gradient and Hessian]
-For $Q \in P$, the geodesic gradient $\nabla f(Q)$ is the unique element in $H$ such that 
-$$\langle X, H \rangle = \partial_t f(\sqrt{Q}e^{Xt}\sqrt{Q})|_{t = 0}$$
-for all $X \in H$. The Hessian $\nabla^2 f(Q)$ is the linear operator on $H$ such that 
-$$\langle Y,  \nabla^2 f(Q) X \rangle = \partial_s \partial_t f(\sqrt{Q}e^{Xs + Yt}\sqrt{Q})|_{s,t = 0}$$
-for all $X, Y \in H$. 
-\end{definition}
 To calculate the gradient, we need a definition from linear algebra. 
-\begin{definition}
+\begin{definition}[Partial trace] For $\rho \in  \bigotimes_{i \in [k]} \PD_{d_i}$, let
 $\rho^S$ denote the partial trace $$\tr_{\bar{S}} \rho \in \bigotimes_{i \in S} \PD_{d_i},$$
-defined by $\tr \rho(A \otimes I_{\bar{S}}) = \tr A \rho^S$ for all $A \in H.$
+defined by $\tr \rho(A \otimes I_{\bar{S}}) = \tr A \rho^S$ for all $A \in \bigotimes_{i \in S} \Herm_{d_i}.$
 \end{definition}
 
 
-\begin{fact}[Geodesic gradients and Hessians]
-Let $\rho$ denote $\frac{\vec X \vec X^\dagger}{\|\vec X\|^2}$, and for $S \subset [k]$ let $\rho^S$ denote the partial trace \CF{should probably move the partial trace def elsewhere}
-$$\tr_{\bar{S}} \rho \in \bigotimes_{i \in S} \PD_{d_i}.$$
-The geodesic gradient $\nabla f := (\nabla_1 f, \dots, \nabla_k f) \in P $ at the identity is given by
+\begin{fact}[Geodesic gradient and Hessian calculations]
+Let $\rho$ denote $\frac{\vec X \vec X^\dagger}{\|\vec X\|^2}$. The geodesic gradient $\nabla f := (\nabla_1 f, \dots, \nabla_k f) \in P $ at the identity is given by
 \begin{align}
-\nabla_a f &= \rho^a - \frac{1}{d_{a}} I_{a}
+\nabla_a f &= d_a \rho^a -  I_{a}
 \end{align}
 for $a \in [k]$. 
 The geodesic Hessian $\nabla^2 f$ is given by 
-\begin{align}\langle Y, (\nabla^{2}_{aa} f) Y \rangle &=  \langle \rho^{a}, Y^{2} \rangle - \left\langle \rho^{a}, Y \right\rangle^{2} \\
-\langle Z, (\nabla^{2}_{ab} f) Y \rangle &= \langle \rho^{ab}, Z \otimes Y \rangle  - \langle \rho^{a}, Y \rangle \langle \rho^{b}, Z \rangle
+\begin{align}\frac{1}{d_a}\langle Y, (\nabla^{2}_{aa} f) Y \rangle &= \langle \rho^{a}, Y^{2} \rangle - \left\langle \rho^{a}, Y \right\rangle^{2} \\
+\frac{1}{\sqrt{d_a d_b}}\langle Z, (\nabla^{2}_{ab} f) Y \rangle &= \langle \rho^{ab}, Z \otimes Y \rangle  - \langle \rho^{a}, Y \rangle \langle \rho^{b}, Z \rangle
 \end{align}
 for $a \neq b \in [k]$, $Y \in \Herm_{d_a}, Z \in \Herm_{d_b}$. 
 \end{fact}
@@ -279,8 +298,11 @@ for $a \neq b \in [k]$, $Y \in \Herm_{d_a}, Z \in \Herm_{d_b}$.
 Let $\tilde{\rho}:= \|\vec X\|_F^2\rho$ and let
 \[ F(\Theta) := \tr  \Theta \tilde{\rho}; \hspace{10mm} \]
 so that 
-\[ \partial_{t=0} F(I_{\overline{a}} \otimes e^{tY}) = \tr  (I_{\overline{a}} \otimes e^{tY}  Y)\tilde{\rho}  |_{t=0} = \tr  (I_{\overline{a}} \otimes Y) \tilde{\rho} , \]
-when $a\neq b$,
+\begin{align*} \partial_{t=0} F(I_{\overline{a}} \otimes e^{tY}) = \tr  (I_{\overline{a}} \otimes e^{tY}  Y)\tilde{\rho}  |_{t=0} &= \tr  (I_{\overline{a}} \otimes Y) \tilde{\rho} \\
+&=\tr \tilde{\rho}^a  Z
+ \end{align*}
+ and so thus, $\nabla_a F = d_a \tilde{\rho}^a$.
+When $a\neq b$,
 \begin{align*}\partial_{s=0} \partial_{t=0} F(I_{\overline{\{a,b\}}} \otimes e^{sY} \otimes e^{tZ}) &=  \partial_{s=0} \tr  (I_{\overline{b}} \otimes e^{sY}) (I_{\overline{a}} \otimes Z) \tilde{\rho} \\
 &= \tr (I_{\overline{b}} \otimes Y) (I_{\overline{a}} \otimes Z) \tilde{\rho}
 \end{align*}
@@ -288,14 +310,15 @@ and when $a = b$
 \begin{align*}\partial_{s=0} \partial_{t=0} F(I_{\overline{a}} \otimes e^{sY+ tZ}) &=  \partial_{s=0} \tr  (I_{\overline{b}} \otimes e^{sY}) (I_{\overline{a}} \otimes Z) \tilde{\rho} \\
 &= \tr (I_{\overline{b}} \otimes Y) (I_{\overline{a}} \otimes Z) \tilde{\rho}.
 \end{align*}
-Thus, 
-%For simplicity, in this part we denote $Q = v v^{*}, s := Tr[Q]$ and marginals $Q^{S} := Tr_{\overline{S}}[Q]$. We will only need $\{Q^{a}\},\{Q^{ab}\}.$
-\[ \langle \nabla_a F, Z \rangle = \langle \tilde{\rho}^a, Z \rangle  \]
-and 
-\begin{align*} \langle Z, (\nabla^{2}_{aa}) F Z \rangle &=  \langle \tilde{\rho}^a, Z^{2} \rangle  \\
- \langle Y, (\nabla^{2} F) Z \rangle &= \langle \tilde{\rho}^{ab}, Z \otimes Y \rangle  \end{align*}
 
-Now to calculate the same for $f$, note that $f = \log F - \sum_{a \in [k]} \frac1{d_a} \log\det(\Theta_a)$. Further note that $\nabla \log F = \frac{\nabla F}{F}$, $\nabla^{2} f = \frac{\nabla^{2} F}{F} - \frac{(\nabla F)(\nabla F)^{\dagger}}{F^{2}}$, and that the geodesic gradient of $\log \det \Theta_a$ is $I_{a}$ and the geodesic Hessian is zero. Plugging in the values of $F, \nabla F, \nabla^2 F$ from above completes the proof. \end{proof}
+%For simplicity, in this part we denote $Q = v v^{*}, s := Tr[Q]$ and marginals $Q^{S} := Tr_{\overline{S}}[Q]$. We will only need $\{Q^{a}\},\{Q^{ab}\}.$
+so that
+\begin{align*} \langle Z, (\nabla^{2}_{aa} F) Z \rangle &= d_a \langle  \tilde{\rho}^a, Z^{2}\rangle   \\
+ \langle Y, (\nabla^{2} F) Z \rangle &= \sqrt{d_a d_b}\langle \tilde{\rho}^{ab} , Z \otimes Y \rangle . \end{align*}
+Here the $d_a, \sqrt{d_a d_b}$ factors arise because the Hessian is defined using $\langle \cdot, \cdot \rangle_{\vec d}$, not the usual Hilbert-Schmidt inner product $\langle \cdot, \cdot \rangle$.
+
+Now to calculate the same for $f$, note that $f = g + \log F $ for 
+$$g:= - \sum_{a \in [k]} \frac1{d_a} \log\det(\Theta_a).$$ Further note that $\nabla \log F = \frac{\nabla F}{F}$, $\nabla^{2} f = \frac{\nabla^{2} F}{F} - \frac{(\nabla F)(\nabla F)^{*}}{F^{2}}$, and that $\nabla_a g = d_a I_{a}$ and $\nabla^2 g = 0$. Plugging in the values of $F, \nabla F, \nabla^2 F$ from above completes the proof. \end{proof}
 
 
 
@@ -306,7 +329,7 @@ Recall that $\nabla_a f = \rho^a - I_a/d_a$, where $\rho^a$ is distributed as $Y
 Let $Y \in \R^{d \times N}$ for $d < N$ have independent standard gaussian entries. Then for $t \geq 0$, the following occurs with $\leq 2 \exp(-t^{2}/2)$ failure probability:
 \[ \sqrt{N} - \sqrt{d} - t \leq s_{d}(Y) \leq s_{1}(Y) \leq \sqrt{N} + \sqrt{d} + t  \]
 \end{theorem}
-
+\CF{fix proof to involve new inner product}
 \begin{proof}[Proof of \cref{lemma:gradient-bound}]Let $N = n D/d_a$ and $d = d_a$. Again, $\nabla_a f = \rho^a - I_a/d_a$ where $\rho^a$ is distributed as $Y Y^\dagger/\|Y\|_F^2$, where $Y$ is a $d \times N$ matrix with independent Gaussian entries.
 By \cref{cor:vershynin}, we have the following with $\leq 2 \exp(-t^{2}/2)$ failure probability:
 \[\sqrt{N} \left( 1 -  \frac{\sqrt{d} + t }{\sqrt{N}}  \right)\leq  s_{1} \left( Y \right) \leq s_{d}\left( Y \right) \leq  \sqrt{N} \left( 1 + \frac{\sqrt{d} + t }{\sqrt{N}}  \right)  \]
