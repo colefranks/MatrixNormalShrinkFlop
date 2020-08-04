@@ -185,15 +185,16 @@ The choice of the coefficient $1/d_i$ is a matter of convenience and, because re
 
 We first define our notion of convexity. The function $f_{\vec X}$ has a property called \emph{geodesic convexity} \CF{cite bfg+}. 
 \begin{definition}[Geodesic convexity]\CF{define $P,G,H$ before here} A function $f:P \to \R$ is said to be geodesically convex if  
-$$f(A^\dagger e^{t Z} A)$$ is convex in $t$ for all $Z \in H$ and $A\in G$. Say $f$ is $\lambda$-geodesically \emph{strongly convex} w.r.t norm $\|\cdot\|$ if $\partial^2_t f(A^\dagger e^{t Z} A) \geq \lambda \|Z\|^{2}$. 
+$$f(A^\dagger e^{t Z} A)$$ is convex in $t$ for all $Z \in H$ and $A\in G$. Say $f$ is $\lambda$-geodesically \emph{strongly convex} w.r.t norm $\|\cdot\|$ if $\partial^2_t f(A^\dagger e^{t Z} A) \geq \lambda \|Z\|^{2}$. We will use the norm $\| \cdot\|$ given by the inner product $\langle X, Y \rangle = \sum_{a \in [k]} \frac{1}{d_a} \tr X_a Y_a $ for $X, Y \in H$. 
 \end{definition} 
 With this definition in place, we are able to state the rather simple plan. \CF{change $\Sigma$ to $\Theta$ in what follows}
 \begin{enumerate}
 \item \textbf{Reduce to identity: } Firstly, note that $\widehat{\Sigma}(\vec X) = \Sigma^{1/2} \hat{\Sigma}(\Sigma^{-1/2} \vec X) \Sigma^{1/2}$. As $\Sigma^{-1/2} \vec X$ is distributed as $n$ samples from $\Sigma^{-1/2}X$ which is a standard Gaussian, the distance 
 $$ d(\hat{\Sigma}(\vec X), I)$$
 for $X$ standard Gaussian is distributed exactly as $d(\hat{\Sigma}(\vec X), \Sigma)$ for $X$ with covariance matrix $\Sigma$. This means it is enough to bound $d(\hat{\Sigma}(\vec X), I)$ assuming $\vec X$ is a standard Gaussian.
-\item \textbf{Show strong convexity: } Show that, with high probability, $f_{\vec X}$ is $\Omega(1)$-geodesically strongly convex near $I$ w.r.t. a specific norm $\|\cdot\|$.
-\item \textbf{Bound the gradient: } Show that $\nabla f_{\vec X} (I) $ is small with high probability (w.r.t. the dual norm $\|\cdot\|_{*}$). \CF{Probably need to say something about why geodesic distance and $d$ are comparable.}
+\item \textbf{Show strong convexity: } Show that, with high probability, $f_{\vec X}$ is $\Omega(1)$-geodesically strongly convex near $I$ w.r.t. $\|\cdot\|$.
+\item \textbf{Bound the gradient: } Show that $\| \nabla f_{\vec X} (I) \|$ is small with high probability.
+%(w.r.t. the dual norm $\|\cdot\|_{*}$). \CF{Probably need to say something about why geodesic distance and $d$ are comparable.}
 
 \end{enumerate}
 These together imply the sample complexity bounds - as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far. Furthermore, like in the Euclidean case, if a function is strongly geodesically convex in a region and one can prove a \emph{descent lemma} for a sequence in the region, then it must converge exponentially quickly to an optimizer. It is well-known that various optimization algorithms applied to $f_{\vec X}$ satisfy such a descent lemma \CF{cite bfg+}.
@@ -204,23 +205,23 @@ We now proceed to state the lemma from geodesically convex optimization we will 
 
 
 
-\begin{lemma}\label{lem:convex-ball} Let $f$ be geodesically convex everywhere, and $\lambda$-geodesically strongly convex w.r.t. norm $\|\cdot\|$ on a $\| \cdot \|$-ball of radius $\kappa$ about $I$; further assume the geodesic gradient satisfies $\|\nabla f(I)\|_{*} = \eps < \lambda \kappa$. Then there is an optimizer within a $\|\cdot\|$-ball of radius $\eps/\lambda$. 
+\begin{lemma}\label{lem:convex-ball} Let $f$ be geodesically convex everywhere, and $\lambda$-geodesically strongly convex w.r.t. norm $\|\cdot\|$ on a $\| \cdot \|$-ball of radius $\kappa$ about $I$; further assume the geodesic gradient satisfies $\|\nabla f(I)\| = \eps < \lambda \kappa$. Then there is an optimizer within a $\|\cdot\|$-ball of radius $\eps/\lambda$. 
 \end{lemma}
 \begin{proof}
 Take geodesic $e^{t Z}$ towards the optimum with normalized speed $\|Z\| = 1$ so the optimizer is $e^{T Z}$. Let $g(t) := f(e^{tZ})$, which is $\lambda$-strongly convex in $t$. 
-\[ g'(0) = \langle \nabla f(I), Z \rangle \geq - \|\nabla f(I)\|_{*} \|Z\| \geq - \eps   \]
+\[ g'(0) = \langle \nabla f(I), Z \rangle \geq - \|\nabla f(I)\| \|Z\| \geq - \eps   \]
 \[ 0 = g'(T) = \int_{t=0}^{T} g''(t) dt + g'(0) \geq \lambda \min\{\kappa,T\} - \eps     \]
 Now if $T \geq \kappa$ we have a contradiction as $\lambda \kappa - \epsilon > 0$. Therefore we must have $\lambda T < \lambda \kappa \leq \eps$, and the conclusion follows by rearranging. 
 \end{proof}
-Next, we state the two theorems that allow us to apply this lemma. We prove them in the next two sections.
+Next, we state the two theorems that allow us to apply this lemma. We prove them in the next two sections. \CF{probably need to define geodesic gradient}
 
 \begin{lemma}\label{lemma:gradient-bound} Let $N_a := n D/d_a$, and suppose $N_a \geq C d_a/\eps^2$ for all $a \in [k]$. Then with probability at least $1 -  \sum_{a \in [k]} e^{-\Omega(N_a \eps^2)},$ for all $a \in [k]$ we have 
 $$\| \nabla_a f \|_{op} \leq \eps/d_a.$$
-As a consequence, $\|\nabla f(I)\|_{*}^{2} := \sum_{a} d_{a} \|\nabla_a f \|_{F}^{2} \leq k \eps^{2}$. 
+As a consequence, $\|\nabla f(I)\|^{2} = \sum_{a} d_{a} \|\nabla_a f \|_{F}^{2} \leq k \eps^{2}$. 
 \end{lemma}
 
 \begin{theorem}\label{thm:tensor-convexity}
-Suppose the number of samples is at least $k^{2} \max_{a} d_{a}^{2}/D$. Then with failure probability $\leq 1/poly(D)$, $f_X$ is $\Omega(1)$-strongly convex at $I$ w.r.t. norm $\|Z\|^{2} := \sum_{a} \frac{1}{d_{a}} \|Z_{a}\|_{F}^{2}$. 
+Suppose the number of samples is at least $k^{2} \max_{a} d_{a}^{2}/D$. Then with failure probability $\leq 1/poly(D)$, $f_X$ is $\Omega(1)$-strongly convex at $I$ w.r.t. $\|\cdot \|$.
 \end{theorem}
 
 \begin{lemma}\label{lem:perturbation}
@@ -229,7 +230,7 @@ If $f$ is $\lambda$-strongly convex at $I$ and $\forall a: d_{a} \|(\nabla f)_{a
 
 These lemmas immediately yield \cref{thm:tensor-frobenius}. 
 \begin{proof}[Proof of \cref{thm:tensor-frobenius}] By \cref{lemma:gradient-bound}, we have 
-\[ \forall a: \|(\nabla f)_{a}\|_{op} \leq \frac{\eps}{d_{a}} \implies \|\nabla f\|_{*}^{2} = \sum_{a} d_{a} \|(\nabla f)_{a}\|_{F}^{2} \leq k \eps^{2}  \]
+\[ \forall a: \|(\nabla f)_{a}\|_{op} \leq \frac{\eps}{d_{a}} \implies \|\nabla f\|^{2} = \sum_{a} d_{a} \|(\nabla f)_{a}\|_{F}^{2} \leq k \eps^{2}  \]
 By \cref{thm:tensor-convexity} we have that $f$ is $1-o_{d}(1)$ strongly convex in norm $\|\cdot\|$, and further by \cref{lem:perturbation} $f$ is $\Omega(1)$ (for concreteness say $1/2$) strongly convex at any point $e^{Z}$ with $\forall a: \|Z_{a}\|_{op} \leq \delta \ll 1/k$. 
 We can show that this region of strong convexity contains a large ball in the norm $\|\cdot\|$:
 \[ \exists a: \|Z_{a}\|_{op} > \delta \implies \|Z\|^{2} \geq \frac{1}{d_{a}} \|Z_{a}\|_{F}^{2} \geq \frac{\delta^{2}}{d_{a}}  \]
@@ -246,6 +247,18 @@ Let $\delta_a = \|Z_a\|_{op}$. Then $k \sum_a  \delta_a \leq k^{3/2} \max \sqrt{
 
 We now proceed to compute the gradient and Hessian of $f$, and then to prove the bound \cref{lemma:gradient-bound} on the gradient using basic matrix concentration results. 
 
+\begin{definition}[Geodesic gradient and Hessian]
+For $Q \in P$, the geodesic gradient $\nabla f(Q)$ is the unique element in $H$ such that 
+$$\langle X, H \rangle = \partial_t f(\sqrt{Q}e^{Xt}\sqrt{Q})|_{t = 0}$$
+for all $X \in H$. The Hessian $\nabla^2 f(Q)$ is the linear operator on $H$ such that 
+$$\langle Y,  \nabla^2 f(Q) X \rangle = \partial_s \partial_t f(\sqrt{Q}e^{Xs + Yt}\sqrt{Q})|_{s,t = 0}$$
+for all $X, Y \in H$. 
+\end{definition}
+To calculate the gradient, we need a definition from linear algebra. 
+\begin{definition}
+$\rho^S$ denote the partial trace $$\tr_{\bar{S}} \rho \in \bigotimes_{i \in S} \PD_{d_i},$$
+defined by $\tr \rho(A \otimes I_{\bar{S}}) = \tr A \rho^S$ for all $A \in H.$
+\end{definition}
 
 
 \begin{fact}[Geodesic gradients and Hessians]
