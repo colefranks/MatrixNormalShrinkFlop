@@ -76,7 +76,7 @@
 
 
 \title{Logarithmic sample complexity for dense matrix models}
-\author{Cole Franks, Rafael Oliveira, Akshay Ramachandran}
+\author{Cole Franks, Rafael Oliveira, Akshay Ramachandran, Michael Walter}
 \date{February 2020}
 
 \begin{document}
@@ -301,7 +301,7 @@ Let $t = c \sqrt{N} \eps$. Because $d \leq c N \eps^2$, both largest and least s
 $\sqrt{N} \left( 1 + c \cdot \eps   \right)$. 
 
 Provided $c$ is small enough we then have 
- $$\lambda_1(YY^\dagger), \lambda_{d}(YY^\dagger) \in N(1 + c \cdot \eps).$$ 
+ $$\lambda_1(YY^\dagger), \lambda_{d}(YY^\dagger) \in N(1 \pm c \cdot \eps).$$ 
  Next, observe that $\|Y\|_F^2$ is a $\chi$-squared distribution with $Nd$ degrees of freedom, and thus satisfies $\| Y\|_F^2 - Nd \leq t N d$ with probability $1 - 2e^{- Nd t^2/8}$ for $t \leq 1$ \CF{\cite{wainwright}}. Thus 
   $$\lambda_1(\rho^a), \lambda_2(\rho^a) \in  N(1 \pm c \cdot \eps)/ Nd(1 \pm c \cdot \eps) \in \frac{1}{d}(1 \pm \eps)$$ 
 with probability $1 - 2 e^{- c N \eps^2}- 2 e^{- c Nd \eps^2} = 1 - 4 e^{- N\eps^2},$ provided $c$ is small enough. Applying the union bound over $[k]$ completes the proof of the lemma.\end{proof}
@@ -1074,6 +1074,10 @@ The eigenbases of $\{\mu_{a}\}, \{T_{ba}(\mu_{b})\}$ are roughly as incoherent a
 \end{claim}
 
 The problem remaining is that eigenvectors are not continuous objects, so a bound on incoherence at various discrete times does not imply a bound for all continuous times. 
+
+%\subsection{Separability}
+
+%If the state $\rho$ is separable, 
 
 
 
