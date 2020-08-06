@@ -139,31 +139,37 @@ Define
 d_{op}(\Sigma_1, \Sigma_2) = \| I - \Sigma_2^{1/2} \Sigma_1^{-1} \Sigma_2^{1/2}\|_{op}
 \end{align}
 \end{definition}
-We may now state precisely our results for the matrix and tensor normal models.
-\begin{theorem}[Matrix normal model spectral error]\label{thm:matrix-normal} The MLE $(\hat{\Sigma}_1,\hat{\Sigma}_2) $ for $(\Sigma_1, \Sigma_2)$ from $n$ independent samples satisfies 
-$$ d_{op}(\hat{\Sigma}_i, \Sigma_i) = O(\TODO{}) $$
-for $i = \{1,2\}$ with probability $\TODO{}$.
-\CF{presumably there will be some dimension-dependent factors}.
-\end{theorem}
+
+We may now state precisely our result for the tensor normal models.
 
 \begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius} Suppose $\eps \leq c$ and the number of samples satisfies $n \geq C k \max d_{a}^3/D\eps^2$. The MLE $(\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) $ for $(\Theta_1, \dots \Theta_k)$ from $n$ independent samples satisfies 
 $$ d_{F}(\widehat{\Theta}_i, \Theta_i) \leq \eps $$
 for $i \in [k]$ with probability $1 - \CF{1/poly(D)}$.
 \end{theorem}
 
+In the case of matrix normal models $(k=2)$, we also obtain the following result.
+
+\begin{theorem}[Matrix normal model spectral error]\label{thm:matrix-normal} The MLE $(\hat{\Sigma}_1,\hat{\Sigma}_2) $ for $(\Sigma_1, \Sigma_2)$ from $n$ independent samples satisfies 
+$$ d_{op}(\hat{\Sigma}_i, \Sigma_i) = O(\TODO{}) $$
+for $i = \{1,2\}$ with probability $\TODO{}$.
+\CF{presumably there will be some dimension-dependent factors}.
+\end{theorem}
+
+Our next results show that in either case the flip-flop algorithm can find the MLEs with high probability.
+
+\begin{theorem}[Tensor flip-flop]\label{thm:tensor-flipflop} If $\hat{\Sigma}$ denotes the MLE estimator for $\Sigma$, then provided $n \geq \TODO{}$ the flip-flop algorithm computes $\underline{\Sigma}$ with 
+$$ d_F(\underline{\Sigma}, \hat{\Sigma}) \leq \eps $$
+in $O(\TODO{\log(1/\eps)})$ iterations with probability at least $\TODO{}$.
+\end{theorem}
 
 \begin{theorem}[Matrix flip-flop]\label{thm:matrix-flipflop} If $(\hat{\Sigma}_1, \hat{\Sigma}_2) $ denotes the MLE estimator for for $(\Sigma_1, \Sigma_2)$, then provided $n \geq \TODO{}$ the flip-flop algorithm computes $(\underline{\Sigma}_1, \underline{\Sigma}_2)$ with 
 $$ d_F(\underline{\Sigma}_i, \hat{\Sigma}_i) \leq \eps $$
 for $i \in \{1,2\}$ in $O(\TODO{\log(1/\eps)})$ iterations with probability at least $\TODO{}$.
 \end{theorem}
 
-\CF{make the same changes to the other guys - make sure it's the right thing}.
-
-\begin{theorem}[Tensor flip-flop]\label{thm:tensor-flipflop} If $\hat{\Sigma}$ denotes the MLE estimator for $\Sigma$, then provided $n \geq \TODO{}$ the flip-flop algorithm computes $\underline{\Sigma}$ with 
-$$ d_F(\underline{\Sigma}, \hat{\Sigma}) \leq \eps $$
-in $O(\TODO{\log(1/\eps)})$ iterations with probability at least $\TODO{}$.
-\end{theorem}
 One may wonder why in the above theorems we consider the distances for the individual tensor factors and not the covariance matrix itself, but tight bounds for the covariance matrix itself follow from the above bounds (apart from the logarithmic factor in the matrix normal case and a constant factor in general).
+
+\CF{make the same changes to the other guys - make sure it's the right thing}.
 
 
 \section{Tensor normal models}
