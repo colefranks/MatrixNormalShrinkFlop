@@ -89,6 +89,7 @@
 \item Use $n$ instead of $T$ for number of samples.
 \item Replace the failure probability $1/poly(D)$ by an actual expression. 
 \item Fix the dimension issue in \cref{thm:tensor-convexity}.
+\item Small annoying thing - we assume determinant 1. This can be handled easily, but needs to be done.
 \end{enumerate}
 
 }
@@ -283,9 +284,9 @@ Let $\tilde{\rho}:= \|\vec X\|_F^2\rho$ and let
 \[ F(\Theta) := \tr  \Theta \tilde{\rho}; \hspace{10mm} \]
 so that 
 \begin{align*} \partial_{t=0} F(I_{\overline{a}} \otimes e^{tY}) = \tr  (I_{\overline{a}} \otimes e^{tY}  Y)\tilde{\rho}  |_{t=0} &= \tr  (I_{\overline{a}} \otimes Y) \tilde{\rho} \\
-&=\tr \tilde{\rho}^a  Z
+&=\tr \tilde{\rho}^{\{a\}}  Z
  \end{align*}
- and so thus, $\nabla_a F = d_a \tilde{\rho}^a$.
+ and so thus, $\nabla_a F = d_a \tilde{\rho}^{\{a\}}$.
 When $a\neq b$,
 \begin{align*}\partial_{s=0} \partial_{t=0} F(I_{\overline{\{a,b\}}} \otimes e^{sY} \otimes e^{tZ}) &=  \partial_{s=0} \tr  (I_{\overline{b}} \otimes e^{sY}) (I_{\overline{a}} \otimes Z) \tilde{\rho} \\
 &= \tr (I_{\overline{b}} \otimes Y) (I_{\overline{a}} \otimes Z) \tilde{\rho}
@@ -297,8 +298,8 @@ and when $a = b$
 
 %For simplicity, in this part we denote $Q = v v^{*}, s := Tr[Q]$ and marginals $Q^{S} := Tr_{\overline{S}}[Q]$. We will only need $\{Q^{a}\},\{Q^{ab}\}.$
 so that
-\begin{align*} \langle Z, (\nabla^{2}_{aa} F) Z \rangle &= d_a \langle  \tilde{\rho}^a, Z^{2}\rangle   \\
- \langle Y, (\nabla^{2} F) Z \rangle &= \sqrt{d_a d_b}\langle \tilde{\rho}^{ab} , Z \otimes Y \rangle . \end{align*}
+\begin{align*} \langle Z, (\nabla^{2}_{aa} F) Z \rangle &= d_a \langle  \tilde{\rho}^{\{a\}}, Z^{2}\rangle   \\
+ \langle Y, (\nabla^{2} F) Z \rangle &= \sqrt{d_a d_b}\langle \tilde{\rho}^{\{a,b\}} , Z \otimes Y \rangle . \end{align*}
 Here the $d_a, \sqrt{d_a d_b}$ factors arise because the Hessian is defined using $\langle \cdot, \cdot \rangle_{\vec d}$, not the usual Hilbert-Schmidt inner product $\langle \cdot, \cdot \rangle$.
 
 Now to calculate the same for $f$, note that $f = g + \log F $ for 
