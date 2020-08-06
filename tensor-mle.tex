@@ -117,11 +117,12 @@ It remains an open question to show tight bounds for convergence of the MLE in s
 \item $X$ for the tensor random variable, $X_1, \dots, X_n$ for the samples, $\vec X = (X_1, \dots, X_n)$ for the tuple of samples. $\rho = \vec X \vec X^\dagger/\|\vec X\|_F^2$.
 \item $\langle \cdot, \cdot \rangle_{\vec d}$ denotes the modified inner product, $\langle \cdot, \cdot \rangle$ the usual Hilbert-Schmidt inner product. \MW{\dots{}and more generally for the ordinary $\ell_2$ inner product of vectors.}
 \item $f_{\vec X}$ for the function in \cref{dfn:function}, mostly drop $\vec X$.
-\item $\PD_d$ for $d \times d$ pd's, $\Herm_d$ for $d \times d$ Hermitians. I don't think stats folks use this, I just really like them. Other suggestions welcome. $\Theta$ for big tensor product psd, $\Theta_a$ for individual psd's. \MW{$\operatorname{Sym}_d$ for real symmetric matrices?} \MW{$\Theta$ looks like big O notation}
+\item $\PD_d$ for $d \times d$ pd's, $\Herm_d$ for $d \times d$ Hermitians. I don't think stats folks use this, I just really like them. Other suggestions welcome. $\Theta$ for big tensor product psd, $\Theta_a$ for individual psd's. \MW{$\operatorname{Sym}_d$ for real symmetric matrices?} \MW{$\Theta$ looks like big O notation} \CF{Stats people seem to use it; hopefully we can avoid any ambiguity like that}
 \item I'm going to call $G = \oplus \GL_{d_i}, P = \oplus \PD_{d_i}, H = \oplus \Herm_{d_i}$. Explain somewhere how H is the tangent space.
 \item $\nabla, \nabla^2$ seems fine for geodesic Hessians and gradients. Denote components by $\nabla_a f$, $\nabla^2_{ab} f$. $\nabla f$ means at the identity.
 \item $C, c$ large (resp. small) constants that change line to line. 
-\item $\rho^a$ for marginals \MW{this looks like a power. I would either do $\rho^{(a)}$ or $\rho_a$; the latter is perhaps a bit awkward if we often look at matrix elements.}
+\item $\rho^{\{a\}}$ for marginals. \CF{This is just what happens if you don't abuse the notation $\rho^S$; Michael please insist if it looks too nonstandard}.
+%\MW{this looks like a power. I would either do $\rho^{(a)}$ or $\rho_a$; the latter is perhaps a bit awkward if we often look at matrix elements.}
 \item anything else we think of.
 \end{itemize}
 
@@ -207,14 +208,14 @@ With this definition in place, we are able to state the rather simple plan.
 \item\label{it:reduce} \textbf{Reduce to identity: } Firstly, note that $\widehat{\Theta}(\vec X) = \Theta^{1/2} \hat{\Theta}(\Theta^{-1/2} \vec X) \Theta^{1/2}$. As $\Theta^{-1/2} \vec X$ is distributed as $n$ samples from $\Theta^{-1/2}X$ which is a standard Gaussian, the distance 
 $$ d(\hat{\Theta}(\vec X), I)$$
 for $X$ standard Gaussian is distributed exactly as $d(\hat{\Theta}(\vec X), \Theta)$ for $X$ with covariance matrix $\Theta$. This means it is enough to bound $d(\hat{\Theta}(\vec X), I)$ assuming $\vec X$ is a standard Gaussian.
-\item \textbf{Show strong convexity: } Show that, with high probability, $f_{\vec X}$ is $\Omega(1)$-geodesically strongly convex near $I$ w.r.t. $\|\cdot\|_{\vec d}$.
-\item \textbf{Bound the gradient: } Show that $\| \nabla f_{\vec X} (I) \|_{\vec d}$ is small with high probability.
+\item\label{it:convexity} \textbf{Show strong convexity: } Show that, with high probability, $f_{\vec X}$ is $\Omega(1)$-geodesically strongly convex near $I$ w.r.t. $\|\cdot\|_{\vec d}$.
+\item\label{it:grad} \textbf{Bound the gradient: } Show that $\| \nabla f_{\vec X} (I) \|_{\vec d}$ is small with high probability.
 %(w.r.t. the dual norm $\|\cdot\|_{*}$). \CF{Probably need to say something about why geodesic distance and $d$ are comparable.}
 
 \end{enumerate}
 These together imply the sample complexity bounds - as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far. Furthermore, like in the Euclidean case, if a function is strongly geodesically convex in a region and one can prove a \emph{descent lemma} for a sequence in the region, then it must converge exponentially quickly to an optimizer. It is well-known that various optimization algorithms applied to $f_{\vec X}$ satisfy such a descent lemma \CF{cite bfg+}.
 
-We now proceed to state the lemma from geodesically convex optimization we will need to prove the \cref{thm:tensor-frobenius}.
+We now formally state the lemma that we will use to relate the gradient, and convexity of $f$, and distance to the optimizer as in the plan above. 
 
 %\begin{definition}[Geodesic gradient]\TODO{definition of geodesic gradient and Hessian}\end{definition}
 
@@ -228,8 +229,23 @@ Take geodesic $e^{t Z}$ towards the optimum with normalized speed $\|Z\| = 1$ so
 \[ 0 = g'(T) = \int_{t=0}^{T} g''(t) dt + g'(0) \geq \lambda \min\{\kappa,T\} - \eps     \]
 Now if $T \geq \kappa$ we have a contradiction as $\lambda \kappa - \epsilon > 0$. Therefore we must have $\lambda T < \lambda \kappa \leq \eps$, and the conclusion follows by rearranging. 
 \end{proof}
-Next, we state the two results that allow us to apply this lemma. \begin{definition}[Geodesic gradient and Hessian]
-For $Q \in P$, the geodesic gradient $\nabla f(Q)$ is the unique element in $H$ such that 
+
+%\MW{Since the overall plan was already stated above, I think I would directly move on to the next subsection -- skipping the lemmas without proof and moving the proof of Theorem~2 to a final Subsection~2.4. If you prefer leaving as is then let's please restate the lemmas below, right now it is a bit painful to read.}
+
+
+
+
+
+
+
+
+
+
+\subsection{Gradients and Hessians}
+
+As suggested by the plan from the previous section, we now compute the gradient and Hessian of $f$ and then bound the gradient using basic matrix concentration results. We first define gradients in our setting. 
+\begin{definition}[Riemannian gradient and Hessian]
+For $Q \in P$, the Riemannian gradient $\nabla f(Q)$ is the unique element in $H$ such that 
 $$\langle Z, H \rangle_{\vec d} = \partial_t f(\sqrt{Q}e^{Zt}\sqrt{Q})|_{t = 0}$$
 for all $Z \in H$. We define $\nabla f = \nabla f(I)$, and we write $\nabla f = (\nabla_1 f, \dots, \nabla_k f).$
 
@@ -242,58 +258,26 @@ $$\nabla^2 f = \begin{bmatrix}
  \nabla_{k1}^2 f &  \dots &  \nabla_{kk}^2 f 
  \end{bmatrix}$$
 \end{definition}
+To calculate the gradient, we will need a definition from linear algebra.
 
-\MW{Since the overall plan was already stated above, I think I would directly move on to the next subsection -- skipping the lemmas without proof and moving the proof of Theorem~2 to a final Subsection~2.4. If you prefer leaving as is then let's please restate the lemmas below, right now it is a bit painful to read.}
-
-\begin{lemma}\label{lemma:gradient-bound} Let $N_a := n D/d_a$, and suppose $N_a \geq C d_a/\eps^2$ for all $a \in [k]$. Then with probability at least $1 -  \sum_{a \in [k]} e^{-\Omega(N_a \eps^2)},$ for all $a \in [k]$ we have 
-$$\| \nabla_a f \|_{op} \leq \eps$$
-As a consequence, $\|\nabla f(I)\|_{\vec d} ^{2} = \sum_{a}\frac{1}{d_a} \|\nabla_a f \|_{F}^{2} \leq k \eps^{2}$. 
-\end{lemma}
-
-\begin{theorem}\label{thm:tensor-convexity}
-Suppose the number of samples is at least $k^{2} \max_{a} d_{a}^{2}/D$. Then with failure probability $\leq 1/poly(D)$, $f$ is $\Omega(1)$-strongly convex at $I$ w.r.t. $\|\cdot \|_{\vec d}$.
-\end{theorem}
-
-\begin{lemma}\label{lem:perturbation}
-If $f$ is $\lambda$-strongly convex at $I$ and $\forall a: d_{a} \|(\nabla f)_{a}\|_{op} \leq \eps \ll 1/k$, then for $Z$ such that $\forall a: \|Z_{a}\|_{op} \leq \delta_{a} \ll 1/k$, the function $f$ at $e^{Z}$ is $\lambda - O(k \sum_{a} \delta_{a})$ strongly convex. 
-\end{lemma}
-
-These lemmas immediately yield \cref{thm:tensor-frobenius}. 
-\begin{proof}[Proof of \cref{thm:tensor-frobenius}]By \cref{it:reduce} in \cref{subsec:outline}, it is enough to prove the theorem assuming $\Theta = I$. 
-We seek to apply \cref{lem:convex-ball}, so we need $\lambda \kappa > \|\nabla f\|_{\vec d}$, where $\lambda$ is the strong convexity we can maintain in a $\kappa$-ball. Set $\delta = \eps/\max \sqrt{k d_a}$; by our first assumption on $\eps$, we have $N_a \geq C d_a/\delta^2$ for all $a \in [k]$, we may apply \cref{lemma:gradient-bound}. Thus, with failure probability $O\left( \sum_a \exp ( - N_a \delta^2)\right)$ we have $\|(\nabla f)_{a}\|_{op} \leq \frac{\delta}{d_{a}}$ for all $a \in [k]$ and so
-\[  \|\nabla f\|_{\vec d}^{2} = \sum_{a} d_{a} \|(\nabla f)_{a}\|_{F}^{2} \leq  k \delta^{2}.  \]
-We next bound $\kappa$. By \cref{thm:tensor-convexity}, with failure probability $\CF{1/poly(D)}$ we have that $f$ is $1-o_{d}(1)$ strongly convex in norm $\|\cdot\|_{\vec d}$ at $I$, and further by \cref{lem:perturbation} $f$ is $1/2$ strongly convex at any point $e^{Z}$ with $\forall a: \|Z_{a}\|_{op} \leq  c/k$ for $c$ a small enough constant. Because $\|Z_a\|_{op} \leq \|Z_a\|_F \leq \sqrt{d_a} \|Z\|_{\vec d},$ we may take $\kappa = c/\max_a \sqrt{d_a}$ and $\lambda = 1/2$.
-
-By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\max_a \sqrt{d_a} $ there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$. The inequality follows from our second assumption on $\eps$. Because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) = O( \|\log \widehat{\Theta}\|_{\vec d} \sqrt{d_a})  \leq C \delta \sqrt{k d_a}.$ Applying $\eps = \delta \sqrt{k \max d_a}$ completes the proof.
-\end{proof}
-
-
-
-
-\subsection{Gradients and Hessians}
-
-We now proceed to compute the gradient and Hessian of $f$, and then to prove the bound \cref{lemma:gradient-bound} on the gradient using basic matrix concentration results. 
-
-To calculate the gradient, we need a definition from linear algebra. 
 \begin{definition}[Partial trace] For $\rho \in  \bigotimes_{i \in [k]} \PD_{d_i}$, let
 $\rho^S$ denote the partial trace $$\tr_{\bar{S}} \rho \in \bigotimes_{i \in S} \PD_{d_i},$$
 defined by $\tr \rho(A \otimes I_{\bar{S}}) = \tr A \rho^S$ for all $A \in \bigotimes_{i \in S} \Herm_{d_i}.$
 \end{definition}
 
-\MW{Not sure if those should be called `Riemannian' gradient and Hessian.}
 
-\begin{fact}[Geodesic gradient and Hessian calculations]
-Let $\rho$ denote $\frac{\vec X \vec X^\dagger}{\|\vec X\|^2}$. The geodesic gradient $\nabla f := (\nabla_1 f, \dots, \nabla_k f) \in P $ at the identity is given by
+\begin{lemma}[Riemannian gradient and Hessian calculations]
+Let $\rho$ denote $\frac{\vec X \vec X^\dagger}{\|\vec X\|^2}$. The Riemannian gradient $\nabla f := (\nabla_1 f, \dots, \nabla_k f) \in P $ at the identity is given by
 \begin{align}
-\nabla_a f &= d_a \rho^a -  I_{a}
+\nabla_a f &= d_a \rho^{\{a\}} -  I_{a}
 \end{align}
 for $a \in [k]$. 
 The geodesic Hessian $\nabla^2 f$ is given by 
-\begin{align}\frac{1}{d_a}\langle Y, (\nabla^{2}_{aa} f) Y \rangle &= \langle \rho^{a}, Y^{2} \rangle - \left\langle \rho^{a}, Y \right\rangle^{2} \\
-\frac{1}{\sqrt{d_a d_b}}\langle Z, (\nabla^{2}_{ab} f) Y \rangle &= \langle \rho^{ab}, Z \otimes Y \rangle  - \langle \rho^{a}, Y \rangle \langle \rho^{b}, Z \rangle
+\begin{align}\frac{1}{d_a}\langle Y, (\nabla^{2}_{aa} f) Y \rangle &= \langle \rho^{\{a\}}, Y^{2} \rangle - \left\langle \rho^{\{a\}}, Y \right\rangle^{2} \\
+\frac{1}{\sqrt{d_a d_b}}\langle Z, (\nabla^{2}_{ab} f) Y \rangle &= \langle \rho^{\{a,b\}}, Z \otimes Y \rangle  - \langle \rho^{\{a\}}, Y \rangle \langle \rho^{\{b\}}, Z \rangle
 \end{align}
 for $a \neq b \in [k]$, $Y \in \Herm_{d_a}, Z \in \Herm_{d_b}$. 
-\end{fact}
+\end{lemma}
 \begin{proof}
 Let $\tilde{\rho}:= \|\vec X\|_F^2\rho$ and let
 \[ F(\Theta) := \tr  \Theta \tilde{\rho}; \hspace{10mm} \]
@@ -320,16 +304,25 @@ Here the $d_a, \sqrt{d_a d_b}$ factors arise because the Hessian is defined usin
 Now to calculate the same for $f$, note that $f = g + \log F $ for 
 $$g:= - \sum_{a \in [k]} \frac1{d_a} \log\det(\Theta_a).$$ Further note that $\nabla \log F = \frac{\nabla F}{F}$, $\nabla^{2} f = \frac{\nabla^{2} F}{F} - \frac{(\nabla F)(\nabla F)^{*}}{F^{2}}$, and that $\nabla_a g = d_a I_{a}$ and $\nabla^2 g = 0$. Plugging in the values of $F, \nabla F, \nabla^2 F$ from above completes the proof. \end{proof}
 
+Having calculated the gradient and Hessian of $f$, we are ready to state our bounds:
 
+\begin{lemma}\label{lemma:gradient-bound} Let $N_a := n D/d_a$, and suppose $N_a \geq C d_a/\eps^2$ for all $a \in [k]$. Then with probability at least $1 -  \sum_{a \in [k]} e^{-\Omega(N_a \eps^2)},$ for all $a \in [k]$ we have 
+$$\| \nabla_a f \|_{op} \leq \eps$$
+As a consequence, $\|\nabla f(I)\|_{\vec d} ^{2} = \sum_{a}\frac{1}{d_a} \|\nabla_a f \|_{F}^{2} \leq k \eps^{2}$. 
+\end{lemma}
 
-Recall that $\nabla_a f = \rho^a - I_a/d_a$, where $\rho^a$ is distributed as $Y Y^\dagger/\|Y\|_F^2$, where $Y$ is a $d \times N$ matrix with independent Gaussian entries. This motivates the next lemma on the singular values of random Gaussian matrices.
+To prove this we will need a standard result in matrix concentration. Recall that $\nabla_a f = d_a \rho^{\{a\}} - I_a$, where $\rho^{\{a\}}$ is distributed as $Y Y^\dagger/\|Y\|_F^2$, where $Y$ is a $d \times N$ matrix with independent Gaussian entries. This motivates the next lemma on the singular values of random Gaussian matrices.
 % https://arxiv.org/pdf/1011.3027.pdf
 
 \begin{theorem} [Corollary 5.35 of \CF{\cite{vershinyn}}]\label{cor:vershynin}
 Let $Y \in \R^{d \times N}$ for $d < N$ have independent standard gaussian entries. Then for $t \geq 0$, the following occurs with $\leq 2 \exp(-t^{2}/2)$ failure probability:
 \[ \sqrt{N} - \sqrt{d} - t \leq s_{d}(Y) \leq s_{1}(Y) \leq \sqrt{N} + \sqrt{d} + t  \]
 \end{theorem}
-\begin{proof}[Proof of \cref{lemma:gradient-bound}]Let $N = n D/d_a$ and $d = d_a$. Again, $\nabla_a f = d_a \rho^a - I_a$ where $\rho^a$ is distributed as $Y Y^\dagger/\|Y\|_F^2$, where $Y$ is a $d \times N$ matrix with independent Gaussian entries.
+
+
+
+
+\begin{proof}[Proof of \cref{lemma:gradient-bound}]Let $N = n D/d_a$ and $d = d_a$. Again, $\nabla_a f = d_a \rho^{\{a\}} - I_a$ where $\rho^{\{a\}}$ is distributed as $Y Y^\dagger/\|Y\|_F^2$, where $Y$ is a $d \times N$ matrix with independent Gaussian entries.
 By \cref{cor:vershynin}, we have the following with $\leq 2 \exp(-t^{2}/2)$ failure probability:
 \[\sqrt{N} \left( 1 -  \frac{\sqrt{d} + t }{\sqrt{N}}  \right)\leq  s_{1} \left( Y \right) \leq s_{d}\left( Y \right) \leq  \sqrt{N} \left( 1 + \frac{\sqrt{d} + t }{\sqrt{N}}  \right)  \]
 Let $t = c \sqrt{N} \eps$. Because $d \leq c N \eps^2$, both largest and least singular values are
@@ -338,25 +331,28 @@ $\sqrt{N} \left( 1 + c \cdot \eps   \right)$.
 Provided $c$ is small enough we then have 
  $$\lambda_1(YY^\dagger), \lambda_{d}(YY^\dagger) \in N(1 \pm c \cdot \eps).$$ 
  Next, observe that $\|Y\|_F^2$ is a $\chi$-squared distribution with $Nd$ degrees of freedom, and thus satisfies $\| Y\|_F^2 - Nd \leq t N d$ with probability $1 - 2e^{- Nd t^2/8}$ for $t \leq 1$ \CF{\cite{wainwright}}. Thus 
-  $$\lambda_1(\rho^a), \lambda_2(\rho^a) \in  N(1 \pm c \cdot \eps)/ Nd(1 \pm c \cdot \eps) \in \frac{1}{d}(1 \pm \eps)$$ 
+  $$\lambda_1(\rho^{\{a\}}), \lambda_2(\rho^{\{a\}}) \in  N(1 \pm c \cdot \eps)/ Nd(1 \pm c \cdot \eps) \in \frac{1}{d}(1 \pm \eps)$$ 
 with probability $1 - 2 e^{- c N \eps^2}- 2 e^{- c Nd \eps^2} = 1 - 4 e^{- N\eps^2},$ provided $c$ is small enough. Applying the union bound over $[k]$ completes the proof of the lemma.\end{proof}
  
-% Both $\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a$ and $\| \vec X\|_F^2 - Nd_a \leq .5 N d_a$ hold with probability \CF{blah}$. Now  $$ \|\rho^a - I_a/d_a\|_{op} \leq \|\rho^a - N I_{d_a}/ \|\vec X\|_F\|_{op} + $$
+% Both $\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a$ and $\| \vec X\|_F^2 - Nd_a \leq .5 N d_a$ hold with probability \CF{blah}$. Now  $$ \|\rho^{\{a\}} - I_a/d_a\|_{op} \leq \|\rho^{\{a\}} - N I_{d_a}/ \|\vec X\|_F\|_{op} + $$
 
 
 %Provided $c$ is small enough we then have 
  %$$\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a.$$ 
  
  
-% Next, observe that $\|\vec X\|_F^2$ is a $\chi$-squared distribution with $Nd_a$ degrees of freedom, and thus satisfies $\| \vec X\|_F^2 - Nd_a \leq .5 N d_a$ with probability $1 - 2e^{- c N d_a}$. Both $\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a$ and $\| \vec X\|_F^2 - Nd_a \leq .5 N d_a$ hold with probability \CF{blah}$. Now  $$ \|\rho^a - I_a/d_a\|_{op} \leq \|\rho^a - N I_{d_a}/ \|\vec X\|_F\|_{op} + $$
+% Next, observe that $\|\vec X\|_F^2$ is a $\chi$-squared distribution with $Nd_a$ degrees of freedom, and thus satisfies $\| \vec X\|_F^2 - Nd_a \leq .5 N d_a$ with probability $1 - 2e^{- c N d_a}$. Both $\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a$ and $\| \vec X\|_F^2 - Nd_a \leq .5 N d_a$ hold with probability \CF{blah}$. Now  $$ \|\rho^{\{a\}} - I_a/d_a\|_{op} \leq \|\rho^{\{a\}} - N I_{d_a}/ \|\vec X\|_F\|_{op} + $$
 
 
 
 \subsection{Strong convexity}
 \TODO{Fix for new inner product and dimension issue}
-
-
-\begin{theorem}
+We now prove our main strong convexity results in order to carry out \cref{it:convexity} of the plan from \cref{subsec:outline}. We begin by showing strong convexity \emph{at} the origin, and later show strong convexity \emph{near} the origin.
+\begin{theorem}\label{thm:tensor-convexity}
+Suppose the number of samples is at least $k^{2} \max_{a} d_{a}^{2}/D$. Then with failure probability $\leq 1/poly(D)$, $f$ is $\Omega(1)$-strongly convex at $I$ w.r.t. $\|\cdot \|_{\vec d}$.
+\end{theorem}
+To prove this, we need some results on quantum expansion from \TODO{cite}. \CF{I also suggest that these be simplified - can we just state the corollary directly?}
+\begin{theorem}[\TODO{source?}]
 Let $P$ denote the projection onto $(\vec{I_{n}},\vec{I_{m}})$, then the following holds with $1/poly(mn)$ failure probability
 \[ \|\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i} (I - P) \|_{op} \leq O \left( \sqrt{\sum_{i} \alpha_{i}^{2}} \right) \left( \E \|Y\|_{op} \right)^{2} \]
 \end{theorem}
@@ -366,43 +362,31 @@ For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kr
 \[ \sum_{k=1}^{TD/d_{a}d_{b}} \frac{1}{TD} Y_{k} \otimes Y_{k}   \]
 By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is of the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} TD}}$, so for constant expansion it suffices that $TD \gg \max_{a} d_{a}^{2}$
 \end{corollary}
-
-\begin{proof} [Proof of \cref{thm:tensor-convexity}]
-Take any quadratic form of the Hessian for $\{Z_{a} \perp I_{a}\}$:
-\[ \partial_{t=0}^{2} f(e^{t Z}) = \sum_{a} \langle Q^{a}, Z_{a}^{2} \rangle + \sum_{a \neq b} \langle Q^{ab}, Z_{a} \otimes Z_{b} \rangle   \]
-\[ \geq \sum_{a} \lambda_{\min}(Q^{a}) \|Z_{a}\|_{F}^{2} - \sum_{a \neq b} \|Q^{ab} (I-P_{ab})\|_{op} \|Z_{a}\|_{F} \|Z_{b}\|_{F}    \]
-Now we can use our high probability bounds derived above:
-\[ \forall a: Q^{a} \succeq \frac{1-\epsilon}{d_{a}} I_{a}; \hspace{10mm} 
-\forall a \neq b: \|Q^{ab} (I-P_{ab})\|_{op} < \frac{\lambda}{\sqrt{d_{a} d_{b}}}   \]
-\[ \implies \partial_{t=0}^{2} f(e^{t Z}) \geq \sum_{a} \frac{1-\eps}{d_{a}} \|Z_{a}\|_{F}^{2} - \sum_{a \neq b} \frac{\lambda}{\sqrt{d_{a} d_{b}}} \|Z_{a}\|_{F} \|Z_{b}\|_{F}  \]
-\[ \geq \sum_{a} \frac{1-\eps+\lambda}{d_{a}} \|Z_{a}\|_{F}^{2} - \lambda \left( \sum_{a} \frac{1}{\sqrt{d_{a}}} \|Z_{a}\|_{F}   \right)^{2}   \]
-\[ \geq \sum_{a} \frac{1-\eps+\lambda}{d_{a}} \|Z_{a}\|_{F}^{2} - k\lambda \sum_{a} \frac{1}{d_{a}} \|Z_{a}\|_{F}^{2} \]
-\[ = (1-\eps-(k-1)\lambda) \|Z\|^{2}    \]
-Choosing $\eps,\lambda$ small enough gives the theorem. 
-\end{proof}
-
-\begin{proof}
+\begin{proof}[Proof of \cref{thm:tensor-convexity}]
 We can in fact show that $\nabla^{2}$ is well-conditioned using the following:
 \[ -\begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} 
 \preceq \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}
 \preceq \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
 \]
-We can rewrite the Hessian using shorthand $\{M_{a}\}$ for the diagonal blocks and $\{M_{ab}\}$ for off-diagonal blocks: \CF{why not just write $\nabla^2_{ab}f$?}
+We can rewrite the Hessian using shorthand $\{M_{a}\}$ for the diagonal blocks and $\{M_{ab}\}$ for off-diagonal blocks: \CF{why not just write $\nabla^2_{ab}f$?} \CF{Also, the matrices $E_{aa} \otimes M_a$ are not all of the same size}
 \[ \nabla^{2} f = \sum_{a} E_{aa} \otimes M_{a} + \sum_{a \neq b} E_{ab} \otimes M_{ab}  \]
-Now we can again use the high-probability bounds derived above:
+Now we can again use the high-probability bounds derived above: \TODO{actually cref them}
 \[ M_{a} \in \frac{1 \pm \eps}{d_{a}} I_{a}; \hspace{5mm} \forall a \neq b: \|M_{ab}\|_{op} \leq \frac{\lambda}{\sqrt{d_{a} d_{b}}}   \]
 \[ \nabla^{2} \preceq \sum_{a} E_{aa} \otimes \left( \frac{1+\eps}{d_{a}} I_{a} \right) + \sum_{a < b} E_{aa} \otimes \left( \frac{\lambda}{d_{a}} I_{a} \right) + E_{bb} \otimes \left( \frac{\lambda}{d_{b}} I_{b} \right)    \]
 \[ \preceq \sum_{a} E_{aa} \otimes \frac{1+\eps+(k-1)\lambda}{d_{a}} I_{a}  \]
 The same sequence of inequalities can be reversed to show a lower bound. So in fact we can show the above bounds on blocks shows $O(\eps + k \lambda)$-condition number bound on the Hessian in norm $\|\cdot\|$. 
 \end{proof}
-We now move to prove \cref{lem:perturbation}, which shows that the Hessian remains strongly convex in an operator norm ball about the origin. We require an intermediate lemma showing that each block of the Hessian changes fairly little on the operator ball.
+We now show our second strong convexity result, namely that if our function is strongly convex at the origin then it is also strongly convex in an operator norm ball about the origin. 
 
-\begin{lemma} [Lemma 3.6 in KLR]
-\[ \|M^{ab}\|_{F \to F}^{2} \leq \|M^{a}\|_{F \to F} \|M^{b}\|_{F \to F}   \]
+
+\begin{lemma}\label{lem:perturbation}
+If $f$ is $\lambda$-strongly convex at $I$ and $\forall a: d_{a} \|(\nabla f)_{a}\|_{op} \leq \eps \ll 1/k$, then for $Z$ such that $\forall a: \|Z_{a}\|_{op} \leq \delta_{a} \ll 1/k$, the function $f$ at $e^{Z}$ is $\lambda - O(k \sum_{a} \delta_{a})$ strongly convex. 
 \end{lemma}
-\begin{proof}
-We have a simple proof of this: by convexity we know $\begin{pmatrix} M^{a} & M^{ab} \\ M^{ba} & M^{b}  \end{pmatrix} \succeq 0$. 
-\end{proof}
+
+
+
+
+The bulk of the work goes towards an intermediate lemma showing that each block of the Hessian changes fairly little on the operator ball.
 
 
 \begin{lemma}\label{lem:block-perturbation}
@@ -436,9 +420,16 @@ Now we analyze one of these terms (by abuse of notation $Z, Y \succ 0$):
 Each of these terms we can bound by $\sigma^{ab}_{1} \|Z\|_{F} \|Y\|_{F}$. (Note we can save a $2$-factor on these four terms since they are decompositions of $Z,Y$). So by iterating this argument over all $c$, we get the desired bound. 
 \end{proof}
 
+After one more simple lemma, we will be ready to prove our second strong convexity result, \cref{lem:perturbation}. 
+\begin{lemma} [Lemma 3.6 in \TODO{cite KLR}; \CF{where is this used?}]
+\[ \|M^{ab}\|_{F \to F}^{2} \leq \|M^{a}\|_{F \to F} \|M^{b}\|_{F \to F}   \]
+\end{lemma}
+\begin{proof}
+We have a simple proof of this: by convexity we know $\begin{pmatrix} M^{a} & M^{ab} \\ M^{ba} & M^{b}  \end{pmatrix} \succeq 0$. 
+\end{proof}
 
 \begin{proof}[Proof of \cref{lem:perturbation}]
-By the condition on gradient, we have that 
+By the condition on the gradient \TODO{what condition? cref it}, we have that 
 \[ \forall a,b: \|M^{ab}\|_{op}^{2} \leq \|M^{a}\|_{op} \|M^{b}\|_{op} \leq \frac{1+\eps}{d_{a} d_{b}}   \]
 We apply the perturbation lemma to each part sucessively, and if $\delta$ are small enough we can assume this bound holds in weaker form $1+\epsilon \leq 2$ for all iterations. The above lemma shows for each part and any test vectors 
 \[ \langle w w^{*} - v v^{*}, I_{\overline{ab}} \otimes \frac{Z}{\|Z\|_{F}} \otimes \frac{Y}{\|Y\|_{F}} \rangle \leq \frac{O( \sum_{a} \delta_{a} )}{\sqrt{d_{a} d_{b}}} =: \frac{\delta}{\sqrt{d_{a} d_{b}}}   \]
@@ -446,6 +437,17 @@ Here the suppressed constants are $\leq 7$. Therefore the difference between Hes
 \[ |\langle Y, \nabla^{2} f(e^{Z}) - \nabla^{2} f(I), Y \rangle|  \leq \delta \left( \sum_{a} \frac{\|Y_{a}\|_{F}^{2}}{d_{a}} + \sum_{a \neq b} \frac{\|Y_{a}\|_{F} \|Y_{b}\|_{F}}{\sqrt{d_{a} d_{b}}} \right) \leq k \delta \|Y\|^{2}   \]
 \end{proof}
 
+
+\subsection{Proof of \cref{thm:tensor-frobenius}}
+We are now ready to prove the main result of this section according to the plan outlined in \cref{subsec:outline}.
+\TODO{restate it here?}
+\begin{proof}[Proof of \cref{thm:tensor-frobenius}]By \cref{it:reduce} in \cref{subsec:outline}, it is enough to prove the theorem assuming $\Theta = I$. 
+We seek to apply \cref{lem:convex-ball}, so we need $\lambda \kappa > \|\nabla f\|_{\vec d}$, where $\lambda$ is the strong convexity we can maintain in a $\kappa$-ball. Set $\delta = \eps/\max \sqrt{k d_a}$; by our first assumption on $\eps$, we have $N_a \geq C d_a/\delta^2$ for all $a \in [k]$, we may apply \cref{lemma:gradient-bound}. Thus, with failure probability $O\left( \sum_a \exp ( - N_a \delta^2)\right)$ we have $\|(\nabla f)_{a}\|_{op} \leq \frac{\delta}{d_{a}}$ for all $a \in [k]$ and so
+\[  \|\nabla f\|_{\vec d}^{2} = \sum_{a} d_{a} \|(\nabla f)_{a}\|_{F}^{2} \leq  k \delta^{2}.  \]
+We next bound $\kappa$. By \cref{thm:tensor-convexity}, with failure probability $\CF{1/poly(D)}$ we have that $f$ is $1-o_{d}(1)$ strongly convex in norm $\|\cdot\|_{\vec d}$ at $I$, and further by \cref{lem:perturbation} $f$ is $1/2$ strongly convex at any point $e^{Z}$ with $\forall a: \|Z_{a}\|_{op} \leq  c/k$ for $c$ a small enough constant. Because $\|Z_a\|_{op} \leq \|Z_a\|_F \leq \sqrt{d_a} \|Z\|_{\vec d},$ we may take $\kappa = c/\max_a \sqrt{d_a}$ and $\lambda = 1/2$.
+
+By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\max_a \sqrt{d_a} $ there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$. The inequality follows from our second assumption on $\eps$. Because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) = O( \|\log \widehat{\Theta}\|_{\vec d} \sqrt{d_a})  \leq C \delta \sqrt{k d_a}.$ Applying $\eps = \delta \sqrt{k \max d_a}$ completes the proof.
+\end{proof}
 
 \section{Matrix normal models}\label{sec:matrix-normal}
 \TODO{Proof of \cref{thm:matrix-normal}. Prove bounds on $d_{op}(\hat{\Sigma}, I)$ assuming $X$ standard normal.}
@@ -465,7 +467,8 @@ Here the suppressed constants are $\leq 7$. Therefore the difference between Hes
 
 
 
-
+\section{Noise}
+\TODO{make sure things work under some error in the data; somewhat optional}
 
 
 \section{Open problems}
@@ -564,7 +567,7 @@ This means if we denote $\{\lambda_{1}, ..., \lambda_{d}\}$ the spectrum of $\su
 
 % https://arxiv.org/pdf/1011.3027.pdf
 
-\begin{corollary} [Corollary 5.35]\label{cor:vershynin}
+\begin{corollary} [Corollary 5.35]%\label{cor:vershynin}
 Let $G_{d,N} \in \R^{d \times N}$ for $d < N$ have independent standard gaussian entries. Then for $t \geq 0$, the following occurs with $\leq 2 \exp(-t^{2}/2)$ failure probability:
 \[ \sqrt{N} - \sqrt{d} - t \leq s_{d}(G) \leq s_{1}(G) \leq \sqrt{N} + \sqrt{d} + t  \]
 \end{corollary}
@@ -1021,17 +1024,17 @@ For two orthonormal bases $\{u_{i}\},\{v_{i}\} \subseteq \R^{d}$, the coherence 
 
 Let $(\epsilon/d_{a},u)$ be the eigenpair associated with operator norm of $\mu_{a}$ and recall that under gradient flow we move in direction $X := -\sum_{a} e_{a} \otimes d_{a} \mu_{a}\}$
 \[ -\partial_{t=0} \|\mu_{a}\|_{op} = -\langle e_{a} \otimes uu^{*}, \nabla^{2} X \rangle     \]
-\[ = \langle \rho^{a}, d_{a} \mu_{a} u u^{*} \rangle + \sum_{b \neq a} \langle \rho^{ab}, u u^{*} \otimes d_{b} \mu_{b} \rangle    \]
-\[ = \frac{1}{d_{a}} (1+\eps) d_{a} \frac{1}{d_{a}} \eps + \sum_{b \neq a} d_{b} \langle \rho^{ab}, u u^{*} \otimes \mu_{b} \rangle   \]
+\[ = \langle \rho^{\{a\}}, d_{a} \mu_{a} u u^{*} \rangle + \sum_{b \neq a} \langle \rho^{\{a,b\}}, u u^{*} \otimes d_{b} \mu_{b} \rangle    \]
+\[ = \frac{1}{d_{a}} (1+\eps) d_{a} \frac{1}{d_{a}} \eps + \sum_{b \neq a} d_{b} \langle \rho^{\{a,b\}}, u u^{*} \otimes \mu_{b} \rangle   \]
 
 Let's focus on a single $(a,b)$ term, and denote $T : L(\R^{d_{b}}) \to L(\R^{d_{a}})$ as
-\[ \langle T(Y_{b}), X_{a} \rangle := \langle \rho^{ab}, X_{a} \otimes Y_{b} \rangle \]
+\[ \langle T(Y_{b}), X_{a} \rangle := \langle \rho^{\{a,b\}}, X_{a} \otimes Y_{b} \rangle \]
 So the term we are analyzing is $\langle T(\mu_{b}), u u^{*} \rangle$, which can be viewed as a diagonal of the matrix $T(\mu_{b})$. We have good bounds on this matrix:
-\[ \langle I_{a}, T(\mu_{b}) \rangle = \langle \rho^{ab}, I_{a} \otimes \mu_{b} \rangle = \|\mu_{b}\|_{F}^{2}  \]
+\[ \langle I_{a}, T(\mu_{b}) \rangle = \langle \rho^{\{a,b\}}, I_{a} \otimes \mu_{b} \rangle = \|\mu_{b}\|_{F}^{2}  \]
 Now define $Y := T(\mu_{b}) - \frac{\|\mu_{b}\|_{F}^{2}}{d_{a}} I_{a}$ to be projection orthogonal to the identity:
-\[ \|Y\|_{F} = \sup_{X} \frac{ \langle Y,X \rangle }{\|X\|_{F}} = \sup_{X \perp I} \frac{ \langle Y, X \rangle }{\|X\|_{F}} = \sup_{X \perp I, \|X\|_{F} = 1} \langle \rho^{ab}, X \otimes \mu_{b} \rangle \leq \frac{\lambda}{\sqrt{d_{a} d_{b}}} \|\mu_{b}\|_{F}     \]
+\[ \|Y\|_{F} = \sup_{X} \frac{ \langle Y,X \rangle }{\|X\|_{F}} = \sup_{X \perp I} \frac{ \langle Y, X \rangle }{\|X\|_{F}} = \sup_{X \perp I, \|X\|_{F} = 1} \langle \rho^{\{a,b\}}, X \otimes \mu_{b} \rangle \leq \frac{\lambda}{\sqrt{d_{a} d_{b}}} \|\mu_{b}\|_{F}     \]
 Now if $Y = \sum_{i} y_{i} v_{i} v_{i}^{*}$ is the eigendecomposition, we have a bound on the variance of the eigenvalues. Let $\mu_{a} = \sum_{i} x_{i} u_{i} u_{i}^{*}$, and if we have a bound on the coherence of $U,V$, we can bound the competing term:
-\[ d_{b} \langle \rho^{ab}, u u^{*} \otimes \mu_{b} \rangle = d_{b} \langle \rho^{ab}, \frac{1}{d_{a}} I_{a} \otimes \mu_{b} + (u u^{*} - \frac{1}{d_{a}} I_{a}) \otimes \mu_{b} \rangle    \]
+\[ d_{b} \langle \rho^{\{a,b\}}, u u^{*} \otimes \mu_{b} \rangle = d_{b} \langle \rho^{\{a,b\}}, \frac{1}{d_{a}} I_{a} \otimes \mu_{b} + (u u^{*} - \frac{1}{d_{a}} I_{a}) \otimes \mu_{b} \rangle    \]
 \[ = \frac{d_{b} \|\mu_{b}\|_{F}^{2}}{d_{a}} + d_{b} \langle Y, u u^{*} \rangle  
 = \frac{d_{b} \|\mu_{b}\|_{F}^{2}}{d_{a}} + d_{b} \sum_{i} y_{i} \langle u, v_{i} \rangle^{2}    \]
 \[ \leq \frac{d_{b} \|\mu_{b}\|_{F}^{2}}{d_{a}} + d_{b} \left( \sum_{i} y_{i}^{2} \langle u, v_{i} \rangle^{2}  \right)^{1/2} \left( \sum_{i} \langle u, v_{i} \rangle^{2} \right)^{1/2}   \]
@@ -1072,8 +1075,7 @@ The problem remaining is that eigenvectors are not continuous objects, so a boun
 \end{enumerate}
 
 
-\section{Noise}
-\TODO{make sure things work under some error in the data}
+\section{Old stuff}
 
 \subsection{Different Inner Product}
 
@@ -1091,17 +1093,17 @@ Also $\rho := \sum_{i} X_{i} X_{i}^{*}$ and $\{\rho^{S}\}_{S \subseteq [k]}$ are
 \end{definition}
 
 \begin{fact}
-\[ (\nabla f(I))_{a} = d_{a} \rho^{a} - I_{a}  \]
+\[ (\nabla f(I))_{a} = d_{a} \rho^{\{a\}} - I_{a}  \]
 \end{fact}
 \begin{proof}
 We can define $\nabla f$ dually as $\forall Z: \langle \nabla f(I), Z \rangle_{R} := \partial_{t=0} f(e^{tZ})$
 \[ \partial_{t=0} f(e^{t Z_{a}}) = \partial_{t=0} \langle \rho, I_{\overline{a}} \otimes e^{tZ_{a}}  \rangle - \partial_{t=0} \frac{1}{d_{a}} \log\det e^{t Z_{a}}  \]
-\[ = \left\langle \rho^{a} - \frac{1}{d_{a}} I_{a}, Z_{a} e^{t Z_{a}} \right\rangle|_{t=0} = \left\langle R_{a}^{-1} \left( \rho^{a} - \frac{1}{d_{a}} I_{a} \right) R_{a}^{-1}, Z_{a} \right\rangle_{R}   \]
+\[ = \left\langle \rho^{\{a\}} - \frac{1}{d_{a}} I_{a}, Z_{a} e^{t Z_{a}} \right\rangle|_{t=0} = \left\langle R_{a}^{-1} \left( \rho^{\{a\}} - \frac{1}{d_{a}} I_{a} \right) R_{a}^{-1}, Z_{a} \right\rangle_{R}   \]
 
 Similarly we define the Hessian as 
 \[ \partial_{s=t=0} f(e^{tZ_{a} + sY_{b}}) = \langle \rho, \{ I_{\overline{a}} \otimes Z_{a}, I_{\overline{b}} \otimes Y_{b} \} \rangle   \]
-\[ \implies (\nabla^{2} f(I))_{aa} = \langle R_{a}^{-1} \rho^{a} R_{a}^{-1}, \{Z, Y\} \rangle_{R}    \]
-\[ \implies (\nabla^{2} f(I))_{ab} = \langle \rho^{ab}, Z \otimes Y \rangle   \]
+\[ \implies (\nabla^{2} f(I))_{aa} = \langle R_{a}^{-1} \rho^{\{a\}} R_{a}^{-1}, \{Z, Y\} \rangle_{R}    \]
+\[ \implies (\nabla^{2} f(I))_{ab} = \langle \rho^{\{a,b\}}, Z \otimes Y \rangle   \]
 \end{proof}
 
 \AR{Not sure how to define Hessian. I think I'd like the Hessian to be 
@@ -1130,6 +1132,22 @@ $\lambda$-strong convexity is a sufficient condition for fast convergence of the
 \AR{Not sure how to write the third term above, the inner product with Hessian}
 \end{lemma}
 
+\subsection{Old proof of \cref{thm:tensor-convexity}}
+
+
+\begin{proof} [Proof of \cref{thm:tensor-convexity}]
+Take any quadratic form of the Hessian for $\{Z_{a} \perp I_{a}\}$:
+\[ \partial_{t=0}^{2} f(e^{t Z}) = \sum_{a} \langle Q^{a}, Z_{a}^{2} \rangle + \sum_{a \neq b} \langle Q^{ab}, Z_{a} \otimes Z_{b} \rangle   \]
+\[ \geq \sum_{a} \lambda_{\min}(Q^{a}) \|Z_{a}\|_{F}^{2} - \sum_{a \neq b} \|Q^{ab} (I-P_{ab})\|_{op} \|Z_{a}\|_{F} \|Z_{b}\|_{F}    \]
+Now we can use our high probability bounds derived above:
+\[ \forall a: Q^{a} \succeq \frac{1-\epsilon}{d_{a}} I_{a}; \hspace{10mm} 
+\forall a \neq b: \|Q^{ab} (I-P_{ab})\|_{op} < \frac{\lambda}{\sqrt{d_{a} d_{b}}}   \]
+\[ \implies \partial_{t=0}^{2} f(e^{t Z}) \geq \sum_{a} \frac{1-\eps}{d_{a}} \|Z_{a}\|_{F}^{2} - \sum_{a \neq b} \frac{\lambda}{\sqrt{d_{a} d_{b}}} \|Z_{a}\|_{F} \|Z_{b}\|_{F}  \]
+\[ \geq \sum_{a} \frac{1-\eps+\lambda}{d_{a}} \|Z_{a}\|_{F}^{2} - \lambda \left( \sum_{a} \frac{1}{\sqrt{d_{a}}} \|Z_{a}\|_{F}   \right)^{2}   \]
+\[ \geq \sum_{a} \frac{1-\eps+\lambda}{d_{a}} \|Z_{a}\|_{F}^{2} - k\lambda \sum_{a} \frac{1}{d_{a}} \|Z_{a}\|_{F}^{2} \]
+\[ = (1-\eps-(k-1)\lambda) \|Z\|^{2}    \]
+Choosing $\eps,\lambda$ small enough gives the theorem. 
+\end{proof}
 
 
 
