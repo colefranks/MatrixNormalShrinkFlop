@@ -117,7 +117,7 @@ It remains an open question to show tight bounds for convergence of the MLE in s
 \item $X$ for the tensor random variable, $X_1, \dots, X_n$ for the samples, $\vec X = (X_1, \dots, X_n)$ for the tuple of samples. $\rho = \vec X \vec X^\dagger/\|\vec X\|_F^2$.
 \item $\langle \cdot, \cdot \rangle_{\vec d}$ denotes the modified inner product, $\langle \cdot, \cdot \rangle$ the usual Hilbert-Schmidt inner product. 
 \item $f_{\vec X}$ for the function in \cref{dfn:function}, mostly drop $\vec X$.
-\item $\PD_d$ for $d \times d$ pd's, $\Herm_d$ for $d \times d$ Hermitians. I don't think stats folks use this, I just really like them. Other suggestions welcome. $\Theta$ for big tensor product psd, $\Theta_a$ for individual psd's.
+\item $\PD_d$ for $d \times d$ pd's, $\Herm_d$ for $d \times d$ Hermitians. I don't think stats folks use this, I just really like them. Other suggestions welcome. $\Theta$ for big tensor product psd, $\Theta_a$ for individual psd's. \MW{$\operatorname{Sym}_d$ for real symmetric matrices?!}
 \item I'm going to call $G = \oplus \GL_{d_i}, P = \oplus \PD_{d_i}, H = \oplus \Herm_{d_i}$. Explain somewhere how H is the tangent space.
 \item $\nabla, \nabla^2$ seems fine for geodesic Hessians and gradients. Denote components by $\nabla_a f$, $\nabla^2_{ab} f$. $\nabla f$ means at the identity.
 \item $C, c$ large (resp. small) constants that change line to line. 
@@ -125,7 +125,7 @@ It remains an open question to show tight bounds for convergence of the MLE in s
 \item anything else we think of.
 \end{itemize}
 
-\MW{Real vs complex matrices. In 1.2, I think we want to state our results for real Gaussians and perhaps only add a sentence or so about the complex case. In the technical part, it might be conveneint to define g-convexity, gradients, etc in a way that works in both the real + complex case (or to only give the complex definitions). Need to discuss things like how the unique MLE for real samples is automatically real etc, comment that flip flop keeps us real, etc. I wonder what's the best strategy. // Or we just write the paper for real tensors and only add a remark about how to generalize.}
+\MW{Real vs complex matrices. Current thinking is to stick to real tensors throughout (to avoid distracting stats folks) and to add a remark or subsection that explains how to deal with complex tensors.}
 
 \subsection{Results}
 
