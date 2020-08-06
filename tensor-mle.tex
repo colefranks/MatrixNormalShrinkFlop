@@ -188,12 +188,11 @@ Both likelihoods are geodesically convex, as will be defined precisely in the ne
 Restricting $\tilde L$ to $\Sigma$ of the form $\bigotimes_{a = 1}^{k} \Sigma_a$, or equivalently $\Theta = \bigotimes_{a = 1}^{k} \Theta_a$, we are led to consider the minima of the following function. 
 \begin{definition}[Projective log-likelihood function]\label{dfn:function}
 Given $\vec{X} = (X_1, \dots, X_n)$, let the function $f_{\vec X}:\bigoplus_{i} \PD_{d_i} \to \R$ be given by 
-\begin{gather}f_{\vec X}(\Theta_1, \dots, \Theta_n) = \log \sum_{i = 1}^n \left\langle X_i,  \bigotimes_{i = 1}^k \Theta_i X_i\right\rangle - \sum_{i = 1}^k \frac{1}{d_i} \log\det \Theta_i. \label{eq:projective-likelihood}\end{gather}
+\begin{gather}f_{\vec X}(\Theta_1, \dots, \Theta_n) = \log \sum_{i = 1}^n \left\langle X_i,  \bigotimes_{j = 1}^k \Theta_j X_i\right\rangle - \sum_{i = 1}^k \frac{1}{d_i} \log\det \Theta_i. \label{eq:projective-likelihood}\end{gather}
 define $\widehat{\Theta}$ to be the minimizer of $f_{\vec X}$ in $\bigoplus_{i} \PD_{d_i}$ if it exists and is unique.
 \end{definition}
 When $\vec X$ is clear from context we will drop it. 
-The choice of the coefficient $1/d_i$ is a matter of convenience and, because renormalizing $\Sigma_i$ changes $\Sigma$ only by a constant factor, does does not change the optima.
-\MW{The `bare' result would be $\frac D{d_i}$, right? Hwo do you renormalize it away?}
+%The choice of the coefficient $1/d_i$ is a matter of convenience and, because renormalizing $\Sigma_i$ changes $\Sigma$ only by a constant factor, does does not change the optima. \MW{The `bare' result would be $\frac D{d_i}$, right? Hwo do you renormalize it away?}
 
 
 \subsection{Sample complexity from goedesic convexity}\label{subsec:outline} Following \cite{FM20}, and in spirit also \CF{cite weisel}, we use geodesic convexity to prove \cref{thm:tensor-frobenius}. \cref{thm:matrix-normal}, proven later in \cref{sec:matrix-normal}, requires the stronger notion of \emph{quantum expansion}.
