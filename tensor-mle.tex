@@ -121,10 +121,11 @@ It remains an open question to show tight bounds for convergence of the MLE in s
 \item I'm going to call $G = \oplus \GL_{d_i}, P = \oplus \PD_{d_i}, H = \oplus \Herm_{d_i}$. Explain somewhere how H is the tangent space.
 \item $\nabla, \nabla^2$ seems fine for geodesic Hessians and gradients. Denote components by $\nabla_a f$, $\nabla^2_{ab} f$. $\nabla f$ means at the identity.
 \item $C, c$ large (resp. small) constants that change line to line. 
-\item anything else we think of. 
+\item $\rho^a$ for marginals \MW{this looks like a power. I would either do $\rho^{(a)}$ or $\rho_a$; the latter is perhaps a bit awkward if we often look at matrix elements.}
+\item anything else we think of.
 \end{itemize}
-\MW{Do we do complex matrices by default (re `Hermitian')?}
-\MW{$\rho^a$ for marginals looks like a power. I would either do $\rho^{(a)}$ or $\rho_a$; the latter is perhaps a bit awkward if we often look at matrix elements.}
+
+\MW{Real vs complex matrices. In 1.2, I think we want to state our results for real Gaussians and perhaps only add a sentence or so about the complex case. In the technical part, it might be conveneint to define g-convexity, gradients, etc in a way that works in both the real + complex case (or to only give the complex definitions). Need to discuss things like how the unique MLE for real samples is automatically real etc, comment that flip flop keeps us real, etc. I wonder what's the best strategy.}
 
 \subsection{Results}
 
