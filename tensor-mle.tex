@@ -427,8 +427,8 @@ The argument for the off-diagonal blocks is similar. We first argue the change o
 \[ \implies M_{w} = (e^{\delta_{b}} \otimes e^{\delta_{b}}) M_{v} (e^{\delta_{a}} \otimes e^{\delta_{a}})   \]
 \[ \implies \|M_{w} - M_{v}\|_{op} \leq O(\|\delta_{a}\|_{op} + \|\delta_{b}\|_{op}) \|M_{v}\|_{op}   \]
 where in the last step we used $\delta \ll 1$. 
-
-The more difficult part of the argument to see (at least for me) is how $\sigma^{ab}$ changes if some other part $c \neq a,b$ is changed, i.e. $\forall d \neq c: \delta_{d} = 0$. First we define $\delta := e^{2 \delta_{c}} - I$, and test vectors $Z,Y$:
+\CF{comment things that we wouldn't want to accidentally leave in, as I have done in the next sentence} 
+The more difficult part of the argument to see \AR{at least for me} is how $\sigma^{ab}$ changes if some other part $c \neq a,b$ is changed, i.e. $\forall d \neq c: \delta_{d} = 0$. First we define $\delta := e^{2 \delta_{c}} - I$, and test vectors $Z,Y$:
 \[ \langle w w^{*} - v v^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle = \langle v v^{*}, \delta \otimes Z \otimes Y \rangle  = \langle Z \otimes Y, V^{*} \delta V \rangle \]
 Here $V \in \R^{d_{c} \times d_{a}d_{b}}$ is the matricized version of $v$, i.e. the $k$-th element of $ij$-th column is $(V_{ij})_{k} := v_{ijk}$. Now in order to use our operator norm bounds, we need to deal with cancelations, so we split into positive and negative parts $Z := Z_{+} - Z_{-}, Y := Y_{+} - Y_{-}$:
 \[ |\langle Z \otimes Y, V^{*} \delta V \rangle| \leq |\langle Z_{\pm} \otimes Y_{\pm}, V^{*} \delta V \rangle |  \]
