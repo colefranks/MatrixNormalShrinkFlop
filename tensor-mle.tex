@@ -758,8 +758,17 @@ Note we've gotten rid of the projection $(I-P)$, but now the left and right Krau
 \[ = \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{Y} Tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) (\E_{Z} Tr [ Z_{i_{1}}^{*} Z_{j_{1}} ... Z_{i_{p}}^{*} Z_{j_{p}} ] )  \]
 Here we used independence of $(Y,Z)$. We eventually want to charge to a term $\E \|\sum_{i} \alpha_{i} Y_{i}\|_{op}$. To this end we notice that since any expectations of polynomials of gaussians with positive coefficients are nonnegative and positive iff the polynomial is even; therefore $\alpha^{\vec{i}} \alpha^{\vec{j}}$ is also positive for all non-vanishing terms. So we can upper bound the term individually by the nc-Holder inequality below
 \[ \leq  \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{Y} Tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) ( \E_{Z} \|Z_{i_{1}}^{*}\|_{2p} ... \|Z_{j_{p}}\|_{2p} )  \]
-\[ = \E_{Y,Z} \left\|\sum_{i} \alpha_{i} \|Z_{i}\|_{2p} Y_{i} \right\|_{2p}^{2p}   \]
-\[ = \E_{Z} \left( \sum_{i} \alpha_{i}^{2} \|Z_{i}\|_{2p}^{2} \right)^{p} \E_{Y} \|Y\|_{2p}^{2p}    \]
+
+\begin{claim}
+For iid $\{Z_{i}\}$ and $\sum_{i} q_{i} = 2p$:
+\[ \E \|Z_{1}\|_{2p}^{q_{1}} ... \|Z_{k}\|_{2p}^{q_{k}} \leq \prod_{i} (\E \|Z_{i}\|_{2p}^{q_{i} \cdot 2p/q_{i}} )^{q_{i}/2p} = \E \|Z\|_{2p}^{2p}    \]
+\end{claim}
+
+\[ \implies \E \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}\|_{2p}^{2p} 
+\leq \E_{Z} \|Z\|_{2p}^{2p} \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{Y} Tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) \]
+\[ = \E_{Z} \|Z\|_{2p}^{2p} \left\| \sum_{i} \alpha_{i} Y_{i} \right\|_{2p}^{2p} 
+= \E_{Z} \|Z\|_{2p}^{2p} \left( \sum_{i} \alpha_{i}^{2} \right)^{p} \E_{Y} \|Y\|_{2p}^{2p}     \]
+In the last step we used that $\sum_{i} c_{i} Y_{i}$ has the same distribution as $\|c\|_{2} Y$ where $\{Y_{i}\}, Y$ are independent gaussians with the same covariance. 
 Finally we can bound $\|\cdot\|_{op}$ by the trace method. Assume wlog (by homogeneity) that $\|\alpha\|_{2} = 1$:
 \[ \E_{Y,Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} \|_{op}^{2p} \leq \E_{Y,Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} \|_{2p}^{2p} \]
 \[ \leq ( \E \|Y\|_{2p}^{2p} )^{2} \leq ( m \E \|Y\|_{op}^{2p} )^{2} \leq m^{2} (\E \|Y\|_{op} + O(\sqrt{\frac{2p}{m+n}}))^{4p} \]
