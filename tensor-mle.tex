@@ -1084,6 +1084,39 @@ The problem remaining is that eigenvectors are not continuous objects, so a boun
 \end{enumerate}
 
 
+\subsection{Operator Norm Monotonicity}
+
+Our quantum setting is that we have $\{X_{1}, ..., X_{n}\}$ gaussian samples $X \sim N(0, \frac{1}{n} \otimes_{a} \frac{1}{d_{a}} I_{a})$ and we want to show the optimizers of the log-Likelihood function is "nearby". In the classical setting we have $k$-tensor with entries from the $\chi$-square distribution with mean $\frac{1}{nD}$ and $n$ degrees of freedom: $\chi(\frac{1}{D},n)$. For any given torus $T \subseteq G$, the Kempf-Ness function of our quantum input on this torus looks the same as a classical input. 
+
+\begin{claim}
+If we condition on $T$ being the "minimizing torus" so that the optimizer of the log-likelihood function lies in this torus, then the input looks like the classical setting. 
+\end{claim}
+
+By the above reduction, if we can prove a bound on the optimizer for a fixed torus, then we have shown the same bound in the quantum setting. 
+
+\begin{fact}
+For $A \in \R^{n \times m}$, $\|A\|_{\infty \to \infty} \leq \max_{i \in n} \sum_{j \in [m]} |A_{ij}|$. 
+\end{fact}
+
+We consider $A$ to be a bipartite marginal, so with entries $\chi(\frac{1}{d_{a} d_{b}}, \frac{nD}{d_{a} d_{b}})$. With high probability the row sums are $\in \frac{1 \pm \eps}{d_{a}}$ and the column sums are $\in \frac{1 \pm \eps}{d_{b}}$, so $\|A\|_{\infty \to \infty} \leq \frac{1+\eps}{d_{a}}$. We want to show that the gradient flow decreases the operator norm of the moment map:
+\[ -\partial_{t} \langle \mu, e_{a} \otimes e_{i} \rangle = (\rho_{a})_{i} d_{a} (\mu_{a})_{i} + \sum_{b \neq a} \langle e_{i} , A^{ab} d_{b} \mu_{b} \rangle    \]
+Here $(\rho_{a})_{i} \in \frac{1 \pm \eps}{d_{a}}$, and the first term has the same sign as $(\mu_{a})_{i}$ and so is pushing the correct way. We would like to show all other forces (from $b \neq a$) cannot push enough to go the wrong way. 
+\[ -\partial_{t} |(\mu_{a})_{i}| \geq |(\mu_{a})_{i}| d_{a} (\rho_{a})_{i} - \sum_{b \neq a} \|A^{ab}\|_{\infty \to \infty} \|d_{b} \mu_{b}\|_{\infty}      \]
+Then if e.g. $\forall b \neq a: \|A^{ab}\|_{\infty \to \infty} \ll 1/k d_{a}$ and we consider $(a,i)$ to be the marginal with highest error, this error is decreasing exponentially. 
+
+Let $\langle y, \vec{1}_{b} \rangle = 0$:
+\[ \E \sum_{j} y_{j} \chi(\frac{1}{d_{a} d_{b}}, \frac{nD}{d_{a} d_{b}}) = \sum_{j} y_{j} \frac{1}{d_{a} d_{b}} = 0   \]
+\[ \log \E \exp \theta \sum_{j} y_{j} \chi(\frac{1}{d_{a} d_{b}}, \frac{nD}{d_{a} d_{b}}) = \sum_{j} \frac{-n D}{2d_{a} d_{b}} \log \left( 1 - \frac{2 \theta y_{j}}{n D} \right)    \]
+\[ \lesssim \theta^{2} \frac{\|y\|_{2}^{2}}{n D d_{a} d_{b}} \hspace{5mm} \forall \theta \lesssim \left( \frac{\|y\|_{\infty}}{n D}  \right)^{-1}    \]
+\[ \implies \Pr [|\cdot| \geq t] \leq \begin{cases}
+\exp \left( - \frac{\Omega(n D d_{a} d_{b} t^{2})}{\|y\|_{2}^{2}} & \forall t \lesssim \frac{\|y\|_{2}^{2}}{d_{a} d_{b} \|y\|_{\infty}}   \right)
+\\ \exp \left( - \frac{ \Omega(n D t) }{\|y\|_{\infty}} \right) & o.w.  \end{cases}   \]
+To bound $\|A\|_{\infty \to \infty} \ll 1/k d_{a}$, we choose $t \ll \frac{\|y\|_{\infty}}{k d_{a}}$ which is in the second case. So we get probability $\leq \exp( - \frac{n D}{k d_{a}} )$. If we run a net over $\R^{d_{b}} \perp \vec{1}_{b}$ of size $\exp(\Tilde{O}(d_{b}))$ and union bound over all rows, we get $\|A\|_{\infty \to \infty} \ll 1/k d_{a}$ whp whenever $n D \gg k d_{a}( d_{b} + \log d_{a} ) $. 
+
+To make this robust to perturbations we could either give a deterministic bound on how a perturbation affects $\|A\|_{\infty \to \infty}$; or we could run the net over all perturbations near $I$ of size $\exp( \sum_{a} d_{a} )$. Either way we should get that $\|\mu\|_{op}$ is decreasing for all time when $nD \sim \Tilde{O}_{k}(\max_{ab} d_{a} d_{b} )$
+
+
+
 \section{Old stuff}
 
 \subsection{Different Inner Product}
