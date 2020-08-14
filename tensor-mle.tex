@@ -801,10 +801,12 @@ Note we've gotten rid of the projection $(I-P)$, but now the left and right Krau
 Here we used independence of $(Y,Z)$. We eventually want to charge to a term $\E \|\sum_{i} \alpha_{i} Y_{i}\|_{op}$. To this end we notice that since any expectations of polynomials of gaussians with positive coefficients are nonnegative and positive iff the polynomial is even; therefore $\alpha^{\vec{i}} \alpha^{\vec{j}}$ is also positive for all non-vanishing terms. So we can upper bound the term individually by the nc-Holder inequality below
 \[ \leq  \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{Y} Tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) ( \E_{Z} \|Z_{i_{1}}^{*}\|_{2p} ... \|Z_{j_{p}}\|_{2p} )  \]
 
-\begin{claim}
-For iid $\{Z_{i}\}$ and $\sum_{i} q_{i} = 2p$:
-\[ \E \|Z_{1}\|_{2p}^{q_{1}} ... \|Z_{k}\|_{2p}^{q_{k}} \leq \prod_{i} (\E \|Z_{i}\|_{2p}^{q_{i} \cdot 2p/q_{i}} )^{q_{i}/2p} = \E \|Z\|_{2p}^{2p}    \]
-\end{claim}
+We have $\E \|Z\|_{2p}^{k} \leq ( \E \|Z\|_{2p}^{2p} )^{k/2p}$ by Jensen's inequality, so we can collect like terms together:
+
+%\begin{claim}
+%For iid $\{Z_{i}\}$ and $\sum_{i} q_{i} = 2p$:
+%\[ \E \|Z_{1}\|_{2p}^{q_{1}} ... \|Z_{k}\|_{2p}^{q_{k}} \leq \prod_{i} (\E \|Z_{i}\|_{2p}^{q_{i} \cdot 2p/q_{i}} )^{q_{i}/2p} = \E \|Z\|_{2p}^{2p}    \]
+%\end{claim}
 
 \[ \implies \E \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}\|_{2p}^{2p} 
 \leq \E_{Z} \|Z\|_{2p}^{2p} \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{Y} Tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) \]
@@ -813,13 +815,13 @@ For iid $\{Z_{i}\}$ and $\sum_{i} q_{i} = 2p$:
 In the last step we used that $\sum_{i} c_{i} Y_{i}$ has the same distribution as $\|c\|_{2} Y$ where $\{Y_{i}\}, Y$ are independent gaussians with the same covariance. 
 Finally we can bound $\|\cdot\|_{op}$ by the trace method. Assume wlog (by homogeneity) that $\|\alpha\|_{2} = 1$:
 \[ \E_{Y,Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} \|_{op}^{2p} \leq \E_{Y,Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} \|_{2p}^{2p} \]
-\[ \leq ( \E \|Y\|_{2p}^{2p} )^{2} \leq ( m \E \|Y\|_{op}^{2p} )^{2} \leq m^{2} (\E \|Y\|_{op} + O(\sqrt{\frac{2p}{m+n}}))^{4p} \]
+\[ \leq ( \E \|Y\|_{2p}^{2p} )^{2} \leq ( m \E \|Y\|_{op}^{2p} )^{2} \leq m^{2} \left(\E \|Y\|_{op} + O(\sqrt{\frac{2p}{m+n}}) \right)^{4p} \]
 So choosing $p \sim \log m$ gives the bound. 
 \end{proof}
 
 \begin{theorem}
-For $p = 2^{m}$, we have the following generalization of Holder's inequality
-\[ |Tr[\prod_{i} A_{i}]| \leq \prod_{i} \|A_{i}\|_{p}   \]
+For $p = 2^{m}$, we have the following (Holder's type) inequality
+\[ |Tr[\prod_{i=1}^{p} A_{i}]| \leq \prod_{i=1}^{p} \|A_{i}\|_{p}   \]
 \end{theorem}
 \begin{proof} [Tao notes]
 Done by induction. Note if $A$ are Hermitian, there is a simple tensor trick which allows us to prove the above for all $p \in \mathbb{N}$. 
@@ -1043,6 +1045,12 @@ Now we analyze one of these terms (by abuse of notation $Z, Y \succ 0$):
 \[ \leq \langle Z \otimes Y, V^{*} |\delta| V \rangle \leq \|\delta\|_{op} \langle Z \otimes Y, V^{*} V \rangle = \|\delta\|_{op} \langle v v^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle   \]
 Each of these terms we can bound by $\sigma^{ab}_{1} \|Z\|_{F} \|Y\|_{F}$. (Note we can save a $2$-factor on these four terms since they are decompositions of $Z,Y$). So by iterating this argument over all $c$, we get the desired bound. 
 \end{proof}
+
+\begin{remark}
+Instead of $F$, we could use any pair of dual norms and get the same result. In particular, we will use these results to bound the $1 \to 1$ and $op \to op$ norms of the channels. Explicitly, if we redefine $\sigma := \|\Phi\|_{p \to p}$ and $(p,q)$ are Holder conjuguates:
+\[ \langle v v^{*}, \delta \otimes Z \otimes Y \rangle \leq \|\delta\|_{op} \langle v v^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle \leq \sigma \|\delta\|_{op} \|Z_{\pm}\|_{p} \|Y_{\pm}\|_{q} \]
+\[ \leq \sigma \|\delta\|_{op} (2\|Z_{+}\|_{p}^{p} + 2\|Z_{-}\|_{p}^{p})^{1/p} (2\|Y_{+}\|_{q}^{q} + 2\|Y_{-}\|_{q}^{q})^{1/q} = 2 \sigma \|\delta\|_{op} \|Z\|_{p} \|Y\|_{q}     \]
+\end{remark}
 
 \subsection{Conclusion}
 At the end of the day we require $nD \gtrsim \max_{a} d_{a}^{3} \log D$ to get small enough $\nabla$ and robust expansion. Note this is $d \log D$ away from the existence/ uniqueness threshold for the solution. 
