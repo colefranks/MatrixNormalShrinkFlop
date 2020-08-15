@@ -1159,7 +1159,7 @@ Let $\langle y, \vec{1}_{b} \rangle = 0$:
 \[ \log \E \exp \theta \sum_{j} y_{j} \chi(\frac{1}{d_{a} d_{b}}, \frac{nD}{d_{a} d_{b}}) = \sum_{j} \frac{-n D}{2d_{a} d_{b}} \log \left( 1 - \frac{2 \theta y_{j}}{n D} \right)    \]
 \[ \lesssim \theta^{2} \frac{\|y\|_{2}^{2}}{n D d_{a} d_{b}} \hspace{5mm} \forall \theta \lesssim \left( \frac{\|y\|_{\infty}}{n D}  \right)^{-1}    \]
 \[ \implies \Pr [|\cdot| \geq t] \leq \begin{cases}
-\exp \left( - \frac{\Omega(n D d_{a} d_{b} t^{2})}{\|y\|_{2}^{2}} & \forall t \lesssim \frac{\|y\|_{2}^{2}}{d_{a} d_{b} \|y\|_{\infty}}   \right)
+\exp \left( - \frac{\Omega(n D d_{a} d_{b} t^{2})}{\|y\|_{2}^{2}} \right) & \forall t \lesssim \frac{\|y\|_{2}^{2}}{d_{a} d_{b} \|y\|_{\infty}}   
 \\ \exp \left( - \frac{ \Omega(n D t) }{\|y\|_{\infty}} \right) & o.w.  \end{cases}   \]
 To bound $\|A\|_{\infty \to \infty} \ll 1/k d_{a}$, we choose $t \ll \frac{\|y\|_{\infty}}{k d_{a}}$ which is in the second case. So we get probability $\leq \exp( - \frac{n D}{k d_{a}} )$. If we run a net over $\R^{d_{b}} \perp \vec{1}_{b}$ of size $\exp(\Tilde{O}(d_{b}))$ and union bound over all rows, we get $\|A\|_{\infty \to \infty} \ll 1/k d_{a}$ whp whenever $n D \gg k d_{a}( d_{b} + \log d_{a} ) $. 
 
