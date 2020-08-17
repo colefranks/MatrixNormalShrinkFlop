@@ -476,14 +476,14 @@ The rationale for the above definition is that $\Phi$ is doubly balanced when $(
 Our main tool is the following:
 
 
-\begin{theorem}[\CF{cite klr; check}]\label{thm:klr}
-If $\Phi$ is a $\eps$-balanced, $(1 - \lambda)$-quantum expander, and $\eps \leq c \lambda^2/\log d_1$, then the maximum likelihood estimator $(\widehat{\Theta}_1, \widehat{\Theta}_2) \in \SL_{d_1}\times \SL_{d_2}$ is unique and satisfies
+\begin{theorem}[\CF{cite klr, comment about how to assume in SL?}]\label{thm:klr}
+If $\Phi$ is an $\eps$-balanced, $(1 - \lambda)$-quantum expander, and $\eps \leq c \lambda^2/\log d_1$, then the maximum likelihood estimator $(\widehat{\Theta}_1, \widehat{\Theta}_2) \in \SL_{d_1}\times \SL_{d_2}$ is unique and satisfies
 $$\| \widehat{\Theta}_1 - I_{d_1}\|_{op}, \| \widehat{\Theta}_2 - I_{d_2}\|_{op} \leq \frac{\eps \log d_1}{\lambda}.$$ 
 \end{theorem}
 Our main result for this section is that $\Phi$ is with high probability a good quantum expander, which allows us to apply the previous theorem.
 
 \begin{theorem}\label{thm:operator-cheeger}
-There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is $\eps \sqrt{d_2/n d_1}$-balanced and a $1 - c$ quantum expander with failure probability $O(e^{ - \Omega( d_2 \eps^2)} + e^{ - \Omega( n d_1)})$ provided $n \geq C(d_2/d_1) \log (d_2/d_1)$. 
+There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is $\eps \sqrt{d_2/n d_1}$-balanced and a $1 - c$ quantum expander with failure probability $$O(e^{ - \Omega( d_2 \eps^2)} + e^{ - \Omega( n d_1)}).$$
 \end{theorem}
 
 Before proving the above result, we use it to prove \cref{thm:matrix-normal}. 
