@@ -144,20 +144,20 @@ d_{op}(\Sigma_1, \Sigma_2) = \| I - \Sigma_2^{1/2} \Sigma_1^{-1} \Sigma_2^{1/2}\
 
 We may now state precisely our result for the tensor normal models.
 
-\begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius} Suppose $\eps \leq c$ and the number of samples satisfies $n \geq C k \max d_{a}^3/D\eps^2$. The MLE $(\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) $ for $(\Theta_1, \dots \Theta_k)$ from $n$ independent samples satisfies 
-$$ d_{F}(\widehat{\Theta}_i, \Theta_i) \leq \eps $$
-for $i \in [k]$ with probability $1 - \CF{1/poly(D)}$.
+\begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius} Suppose $\eps \leq c$ and the number of samples satisfies $n \geq C k \max d_{a}^3/D\eps^2$. The MLE $(\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) $ for $(\Theta_1, \dots \Theta_k)$ from $n$ independent samples of the tensor normal model satisfies 
+$$ d_{F}(\widehat{\Theta}_a, \Theta_a) \leq \eps $$
+for $a \in [k]$ with probability $1 - \CF{1/poly(D)}$.
 \end{theorem}
 
-In the case of matrix normal models $(k=2)$, we also obtain the following result.
+\CF{explain tightness; the distance bounds are tight but when they kick in is not necessarily tight. Truly tight bounds would follow from operator norm analysis.} In the case of matrix normal models $(k=2)$, we obtain the following stronger result.
 
-\begin{theorem}[Matrix normal model spectral error]\label{thm:matrix-normal} The MLE $(\hat{\Sigma}_1,\hat{\Sigma}_2) $ for $(\Sigma_1, \Sigma_2)$ from $n$ independent samples satisfies 
-$$ d_{op}(\hat{\Sigma}_i, \Sigma_i) = O(\TODO{}) $$
-for $i = \{1,2\}$ with probability $\TODO{}$.
-\CF{presumably there will be some dimension-dependent factors}.
+\begin{theorem}[Matrix normal model spectral error]\label{thm:matrix-normal} Suppose $d_1 \leq d_2$,
+$$n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \log^2(d_1) \eps^{-2}\}$$ for $C$ a large enough constant and $\eps < c$ for a small enough constant $c$. The MLE $(\widehat{\Theta}_1,\widehat{\Theta}_2) $ for $(\Theta_1, \Theta_2)$ from $n$ independent samples of the matrix normal model satisfies 
+$$ d_{op}(\widehat{\Theta}_a, \Theta_a) = O\left(\eps \sqrt{\frac{d_2}{n d_1}} \log d_1\right) $$
+for $a \in \{1,2\}$ with probability $1 - O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)})$.
 \end{theorem}
 
-Our next results show that in either case the flip-flop algorithm can find the MLEs with high probability.
+Our next results show that in either case the flip-flop algorithm can find the MLEs with high probability. \TODO{change flip flops to thetas}
 
 \begin{theorem}[Tensor flip-flop]\label{thm:tensor-flipflop} If $\hat{\Sigma}$ denotes the MLE estimator for $\Sigma$, then provided $n \geq \TODO{}$ the flip-flop algorithm computes $\underline{\Sigma}$ with 
 $$ d_F(\underline{\Sigma}, \hat{\Sigma}) \leq \eps $$
@@ -170,9 +170,6 @@ for $i \in \{1,2\}$ in $O(\TODO{\log(1/\eps)})$ iterations with probability at l
 \end{theorem}
 
 One may wonder why in the above theorems we consider the distances for the individual tensor factors and not the covariance matrix itself, but tight bounds for the covariance matrix itself follow from the above bounds (apart from the logarithmic factor in the matrix normal case and a constant factor in general).
-
-\CF{make the same changes to the other guys - make sure it's the right thing}.
-
 
 \section{Tensor normal models}
 We now give a precise definition of the MLE in the tensor normal model, in which $X$ is sampled according to $N(0, \Sigma = \bigotimes_{a = 1}^{k} \Sigma_a)$ for $\Sigma_a$ a positive-definite $d_a\times d_a$ matrix. Let $D = \prod_{a \in [k]} d_a$. The matrix normal model is the case $k = 2$. 
@@ -208,7 +205,7 @@ With this definition in place, we are able to state the rather simple plan.
 \begin{enumerate}
 \item\label{it:reduce} \textbf{Reduce to identity: } Firstly, note that $\widehat{\Theta}(\vec X) = \Theta^{1/2} \hat{\Theta}(\Theta^{-1/2} \vec X) \Theta^{1/2}$. As $\Theta^{-1/2} \vec X$ is distributed as $n$ samples from $\Theta^{-1/2}X$ which is a standard Gaussian, the distance 
 $$ d(\hat{\Theta}(\vec X), I)$$
-for $X$ standard Gaussian is distributed exactly as $d(\hat{\Theta}(\vec X), \Theta)$ for $X$ with covariance matrix $\Theta$. This means it is enough to bound $d(\hat{\Theta}(\vec X), I)$ assuming $\vec X$ is a standard Gaussian.
+for $X$ standard Gaussian is distributed exactly as $d(\hat{\Theta}(\vec X), \Theta)$ for $X$ with covariance matrix $\Theta$. Here $d \in \{d_F, d_{op}\}$. This means it is enough to bound $d(\hat{\Theta}(\vec X), I)$ assuming $\vec X$ is a standard Gaussian.  
 \item\label{it:convexity} \textbf{Show strong convexity: } Show that, with high probability, $f_{\vec X}$ is $\Omega(1)$-geodesically strongly convex near $I$ w.r.t. $\|\cdot\|_{\vec d}$.
 \item\label{it:grad} \textbf{Bound the gradient: } Show that $\| \nabla f_{\vec X} (I) \|_{\vec d}$ is small with high probability.
 %(w.r.t. the dual norm $\|\cdot\|_{*}$). \CF{Probably need to say something about why geodesic distance and $d$ are comparable.}
@@ -466,29 +463,34 @@ $$\Phi(Y) = \sum_{i = 1}^n X_i^T Y X_i.$$
 $\Phi$ is known as the \emph{completely positive map} with Kraus operators $X_1, \dots, X_n$. 
 \item $\Phi$ is said to be a \emph{$(1 - \lambda)$-quantum expander} if the second singular value $\sigma_2(\Phi)$ satisfies the following bound:
 $$\sigma_2(\Phi) \leq \frac{(1 - \lambda)}{\sqrt{d_1d_2}} \tr \Phi(I_{d_2}).$$
-\item \CF{\emph{balanced-ness}.}
+\item Say $\Phi$ is \emph{$\eps$-doubly balanced} if 
+\begin{align*}
+\|d_2 \Phi(I_{d_1})/\tr \Phi(I_{d_1})  - I_{d_2} \|_{op}& \leq \eps\\
+\textrm{and }\|d_1 \Phi^*(I_{d_2})/\tr \Phi(I_{d_1})  - I_{d_1}  \|_{op} & \leq \eps,
+\end{align*}
 \end{enumerate}
 \end{definition}
 
-The rationale for the above definition is that when $(I_{d_2}/\sqrt{d_2}, I_{d_1}/\sqrt{d_1})$ is in fact a singular pair for $\Phi$, as will approximately be the case in our setting, we have $\sigma_1(\Phi) =  \tr \Phi(I_{d_2})/\sqrt{d_1 d_2}.$ Thus $(1-\lambda)$ is like a spectral gap.
+The rationale for the above definition is that $\Phi$ is doubly balanced when $(I_{d_1}/\sqrt{d_1}, I_{d_2}/\sqrt{d_2})$ is a singular pair for $\Phi$. This will approximately be the case in our setting (in fact, $\eps$-balancedness is none other than the conclusion of \cref{lemma:gradient-bound} for $k = 2$), and in this case $\sigma_1(\Phi) =  \tr \Phi(I_{d_1})/\sqrt{d_1 d_2}.$ Thus $(1-\lambda)$ is like a spectral gap.
 %$\sigma_1(\Phi) = \langle I_{d_1}/\sqrt{d_1}, \Phi(I_{d_1}/\sqrt{d_2}) \rangle$
 Our main tool is the following:
 
 
 \begin{theorem}[\CF{cite klr; check}]\label{thm:klr}
-If $\Phi$ is an $\eps$-balanced, $(1 - \lambda)$-quantum expander, and $\eps \leq c \lambda^2/\log p$, then there is a scaling solution $L, R$ such that $\|L - I\|_{op} \leq \eps \log p/\lambda$. 
+If $\Phi$ is a $\eps$-balanced, $(1 - \lambda)$-quantum expander, and $\eps \leq c \lambda^2/\log d_1$, then the maximum likelihood estimator $(\widehat{\Theta}_1, \widehat{\Theta}_2) \in \SL_{d_1}\times \SL_{d_2}$ is unique and satisfies
+$$\| \widehat{\Theta}_1 - I_{d_1}\|_{op}, \| \widehat{\Theta}_2 - I_{d_2}\|_{op} \leq \frac{\eps \log d_1}{\lambda}.$$ 
 \end{theorem}
 Our main result for this section is that $\Phi$ is with high probability a good quantum expander, which allows us to apply the previous theorem.
 
-\begin{theorem}[\CF{check}]\label{thm:operator-cheeger}
-There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. If the entries of the $n$ Kraus operators of $\Phi$ are drawn from standard Gaussians, then $\Phi$ is $C\sqrt{d_2/n d_1}$-balanced and a $1 - c$ quantum expander with probability $e^{ - \Omega( nd_1)}$ provided $n \geq C\max\{(d_2/d_1) \log (d_2/d_1)\}$. 
+\begin{theorem}\label{thm:operator-cheeger}
+There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is $\eps \sqrt{d_2/n d_1}$-balanced and a $1 - c$ quantum expander with failure probability $O(e^{ - \Omega( d_2 \eps^2)} + e^{ - \Omega( n d_1)})$ provided $n \geq C(d_2/d_1) \log (d_2/d_1)$. 
 \end{theorem}
 
 Before proving the above result, we use it to prove \cref{thm:matrix-normal}. 
 
-\begin{proof}[Proof of \cref{thm:matrix-normal}]
-\CF{todo; not hard, literally stringing the two together.}
-
+\begin{proof}[Proof of \cref{thm:matrix-normal}] As discussed in \cref{subsec:outline}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. By \cref{thm:operator-cheeger}, provided $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps_0^{-2}\} $ with probability $1 - O(e^{ - \Omega( d_2 \eps_0^2)} + e^{-\Omega(n d_1)})$ the operator $\Phi$ is $\delta:=\eps_0  \sqrt{\frac{d_2}{n d_1}}$-balanced and is a $(1 - c)$-quantum expander. Condition on this event. By our choice of $n$, we have $\delta \leq \lambda^2/\log d_1$ if we take $\eps_0 = \eps/\log(d_1)$ for $\eps \leq c$. By \cref{thm:klr}, 
+\begin{gather*} \| \widehat{\Theta}_1 - I_{d_1}\|_{op}, \| \widehat{\Theta}_2 - I_{d_2}\|_{op} \leq C \eps_0 \sqrt{\frac{d_2}{n d_1}} \log d_1 = O\left(\eps \sqrt{\frac{d_2}{n d_1}}\right).\qedhere\end{gather*}
+The failure probability becomes $O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)} + e^{-\Omega(n d_1)})$; note that by our choice of $n$, $n d_1 \geq C d_2 \log (d_1/d_2) \geq d_2 \eps^2/\log^2 d_1$ so that the second term is dominated by the first.
 \end{proof}
 
 
@@ -504,11 +506,11 @@ Before proving the above result, we use it to prove \cref{thm:matrix-normal}.
 
 \subsection{The Cheeger constant of a random operator}
 
-To prove \cref{thm:operator-cheeger}, we first define the Cheeger constant of an operator $\Phi:\mat(d_1) \to \mat(d_2)$. This is similar to a concept defined in \cite{H07}.
+To prove \cref{thm:operator-cheeger}, we first define the Cheeger constant of an operator $\Phi:\mat(d_1) \to \mat(d_2)$. This is similar to a concept defined in \cite{H07}. 
 \begin{definition}
 Let $\Phi : \mat(d_1) \to \mat(d_2)$ be a completely positive map. The Cheeger constant $\ch(\Phi)$ of the weighted bipartite graph associated to $B$ is given by 
-$$\ch(\Phi):=\min_{\Pi_1, \Pi_2: \vol(\Pi_1, \Pi_2) \leq \tr \Phi} \phi(\Pi_1,\Pi_2)$$
-where $\Pi_1: \C^{d_1} \to \C^{d_1}$ and $\Pi_1: \C^{d_2} \to \C^{d_2}$ are orthogonal projections and the \emph{conductance} $\phi$ of the cut $\Pi_1, \Pi_2$ is defined to be
+$$\ch(\Phi):=\min_{\Pi_1, \Pi_2: \vol(\Pi_1, \Pi_2) \leq \tr \Phi(I)} \phi(\Pi_1,\Pi_2)$$
+where $\Pi_1: \C^{d_1} \to \C^{d_1}$ and $\Pi_1: \C^{d_2} \to \C^{d_2}$ are orthogonal projections that are not both zero and the \emph{conductance} $\phi$ of the cut $\Pi_1, \Pi_2$ is defined to be
 $$\phi(\Pi_1,\Pi_2) := \frac{\cut(\Pi_1, \Pi_2)}{\vol(\Pi_1,\Pi_2)}$$
 where 
 %$$ \vol(\Pi_1,\Pi_2):= \sum_{i \in T, j \in [d_2]} b_{ij} + \sum_{i \in [d_1], j \in S} b_{ij}\textrm{ and } \cut(S, T):= \sum_{i \not\in T, j  \in S} b_{ij} + \sum_{i \in T, j \not\in S} b_{ij}.$$
@@ -524,19 +526,19 @@ We now cite a slight generalization of \cite{FM20}.
 $$ \max\left\{1/2, 1 -  \ch(\Phi)^2 + C \frac{\eps}{\ch(\Phi)^2} \right\}$$
 quantum expander.
 \end{lemma}
+We proceed to bound the Cheeger constant of a random operator. The Cheeger constant of an operator is scale-invariant, so for convenience we let $\Phi$ have Kraus operators $X_1, \dots, X_n$, each drawn from $N(0,  I_{d_1} \ot I_{d_2}).$ Our main observation is the following. 
 
-We proceed to bound the Cheeger constant of a random operator. The Cheeger constant of an operator is scale-invariant, so for convenience we let $\Phi$ have Kraus operators $A_1, \dots, A_n$, each drawn from $N(0,  I_{d_1} \ot I_{d_2}).$ Our main observation is the following. 
-\begin{fact}\label{fact:chi} Let $\Pi_1:\C^{d_1} \to \C^{d_1}, \Pi_2: \C^{d_2} \to \C^{d_2}$ be orthogonal projections, of rank $r_1, r_2$, respectively. Then $\cut(\Pi_1, \Pi_2), \vol(\Pi_1, \Pi_2), \vol(I_{d_1}, I_{d_2})$ is jointly distributed as 
-$$ X, X + 2Y, 2X + 2 Y + 2Z$$ where 
-$X, Y, Z$ are independent $\chi^2$ random variables with $F_1:=n r_1(d_2 - r_2) + n r_2(d_1-r_1), F_2:= n r_1r_2, F_3:= n(d_1 - r_1)(d_2 - r_2)$ degrees of freedom, respectively. 
-\end{fact} 
+\begin{lemma}\label{fact:chi} Let $\Pi_1:\C^{d_1} \to \C^{d_1}, \Pi_2: \C^{d_2} \to \C^{d_2}$ be orthogonal projections, of rank $r_1, r_2$, respectively. Then $\cut(\Pi_1, \Pi_2), \vol(\Pi_1, \Pi_2), \vol(I_{d_1}, I_{d_2})$ is jointly distributed as 
+$$ R_1, R_1 + 2R_2, 2R_1 + 2 R_2 + 2R_3$$ where 
+$R_1, R_2, R_3$ are independent $\chi^2$ random variables with $F_1:=n r_1(d_2 - r_2) + n r_2(d_1-r_1), F_2:= n r_1r_2, F_3:= n(d_1 - r_1)(d_2 - r_2)$ degrees of freedom, respectively. 
+\end{lemma} 
 \begin{proof} As the distribution of $\Phi$ is invariant under the action of unitaries, the distribution of $\cut(\Pi_1, \Pi_2), \vol(\Pi_1, \Pi_2)$ depends only on the rank of $\Pi_1, \Pi_2$. Thus we may compute in the case that $\Pi_1, \Pi_2$ are coordinate projections, in which case one may verify the fact straightforwardly. 
 \end{proof}
 
 
  We show a sufficient condition for the Cheeger constant being bounded away from $1$ that is amenable to the previous distributional description.
 \begin{lemma}\label{lem:suff}
-Let $r_1, r_2$ be the ranks of projections $\Pi_1: \C^{d_1} \to \C^{d_1}, \Pi_2: \C^{d_2} \to \C^{d_2}$, and let $F_1:= n r_1(d_2 - r_2) + n r_2(d_1-r_1)$ and $F_2:=n r_1r_2.$ If 
+Let $r_1, r_2$ not both zero be the ranks of projections $\Pi_1: \C^{d_1} \to \C^{d_1}, \Pi_2: \C^{d_2} \to \C^{d_2}$, and let $F_1:= n r_1(d_2 - r_2) + n r_2(d_1-r_1)$ and $F_2:=n r_1r_2.$ If 
 \begin{itemize}
 \item for all $\Pi_1, \Pi_2$ such that $F_2 \geq (4/9) n d_1 d_2$ we have 
 \begin{gather}\vol(\Pi_1, \Pi_2) \geq (1/2 - \delta) \vol(I_{d_1}, I_{d_2}),\label{eq:vol}\end{gather} and
@@ -545,7 +547,7 @@ Let $r_1, r_2$ be the ranks of projections $\Pi_1: \C^{d_1} \to \C^{d_1}, \Pi_2:
 \end{itemize}
 then $\ch(\Phi) \geq 1/6 - O(\delta)$ for $\delta \leq c$.
 \end{lemma}
-\begin{proof} By the first assumption, it remains to show that $F_1/(F_1 + 2 F_2) \geq 1/3$ provided $F_2 < (4/9) n d_1 d_2$, or $r_1 r_2 < (4/9) d_1 d_2$. Indeed, 
+\begin{proof} By the first assumption, it remains to show that $F_1/(F_1 + 2 F_2) \geq 1/3$ provided $F_2 < (4/9) n d_1 d_2$, or $r_1 r_2 < (4/9) d_1 d_2$. Indeed, if either $r_1 = 0$ or $r_2 = 0$, then $F_2 = 0$ and $F_1>0$ and the claim holds, else
 \begin{align*}F_1/(F_1 + 2 F_2) &= \frac{r_1 d_2 + r_2 d_1 - 2 r_1 r_2}{r_1 d_2 + r_2 d_1}\\
  &= 1 -2 \sqrt\frac{ r_1 r_2}{d_1 d_2} \frac{1}{ \sqrt{ r_1 d_2/r_2 d_1} + \sqrt{r_2 d_1/ r_1 d_2}} \\
  &\geq 1 - \sqrt{4/9} = 1/3.
@@ -556,7 +558,7 @@ In the last inequality we used that $a + a^{-1} \geq 2$ for all $a \in \R_+$ and
 
 Next we use this to show that for fixed $\Pi_1, \Pi_2$, with high probability the events in \cref{lem:suff} hold. 
 \begin{lemma}\label{lem:probabilities}
-Let $r_1, r_2$ be the ranks of projections $\Pi_1: \C^{d_1} \to \C^{d_1}, \Pi_2: \C^{d_2} \to \C^{d_2}$, and let $F_1:= n r_1(d_2 - r_2) + n r_2(d_1-r_1)$ and $F_2 = n r_1 r_2$. Then 
+Let $r_1, r_2$ not both zero be the ranks of projections $\Pi_1: \C^{d_1} \to \C^{d_1}, \Pi_2: \C^{d_2} \to \C^{d_2}$, and let $F_1:= n r_1(d_2 - r_2) + n r_2(d_1-r_1)$ and $F_2 = n r_1 r_2$. Then 
 \begin{itemize}
 \item if $F_2 \geq (4/9) n d_1 d_2$, then \cref{eq:vol} holds with $\delta = 0$ with probability at least $1 - e^{-\Omega( n d_1 d_2)}$. 
 \item else, \cref{eq:cut} holds with $\delta = 0$ with probability at least $1 - e^{-\Omega( F_1)}$. 
@@ -566,20 +568,21 @@ Let $r_1, r_2$ be the ranks of projections $\Pi_1: \C^{d_1} \to \C^{d_1}, \Pi_2:
 
 
 \begin{proof}
-Recall from \cref{fact:chi} that, $\cut(\Pi_1, \Pi_2), \vol(\Pi_1, \Pi_2), \vol(I_{d_1}, I_{d_2})$ are jointly distributed as $X, X + 2Y, 2X + 2Y + 2Z$ for $X, Y, Z$ independent $\chi^2$ random variables with $F_1, F_2, F_3$ degrees of freedom, respectively. Thus it is enough to show that 
+Recall from \cref{fact:chi} that, $\cut(\Pi_1, \Pi_2), \vol(\Pi_1, \Pi_2), \vol(I_{d_1}, I_{d_2})$ are jointly distributed as $R_1, R_1 + 2R_2, 2R_1 + 2R_2 + 2R_3$ for $R_1, R_2, R_3$ independent $\chi^2$ random variables with $F_1, F_2, F_3$ degrees of freedom, respectively. Thus it is enough to show that 
 \begin{itemize}
-\item If $nr_1 r_2 \geq (4/9) n d_1 d_2$, then with probability $1 - e^{- \Omega( n d_1 d_2)}$ we have $Y > Z$, and 
-\item if $nr_1 r_2 \leq (2/3) n d_1 d_2$, then with probability $1 - e^{- \Omega(F_1)}$ we have $X \geq (2/3) F_1$ and $X + 2Y \leq (4/3) (F_1 + 2 F_2),$ 
-\item and with probability $1 - e^{- \Omega(F_1 + 2 F_2)}$, $X + 2Y \geq (2/3) (F_1 + 2 F_2) = (2/3) n (r_1 d_2 + r_2 d_1)$ and $X + Y + Z \leq (4/3)(F_1 + F_2 + F_3) = (4/3)n d_1 d_2$. 
+\item If $nr_1 r_2 \geq (4/9) n d_1 d_2$, then with probability $1 - e^{- \Omega( n d_1 d_2)}$ we have $R_2 > R_3$, and 
+\item if $nr_1 r_2 \leq (2/3) n d_1 d_2$, then with probability $1 - e^{- \Omega(F_1)}$ we have $R_1 \geq (2/3) F_1$ and $R_1 + 2R_2 \leq (4/3) (F_1 + 2 F_2),$ 
+\item and with probability $1 - e^{- \Omega(F_1 + 2 F_2)}$, $R_1 + 2R_2 \geq (2/3) (F_1 + 2 F_2) = (2/3) n (r_1 d_2 + r_2 d_1)$ and $R_1 + R_2 + R_3 \leq (4/3)(F_1 + F_2 + F_3) = (4/3)n d_1 d_2$. 
 \end{itemize}
 All three follow from standard results for concentration of $\chi^2$ random variables \cite{W19}. To prove the first item, first note that $F_1 + 2 F_2 \geq (4/3)(F_1 + F_2 + F_3)$, because 
 \begin{align*}
 (F_1 + 2 F_2)/( F_1 + F_2 + F_3) &= \frac{r_1}{d_1} + \frac{r_2}{d_2}\\
  &= \sqrt{ \frac{r_1 r_2}{d_1 d_2}}\left( \sqrt{ \frac{r_1 d_2}{r_2 d_1}} + \sqrt{ \frac{r_2 d_1}{r_1 d_2}}\right) \geq (2/3) \cdot 2 \geq 4/3.
 \end{align*}
-In particular, $F_2 \geq (2/3)(F_2 + F_3)$. Thus, with probability $1 - e^{- c F_2}$, $Y \geq (5/9) (F_2 + F_3)$ and $Y + Z \leq (10/9) (F _2 + F_3),$ so $Y > Z$ with probability $1 - e^{- c F_2} \geq 1 - e^{- c n d_1 d_2}$. The second and third items are straightforward. 
+In particular, $F_2 \geq (2/3)(F_2 + F_3)$. Thus, with probability $1 - e^{- c F_2}$, $R_2 \geq (5/9) (F_2 + F_3)$ and $R_2 + R_3 \leq (10/9) (F _2 + F_3),$ so $R_2 > R_3$ with probability $1 - e^{- c F_2} \geq 1 - e^{- c n d_1 d_2}$. The second and third items are straightforward. 
 \end{proof}
-Finally, we show using an epsilon net that the Cheeger constant is high for \emph{all} projections. 
+
+Finally, we show using an epsilon net that the Cheeger constant is large for \emph{all} projections. 
 \begin{lemma}[\cite{FM20}]\label{lem:net} There is a $\delta$-net $N$ of the rank $r$ orthogonal projections $\Pi: \C^d \to \C^d$ with $|N| = \exp(O(d r |\ln \delta|))$.
 \end{lemma}
 As a corollary, the number of pairs of projections $\Pi_1, \Pi_2$ of rank $r_1, r_2$ has a $\delta$-net of size on the order of $(r_1 d_1 + r_2 d_2) |\ln \delta|$. 
@@ -596,7 +599,8 @@ We first show the first inequality.
 &  + |\tr (I_{d_2} - \Pi'_2) \Phi(\Pi'_2) - \tr (I_{d_2} - \Pi_2) \Phi(\Pi_2)|.
 \end{align*}
 We begin with the first term. 
-\begin{align*}|\tr \Pi'_2 \Phi(I_{d_1} - \Pi'_1) - \tr \Pi_2 \Phi(I_{d_1} - \Pi_1)| &= |\tr (\Pi'_2 - \Pi_2) \Phi(I_{d_1} - \Pi'_1) + \tr \Pi_2 \Phi(\Pi_1 - \Pi'_1)|\\
+\begin{align*}&|\tr \Pi'_2 \Phi(I_{d_1} - \Pi'_1) - \tr \Pi_2 \Phi(I_{d_1} - \Pi_1)|\\
+&= |\tr (\Pi'_2 - \Pi_2) \Phi(I_{d_1} - \Pi'_1) + \tr \Pi_2 \Phi(\Pi_1 - \Pi'_1)|\\
 &\leq \delta\| \Phi(I_{d_1} - \Pi'_1)\|_F + \delta\| \tr \Phi^*(\Pi_2)\|_F\\
 & \leq 2 \delta \tr \Phi(I_{d_1}).
 \end{align*}
@@ -604,30 +608,43 @@ The second term follows by symmetry. The proof of the second inequality is simil
 \end{proof}
 
 \begin{lemma}[Applying union bound]\label{lem:union}
-Let $d_1 < d_2$. Suppose $n \geq C \frac{d_2}{d_1} \log (d_1 d_2)$. Then with probability at least $1 - \exp( - \Omega(n d_1))$, we have $\ch(\Phi) = \Omega(1)$.
+Let $d_1 < d_2$. Suppose $n \geq C \frac{d_2}{d_1} \log (d_2/d_1)$. Then $\ch(\Phi) = \Omega(1)$ with failure probability $O(e^{- \Omega(n d_1)})$.
 \end{lemma}
-\begin{proof} Let $\delta' \leq c/(d_1d_2)$. Let $N(r_1, r_2)$ be a $\delta$-net for the pairs of projections of rank $r_1, r_2$, respectively, with $|N(r_1, r_2)| = e^{O((d_1r_1 + d_2 r_2) \log(1/\delta))}$, and $N = \bigcup_{r_1, r_2} N(r_1, r_2)$. By \cref{lem:net-suffices}, it is enough to show that with probability $\exp( - c n (d_1 + d_2))$ for $r_1, r_2$ not both zero we have
+\begin{proof} Let $\delta' \leq c d_1/d_2$. Let $N(r_1, r_2)$ be a $\delta'$-net for the pairs of projections of rank $r_1, r_2$, respectively, with $|N(r_1, r_2)| = e^{O((d_1r_1 + d_2 r_2) \log(1/\delta'))}$, and $N = \bigcup_{r_1, r_2} N(r_1, r_2)$. We claim that it is enough to show that with probability $\exp( - c n d_1 )$, for all $r_1, r_2$ not both zero we have
 \begin{enumerate}
 \item \cref{eq:vol} holds with $\delta = 0$ for every $\Pi_1,\Pi_2 \in N(r_1, r_2)$ when $r_1 r_2 \geq (4/9) d_1 d_2$,
 \item  and \cref{eq:cut} holds with $\delta =0$ for all $\Pi_1, \Pi_2 \in N(r_1, r_2)$ otherwise.
-\item $\vol(\Pi_1, \Pi_2) \geq \tr \Phi(I) (d_1/d_2)$ for all $r_1, r_2$ not both zero.
+\item $\vol(\Pi_1, \Pi_2) \geq \tr \Phi(I) (d_1/d_2)$.
 \end{enumerate}
-These three items would complete the proof of the lemma, because every pair of projections is at most $\delta$ from an element of $N$ and if every element of $N$ has $\vol(\Pi_1, \Pi_2) \geq \tr \Phi(I)/{d_1 d_2}$, then by \cref{lem:net-suffices} the two sufficient conditions of \cref{lem:suff} hold with $\delta =  \delta' d_1 d_2/4 \leq c$. \CF{continue here; fix this and make it more transparent.} 
+Let us check that the hypotheses of \cref{lem:suff} with $\delta \leq c$ are implied by these three items; this will imply that conditioned on the three items we have $\ch(\Phi) \geq \Omega(1)$. Because every pair $(\Pi'_1,\Pi'_2)$ of projections of ranks $r_1,r_2$ is most $\delta$ far from some element $(\Pi_1, \Pi_2)$ of $N(r_1,r_2)$, then by \cref{lem:net-suffices} (and the inequality $\vol(\Pi_1, \Pi_2) \geq \tr \Phi(I)(d_1/d_2)$) we have 
+\begin{align*} (1 - 4 \delta'  \cdot d_2/d_1) \vol(\Pi_1, \Pi_2) \leq  \vol(\Pi_1', \Pi_2') \leq  (1 + 4 \delta'  \cdot d_2/d_1) \vol(\Pi_1, \Pi_2).\end{align*}
+By assumption, $4 \delta' \cdot d_2/d_1 \leq c$. This shows \cref{eq:vol} holds with $\delta \leq c$ when $r_1 r_2 \geq (4/9) d_1 d_2$. It remains to show that \cref{eq:cut} holds otherwise. Firstly, when $r_1 r_2 < (4/9) d_1 d_2$ we have
+\begin{gather} \vol(\Pi_1', \Pi_2') \leq (1 + c) \vol(\Pi_1, \Pi_2) \leq  (1 + c)(4/3)(F_1 + 2 F_2).\label{eq:not-net-9a}\end{gather}
+  Next, observe that 
+$$  \cut(\Pi_1', \Pi_2') \geq \cut(\Pi_1, \Pi_2) - c \vol(\Pi_1, \Pi_2).$$
+In the proof of \cref{lem:suff} it is shown that if $r_1 r_2 < (4/9) d_1 d_2$ then $F_1 \geq \frac{1}{3} (F_1 + 2 F_2)$, in which case
+\begin{align}
+\cut(\Pi_1', \Pi_2') &\geq \cut(\Pi_1, \Pi_2) - c \vol(\Pi_1, \Pi_2) \geq \nonumber\\
+& \geq (2/3) F_1 -  c (4/3)(F_1 + 2 F_2) \geq (2/3 - c) F_1.\label{eq:not-net-9b}
+\end{align}
 
-To show that the three conditions hold with the desired probability, we show that for fixed $r_1, r_2$, each holds with probability at least $1 - e^{n (r_1 d_2 + r_2 d_1)}$. The sum of $e^{-\Omega(n (r_1d_2 + r_2 d_1))}$ over all $0 \leq r_1 \leq d_1, 0 \leq r_2 \leq d_2$ apart from $r_1 = r_2 = 0$ is $O(e^{- \Omega( n d_1)})$, so the conditions hold for all $r_1, r_2$ with the desired probability. 
+Taken together, \cref{eq:not-net-9a,eq:not-net-9b} show that \cref{eq:cut} holds when $r_1 r_2 < (4/9) d_1 d_2$. 
+
+We must next show that the three conditions hold with the desired probability. We show that for fixed $r_1, r_2$, each item holds with probability at least $1 - e^{n (r_1 d_2 + r_2 d_1)}$. The sum of $e^{-\Omega(n (r_1d_2 + r_2 d_1))}$ over all $0 \leq r_1 \leq d_1, 0 \leq r_2 \leq d_2$ apart from $r_1 = r_2 = 0$ is $O(e^{- \Omega( n d_1)})$, so the conditions hold for all $r_1, r_2$ with the desired probability. Note that by our choice of $n$ we have $(d_1r_1 + d_2 r_2) \log(1/\delta') \leq c n (r_1d_2 + r_2 d_1)$ for $r_1, r_2$ not both zero. 
 
 We first bound the failure probability for the first item. By \cref{lem:probabilities}, if $r_1 r_2 \geq (4/9) d_1 d_2$ then \cref{eq:vol} holds for every $\Pi \in N(r_1, r_2)$ with probability 
 \begin{align*}
-1 - |N|e^{- \Omega( n d_1 d_2) } = 1 - e^{-\Omega(n d_1 d_2)} \geq 1 - e^{ - \Omega(n (r_2d_1 + r_1d_2)}.
+1 - |N(r_1, r_2)|e^{- \Omega( n d_1 d_2) } &= 1 - |N(r_1, r_2)| e^{ - \Omega(n (r_2d_1 + r_1d_2))}\\
+&= 1 - e^{ - \Omega(n (r_2d_1 + r_1d_2))}.
 \end{align*}
-Here we have used the lower bound on $n$. 
 
-Next we bound the probability in the second case. As in the proof of \cref{lem:suff}, if $r_1 r_2 \leq (4/9) d_1 d_2$ then $F_1 \geq \frac{1}{2} (F_1 + 2 F_2)$. Hence $F_1/ (r_1 d_1 + r_2 d_2) \geq \frac{1}{2} (r_1 d_2 + r_2 d_1)/(r_1 d_1 + r_2 d_2) \geq \frac{1}{2} \frac{d_1}{d_2}$. Thus, by \cref{lem:probabilities} and the lower bound on $n$, \cref{eq:cut} holds for every $\Pi \in N(r_1, r_2)$ with probability $1 - e^{-\Omega(n (r_1d_2 + r_2 d_1)}.$ 
+Next we bound the probability for the second item. By \cref{lem:probabilities}, \cref{eq:cut} holds for fixed $\Pi \in N(r_1, r_2)$ with probability $1 - e^{-\Omega( F_1)}$, but as in the proof of \cref{lem:suff} we have $F_1 \geq \frac{1}{3} (F_1 + 2 F_2)$ when $r_1 r_2 < (4/9) d_1 d_2$, so $F_1 = \Omega(n (r_1d_2 + r_2 d_1))$. Now, by the union bound and the lower bound on $n$, \cref{eq:cut} holds for every element of $N(r_1, r_2)$ with probability $1 - |N(r_1,r_2)| e^{-\Omega(n (r_1d_2 + r_2 d_1)} = 1 - e^{-\Omega(n (r_1d_2 + r_2 d_1)}$.
 
-The third item holds with probability $1 - e^{-\Omega(n (r_1d_2 + r_2 d_1)}$ by \cref{lem:probabilities}. \end{proof}
+
+The third item holds with probability $1 - e^{-\Omega(n (r_1d_2 + r_2 d_1))}$ by \cref{lem:probabilities}, so by a similar application of the union bound and our choice of $n$ it holds for all elements of $N(r_1, r_2)$ with probability $1 - e^{-\Omega(n (r_1d_2 + r_2 d_1))}$. \end{proof}
 
 \begin{proof}[Proof of \cref{thm:operator-cheeger}]
-To prove \cref{thm:operator-cheeger}, apply \cref{lem:op-cheeger} using \cref{cor:vershynin} to bound $\eps$ and \cref{lem:union} to bound $\ch(\Phi)$. \CF{actually write}.
+To prove \cref{thm:operator-cheeger}, we apply \cref{lem:op-cheeger} using \cref{lemma:gradient-bound} to bound the balancedness of $\Phi$ and \cref{lem:union} to bound $\ch(\Phi)$. Indeed, $\|\nabla_a f\|_{op} \leq \eps_0$ for $a \in \{1,2\}$ if and only if $\Phi$ is $\eps_0$-balanced, so by \cref{lemma:gradient-bound} the operator $\Phi$ is $\eps_0$-balanced with probability $1 -  e^{-\Omega(n d_1 \eps_0^2)} - e^{-\Omega(n d_2 \eps_0^2)} \geq 1 - 2e^{-\Omega(n d_1 \eps_0^2)}$ provided $n \geq C\eps^{-2} d_1/d_2 $. Setting $\eps_0 = \eps \sqrt{\frac{d_2 }{n d_1}}$ proves the balancedness claim. For the expansion, \cref{lem:union} shows $\ch(\Phi) = \Omega(1)$ with failure probability $O(e^{- O(n d_1)})$.  By \cref{lem:op-cheeger}, $\Phi$ is a $1 - c$-quantum expander. 
 \end{proof}
 
 
