@@ -483,14 +483,14 @@ $$\| \widehat{\Theta}_1 - I_{d_1}\|_{op}, \| \widehat{\Theta}_2 - I_{d_2}\|_{op}
 Our main result for this section is that $\Phi$ is with high probability a good quantum expander, which allows us to apply the previous theorem.
 
 \begin{theorem}\label{thm:operator-cheeger}
-There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is $\eps \sqrt{d_2/n d_1}$-balanced and a $1 - c$ quantum expander with failure probability $$O(e^{ - \Omega( d_2 \eps^2)} + e^{ - \Omega( n d_1)}).$$
+There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is $\eps \sqrt{d_2/n d_1}$-balanced and a $1 - c$ quantum expander with failure probability $O(e^{ - \Omega( d_2 \eps^2)}).$
 \end{theorem}
 
 Before proving the above result, we use it to prove \cref{thm:matrix-normal}. 
 
-\begin{proof}[Proof of \cref{thm:matrix-normal}] As discussed in \cref{subsec:outline}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. By \cref{thm:operator-cheeger}, provided $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps_0^{-2}\} $ with probability $1 - O(e^{ - \Omega( d_2 \eps_0^2)} + e^{-\Omega(n d_1)})$ the operator $\Phi$ is $\delta:=\eps_0  \sqrt{\frac{d_2}{n d_1}}$-balanced and is a $(1 - c)$-quantum expander. Condition on this event. By our choice of $n$, we have $\delta \leq \lambda^2/\log d_1$ if we take $\eps_0 = \eps/\log(d_1)$ for $\eps \leq c$. By \cref{thm:klr}, 
-\begin{gather*} \| \widehat{\Theta}_1 - I_{d_1}\|_{op}, \| \widehat{\Theta}_2 - I_{d_2}\|_{op} \leq C \eps_0 \sqrt{\frac{d_2}{n d_1}} \log d_1 = O\left(\eps \sqrt{\frac{d_2}{n d_1}}\right).\qedhere\end{gather*}
-The failure probability becomes $O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)} + e^{-\Omega(n d_1)})$; note that by our choice of $n$, $n d_1 \geq C d_2 \log (d_1/d_2) \geq d_2 \eps^2/\log^2 d_1$ so that the second term is dominated by the first.
+\begin{proof}[Proof of \cref{thm:matrix-normal}] As discussed in \cref{subsec:outline}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. By \cref{thm:operator-cheeger}, provided $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps_0^{-2}\} $ with probability $1 - O(e^{ - \Omega( d_2 \eps_0^2)})$ the operator $\Phi$ is $\delta:=\eps_0  \sqrt{\frac{d_2}{n d_1}}$-balanced and is a $(1 - c)$-quantum expander. Condition on this event. By our choice of $n$, we have $\delta \leq \lambda^2/\log d_1$ if we take $\eps_0 = \eps/\log(d_1)$ for $\eps \leq c$. By \cref{thm:klr}, 
+\begin{gather*} \| \widehat{\Theta}_1 - I_{d_1}\|_{op}, \| \widehat{\Theta}_2 - I_{d_2}\|_{op} \leq C \eps_0 \sqrt{\frac{d_2}{n d_1}} \log d_1 = O\left(\eps \sqrt{\frac{d_2}{n d_1}}\right).\end{gather*}
+The failure probability becomes $O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)})$.
 \end{proof}
 
 
@@ -644,7 +644,7 @@ Next we bound the probability for the second item. By \cref{lem:probabilities}, 
 The third item holds with probability $1 - e^{-\Omega(n (r_1d_2 + r_2 d_1))}$ by \cref{lem:probabilities}, so by a similar application of the union bound and our choice of $n$ it holds for all elements of $N(r_1, r_2)$ with probability $1 - e^{-\Omega(n (r_1d_2 + r_2 d_1))}$. \end{proof}
 
 \begin{proof}[Proof of \cref{thm:operator-cheeger}]
-To prove \cref{thm:operator-cheeger}, we apply \cref{lem:op-cheeger} using \cref{lemma:gradient-bound} to bound the balancedness of $\Phi$ and \cref{lem:union} to bound $\ch(\Phi)$. Indeed, $\|\nabla_a f\|_{op} \leq \eps_0$ for $a \in \{1,2\}$ if and only if $\Phi$ is $\eps_0$-balanced, so by \cref{lemma:gradient-bound} the operator $\Phi$ is $\eps_0$-balanced with probability $1 -  e^{-\Omega(n d_1 \eps_0^2)} - e^{-\Omega(n d_2 \eps_0^2)} \geq 1 - 2e^{-\Omega(n d_1 \eps_0^2)}$ provided $n \geq C\eps^{-2} d_1/d_2 $. Setting $\eps_0 = \eps \sqrt{\frac{d_2 }{n d_1}}$ proves the balancedness claim. For the expansion, \cref{lem:union} shows $\ch(\Phi) = \Omega(1)$ with failure probability $O(e^{- O(n d_1)})$.  By \cref{lem:op-cheeger}, $\Phi$ is a $1 - c$-quantum expander. 
+To prove \cref{thm:operator-cheeger}, we apply \cref{lem:op-cheeger} using \cref{lemma:gradient-bound} to bound the balancedness of $\Phi$ and \cref{lem:union} to bound $\ch(\Phi)$. Indeed, $\|\nabla_a f\|_{op} \leq \eps_0$ for $a \in \{1,2\}$ if and only if $\Phi$ is $\eps_0$-balanced, so by \cref{lemma:gradient-bound} the operator $\Phi$ is $\eps_0$-balanced with probability $1 -  e^{-\Omega(n d_1 \eps_0^2)} - e^{-\Omega(n d_2 \eps_0^2)} \geq 1 - 2e^{-\Omega(n d_1 \eps_0^2)}$ provided $n \geq C\eps_0^{-2} d_2/d_1 $. Setting $\eps_0 = \eps \sqrt{\frac{d_2 }{n d_1}}$ proves the balancedness claim. For the expansion, \cref{lem:union} shows $\ch(\Phi) = \Omega(1)$ with failure probability $O(e^{- \Omega(n d_1)}) = O(e^{- \Omega(d_2 \eps^2)})$. By \cref{lem:op-cheeger}, $\Phi$ is a $1 - c$-quantum expander. 
 \end{proof}
 
 
