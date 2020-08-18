@@ -210,9 +210,11 @@ Then the same argument as above, restricted to precision matrices of this form, 
   \tilde\ell_{\vec X}(\Theta_1,\dots,\Theta_k) = \sum_{i=1}^k \frac1{d_a} \log \det \Theta_a - \log \sum_{i=1}^n \braket{X_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) X_i},
 \end{align*}
 or equivalently minimize its negation.
-Since this function is also invariant under rescaling the~$\Theta_a$, we are led to minimizing the following function:
+Since this function is also invariant under rescaling the~$\Theta_a$, we may restrict to $\PD_{d_a}^1$, the $d_a\times d_a$ positive definite matrices with unit determinant.
+Thus we are led to minimizing the following function:
+\MW{We already need to restrict to $\PD^1$ here so that the minimizer has a chance of being unique.}
 
-\begin{definition}\label{dfn:function}
+\begin{definition}[Objective]\label{dfn:function}
 Given $n$ samples $\vec{X} = (X_1, \dots, X_n)$ in $\R^D$, define the function $f_{\vec X}\colon\prod_{a=1}^k \PD_{d_a}^1 \to \R$ by
 \begin{align}\label{eq:projective-likelihood}
   f_{\vec X}(\Theta_1,\dots,\Theta_k) = \log \sum_{i=1}^n \braket{X_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) X_i}.
@@ -226,13 +228,41 @@ When $\vec X$ is clear from context we will drop it.
 
 \MW{Should we write lower case $x$ when the $x$ are not random (above) and $X$ when they (e.g., in the `rather simple plan' below)?}
 
-\subsection{Sample complexity from goedesic convexity}\label{subsec:outline} Following \cite{FM20}, and in spirit also \CF{cite weisel}, we use geodesic convexity to prove \cref{thm:tensor-frobenius}. \cref{thm:matrix-normal}, proven later in \cref{sec:matrix-normal}, requires the stronger notion of \emph{quantum expansion}.
+%-----------------------------------------------------------------------------
+\subsection{Sample complexity from geodesic convexity}\label{subsec:outline}
+%-----------------------------------------------------------------------------
+Following \cite{FM20}, and in spirit also \CF{cite weisel}, we use geodesic convexity to prove \cref{thm:tensor-frobenius}.
+\Cref{thm:matrix-normal}, proven later in \cref{sec:matrix-normal}, requires the stronger notion of \emph{quantum expansion}.
 
+Before defining our notion of convexity, we introduce some notation.
+Let~$\SL_d$ denote the group of matrices with unit determinant.
+Recall that $\PD_d^1$ denotes the positive definite matrices with unit determinant.
+Let $\Sym_d^0$ denote the vector space of $d\times d$ traceless symmetric matrices.
+% Any matrix in $\PD_d^1$ can be written as the matrix exponential of a matrix in $\Sym_d^0$.
+Then, $A^T e^Z A \in \PD_d^1$ for any $A \in \SL_d$ and $Z\in\Sym_d$.
+Finally, let $G = \prod_{a=1}^k \SL_{d_a}$, $P = \prod_{a=1}^k \PD_{d_a}^1$, and $S = \bigoplus_{a=1}^k \Sym_{d_a}^0$.
+We denote by $AB=(A_1B_1,\dots,A_kB_k)$ and $e^Z=(e^{Z_1},\dots,e^{Z_k})$ the componentwise product and matrix exponential, respectively, of matrix tuples $A, B \in G$ and $Z\in S$.
+Then, $\gamma(t) = A^T e^{tZ} A = (A_1^T e^{t Z_1} A_1, \dots, A_k^T e^{t Z_k} A_k)$ is a geodesic or `straight line' for a natural Riemannian metric on~$P$.
+This motivates the following definition.
 
-We first define our notion of convexity. The function $f_{\vec X}$ has a property called \emph{geodesic convexity} \CF{cite bfg+}.
-\begin{definition}[Geodesic convexity]\CF{define $P,G,H$ before here} A function $f:P \to \R$ is said to be geodesically convex if
-$$f(A^\dagger e^{t Z} A)$$ is convex in $t$ for all $Z \in H$ and $A\in G$. Say $f$ is $\lambda$-geodesically \emph{strongly convex} w.r.t norm $\|\cdot\|$ if $\partial^2_t f(A^\dagger e^{t Z} A) \geq \lambda \|Z\|^{2}$. We will use the norm $\| \cdot\|_{\vec d}$ given by the inner product $\langle X, Y \rangle_{\vec d} = \sum_{a \in [k]} \frac{1}{d_a} \tr X_a Y_a $ for $X, Y \in H$.
+\begin{definition}[Geodesic convexity]
+A function $f\colon P \to \R$ is said to be \emph{geodesically convex} if, for any $Z \in S$ and $A \in G$, the following function is convex:
+\begin{align*}
+  \R \to \R, \quad t \mapsto f(A^T e^{t Z} A)
+\end{align*}
+Say $f$ is \emph{$\lambda$-geodesically strongly convex} if
+\begin{align*}
+  \partial^2_t f(A^T e^{t Z} A) \geq \lambda \norm{Z}_{\vec d}^2
+\end{align*}
+for all $Z\in S$, and \emph{$L$-geodesically smooth} if
+\begin{align*}
+  \partial^2_t f(A^T e^{t Z} A) \leq L \norm{Z}_{\vec d}^2
+\end{align*}
+for all $Z\in S$.
+Here we use the norm $\norm{\cdot}_{\vec d}$ induced by the inner product $\braket{X, Y}_{\vec d} = \sum_{a=1}^k \frac1{d_a} \tr(X_a Y_a)$ for $X, Y \in S$.
 \end{definition}
+
+The function $f_{\vec X}$ defined in \cref{dfn:function} is geodesically convex and $L$-geo\-de\-si\-cal\-ly smooth for $L=\TODO{XXX NEW NORM}$~\cite{burgisser2019towards}.
 With this definition in place, we are able to state the rather simple plan.
 \begin{enumerate}
 \item\label{it:reduce} \textbf{Reduce to identity: } Firstly, note that $\widehat{\Theta}(\vec X) = \Theta^{1/2} \hat{\Theta}(\Theta^{-1/2} \vec X) \Theta^{1/2}$. As $\Theta^{-1/2} \vec X$ is distributed as $n$ samples from $\Theta^{-1/2}X$ which is a standard Gaussian, the distance
