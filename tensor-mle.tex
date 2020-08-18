@@ -136,7 +136,7 @@ It remains an open question to show tight bounds for convergence of the MLE in s
 We consider the tensor normal model, in which samples are drawn according to a normal distribution $\cN(0, \Sigma)$, where the covariance matrix $\Sigma = \bigotimes_{a = 1}^{k} \Sigma_a$ is the Kronecker product of positive definite $d_a\times d_a$ matrices $\Sigma_a$ for $a\in [k]$.
 Let $\Theta$ denote the precision matrix $\Sigma^{-1}$, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$ where $\Theta_a = \Sigma_a^{-1}$.
 
-We use the following notions of distance. The first arises naturally because it is within a constant factor of the total variation distance (assuming both are small enough constants), and the second because bounds on it typically strengthen bounds on the first. \TODO{$\Sigma$ vs $\Theta$}
+We use the following notions of distance. The first arises naturally because it is within a constant factor of the total variation distance (assuming both are small enough constants), and the second because bounds on it typically strengthen bounds on the first. \TODO{$\Sigma$ vs $\Theta$; write $d(a\Vert b)$ or $d(a;b)$ to emphasize asymmetry?}
 
 \begin{definition}[Distance]
 Define 
@@ -174,28 +174,56 @@ for $i \in \{1,2\}$ in $O(\TODO{\log(1/\eps)})$ iterations with probability at l
 
 One may wonder why in the above theorems we consider the distances for the individual tensor factors and not the covariance matrix itself, but tight bounds for the covariance matrix itself follow from the above bounds (apart from the logarithmic factor in the matrix normal case and a constant factor in general).
 
+%=============================================================================
 \section{Tensor normal models}
-We now give a precise definition of the MLE in the tensor normal model, in which $X$ is sampled according to $N(0, \Sigma = \bigotimes_{a = 1}^{k} \Sigma_a)$ for $\Sigma_a$ a positive-definite $d_a\times d_a$ matrix. Let $D = \prod_{a \in [k]} d_a$. The matrix normal model is the case $k = 2$. 
+%=============================================================================
+\TODO{In this section, \dots}
 
-First, recall the maximum-likelihood estimator for $\Sigma$ without any structure. Let $\Theta$ denote the precision matrix $\Sigma^{-1}$. If $X_1, \dots, X_n \in \R^D$ are the samples from $N(0, \Sigma)$, then the log-likelihood for $\Sigma$ is (up to an additive constant) given by the function  \MW{$l$ or $\ell$ for log-likehood?}
-$$L(\Theta) = \sum_{i = 1}^n \langle X_i,  \Theta X_i\rangle - \frac{1}{D} \log\det \Theta.$$
-If we are only interested in estimating $\Theta$ only up to a constant, we may instead maximize 
-\begin{gather}\tilde L(\Theta) = \log \sum_{i = 1}^n \langle X_i, \Theta X_i\rangle - \frac{1}{D} \log\det \Theta. \label{eq:projective-likelihood}\end{gather}
-and the solutions will differ only by a constant.
-\MW{For us it's relevant that this is still true when we restrict to tensor product $\Sigma$'s.}
-Both likelihoods are geodesically convex, as will be defined precisely in the next section, but only the latter has geodesically Lipschitz gradients, i.e. is geodesically smooth \CF{cite bfg+}. This suggests it is more amenable to geodesically convex optimization, our main tool in this work.
-\begin{remark}[Projective space] One may think of \cref{eq:projective-likelihood} as the MLE for $\Sigma$ after recieving $[X_1, \dots, X_n]$, the equivalence class of the tuple of samples in projective space.
-\MW{Does this mean that $\tilde L$ is the log-likelihood for the family of pushforwards of normal distributions on $\R^n$ onto the unit sphere / projective space? `Projective likelihood function' sounds fancyful :)}\CF{Yes, that's correct. Maybe there's no need to name the thing.}
-\end{remark}
-Restricting $\tilde L$ to $\Sigma$ of the form $\bigotimes_{a = 1}^{k} \Sigma_a$, or equivalently $\Theta = \bigotimes_{a = 1}^{k} \Theta_a$, we are led to consider the minima of the following function. 
-\begin{definition}[Projective log-likelihood function]\label{dfn:function}
-Given $\vec{X} = (X_1, \dots, X_n)$, let the function $f_{\vec X}:\bigoplus_{i} \PD_{d_i} \to \R$ be given by 
-\begin{gather}f_{\vec X}(\Theta_1, \dots, \Theta_n) = \log \sum_{i = 1}^n \left\langle X_i,  \bigotimes_{j = 1}^k \Theta_j X_i\right\rangle - \sum_{i = 1}^k \frac{1}{d_i} \log\det \Theta_i. \label{eq:projective-likelihood}\end{gather}
-define $\widehat{\Theta}$ to be the minimizer of $f_{\vec X}$ in $\bigoplus_{i} \PD_{d_i}$ if it exists and is unique.
+%-----------------------------------------------------------------------------
+\subsection{Maximum-likelihood estimation}
+%-----------------------------------------------------------------------------
+We start by giving a precise definition of maximum-likelihood estimation in the tensor normal model.
+Recall that for a centered normal distribution~$\cN(0,\Sigma)$ with $D\times D$ covariance matrix~$\Sigma$, the log-likelihood function for given samples $X_1,\dots,X_n\in\R^D$ is (up to an additive constant)
+\begin{align*}
+  \ell_{\vec X}(\Theta)
+% = \frac n2 \log \det(\Theta/2\pi) - \sum_{i=1}^n \frac12 \braket{X_i, \Theta X_i} ~
+  = \frac n2 \log \det \Theta - \frac12 \sum_{i=1}^n \braket{X_i, \Theta X_i},
+\end{align*}
+where $\Theta$ denotes the precision matrix $\Sigma^{-1}$.
+Instead of maximizing the function~$\ell_{\vec X}$, we may instead maximize the scale-invariant function
+\begin{align}\label{eq:tilde ell}
+  \tilde\ell_{\vec X}(\Theta) = \frac1D\log\det \Theta - \log \sum_{i=1}^n \braket{X_i, \Theta X_i}.
+\end{align}
+Indeed, the two functions have the same maximizers up to rescaling.%
+\footnote{To see this, write $\Theta = \lambda \Theta'$ for $\lambda>0$ and $\Theta'\in\PD_D^1$ and explicitly carry out the optimization over~$\lambda$. The result is $\sup_{\Theta\in\PD_D} \ell_{\vec X}(\Theta) = \sup_{\Theta'\in\PD_D^1} \frac {nD}2 \left( \log(nD) - 1 \right) + \frac{nD}2 \tilde\ell_{\vec X}(\Theta')$.}
+One may think of \cref{eq:tilde ell} as the log-likelihood of $\Sigma$ after receiving $[X_1, \dots, X_n]$, the equivalence class of the tuple of samples in projective space.
+
+Both log-likelihoods are geodesically convex, as will be defined precisely in the next section, but only the latter function has geodesically Lipschitz gradients, i.e., is geodesically smooth~\cite{burgisser2019towards}.
+This suggests it is more amenable to geodesically convex optimization, our main tool in this work.
+
+The tensor normal model for known dimensions~$d_1,\dots,d_k$ consists of the normal distributions~$\cN(0,\Sigma)$, where $D = \prod_{a=1}^k d_a$ and the covariance matrix is the Kronecker product $\Sigma = \bigotimes_{a=1}^k \Sigma_a$ of positive definite $d_a\times d_a$-matrices $\Sigma_a$.
+Let $\Theta_a = \Sigma_a^{-1}$, so that the precision matrix is given by $\Theta = \bigotimes_{a=1}^k \Theta_a$.
+Then the same argument as above, restricted to precision matrices of this form, shows that to compute the MLE we may maximize the function
+\begin{align*}
+  \tilde\ell_{\vec X}(\Theta_1,\dots,\Theta_k) = \sum_{i=1}^k \frac1{d_a} \log \det \Theta_a - \log \sum_{i=1}^n \braket{X_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) X_i},
+\end{align*}
+or equivalently minimize its negation.
+Since this function is also invariant under rescaling the~$\Theta_a$, we are led to minimizing the following function:
+
+\begin{definition}\label{dfn:function}
+Given $n$ samples $\vec{X} = (X_1, \dots, X_n)$ in $\R^D$, define the function $f_{\vec X}\colon\prod_{a=1}^k \PD_{d_a}^1 \to \R$ by
+\begin{align}\label{eq:projective-likelihood}
+  f_{\vec X}(\Theta_1,\dots,\Theta_k) = \log \sum_{i=1}^n \braket{X_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) X_i}.
+\end{align}
+Let $\widehat{\Theta}_{\vec X}$ denote the minimizer of $f_{\vec X}$ if it exists and is unique.
 \end{definition}
-When $\vec X$ is clear from context we will drop it. 
-%The choice of the coefficient $1/d_i$ is a matter of convenience and, because renormalizing $\Sigma_i$ changes $\Sigma$ only by a constant factor, does does not change the optima. \MW{The `bare' result would be $\frac D{d_i}$, right? Hwo do you renormalize it away?}
 
+\noindent
+When $\vec X$ is clear from context we will drop it.
+
+\MW{Should we write lower case $x$ when the $x$ are not random (above) and $X$ when they (e.g., in the `rather simple plan' below)?}
+
+\TODO{Add a sentence that says clearly how $\widehat\Theta_{\vec X}$ is related to the MLE (i.e., what the multiplicative constant is that relates the two).}
 
 \subsection{Sample complexity from goedesic convexity}\label{subsec:outline} Following \cite{FM20}, and in spirit also \CF{cite weisel}, we use geodesic convexity to prove \cref{thm:tensor-frobenius}. \cref{thm:matrix-normal}, proven later in \cref{sec:matrix-normal}, requires the stronger notion of \emph{quantum expansion}.
 
