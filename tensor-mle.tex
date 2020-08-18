@@ -127,7 +127,7 @@ $\rho = \vec X \vec X^T/\|\vec X\|_F^2$.
 \item I'm going to call $G = \oplus \GL_{d_i}, P = \oplus \PD_{d_i}^1, S = \oplus \Sym_{d_i}^0$. Explain somewhere how $S$ is the tangent space of $P$.
 \item $\nabla, \nabla^2$ for Riemannian Hessians and gradients, $\nabla_a f$, $\nabla^2_{ab} f$ for components. $\nabla f$ means at the identity.
 \item $C, c$ large (resp. small) constants that change line to line.
-\item $\rho^{\{a\}}$ for marginals. \CF{This is just what happens if you don't abuse the notation $\rho^S$; Michael please insist if it looks too nonstandard}. \MW{I am afraid we must define $\rho^a := \rho^{(a)}$, Cole.}
+\item $\rho^{(a)}$ for marginals.
 %\MW{this looks like a power. I would either do $\rho^{(a)}$ or $\rho_a$; the latter is perhaps a bit awkward if we often look at matrix elements.}
 \end{itemize}
 
@@ -293,7 +293,7 @@ This shows that to prove \cref{thm:tensor-frobenius} it is enough to consider th
 \item\label{it:convexity} \textbf{Show strong convexity:}
 Show that, with high probability, $f_{\vec X}$ is $\Omega(1)$-geodesically strongly convex near $I$.
 \item\label{it:grad} \textbf{Bound the gradient:}
-Show that the gradient $\nabla f_{\vec X}(I)$ (defined formally below) is small with high probability.
+Show that the gradient $\nabla f_{\vec X}(I)$ (defined below) is small with high probability. \MW{Swap items 2 and 3?}
 \end{enumerate}
 
 These together imply the desired sample complexity bounds -- as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far.
