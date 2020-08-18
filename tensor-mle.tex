@@ -46,6 +46,7 @@
 
 \newcommand\eps{\varepsilon}
 
+\newcommand\cN{\mathcal{N}}
 \newcommand\FF{\mathcal{F}}
 \newcommand\HH{\mathcal{H}}
 \newcommand\GG{\mathcal{G}}
@@ -111,17 +112,17 @@ $$O(\max \{d_1/d_2, d_2/d_1\} \log \max \{d_1/d_2, d_2/d_1\}),$$ which is tight 
 \item The MLE for the tensor normal model converges is close to the covariance in Frobenius norm for a number of samples that is $O(\max_{i \in [k]} D/d_i^3)$. This result is tight.
 \item Under the same sample requirements as above, the flip-flop algorithm converges exponentially quickly to the MLE with high probability. As a corollary, there is an algorithm to compute the  MLE with polynomial expected runtime.
 \end{enumerate}
-It remains an open question to show tight bounds for convergence of the MLE in spectral norm for the tensor normal model. 
+It remains an open question to show tight bounds for convergence of the MLE in spectral norm for the tensor normal model.
 \subsection{Notation}
 \CF{temporary}
 \begin{itemize}
-\item Number of samples $n$, dimensions $d_1, \dots, d_k$. $D$ for product of these. 
+\item Number of samples $n$, dimensions $d_1, \dots, d_k$. $D$ for product of these.
 \item $X$ for the tensor random variable, $X_1, \dots, X_n$ for the samples, $\vec X = (X_1, \dots, X_n)$ for the tuple of samples. $\rho = \vec X \vec X^T/\|\vec X\|_F^2$.
 \item $\langle \cdot, \cdot \rangle_{\vec d}$ denotes the modified inner product, $\langle \cdot, \cdot \rangle$ the usual Hilbert-Schmidt inner product as well as the $\ell_2$ inner product of vectors
 \item $f_{\vec X}$ for the function in \cref{dfn:function}, mostly drop $\vec X$.
-\item $\Sym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite
+\item $\Sym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite, $\Sym_d^0$ for traceless symmetric, $\PD_d^1$ for $\det=1$ positive definite?
 \item $\Theta$ for big tensor product pd concentration matrix, $\Theta_a$ for individual pd's.
-\item I'm going to call $G = \oplus \GL_{d_i}, P = \oplus \PD_{d_i}, S = \oplus \Sym_{d_i}$. Explain somewhere how $S$ is the tangent space.
+\item I'm going to call $G = \oplus \GL_{d_i}, P = \oplus \PD_{d_i}^1, S = \oplus \Sym_{d_i}^0$. Explain somewhere how $S$ is the tangent space of $P$.
 \item $\nabla, \nabla^2$ for Riemannian Hessians and gradients, $\nabla_a f$, $\nabla^2_{ab} f$ for components. $\nabla f$ means at the identity.
 \item $C, c$ large (resp. small) constants that change line to line.
 \item $\rho^{\{a\}}$ for marginals. \CF{This is just what happens if you don't abuse the notation $\rho^S$; Michael please insist if it looks too nonstandard}. \MW{I am afraid we must define $\rho^a := \rho^{(a)}$, Cole.}
@@ -132,7 +133,10 @@ It remains an open question to show tight bounds for convergence of the MLE in s
 
 \CF{Enough background material to state \cref{thm:matrix-normal,thm:tensor-frobenius,thm:matrix-flipflop,thm:tensor-flipflop}; maybe make some of these into 2-parters, explanation of tightness of results.}
 
-We use the following notions of distance. The first arises naturally because it is within a constant factor of the total variation distance (assuming both are small enough constants), and the second because bounds on it typically strengthen bounds on the first. 
+We consider the tensor normal model, in which samples are drawn according to a normal distribution $\cN(0, \Sigma)$, where the covariance matrix $\Sigma = \bigotimes_{a = 1}^{k} \Sigma_a$ is the Kronecker product of positive definite $d_a\times d_a$ matrices $\Sigma_a$ for $a\in [k]$.
+Let $\Theta$ denote the precision matrix $\Sigma^{-1}$, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$ where $\Theta_a = \Sigma_a^{-1}$.
+
+We use the following notions of distance. The first arises naturally because it is within a constant factor of the total variation distance (assuming both are small enough constants), and the second because bounds on it typically strengthen bounds on the first. \TODO{$\Sigma$ vs $\Theta$}
 
 \begin{definition}[Distance]
 Define 
