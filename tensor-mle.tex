@@ -52,6 +52,7 @@
 \newcommand\SL{\operatorname{SL}}
 \newcommand\PD{\operatorname{PD}}
 \newcommand\Herm{\operatorname{Herm}}
+\newcommand\Sym{\operatorname{Sym}}
 \newcommand\GL{\operatorname{GL}}
 \newcommand\TT{\mathcal{T}}
 \newcommand\PP{\mathcal{P}}
@@ -115,19 +116,17 @@ It remains an open question to show tight bounds for convergence of the MLE in s
 \CF{temporary}
 \begin{itemize}
 \item Number of samples $n$, dimensions $d_1, \dots, d_k$. $D$ for product of these. 
-\item $X$ for the tensor random variable, $X_1, \dots, X_n$ for the samples, $\vec X = (X_1, \dots, X_n)$ for the tuple of samples. $\rho = \vec X \vec X^\dagger/\|\vec X\|_F^2$.
-\item $\langle \cdot, \cdot \rangle_{\vec d}$ denotes the modified inner product, $\langle \cdot, \cdot \rangle$ the usual Hilbert-Schmidt inner product. \MW{\dots{}and more generally for the ordinary $\ell_2$ inner product of vectors.}
+\item $X$ for the tensor random variable, $X_1, \dots, X_n$ for the samples, $\vec X = (X_1, \dots, X_n)$ for the tuple of samples. $\rho = \vec X \vec X^T/\|\vec X\|_F^2$.
+\item $\langle \cdot, \cdot \rangle_{\vec d}$ denotes the modified inner product, $\langle \cdot, \cdot \rangle$ the usual Hilbert-Schmidt inner product as well as the $\ell_2$ inner product of vectors
 \item $f_{\vec X}$ for the function in \cref{dfn:function}, mostly drop $\vec X$.
-\item $\PD_d$ for $d \times d$ pd's, $\Herm_d$ for $d \times d$ Hermitians. I don't think stats folks use this, I just really like them. Other suggestions welcome. $\Theta$ for big tensor product psd, $\Theta_a$ for individual psd's. \MW{$\operatorname{Sym}_d$ for real symmetric matrices?} \MW{$\Theta$ looks like big O notation} \CF{Stats people seem to use it; hopefully we can avoid any ambiguity like that}
-\item I'm going to call $G = \oplus \GL_{d_i}, P = \oplus \PD_{d_i}, H = \oplus \Herm_{d_i}$. Explain somewhere how H is the tangent space.
-\item $\nabla, \nabla^2$ seems fine for geodesic Hessians and gradients. Denote components by $\nabla_a f$, $\nabla^2_{ab} f$. $\nabla f$ means at the identity.
-\item $C, c$ large (resp. small) constants that change line to line. 
-\item $\rho^{\{a\}}$ for marginals. \CF{This is just what happens if you don't abuse the notation $\rho^S$; Michael please insist if it looks too nonstandard}.
+\item $\Sym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite
+\item $\Theta$ for big tensor product pd concentration matrix, $\Theta_a$ for individual pd's.
+\item I'm going to call $G = \oplus \GL_{d_i}, P = \oplus \PD_{d_i}, S = \oplus \Sym_{d_i}$. Explain somewhere how $S$ is the tangent space.
+\item $\nabla, \nabla^2$ for Riemannian Hessians and gradients, $\nabla_a f$, $\nabla^2_{ab} f$ for components. $\nabla f$ means at the identity.
+\item $C, c$ large (resp. small) constants that change line to line.
+\item $\rho^{\{a\}}$ for marginals. \CF{This is just what happens if you don't abuse the notation $\rho^S$; Michael please insist if it looks too nonstandard}. \MW{I am afraid we must define $\rho^a := \rho^{(a)}$, Cole.}
 %\MW{this looks like a power. I would either do $\rho^{(a)}$ or $\rho_a$; the latter is perhaps a bit awkward if we often look at matrix elements.}
-\item anything else we think of.
 \end{itemize}
-
-\MW{Real vs complex matrices. Current thinking of Cole and Michael is to stick to real tensors throughout (to avoid distracting stats folks) and to only add a remark or subsection that explains how to deal with complex tensors.}
 
 \subsection{Results}
 
@@ -664,6 +663,9 @@ To prove \cref{thm:operator-cheeger}, we apply \cref{lem:op-cheeger} using \cref
 \section{Noise}
 \TODO{make sure things work under some error in the data; somewhat optional}
 
+
+\section{Complex tensors}
+\TODO{explain how to generalize to complex tensor models, maybe some quantum motivation?!}
 
 \section{Open problems}
 \TODO{$d_{op}$} for tensors??
