@@ -32,6 +32,7 @@
 \newcommand{\C}{{\mathbb{C}}}
 \newcommand{\ot}{\otimes}
 \newcommand{\mat}{\operatorname{Mat}}
+\newcommand{\op}{\operatorname{op}}
 \newcommand{\ch}{\operatorname{ch}}
 \newcommand{\cut}{\operatorname{cut}}
 \newcommand{\vol}{\operatorname{vol}}
@@ -137,12 +138,16 @@ $\rho = \vec X \vec X^T/\|\vec X\|_F^2$.
 We consider the tensor normal model, in which samples are drawn according to a normal distribution $\cN(0, \Sigma)$, where the covariance matrix $\Sigma = \bigotimes_{a = 1}^{k} \Sigma_a$ is the Kronecker product of positive definite $d_a\times d_a$ matrices $\Sigma_a$ for $a\in [k]$.
 Let $\Theta$ denote the precision matrix $\Sigma^{-1}$, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$ where $\Theta_a = \Sigma_a^{-1}$.
 
-We use the following notions of distance. The first arises naturally because it is within a constant factor of the total variation distance (assuming both are small enough constants), and the second because bounds on it typically strengthen bounds on the first. \TODO{$\Sigma$ vs $\Theta$; write $d(a\Vert b)$ or $d(a;b)$ to emphasize asymmetry?}
+We use the following notions of distance. The first arises naturally because it is within a constant factor of the total variation distance (assuming both are small enough constants), and the second because bounds on it typically strengthen bounds on the first.
 
 \begin{definition}[Distance]
 Define
-\begin{align}d_{F}(\Sigma_1, \Sigma_2) = \| I - \Sigma_2^{1/2} \Sigma_1^{-1} \Sigma_2^{1/2}\|_F\\
-d_{op}(\Sigma_1, \Sigma_2) = \| I - \Sigma_2^{1/2} \Sigma_1^{-1} \Sigma_2^{1/2}\|_{op}
+% \begin{align}d_{F}(\Sigma_1; \Sigma_2) = \| I - \Sigma_2^{1/2} \Sigma_1^{-1} \Sigma_2^{1/2}\|_F\\
+% d_{op}(\Sigma_1; \Sigma_2) = \| I - \Sigma_2^{1/2} \Sigma_1^{-1} \Sigma_2^{1/2}\|_{op}
+% \end{align}
+% and
+\begin{align}d_{F}(\Theta_1; \Theta_2) = \| I - \Theta_2^{-1/2} \Theta_1 \Theta_2^{-1/2}\|_F\\
+d_{op}(\Theta_1; \Theta_2) = \| I - \Theta_2^{-1/2} \Theta_1 \Theta_2^{-1/2}\|_{op}
 \end{align}
 \end{definition}
 
@@ -203,7 +208,7 @@ One may think of \cref{eq:tilde ell} as the log-likelihood of $\Sigma$ after rec
 Both log-likelihoods are geodesically convex, as will be defined precisely in the next section, but only the latter function has geodesically Lipschitz gradients, i.e., is geodesically smooth~\cite{burgisser2019towards}.
 This suggests it is more amenable to geodesically convex optimization, our main tool in this work.
 
-The tensor normal model for known dimensions~$d_1,\dots,d_k$ consists of the normal distributions~$\cN(0,\Sigma)$, where $D = \prod_{a=1}^k d_a$ and the covariance matrix is the Kronecker product $\Sigma = \bigotimes_{a=1}^k \Sigma_a$ of positive definite $d_a\times d_a$-matrices $\Sigma_a$.
+The tensor normal model for dimensions~$\vec d=(d_1,\dots,d_k)$ consists of the normal distributions~$\cN(0,\Sigma)$, where $D = \prod_{a=1}^k d_a$ and the covariance matrix is a Kronecker product $\Sigma = \bigotimes_{a=1}^k \Sigma_a$ of positive definite $d_a\times d_a$-matrices $\Sigma_a$.
 Let $\Theta_a = \Sigma_a^{-1}$, so that the precision matrix is given by $\Theta = \bigotimes_{a=1}^k \Theta_a$.
 Then the same argument as above, restricted to precision matrices of this form, shows that to compute the MLE we may maximize the function
 \begin{align*}
@@ -224,6 +229,7 @@ Let $(\widehat{\Theta}_{\vec X,1}, \dots, \widehat{\Theta}_{\vec X,k})$ denote t
 
 \noindent
 As explained above, $\widehat{\Theta}_{\vec X} = \widehat{\Theta}_{\vec X,1} \ot \cdots \ot \widehat{\Theta}_{\vec X,k}$ is directly related to the maximum likelihood estimator for the tensor normal model (namely, by an known overall multiplicative factor).
+We will often identify $\widehat{\Theta}_{\vec X}$ with the tuple $(\widehat{\Theta}_{\vec X,1}, \dots, \widehat{\Theta}_{\vec X,k})$, and similarly for $\Theta$.
 When $\vec X$ is clear from context we will drop it.
 
 \MW{Should we write lower case $x$ when the $x$ are not random (above) and $X$ when they (e.g., in the `rather simple plan' below)?}
@@ -250,40 +256,59 @@ A function $f\colon P \to \R$ is said to be \emph{geodesically convex} if, for a
 \begin{align*}
   \R \to \R, \quad t \mapsto f(A^T e^{t Z} A)
 \end{align*}
-Say $f$ is \emph{$\lambda$-geodesically strongly convex} if
+Say $f$ is \emph{$\lambda$-geodesically strongly convex} with respect to a norm $\norm\cdot$ on $S$ if
 \begin{align*}
-  \partial^2_t f(A^T e^{t Z} A) \geq \lambda \norm{Z}_{\vec d}^2
+  \partial^2_t f(A^T e^{t Z} A) \geq \lambda \norm{Z}^2 \qquad (\forall Z\in S).
 \end{align*}
-for all $Z\in S$, and \emph{$L$-geodesically smooth} if
-\begin{align*}
-  \partial^2_t f(A^T e^{t Z} A) \leq L \norm{Z}_{\vec d}^2
-\end{align*}
-for all $Z\in S$.
-Here we use the norm $\norm{\cdot}_{\vec d}$ induced by the inner product $\braket{X, Y}_{\vec d} = \sum_{a=1}^k \frac1{d_a} \tr(X_a Y_a)$ for $X, Y \in S$.
+% and \emph{$L$-geodesically smooth} with respect to the norm $\norm\cdot$ if
+% \begin{align*}
+%   \partial^2_t f(A^T e^{t Z} A) \leq L \norm{Z}^2 \qquad (\forall Z\in S).
+% \end{align*}
+Throughout, we will use the norm $\norm{\cdot}_{\vec d}$ induced by the rescaled Hilbert-Schmidt inner product $\braket{X, Y}_{\vec d} = \sum_{a=1}^k \frac1{d_a} \tr(X_a Y_a)$ for $X, Y \in S$.
 \end{definition}
 
-The function $f_{\vec X}$ defined in \cref{dfn:function} is geodesically convex and $L$-geo\-de\-si\-cal\-ly smooth for $L=\TODO{XXX NEW NORM}$~\cite{burgisser2019towards}.
-With this definition in place, we are able to state the rather simple plan.
+The function $f_{\vec X}$ defined in \cref{dfn:function} is geodesically convex%and $L$-geo\-de\-si\-cal\-ly smooth for $L=\TODO{XXX NEW NORM}$
+~\cite{burgisser2019towards}.
+Moreover, for all $\Theta \in P$, $A \in G$, and $\vec X=(X_1,\dots,X_n)$, we have that
+\begin{align}\label{eq:equivariance}
+  f_{A^{-1} \vec X}(A^T \Theta A) = f_{\vec X}(\Theta),
+\end{align}
+where we write $A^{-1} \vec X = (A^{-1} X_1,\cdots,A^{-1} X_n)$.
+With these definitions in place, we are able to state the rather straightforward plan.
+
 \begin{enumerate}
-\item\label{it:reduce} \textbf{Reduce to identity: } Firstly, note that $\widehat{\Theta}(\vec X) = \Theta^{1/2} \hat{\Theta}(\Theta^{-1/2} \vec X) \Theta^{1/2}$. As $\Theta^{-1/2} \vec X$ is distributed as $n$ samples from $\Theta^{-1/2}X$ which is a standard Gaussian, the distance
-$$ d(\hat{\Theta}(\vec X), I)$$
-for $X$ standard Gaussian is distributed exactly as $d(\hat{\Theta}(\vec X), \Theta)$ for $X$ with covariance matrix $\Theta$. Here $d \in \{d_F, d_{op}\}$. This means it is enough to bound $d(\hat{\Theta}(\vec X), I)$ assuming $\vec X$ is a standard Gaussian.
-\item\label{it:convexity} \textbf{Show strong convexity: } Show that, with high probability, $f_{\vec X}$ is $\Omega(1)$-geodesically strongly convex near $I$ w.r.t. $\|\cdot\|_{\vec d}$.
-\item\label{it:grad} \textbf{Bound the gradient: } Show that $\| \nabla f_{\vec X} (I) \|_{\vec d}$ is small with high probability.
-%(w.r.t. the dual norm $\|\cdot\|_{*}$). \CF{Probably need to say something about why geodesic distance and $d$ are comparable.}
-
+\item\label{it:reduce} \textbf{Reduce to identity:}
+Firstly, \cref{eq:equivariance} implies that $\widehat\Theta_{\Theta^{-1/2} \vec X} = \Theta^{1/2} \widehat\Theta_{\vec X} \Theta^{1/2}$ assuming either minimizer exists and is unique.
+Therefore,
+\begin{align*}
+  d_F(\widehat\Theta_{\Theta^{-1/2} \vec X}; \Theta)
+= \norm{ I - \Theta^{-1/2} \widehat\Theta_{\Theta^{-1/2} \vec X} \Theta^{-1/2} }_F
+% = \norm{ I - \widehat\Theta_{\Theta^{1/2} \vec X} }_F
+= d_F(\widehat\Theta_{\vec X}; I)
+\end{align*}
+and likewise for the distance $d_{\op}$.
+Now if $\vec X$ is distributed as $n$ independent samples from a standard Gaussian, $\Theta^{-1/2} \vec X$ is distributed as $n$ independent samples from $\cN(0, \Theta^{-1})$.
+This shows that to prove \cref{thm:tensor-frobenius} it is enough to consider the case that $\Theta = I$ and $\vec X$ is standard Gaussian.
+\item\label{it:convexity} \textbf{Show strong convexity:}
+Show that, with high probability, $f_{\vec X}$ is $\Omega(1)$-geodesically strongly convex near $I$.
+\item\label{it:grad} \textbf{Bound the gradient:}
+Show that the gradient $\nabla f_{\vec X}(I)$ (defined formally below) is small with high probability.
 \end{enumerate}
-These together imply the sample complexity bounds - as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far. Furthermore, like in the Euclidean case, if a function is strongly geodesically convex in a region and one can prove a \emph{descent lemma} for a sequence in the region, then it must converge exponentially quickly to an optimizer. It is well-known that various optimization algorithms applied to $f_{\vec X}$ satisfy such a descent lemma \CF{cite bfg+}.
 
-We now formally state the lemma that we will use to relate the gradient, and convexity of $f$, and distance to the optimizer as in the plan above.
+These together imply the desired sample complexity bounds -- as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far.
+Furthermore, like in the Euclidean case, if a function is strongly geodesically convex in a region and one can prove a \emph{descent lemma} for a sequence in the region, then it must converge exponentially quickly to an optimizer.
+It is well-known that various optimization algorithms applied to $f_{\vec X}$ satisfy such a descent lemma~\cite{burgisser2019towards}.
 
-%\begin{definition}[Geodesic gradient]\TODO{definition of geodesic gradient and Hessian}\end{definition}
+We now formally state the lemma that we will use to relate the gradient and strong convexity to the distance to the optimizer as in the plan above.
+The lemma holds for an arbitrary norm $\norm{\cdot}$ on $S$; we say that $\{ e^Z : \norm Z \leq r \}$ is the \emph{$\norm{\cdot}$-ball} of radius $r>0$ about~$I$.
 
-
-
-\begin{lemma}\label{lem:convex-ball} Let $f$ be geodesically convex everywhere, and $\lambda$-geodesically strongly convex w.r.t. norm $\|\cdot\|$ on a $\| \cdot \|$-ball of radius $\kappa$ about $I$; further assume the geodesic gradient satisfies $\|\nabla f(I)\| = \eps < \lambda \kappa$. Then there is an optimizer within a $\|\cdot\|$-ball of radius $\eps/\lambda$.
+\begin{lemma}\label{lem:convex-ball}
+Let $f\colon P\to \R$ be geodesically convex everywhere, and $\lambda$-geodesically strongly convex with respect to a norm $\norm{\cdot}$ on a $\norm{\cdot}$-ball of radius~$\kappa>0$ about~$I$.
+Further assume that the geodesic gradient satisfies $\norm{\nabla f(I)} \leq \eps < \lambda \kappa$.
+Then $f$ has a unique minimum within the $\norm{\cdot}$-ball of radius~$\eps/\lambda$ about $I$.
 \end{lemma}
 \begin{proof}
+\MW{Sadly, the gradient is not yet defined. Michael continue here.}
 Take geodesic $e^{t Z}$ towards the optimum with normalized speed $\|Z\| = 1$ so the optimizer is $e^{T Z}$. Let $g(t) := f(e^{tZ})$, which is $\lambda$-strongly convex in $t$.
 \[ g'(0) = \langle \nabla f(I), Z \rangle \geq - \|\nabla f(I)\| \|Z\| \geq - \eps   \]
 \[ 0 = g'(T) = \int_{t=0}^{T} g''(t) dt + g'(0) \geq \lambda \min\{\kappa,T\} - \eps     \]
