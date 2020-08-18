@@ -196,7 +196,8 @@ Instead of maximizing the function~$\ell_{\vec X}$, we may instead maximize the 
   \tilde\ell_{\vec X}(\Theta) = \frac1D\log\det \Theta - \log \sum_{i=1}^n \braket{X_i, \Theta X_i}.
 \end{align}
 Indeed, the two functions have the same maximizers up to rescaling.%
-\footnote{To see this, write $\Theta = \lambda \Theta'$ for $\lambda>0$ and $\Theta'\in\PD_D^1$ and explicitly carry out the optimization over~$\lambda$. The result is $\sup_{\Theta\in\PD_D} \ell_{\vec X}(\Theta) = \sup_{\Theta'\in\PD_D^1} \frac {nD}2 \left( \log(nD) - 1 \right) + \frac{nD}2 \tilde\ell_{\vec X}(\Theta')$.}
+\footnote{To see this, write $\Theta = \lambda \Theta'$ for $\lambda>0$ and $\Theta'\in\PD_D^1$ and maximize over~$\lambda$.
+The result is $\lambda = n D / \sum_{i=1}^n \braket{X_i, \Theta X_i}$, hence $\sup_{\Theta\in\PD_D} \ell_{\vec X}(\Theta) = \sup_{\Theta'\in\PD_D^1} \frac {nD}2 \left( \log(nD) - 1 \right) + \frac{nD}2 \tilde\ell_{\vec X}(\Theta')$.}
 One may think of \cref{eq:tilde ell} as the log-likelihood of $\Sigma$ after receiving $[X_1, \dots, X_n]$, the equivalence class of the tuple of samples in projective space.
 
 Both log-likelihoods are geodesically convex, as will be defined precisely in the next section, but only the latter function has geodesically Lipschitz gradients, i.e., is geodesically smooth~\cite{burgisser2019towards}.
@@ -216,15 +217,14 @@ Given $n$ samples $\vec{X} = (X_1, \dots, X_n)$ in $\R^D$, define the function $
 \begin{align}\label{eq:projective-likelihood}
   f_{\vec X}(\Theta_1,\dots,\Theta_k) = \log \sum_{i=1}^n \braket{X_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) X_i}.
 \end{align}
-Let $\widehat{\Theta}_{\vec X}$ denote the minimizer of $f_{\vec X}$ if it exists and is unique.
+Let $(\widehat{\Theta}_{\vec X,1}, \dots, \widehat{\Theta}_{\vec X,k})$ denote the minimizer of $f_{\vec X}$ if it exists and is unique.
 \end{definition}
 
 \noindent
+As explained above, $\widehat{\Theta}_{\vec X} = \widehat{\Theta}_{\vec X,1} \ot \cdots \ot \widehat{\Theta}_{\vec X,k}$ is directly related to the maximum likelihood estimator for the tensor normal model (namely, by an known overall multiplicative factor).
 When $\vec X$ is clear from context we will drop it.
 
 \MW{Should we write lower case $x$ when the $x$ are not random (above) and $X$ when they (e.g., in the `rather simple plan' below)?}
-
-\TODO{Add a sentence that says clearly how $\widehat\Theta_{\vec X}$ is related to the MLE (i.e., what the multiplicative constant is that relates the two).}
 
 \subsection{Sample complexity from goedesic convexity}\label{subsec:outline} Following \cite{FM20}, and in spirit also \CF{cite weisel}, we use geodesic convexity to prove \cref{thm:tensor-frobenius}. \cref{thm:matrix-normal}, proven later in \cref{sec:matrix-normal}, requires the stronger notion of \emph{quantum expansion}.
 
