@@ -204,7 +204,7 @@ Instead of maximizing the function~$\ell_{\vec X}$, we may instead maximize the 
 Indeed, the two functions have the same maximizers up to rescaling.%
 \footnote{To see this, write $\Theta = \lambda \Theta'$ for $\lambda>0$ and $\Theta'\in\PD_D^1$ and maximize over~$\lambda$.
 The result is $\lambda = n D / \sum_{i=1}^n \braket{X_i, \Theta X_i}$, hence $\sup_{\Theta\in\PD_D} \ell_{\vec X}(\Theta) = \sup_{\Theta'\in\PD_D^1} \frac {nD}2 \left( \log(nD) - 1 \right) + \frac{nD}2 \tilde\ell_{\vec X}(\Theta')$.}
-One may think of \cref{eq:tilde ell} as the log-likelihood of $\Sigma$ after receiving $[X_1, \dots, X_n]$, the equivalence class of the tuple of samples in projective space.
+One may think of \cref{eq:tilde ell} as proportional to the log-likelihood of $\Sigma$ after receiving $[X_1, \dots, X_n]$, the equivalence class of the tuple of samples in projective space.
 
 
 Both log-likelihoods are geodesically convex, as will be defined precisely in the next section, but only the latter function has geodesically Lipschitz gradients, i.e., is geodesically smooth~\cite{burgisser2019towards}.
