@@ -290,10 +290,10 @@ Therefore,
 and likewise for the distance $d_{\op}$.
 Now if $\vec X$ is distributed as $n$ independent samples from a standard Gaussian, $\Theta^{-1/2} \vec X$ is distributed as $n$ independent samples from $\cN(0, \Theta^{-1})$.
 This shows that to prove \cref{thm:tensor-frobenius} it is enough to consider the case that $\Theta = I$ and $\vec X$ is standard Gaussian.
+\item\label{it:grad} \textbf{Bound the gradient:}
+Show that the gradient $\nabla f_{\vec X}(I)$ (defined below) is small with high probability.
 \item\label{it:convexity} \textbf{Show strong convexity:}
 Show that, with high probability, $f_{\vec X}$ is $\Omega(1)$-geodesically strongly convex near $I$.
-\item\label{it:grad} \textbf{Bound the gradient:}
-Show that the gradient $\nabla f_{\vec X}(I)$ (defined below) is small with high probability. \MW{Swap items 2 and 3?}
 \end{enumerate}
 
 These together imply the desired sample complexity bounds -- as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far.
@@ -374,7 +374,7 @@ Since $Z$ was arbitrary, this shows that $f(\Theta') > f(\Theta)$ for any $\Thet
 %-----------------------------------------------------------------------------
 \subsection{Bounding the Gradient}
 %-----------------------------------------------------------------------------
-As suggested in step~\ref{it:convexity} of the plan from the previous section, we now compute the gradient of $f_{\vec X}$ and bound it using basic matrix concentration results.
+As suggested in the plan from the previous section, we now compute the gradient of $f_{\vec X}$ and bound it using basic matrix concentration results.
 
 To calculate the gradient, we need a definition from linear algebra.
 
@@ -424,11 +424,11 @@ Then the components of the Riemannian gradient $\nabla f_{\vec X}$ at the identi
 \end{proof}
 
 Having calculated the gradient, we are ready to state our bound:
-\MW{Please check that I did not introduce problems. Can we take $\eps<1$ and write $C\geq16$ some absolute constant?}
+\MW{Please check that I did not introduce problems in \cref{prop:gradient-bound} and its proof. Can we take $\eps<1$ so that we can choose $C=16$?}
 
 \begin{prop}\label{prop:gradient-bound}
 Let $\vec X = (X_1,\dots,X_n)$ be independent standard Gaussian random variables in $\R^D$, where $D=d_1\cdots{}d_k$.
-Let $\eps>0$ and $C \geq 16\max\{\eps^2,1\}$.
+Let $\eps>0$ and $C = 16\max\{\eps^2,1\}$.
 Suppose that, for all $a \in [k]$,
 \begin{align*}
   N_a := \frac{n D}{d_a} \geq C \frac{d_a}{\eps^2}.
@@ -470,9 +470,7 @@ Since there are at most $d \leq N$ nonzero eigenvalues, this implies in turn tha
 \frac {\left( 1 \pm 8\eps/C \right)} {d \left( 1 \pm 8\eps/C \right)} \subseteq \frac1d \left( 1 \pm 16\eps/C \right) \subseteq \frac1d \left( 1 \pm \eps \right),
 \end{align*}
 Thus,
-\begin{align*}
-  \norm{\nabla_a f_{\vec X}}_{\op} \leq \eps
-\end{align*}
+$\norm{\nabla_a f_{\vec X}}_{\op} \leq \eps$
 with failure probability at most $2 \exp(-N \eps^2/(2C^2))$.
 Applying the union bound over $[k]$ completes the proof of the proposition.
 % Next, observe that $\|Y\|_F^2$ is a $\chi^2$-distribution with $Nd$ degrees of freedom, and thus satisfies
