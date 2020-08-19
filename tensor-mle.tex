@@ -424,24 +424,25 @@ Then the components of the Riemannian gradient $\nabla f_{\vec X}$ at the identi
 \end{proof}
 
 Having calculated the gradient, we are ready to state our bound:
+\MW{Please check that I did not introduce problems. Can we take $\eps<1$ and write $C\geq16$?}
 
 \begin{prop}\label{prop:gradient-bound}
 Let $\vec X = (X_1,\dots,X_n)$ be independent standard Gaussian random variables in $\R^D$, where $D=d_1\cdots{}d_k$.
+Let $\eps>0$ and $C \geq 16\max\{\eps^2,1\}$.
 Suppose that, for all $a \in [k]$,
 \begin{align*}
   N_a := \frac{n D}{d_a} \geq C \frac{d_a}{\eps^2}.
 \end{align*}
-\TODO{Say what $C$ depends on.}
-Then, with probability at least $1 - \sum_{a=1}^k e^{-\Omega(N_a \eps^2)}$ we have that
+Then, with probability at least $1 - 2 \sum_{a=1}^k e^{-N_a \eps^2/(2C^2)}$ we have that
 \begin{align*}
   \norm{\nabla_a f_{\vec X}}_{\op} \leq \eps
 \end{align*}
-for all $a\in[k]$, and hence $\norm{\nabla_a f_{\vec X}}_{\vec d}^2 \leq k \eps^2$.
+for all $a\in[k]$, and hence $\norm{\nabla f_{\vec X}}_{\vec d}^2 \leq k \eps^2$.
 \end{prop}
 
 To prove this we will need a standard result in matrix concentration.
 Recall that $\nabla_a f_{\vec X} = d_a \rho^{(a)} - I_a$.
-It is not hard to see that $\rho^{(a)}$ is distributed as $Y Y^\dagger / \norm{Y}_F^2$, where $Y$ is a $d_a \times N_a$ matrix with independent Gaussian entries.
+It is not hard to see that $\rho^{(a)}$ is distributed as $Y Y^T / \norm{Y}_F^2$, where $Y$ is a $d_a \times N_a$ matrix with independent Gaussian entries.
 The following result that bounds the singular values of such random matrices.
 
 \begin{theorem}[Corollary 5.35 of \cite{vershynin2010introduction}]\label{cor:vershynin}
@@ -450,26 +451,40 @@ Then, for $t \geq 0$, the following occurs with probability at least $1 - 2 \exp
 \begin{align*}
   \sqrt{N} - \sqrt{d} - t \leq s_{\min}(Y) \leq s_{\max}(Y) \leq \sqrt{N} + \sqrt{d} + t,
 \end{align*}
-where $s_{\min}$ and $s_{\max}$ denotes the smallest and largest singular value, respectively.
+where $s_{\min}$ and $s_{\max}$ denote the smallest and largest singular value, respectively (we allow for singular values that are zero).
 \end{theorem}
 
 \begin{proof}[Proof of \cref{prop:gradient-bound}]
 We first consider a fixed $a\in[k]$ and later take a union bound.
 Let $d = d_a$ and $N = N_a = n D/d_a$.
-Again, $\nabla_a f_{\vec X} = d_a \rho^{(a)} - I_a$ where $\rho^{(a)}$ is distributed as $Y Y^\dagger/\|Y\|_F^2$, where $Y$ is a $d \times N$ matrix with independent Gaussian entries.
-By \cref{cor:vershynin}, we have the following with $\leq 2 \exp(-t^{2}/2)$ failure probability:
+Again, $\nabla_a f_{\vec X} = d_a \rho^{(a)} - I_a$ where $\rho^{(a)}$ is distributed as $Y Y^T/\|Y\|_F^2$, where $Y$ is a $d \times N$ matrix with independent Gaussian entries.
+By \cref{cor:vershynin}, we have the following with $\leq 2 \exp(-t^2/2)$ failure probability:
 \begin{align*}
-  \sqrt{N} \left( 1 -  \frac{\sqrt{d} + t }{\sqrt{N}}  \right)\leq s_{\min}(Y) \leq s_{\max}(Y) \leq  \sqrt{N} \left( 1 + \frac{\sqrt{d} + t }{\sqrt{N}}  \right).
+  \sqrt{N} \left( 1 -  \frac{\sqrt{d} + t }{\sqrt{N}}  \right)\leq s_{\min}(Y) \leq s_{\max}(Y) \leq  \sqrt{N} \left( 1 + \frac{\sqrt{d} + t }{\sqrt{N}} \right).
 \end{align*}
-\MW{Too tired to check numbers, will continue later.}
-Let $t = c \sqrt{N} \eps$. Because $d \leq c N \eps^2$, both largest and least singular values are
-$\sqrt{N} \left( 1 + c \cdot \eps   \right)$.
-
-Provided $c$ is small enough we then have
- $$\lambda_1(YY^\dagger), \lambda_{d}(YY^\dagger) \in \cN(1 \pm c \cdot \eps).$$
- Next, observe that $\|Y\|_F^2$ is a $\chi$-squared distribution with $Nd$ degrees of freedom, and thus satisfies $\| Y\|_F^2 - Nd \leq t N d$ with probability $1 - 2e^{- Nd t^2/8}$ for $t \leq 1$ \CF{\cite{wainwright}}. Thus
-  $$\lambda_1(\rho^{\{a\}}), \lambda_2(\rho^{\{a\}}) \in  \cN(1 \pm c \cdot \eps)/ Nd(1 \pm c \cdot \eps) \in \frac{1}{d}(1 \pm \eps)$$
-with probability $1 - 2 e^{- c N \eps^2}- 2 e^{- c Nd \eps^2} = 1 - 4 e^{- N\eps^2},$ provided $c$ is small enough. Applying the union bound over $[k]$ completes the proof of the lemma.\end{proof}
+Let $t = \sqrt{N} \eps / C$.
+Because $d \leq N \eps^2 / C$, this shows that all singular values are in $\sqrt{N} \left( 1 \pm 2\eps/C \right)$.
+It follows that the eigenvalues of $YY^T$ are in $N \left( 1 \pm 8\eps/C \right)$.
+Since there are at most $d \leq N$ nonzero eigenvalues, this implies in turn that the eigenvalues of $Y Y^T/\|Y\|_F^2$ are in
+\begin{align*}
+\frac {\left( 1 \pm 8\eps/C \right)} {d \left( 1 \pm 8\eps/C \right)} \subseteq \frac1d \left( 1 \pm 16\eps/C \right) \subseteq \frac1d \left( 1 \pm \eps \right),
+\end{align*}
+Thus,
+\begin{align*}
+  \norm{\nabla_a f_{\vec X}}_{\op} \leq \eps
+\end{align*}
+with failure probability at most $2 \exp(-N \eps^2/(2C^2))$.
+Applying the union bound over $[k]$ completes the proof of the proposition.
+% Next, observe that $\|Y\|_F^2$ is a $\chi^2$-distribution with $Nd$ degrees of freedom, and thus satisfies
+% \begin{align*}
+%   \norm Y_F^2 - Nd \leq tNd
+% \end{align*}
+% with failure probability at most $e^{-Ndt^2/18}$ for $t \in [0,3]$~\cite[(2.44)]{W19}.
+% WAS: $\| Y\|_F^2 - Nd \leq t N d$ with probability $1 - 2e^{- Nd t^2/8}$ for $t \leq 1$ \cite{W19}.
+% Thus
+  % $$\lambda_1(\rho^{\{a\}}), \lambda_2(\rho^{\{a\}}) \in  \cN(1 \pm c \cdot \eps)/ Nd(1 \pm c \cdot \eps) \in \frac{1}{d}(1 \pm \eps)$$
+% with probability $1 - 2 e^{- c N \eps^2}- 2 e^{- c Nd \eps^2} = 1 - 4 e^{- N\eps^2},$ provided $c$ is small enough.
+\end{proof}
 
 % Both $\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a$ and $\| \vec X\|_F^2 - Nd_a \leq .5 N d_a$ hold with probability \CF{blah}$. Now  $$ \|\rho^{\{a\}} - I_a/d_a\|_{op} \leq \|\rho^{\{a\}} - N I_{d_a}/ \|\vec X\|_F\|_{op} + $$
 
