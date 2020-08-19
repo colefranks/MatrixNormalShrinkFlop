@@ -374,7 +374,7 @@ Since $Z$ was arbitrary, this shows that $f(\Theta') > f(\Theta)$ for any $\Thet
 %-----------------------------------------------------------------------------
 \subsection{Bounding the Gradient}
 %-----------------------------------------------------------------------------
-As suggested by the plan from the previous section, we now compute the gradient of $f_{\vec X}$ and bound it using basic matrix concentration results.
+As suggested in step~\ref{it:convexity} of the plan from the previous section, we now compute the gradient of $f_{\vec X}$ and bound it using basic matrix concentration results.
 
 To calculate the gradient, we need a definition from linear algebra.
 
@@ -387,7 +387,7 @@ for all $d_a \times d_a$ matrices $Z_a$.
 Here and in the following we write $I_a$ for the $d_a\times d_a$ identity matrix.
 \end{definition}
 
-\MW{If you prefer we can also write $\rho = \frac{\vec X \vec X^T}{\norm{\vec X}_F^2}$ below, but then we need to say somewhere that we now think of $\vec X$ as a $D\times n$-matrix.}
+\MW{If you prefer we can also write $\rho = \frac{\vec X \vec X^T}{\norm{\vec X}_F^2}$ below, but then we need to say somewhere that we now think of $\vec X$ as a $D\times n$-matrix. But I would not do this unless we have a great reason.}
 
 \begin{lemma}[Riemannian gradient]
 Let $\rho = \sum_{i=1}^n X_i X_i^T / \norm{\vec X}_2^2$.
@@ -497,7 +497,14 @@ Applying the union bound over $[k]$ completes the proof of the proposition.
 
 
 
+%-----------------------------------------------------------------------------
 \subsection{Strong convexity}
+%-----------------------------------------------------------------------------
+We now prove our main strong convexity results in order to carry out step~\ref{it:convexity} of the plan from \cref{subsec:outline}.
+Just like in the Euclidean case, the Hessian is convenient to characterize strong convexity, and we begin by defining it formally in the Riemannian context.
+We then show strong convexity \emph{at} the origin, and later show strong convexity \emph{near} the origin.
+\MW{Michael continue here.}
+
 \begin{definition}[Riemannian Hessian]
 The Hessian $\nabla^2 f(Q)$ is the linear operator on $H$ such that
 $$\langle Y,  \nabla^2 f(Q) Z \rangle_{\vec d} = \partial_s \partial_t f(\sqrt{Q}e^{Zs + Yt}\sqrt{Q})|_{s,t = 0}$$
@@ -544,7 +551,6 @@ Now to calculate the same for $f$, note that $f = g + \log F $ for
 $$g:= - \sum_{a \in [k]} \frac1{d_a} \log\det(\Theta_a).$$ Further note that $\nabla \log F = \frac{\nabla F}{F}$, $\nabla^{2} f = \frac{\nabla^{2} F}{F} - \frac{(\nabla F)(\nabla F)^{*}}{F^{2}}$, and that $\nabla_a g = d_a I_{a}$ and $\nabla^2 g = 0$. Plugging in the values of $F, \nabla F, \nabla^2 F$ from above completes the proof. \end{proof}
 
 \TODO{Fix for new inner product and dimension issue}
-We now prove our main strong convexity results in order to carry out \cref{it:convexity} of the plan from \cref{subsec:outline}. We begin by showing strong convexity \emph{at} the origin, and later show strong convexity \emph{near} the origin.
 \begin{theorem}\label{thm:tensor-convexity}
 Suppose the number of samples is at least $k^{2} \max_{a} d_{a}^{2}/D$. Then with failure probability $\leq 1/poly(D)$, $f$ is $\Omega(1)$-strongly convex at $I$ w.r.t. $\|\cdot \|_{\vec d}$.
 \end{theorem}
