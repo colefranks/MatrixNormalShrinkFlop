@@ -381,9 +381,9 @@ To calculate the gradient, we need a definition from linear algebra.
 \begin{definition}[Partial trace]
 For $\rho \in \PD_D$ and $a\in[k]$, let $\rho^{(a)} \in \PD_{d_a}$ denote the \emph{partial trace} defined by the condition that
 \begin{align*}
-  \tr \rho^{(a)} Z_a = \tr \rho (I_1 \ot \cdots \ot I_{a-1} \ot Z_a \ot I_{a+1} \ot \cdots \ot I_k)
+  \tr \rho^{(a)} Z = \tr \rho Z_a,
 \end{align*}
-for all $d_a \times d_a$ matrices $Z_a$.
+for all $d_a \times d_a$ matrices $Z$, where $Z_a = (I_1 \ot \cdots \ot I_{a-1} \ot Z \ot I_{a+1} \ot \cdots \ot I_k)$.
 Here and in the following we write $I_a$ for the $d_a\times d_a$ identity matrix.
 \end{definition}
 
@@ -401,13 +401,13 @@ Then the components of the Riemannian gradient $\nabla f_{\vec X}$ at the identi
   Let $F_{\vec X}(\Theta) = \tr[\rho \, \Theta]$.
   Then, we have, for all $a\in[k]$, that
   \begin{align*}
-    \frac1{d_a} \tr (\nabla_a F_{\vec X}) Z_a
-  &= \partial_{t=0} F_{\vec X}(I_1,\dots,I_{a-1}, e^{tZ_a}, I_{a+1},\dots,I_n)
-  % \\ &= \tr \rho (I_1 \ot \cdots \ot I_{a-1} \ot Z_a \ot I_{a+1} \ot \cdots \ot I_n)
-  = \tr \rho^{(a)} Z_a
+    \frac1{d_a} \tr (\nabla_a F_{\vec X}) Z
+  = \partial_{t=0} F_{\vec X}(I_1,\dots,I_{a-1}, e^{tZ}, I_{a+1},\dots,I_n)
+  = \tr \rho Z_a
+  = \tr \rho^{(a)} Z
   \end{align*}
-  for all traceless $d_a \times d_a$ matrices $Z_a$.
-  Since $\nabla_a F$ is traceless by definition,
+  for all traceless symmetric $d_a \times d_a$ matrices $Z$.
+  Since $\nabla_a F$ is traceless and symmetric by definition, this implies that
   \begin{align*}
     \nabla_a F_{\vec X}
   = d_a \rho^{(a)} - \tr(\rho^{(a)}) I_a
@@ -501,18 +501,37 @@ Applying the union bound over $[k]$ completes the proof of the proposition.
 We now prove our main strong convexity results in order to carry out step~\ref{it:convexity} of the plan from \cref{subsec:outline}.
 Just like in the Euclidean case, the Hessian is convenient to characterize strong convexity, and we begin by defining it formally in the Riemannian context.
 We then show strong convexity \emph{at} the origin, and later show strong convexity \emph{near} the origin.
-\MW{Michael continue here.}
 
 \begin{definition}[Riemannian Hessian]
-The Hessian $\nabla^2 f(Q)$ is the linear operator on $H$ such that
-$$\langle Y,  \nabla^2 f(Q) Z \rangle_{\vec d} = \partial_s \partial_t f(\sqrt{Q}e^{Zs + Yt}\sqrt{Q})|_{s,t = 0}$$
-for all $Z, Y \in H$. Similarly, $\nabla^2 f$ denotes $\nabla^2 f(I)$, and as a block matrix
-$$\nabla^2 f = \begin{bmatrix}
-\nabla_{11}^2 f &  \dots &  \nabla^2_{1k} f \\
-\vdots &  \ddots &  \vdots\\
- \nabla_{k1}^2 f &  \dots &  \nabla_{kk}^2 f
- \end{bmatrix}$$
+For $\Theta \in P$, the \emph{Riemannian Hessian}~$\nabla^2 f(\Theta)$ is the unique linear operator on $S$ such that
+\begin{align*}
+  \braket{Y, \nabla^2 f(\Theta) Z}_{\vec d} = \partial_{s=0} \partial_{t=0} f(\Theta^{1/2} e^{Ys + Zt} \Theta^{1/2})
+\end{align*}
+for all $Y, Z\in S$.
+We often abbreviate $\nabla^2 f = \nabla^2 f(I)$.
+As a block matrix,
+\begin{align*}
+  \nabla^2 f = \begin{bmatrix}
+  \nabla_{11}^2 f & \dots & \nabla_{1k}^2 f \\
+  \vdots & \ddots & \vdots \\
+  \nabla_{k1}^2 f & \dots & \nabla_{kk}^2 f \\
+  \end{bmatrix},
+\end{align*}
+where $\nabla_{ab}^2f$ is an operator from $\Sym_{d_b}^0$ to $\Sym_{d_a}^0$.
 \end{definition}
+
+Similarly as for the gradient, we can compute the components of the Hessian in terms of a partial trace, as in the following definition and lemma.
+
+\begin{definition}[Partial trace]
+For $\rho \in \PD_D$ and $a \neq b\in[k]$, let $\rho^{(ab)} \in \PD_{d_a \times d_b}$ denote the \emph{partial trace} defined by the condition that
+\begin{align*}
+  \tr \rho^{(ab)} (Y \ot Z) = \tr \rho Y_a Z_b,
+\end{align*}
+for all $d_a \times d_a$ matrices $Y$ and $d_b \times d_b$ matrices $Z$, where, as before, we write~$Y_a = (I_1 \ot \cdots \ot I_{a-1} \ot Y \ot I_{a+1} \ot \cdots \ot I_k)$ and similarly for $Z_b$.
+\end{definition}
+
+\MW{Michael continue here.}
+
 \TODO{also move hessian calculation to here}
 \begin{lemma}[Riemannian Hessian calculations]
 Let $\rho$ denote $\frac{\vec X \vec X^\dagger}{\|\vec X\|^2}$. 
