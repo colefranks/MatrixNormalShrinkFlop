@@ -618,7 +618,9 @@ We can in fact show that $\nabla^{2}$ is well-conditioned using the following:
 \preceq \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}
 \preceq \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
 \]
-We can rewrite the Hessian using shorthand $\{M_{a}\}$ for the diagonal blocks and $\{M_{ab}\}$ for off-diagonal blocks: \CF{why not just write $\nabla^2_{ab}f$?} \CF{Also, the matrices $E_{aa} \otimes M_a$ are not all of the same size}
+We can rewrite the Hessian using shorthand $\{M_{a}\}$ for the diagonal blocks and $\{M_{ab}\}$ for off-diagonal blocks: \CF{why not just write $\nabla^2_{ab}f$?} \CF{Also, the matrices $E_{aa} \otimes M_a$ are not all of the same size} 
+\\ \AR{Ya $\nabla_{ab}$ notation is fine, just needed something that was a matrix of the right dimensions, so shorthand M was to avoid weird things with $\rho$}
+\\ \AR{It's fine if they're of different sizes, we enumerate the basis of the whole space as $\cup_{a} e_{a} \otimes \{e_{i \in [d_{a}]}\}$ }
 \[ \nabla^{2} f = \sum_{a} E_{aa} \otimes M_{a} + \sum_{a \neq b} E_{ab} \otimes M_{ab}  \]
 Now we can again use the high-probability bounds derived above: \TODO{actually cref them}
 \[ M_{a} \in \frac{1 \pm \eps}{d_{a}} I_{a}; \hspace{5mm} \forall a \neq b: \|M_{ab}\|_{op} \leq \frac{\lambda}{\sqrt{d_{a} d_{b}}}   \]
@@ -670,15 +672,26 @@ Now we analyze one of these terms (by abuse of notation $Z, Y \succ 0$):
 Each of these terms we can bound by $\sigma^{ab}_{1} \|Z\|_{F} \|Y\|_{F}$. (Note we can save a $2$-factor on these four terms since they are decompositions of $Z,Y$). So by iterating this argument over all $c$, we get the desired bound.
 \end{proof}
 
+\begin{remark}
+One fantastic thing about the above proof is that it generalizes quite well to a statement about $\|\cdot\|_{p \to p}$. Explicitly, if $\sigma := \|M\|_{p \to p}$, then we have the following bound:
+\[ |\langle v v^{*}, I_{\overline{ab}} \otimes Z_{\pm} \otimes Y_{\pm} \rangle| \leq \sigma \|Z_{\pm} \|_{p} \|Y_{\pm} \|_{q}    \]
+\[ \|Z_{+}\|_{p} \|Y_{+}\|_{q} + \|Z_{+}\|_{p} \|Y_{-}\|_{q} + \|Z_{-}\|_{p} \|Y_{+}\|_{q} + \|Z_{-}\|_{p} \|Y_{-}\|_{q} \]
+\[ \leq (2 \|Z_{+}\|_{p}^{p} + 2 \|Z_{-}\|_{p}^{p})^{1/p} (2 \|Y_{+}\|_{q}^{q} + 2 \|Y_{-}\|_{q}^{q})^{1/q} = 2 \|Z\|_{p} \|Y\|_{q}    \]
+\AR{We may want to use this result for $p \in \{1,\infty\}$ to bound the confounding forces towards $\|\mu\|_{op}$.} 
+\end{remark}
+
 After one more simple lemma, we will be ready to prove our second strong convexity result, \cref{lem:perturbation}.
 \begin{lemma} [Lemma 3.6 in \TODO{cite KLR}; \CF{where is this used?}]
+\AR{The amount we lose in robustness is related to the worst quadratic form in the whole space (not $\perp I$) since we have to break up into $\pm$ parts. }
 \[ \|M^{ab}\|_{F \to F}^{2} \leq \|M^{a}\|_{F \to F} \|M^{b}\|_{F \to F}   \]
 \end{lemma}
 \begin{proof}
-We have a simple proof of this: by convexity we know $\begin{pmatrix} M^{a} & M^{ab} \\ M^{ba} & M^{b}  \end{pmatrix} \succeq 0$.
+New simple proof: by convexity we know $\begin{pmatrix} M^{a} & M^{ab} \\ M^{ba} & M^{b}  \end{pmatrix} \succeq 0$.
 \end{proof}
 
 \begin{proof}[Proof of \cref{lem:perturbation}]
+\[ \langle X, \nabla_{aa}^{2} X \rangle = \langle \rho^{a}, X^{2} \rangle \leq \|\rho^{a}\|_{op} \|X^{2}\|_{1} = \|\rho^{a}\|_{op} \|X\|_{F}^{2} \]
+\AR{I am probably wrong on dimension factors here, but it's the right idea}
 By the condition on the gradient \TODO{what condition? cref it}, we have that
 \[ \forall a,b: \|M^{ab}\|_{op}^{2} \leq \|M^{a}\|_{op} \|M^{b}\|_{op} \leq \frac{1+\eps}{d_{a} d_{b}}   \]
 We apply the perturbation lemma to each part sucessively, and if $\delta$ are small enough we can assume this bound holds in weaker form $1+\epsilon \leq 2$ for all iterations. The above lemma shows for each part and any test vectors
