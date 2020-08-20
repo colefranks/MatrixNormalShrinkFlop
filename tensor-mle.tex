@@ -120,14 +120,16 @@ It remains an open question to show tight bounds for convergence of the MLE in s
 \item Number of samples $n$, dimensions $d_1, \dots, d_k$. $D$ for product of these.
 \item $X$ for the tensor random variable, $X_1, \dots, X_n$ for the samples, $\vec X = (X_1, \dots, X_n)$ for the random tuple of samples.
 $\rho = \vec X \vec X^T/\|\vec X\|_F^2$.
-\item $\langle \cdot, \cdot \rangle_{\vec d}$ denotes the modified inner product, $\langle \cdot, \cdot \rangle$ the usual Hilbert-Schmidt inner product as well as the $\ell_2$ inner product of vectors
+\item $\braket{\cdot,\cdot}_{\vec d}$ denote the modified Hilbert-Schmidt inner product,
+$\langle \cdot, \cdot \rangle$ is the $\ell_2$ inner product of vectors
 \item $f_{\vec X}$ for the function in \cref{dfn:function}, mostly drop $\vec X$.
 \item $\Sym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite, $\Sym_d^0$ for traceless symmetric, $\PD_d^1$ for $\det=1$ positive definite?
 \item $\Theta$ for big tensor product pd concentration matrix, $\Theta_a$ for individual pd's.
 \item I'm going to call $G = \oplus \GL_{d_i}, P = \oplus \PD_{d_i}^1, S = \oplus \Sym_{d_i}^0$. Explain somewhere how $S$ is the tangent space of $P$.
 \item $\nabla, \nabla^2$ for Riemannian Hessians and gradients, $\nabla_a f$, $\nabla^2_{ab} f$ for components. $\nabla f$ means at the identity.
 \item $C, c$ large (resp. small) constants that change line to line.
-\item $\rho^{(a)}$ for marginals.
+\item $\rho^{(a)}$, $\rho^{(ab)}$ for marginals.
+\item $I$ for an identity matrix, $I_a$ for the $d_a \times d_a$ identity matrix
 %\MW{this looks like a power. I would either do $\rho^{(a)}$ or $\rho_a$; the latter is perhaps a bit awkward if we often look at matrix elements.}
 \end{itemize}
 
@@ -204,7 +206,7 @@ Instead of maximizing the function~$\ell_{\vec X}$, we may instead maximize the 
 Indeed, the two functions have the same maximizers up to rescaling.%
 \footnote{To see this, write $\Theta = \lambda \Theta'$ for $\lambda>0$ and $\Theta'\in\PD_D^1$ and maximize over~$\lambda$.
 The result is $\lambda = n D / \sum_{i=1}^n \braket{X_i, \Theta X_i}$, hence $\sup_{\Theta\in\PD_D} \ell_{\vec X}(\Theta) = \sup_{\Theta'\in\PD_D^1} \frac {nD}2 \left( \log(nD) - 1 \right) + \frac{nD}2 \tilde\ell_{\vec X}(\Theta')$.}
-One may think of \cref{eq:tilde ell} as proportional to the log-likelihood of $\Sigma$ after receiving $[X_1, \dots, X_n]$, the equivalence class of the tuple of samples in projective space.
+One may think of \cref{eq:tilde ell} as proportional \MW{or additive constant?} to the log-likelihood of $\Sigma$ after receiving $[X_1, \dots, X_n]$, the equivalence class of the tuple of samples in projective space.
 
 
 Both log-likelihoods are geodesically convex, as will be defined precisely in the next section, but only the latter function has geodesically Lipschitz gradients, i.e., is geodesically smooth~\cite{burgisser2019towards}.
@@ -253,13 +255,13 @@ Then, $\Theta(t) = A^T e^{tZ} A = (A_1^T e^{t Z_1} A_1, \dots, A_k^T e^{t Z_k} A
 This motivates the following definition.
 
 \begin{definition}[Geodesic convexity]
-A function $f\colon P \to \R$ is said to be \emph{geodesically convex} if, for any $A \in G$ and $Z \in S$, the following function is convex:
+A function $f\colon P \to \R$ is said to be \emph{geodesically convex} if, for all $A \in G$ and $Z \in S$, the following function is convex:
 \begin{align*}
   \R \to \R, \quad t \mapsto f(A^T e^{t Z} A)
 \end{align*}
 That is, $\partial^2_t f(A^T e^{t Z} A) \geq 0$ assuming $f$ is twice differentiable.
 
-Further, say $f$ is \emph{$\lambda$-geodesically strongly convex} at a point $\Theta \in P$ if, for some (equivalently, for any) $A \in G$ with $\Theta = A^T A$ and for any $Z \in S$, we have
+Further, say $f$ is \emph{$\lambda$-strongly geodesically convex} at a point $\Theta \in P$ if, for some (equivalently, for any) $A \in G$ with $\Theta = A^T A$ and for any $Z \in S$, we have
 \begin{align*}
   \partial^2_{t=0} f(A^T e^{t Z} A) \geq \lambda \norm{Z}_{\vec d}^2.
 \end{align*}
@@ -295,7 +297,7 @@ This shows that to prove \cref{thm:tensor-frobenius} it is enough to consider th
 \item\label{it:grad} \textbf{Bound the gradient:}
 Show that the gradient $\nabla f_{\vec X}(I)$ (defined below) is small with high probability.
 \item\label{it:convexity} \textbf{Show strong convexity:}
-Show that, with high probability, $f_{\vec X}$ is $\Omega(1)$-geodesically strongly convex near $I$.
+Show that, with high probability, $f_{\vec X}$ is $\Omega(1)$-strongly geodesically convex near $I$.
 \end{enumerate}
 
 These together imply the desired sample complexity bounds -- as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far.
@@ -317,7 +319,7 @@ We often abbreviate $\nabla f = \nabla f(I)$ and write $\nabla f = (\nabla_1 f, 
 Now say that $B_\kappa(I) = \{ e^Z : \norm Z_{\vec d} \leq \kappa \}$ is the ball of radius $\kappa>0$ about~$I$.
 
 \begin{lemma}\label{lem:convex-ball}
-Let $f\colon P\to \R$ be geodesically convex everywhere, and $\lambda$-geodesically strongly convex in a ball of radius~$\kappa>0$ about~$I$.
+Let $f\colon P\to \R$ be geodesically convex everywhere, and $\lambda$-strongly geodesically convex in a ball of radius~$\kappa>0$ about~$I$.
 Further assume the Riemannian gradient satisfies $\norm{\nabla f(I)}_{\vec d} \leq \eps < \lambda \kappa / 2$.
 Then $f$ has a unique minimizer, which is contained in the ball of radius~$\eps/\lambda$ about~$I$.
 \MW{Check factor 2.}
@@ -333,7 +335,7 @@ Then, using the assumption on the gradient,
 \geq -\norm{\nabla f(I)}_{\vec d} \, \norm Z_{\vec d}
 \geq -\eps.
 \end{align}
-Since moreover $f$ is $\lambda$-geodesically strongly convex on $B_\kappa(I)$, we have $g''(t) \geq \lambda$ for all $\abs t\leq\kappa$.
+Since moreover $f$ is $\lambda$-strongly geodesically convex on $B_\kappa(I)$, we have $g''(t) \geq \lambda$ for all $\abs t\leq\kappa$.
 For $t=\kappa$, it follows in particular that
 \begin{align*}
   g(\kappa)
@@ -368,7 +370,7 @@ We still need to show that the minimizer is unique.
 This follows again by strong convexity.
 Indeed, suppose that $\Theta$ is a minimizer and let $Z\in S$ be arbitrary.
 Consider $h(t) = f(\sqrt\Theta e^{tZ} \sqrt\Theta)$.
-Then the function $h(t)$ is convex, has a minimum at $t=0$, and satisfies $h''(0) > 0$, since $f$ is $\lambda$-geodesically strongly convex at $\Theta$ by what we showed above.
+Then the function $h(t)$ is convex, has a minimum at $t=0$, and satisfies $h''(0) > 0$, since $f$ is $\lambda$-strongly geodesically convex at $\Theta$ by what we showed above.
 It follows that $h(t) > h(0)$ for any $t\neq0$.
 Since $Z$ was arbitrary, this shows that $f(\Theta') > f(\Theta)$ for any $\Theta'\neq\Theta$.
 \end{proof}
@@ -380,7 +382,7 @@ As suggested in the plan from the previous section, we now compute the gradient 
 
 To calculate the gradient, we need a definition from linear algebra.
 
-\begin{definition}[Partial trace]
+\begin{definition}[Partial trace]\label{def:single marginal}
 For $\rho \in \PD_D$ and $a\in[k]$, let $\rho^{(a)} \in \PD_{d_a}$ denote the \emph{partial trace} defined by the condition that
 \begin{align*}
   \tr \rho^{(a)} Z = \tr \rho Z_a,
@@ -389,9 +391,9 @@ for all $d_a \times d_a$ matrices $Z$, where $Z_a = (I_1 \ot \cdots \ot I_{a-1} 
 Here and in the following we write $I_a$ for the $d_a\times d_a$ identity matrix.
 \end{definition}
 
-\MW{If you prefer we can also write $\rho = \frac{\vec X \vec X^T}{\norm{\vec X}_F^2}$ below, but then we need to say somewhere that we now think of $\vec X$ as a $D\times n$-matrix. But I would not do this unless we have a great reason.}
+% \MW{If you prefer we can also write $\rho = \frac{\vec X \vec X^T}{\norm{\vec X}_F^2}$ below, but then we need to say somewhere that we now think of $\vec X$ as a $D\times n$-matrix. But I would not do this unless we have a great reason.}
 
-\begin{lemma}[Riemannian gradient]
+\begin{lemma}[Riemannian gradient]\label{lem:gradient}
 Let $\rho = \sum_{i=1}^n X_i X_i^T / \norm{\vec X}_2^2$.
 Then the components of the Riemannian gradient $\nabla f_{\vec X}$ at the identity are given by
 \begin{align*}
@@ -399,12 +401,12 @@ Then the components of the Riemannian gradient $\nabla f_{\vec X}$ at the identi
 \end{align*}
 \end{lemma}
 \begin{proof}
-  % Let $\tilde\rho = \sum_{i=1}^n X_i X_i^T = \norm{\vec X}_2^2 \rho$, and define $F_{\vec X}(\Theta) = \tr[\tilde\rho \, \Theta]$.
-  Let $F_{\vec X}(\Theta) = \tr[\rho \, \Theta]$.
+  Let $F_{\vec X}(\Theta) = \tr \rho \, \Theta$.
   Then, we have, for all $a\in[k]$, that
   \begin{align*}
     \frac1{d_a} \tr (\nabla_a F_{\vec X}) Z
-  = \partial_{t=0} F_{\vec X}(I_1,\dots,I_{a-1}, e^{tZ}, I_{a+1},\dots,I_n)
+  % = \partial_{t=0} F_{\vec X}(I_1,\dots,I_{a-1}, e^{tZ}, I_{a+1},\dots,I_n)
+  = \partial_{t=0} \tr \rho \, e^{t Z_a}
   = \tr \rho Z_a
   = \tr \rho^{(a)} Z
   \end{align*}
@@ -443,7 +445,7 @@ for all $a\in[k]$, and hence $\norm{\nabla f_{\vec X}}_{\vec d}^2 \leq k \eps^2$
 \end{prop}
 
 To prove this we will need a standard result in matrix concentration.
-Recall that $\nabla_a f_{\vec X} = d_a \rho^{(a)} - I_a$.
+Recall that $\nabla_a f_{\vec X} = d_a \rho^{(a)} - I_a$ by \cref{lem:gradient}.
 It is not hard to see that $\rho^{(a)}$ is distributed as $Y Y^T / \norm{Y}_F^2$, where $Y$ is a $d_a \times N_a$ matrix with independent Gaussian entries.
 The following result that bounds the singular values of such random matrices.
 
@@ -507,7 +509,7 @@ We then show strong convexity \emph{at} the origin, and later show strong convex
 \begin{definition}[Riemannian Hessian]
 For $\Theta \in P$, the \emph{Riemannian Hessian}~$\nabla^2 f(\Theta)$ is the unique linear operator on $S$ such that
 \begin{align*}
-  \braket{Y, \nabla^2 f(\Theta) Z}_{\vec d} = \partial_{s=0} \partial_{t=0} f(\Theta^{1/2} e^{Ys + Zt} \Theta^{1/2})
+  \braket{Y, \nabla^2 f(\Theta) Z}_{\vec d} = \partial_{s=0} \partial_{t=0} f(\Theta^{1/2} e^{sY + tZ} \Theta^{1/2})
 \end{align*}
 for all $Y, Z\in S$.
 We often abbreviate $\nabla^2 f = \nabla^2 f(I)$.
@@ -522,7 +524,8 @@ As a block matrix,
 where $\nabla_{ab}^2f$ is an operator from $\Sym_{d_b}^0$ to $\Sym_{d_a}^0$.
 \end{definition}
 
-\MW{Maybe comment that $\braket{Z, \nabla^2 f(\Theta) Z}_{\vec d} = \partial^2_{t=0} f(\Theta^{1/2} e^{Zt} \Theta^{1/2})$ (or do you prefer writing $\partial_t^2 \cdots |_{t=0}$ instead?), so that $\nabla^2 f(\Theta) \succeq 0$ iff $f$ is geodesically convex, and $\nabla^2 f(\Theta) \succeq \lambda I$ iff $f$ is $\lambda$-strongly geodesically convex at $\Theta$.}
+We note that $\braket{Z, \nabla^2 f(\Theta) Z}_{\vec d} = \partial^2_{t=0} f(\Theta^{1/2} e^{tZ} \Theta^{1/2})$ for all $Z\in S$.
+Thus, $f$~is geodesically convex if and only if the Riemannian Hessian is positive semidefinite, i.e., $\nabla^2 f(\Theta) \succeq 0$ in the Loewner order, and $f$ is $\lambda$-strongly geodesically convex if and only if $\nabla^2 f(\Theta) \succeq \lambda I$, i.e., the Hessian is positive definite with eigenvalues larger or equals to~$\lambda$.
 
 Similarly as for the gradient, we can compute the components of the Hessian in terms of a partial trace, as in the following definition and lemma.
 
@@ -534,42 +537,65 @@ For $\rho \in \PD_D$ and $a \neq b\in[k]$, let $\rho^{(ab)} \in \PD_{d_a \times 
 for all $d_a \times d_a$ matrices $Y$ and $d_b \times d_b$ matrices $Z$, where, as before, we write~$Y_a = (I_1 \ot \cdots \ot I_{a-1} \ot Y \ot I_{a+1} \ot \cdots \ot I_k)$ and similarly for $Z_b$.
 \end{definition}
 
-\MW{Michael continue here.}
+\noindent
+This definition is consistent with \cref{def:single marginal} in the sense that $\tr \rho^{(ab)} (Y \ot I) = \tr \rho^{(a)} Y$ and $\tr \rho^{(ab)} (I \ot Z) = \tr \rho^{(b)} Z$ for all $\rho$, $Y$, $Z$.
 
-\TODO{also move hessian calculation to here}
-\begin{lemma}[Riemannian Hessian calculations]
-Let $\rho$ denote $\frac{\vec X \vec X^\dagger}{\|\vec X\|^2}$. 
-The geodesic Hessian $\nabla^2 f$ at the identity is given by
-\begin{align}\frac{1}{d_a}\langle Y, (\nabla^{2}_{aa} f) Y \rangle &= \langle \rho^{\{a\}}, Y^{2} \rangle - \left\langle \rho^{\{a\}}, Y \right\rangle^{2} \\
-\frac{1}{\sqrt{d_a d_b}}\langle Z, (\nabla^{2}_{ab} f) Y \rangle &= \langle \rho^{\{a,b\}}, Z \otimes Y \rangle  - \langle \rho^{\{a\}}, Y \rangle \langle \rho^{\{b\}}, Z \rangle
-\end{align}
-for $a \neq b \in [k]$, $Y \in \Herm_{d_a}, Z \in \Herm_{d_b}$.
+\begin{lemma}[Riemannian Hessian]\label{lem:hessian}
+Let $\rho = \sum_{i=1}^n X_i X_i^T / \norm{\vec X}_2^2$.
+Then the Riemannian Hessian $\nabla^2 f_{\vec X}$ at the identity is given by
+\begin{align*}
+  \frac1{d_a} \tr Y (\nabla^2_{aa} f_{\vec X}) Y
+&= \tr \rho^{(a)} Y^2 - \bigl(\tr Y \rho^{(a)}\bigr)^2 \\
+  \frac1{d_a} \tr Y (\nabla^2_{ab} f_{\vec X}) Z
+&= \tr \rho^{(ab)} \left( Y \ot Z \right) - \bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr) \qquad\text{\MW{i think the dimension factor here was wrong}}
+\end{align*}
+for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d_b\times d_b$ matrices~$Z$.
 \end{lemma}
 \begin{proof}
-Let $\tilde{\rho}:= \|\vec X\|_F^2\rho$ and let
-\[ F(\Theta) := \tr  \Theta \tilde{\rho}; \hspace{10mm} \]
-so that
-\begin{align*} \partial_{t=0} F(I_{\overline{a}} \otimes e^{tY}) = \tr  (I_{\overline{a}} \otimes e^{tY}  Y)\tilde{\rho}  |_{t=0} &= \tr  (I_{\overline{a}} \otimes Y) \tilde{\rho} \\
-&=\tr \tilde{\rho}^{\{a\}}  Z
- \end{align*}
- and so thus, $\nabla_a F = d_a \tilde{\rho}^{\{a\}}$.
-When $a\neq b$,
-\begin{align*}\partial_{s=0} \partial_{t=0} F(I_{\overline{\{a,b\}}} \otimes e^{sY} \otimes e^{tZ}) &=  \partial_{s=0} \tr  (I_{\overline{b}} \otimes e^{sY}) (I_{\overline{a}} \otimes Z) \tilde{\rho} \\
-&= \tr (I_{\overline{b}} \otimes Y) (I_{\overline{a}} \otimes Z) \tilde{\rho}
-\end{align*}
-and when $a = b$
-\begin{align*}\partial_{s=0} \partial_{t=0} F(I_{\overline{a}} \otimes e^{sY+ tZ}) &=  \partial_{s=0} \tr  (I_{\overline{b}} \otimes e^{sY}) (I_{\overline{a}} \otimes Z) \tilde{\rho} \\
-&= \tr (I_{\overline{b}} \otimes Y) (I_{\overline{a}} \otimes Z) \tilde{\rho}.
-\end{align*}
+  Let $F_{\vec X}(\Theta) = \tr \rho \, \Theta$ as in the proof of \cref{lem:gradient}.
+  Then,
+  \begin{align*}
+    \frac 1{d_a} \tr Y \left( \nabla^2_{aa} F_{\vec X} \right) Y
+  &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{(s+t) Y_a} \\
+  &= \partial_{s=0} \partial_{t=0} \tr \rho^{(a)} e^{(s+t) Y}
+  = \tr \rho^{(a)} Y^2,
+  \end{align*}
+  while for $a\neq b$ we have
+  \begin{align*}
+    \frac 1{d_a} \tr Y_a \left( \nabla^2_{ab} F_{\vec X} \right) Z_b
+  &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s Y_a + t Z_b} \\
+  &= \partial_{s=0} \partial_{t=0} \tr \rho^{(ab)} \left( e^{s Y} \ot e^{t Z} \right)
+  = \tr \rho^{(ab)} \left( Y \ot Z \right).
+  \end{align*}
+  Since $f_{\vec X}(\Theta) = \log F_{\vec X}(\Theta) + \log \norm{\vec X}_2^2$, we have
+  \begin{align*}
+    \braket{Y, (\nabla^2 f_{\vec X}) Z}_{\vec d}
+  &= \frac{\braket{Y, (\nabla^2 F_{\vec X}) Z}_{\vec d}}{F_{\vec X}(I)} - \frac{\braket{Y, \nabla F_{\vec X}}_{\vec d} \braket{\nabla F_{\vec X}, Z}_{\vec d}}{F_{\vec X}(I)^2} \\
+  &= \frac{\braket{Y, (\nabla^2 F_{\vec X}) Z}_{\vec d}}{F_{\vec X}(I)} - \braket{Y, \nabla f_{\vec X}}_{\vec d} \braket{\nabla f_{\vec X}, Z}_{\vec d}.
+  \end{align*}
+  % \begin{align*}
+  %   \nabla^2 f_{\vec X}
+  % = \frac {\nabla^2 F_{\vec X}} {F_{\vec X}(I)} - \frac{\nabla F_{\vec X} \braket{\nabla F_{\vec X}, \cdot}_{\vec d}}{F_{\vec X}(I)^2}
+  % = \frac {\nabla^2 F_{\vec X}} {F_{\vec X}(I)} - \nabla f_{\vec X} \braket{\nabla f_{\vec X}, \cdot}_{\vec d},
+  % \end{align*}
+  % where $\dagger$ denotes the adjoint with respect to the inner product $\braket{\cdot,\cdot}_{\vec d}$.
+  Since $F_{\vec X}(I)=1$, plugging in the above formulas and using \cref{lem:gradient} for the gradient completes the proof.
+  % Indeed,
+  % \begin{align*}
+  %   \frac1{d_a} \tr Y (\nabla^2_{aa} f_{\vec X}) Y
+  % = \frac1{d_a} \tr Y (\nabla^2_{aa} F_{\vec X}) Y - \frac1{d_a} \tr Y (\nabla_a f_{\vec X}) \frac1{d_a} \tr Y (\nabla_a f_{\vec X})
+  % = \tr \rho^{(a)} Y^2 - (\tr Y \rho^{(a)})^2
+  % \end{align*}
+  % and
+  % \begin{align*}
+  %   \frac1{d_a} \tr Y (\nabla^2_{ab} f_{\vec X}) Z
+  % = \frac1{d_a} \tr Y (\nabla^2_{ab} F_{\vec X}) Z - \frac1{d_a} \tr Y (\nabla_a f_{\vec X}) \frac1{d_b} \tr Z (\nabla_b f_{\vec X})
+  % = \tr \rho^{(ab)} \left( Y \ot Z \right) - (\tr Y \rho^{(a)})(\tr Z \rho^{(b)})
+  % \end{align*}
+\end{proof}
 
-%For simplicity, in this part we denote $Q = v v^{*}, s := Tr[Q]$ and marginals $Q^{S} := Tr_{\overline{S}}[Q]$. We will only need $\{Q^{a}\},\{Q^{ab}\}.$
-so that
-\begin{align*} \langle Z, (\nabla^{2}_{aa} F) Z \rangle &= d_a \langle  \tilde{\rho}^{\{a\}}, Z^{2}\rangle   \\
- \langle Y, (\nabla^{2} F) Z \rangle &= \sqrt{d_a d_b}\langle \tilde{\rho}^{\{a,b\}} , Z \otimes Y \rangle . \end{align*}
-Here the $d_a, \sqrt{d_a d_b}$ factors arise because the Hessian is defined using $\langle \cdot, \cdot \rangle_{\vec d}$, not the usual Hilbert-Schmidt inner product $\langle \cdot, \cdot \rangle$.
+\MW{Michael continue here.}
 
-Now to calculate the same for $f$, note that $f = g + \log F $ for
-$$g:= - \sum_{a \in [k]} \frac1{d_a} \log\det(\Theta_a).$$ Further note that $\nabla \log F = \frac{\nabla F}{F}$, $\nabla^{2} f = \frac{\nabla^{2} F}{F} - \frac{(\nabla F)(\nabla F)^{*}}{F^{2}}$, and that $\nabla_a g = d_a I_{a}$ and $\nabla^2 g = 0$. Plugging in the values of $F, \nabla F, \nabla^2 F$ from above completes the proof. \end{proof}
 
 \TODO{Fix for new inner product and dimension issue}
 \begin{theorem}\label{thm:tensor-convexity}
@@ -1451,7 +1477,7 @@ for some small $\epsilon,\lambda$. Then the Hessian will be $1-\epsilon - (k-1) 
 
 
 \begin{lemma} [Restatement of \cref{lem:convex-ball}]
-Let $f$ be geodesically convex everywhere. All the below quantities are wrt metric $\langle \cdot, \cdot \rangle_{R}$. Assume $f$ and $\lambda$-geodesically strongly convex ball of radius $\kappa$ about $I$; further assume the geodesic gradient satisfies $\|\nabla f(I)\|_{R} = \eps < \lambda \kappa$. Then there is an optimizer within an $\eps/\lambda$-ball.
+Let $f$ be geodesically convex everywhere. All the below quantities are wrt metric $\langle \cdot, \cdot \rangle_{R}$. Assume $f$ and $\lambda$-strongly geodesically convex ball of radius $\kappa$ about $I$; further assume the geodesic gradient satisfies $\|\nabla f(I)\|_{R} = \eps < \lambda \kappa$. Then there is an optimizer within an $\eps/\lambda$-ball.
 \end{lemma}
 \begin{proof} [Proof of \cref{lem:convex-ball}]
 The proof is exactly the same except the following:
