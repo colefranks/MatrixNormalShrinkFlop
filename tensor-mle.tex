@@ -125,7 +125,7 @@ $\langle \cdot, \cdot \rangle$ is the $\ell_2$ inner product of vectors
 \item $f_{\vec X}$ for the function in \cref{dfn:function}, mostly drop $\vec X$.
 \item $\Sym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite, $\Sym_d^0$ for traceless symmetric, $\PD_d^1$ for $\det=1$ positive definite?
 \item $\Theta$ for big tensor product pd concentration matrix, $\Theta_a$ for individual pd's.
-\item I'm going to call $G = \oplus \GL_{d_i}, P = \oplus \PD_{d_i}^1, S = \oplus \Sym_{d_i}^0$. Explain somewhere how $S$ is the tangent space of $P$.
+\item I'm going to call $\GL = \oplus \GL_{d_i}, \PD = \oplus \PD_{d_i}^1, \Sym = \oplus \Sym_{d_i}^0$. Explain somewhere how $\Sym$ is the tangent space of $\PD$.
 \item $\nabla, \nabla^2$ for Riemannian Hessians and gradients, $\nabla_a f$, $\nabla^2_{ab} f$ for components. $\nabla f$ means at the identity.
 \item $C, c$ large (resp. small) constants that change line to line.
 \item $\rho^{(a)}$, $\rho^{(ab)}$ for marginals.
@@ -621,12 +621,12 @@ We can in fact show that $\nabla^{2}$ is well-conditioned using the following:
 We can rewrite the Hessian using shorthand $\{M_{a}\}$ for the diagonal blocks and $\{M_{ab}\}$ for off-diagonal blocks: \CF{why not just write $\nabla^2_{ab}f$?} \CF{Also, the matrices $E_{aa} \otimes M_a$ are not all of the same size} 
 \\ \AR{Ya $\nabla_{ab}$ notation is fine, just needed something that was a matrix of the right dimensions, so shorthand M was to avoid weird things with $\rho$}
 \\ \AR{It's fine if they're of different sizes, we enumerate the basis of the whole space as $\cup_{a} e_{a} \otimes \{e_{i \in [d_{a}]}\}$ }
-\[ \nabla^{2} f = \sum_{a} E_{aa} \otimes M_{a} + \sum_{a \neq b} E_{ab} \otimes M_{ab}  \]
+\[ \nabla^{2} f = \sum_{a} E_{aa} \otimes \nabla^{2}_{aa} + \sum_{a \neq b} E_{ab} \otimes \nabla^{2}_{ab}  \]
 Now we can again use the high-probability bounds derived above: \TODO{actually cref them}
-\[ M_{a} \in \frac{1 \pm \eps}{d_{a}} I_{a}; \hspace{5mm} \forall a \neq b: \|M_{ab}\|_{op} \leq \frac{\lambda}{\sqrt{d_{a} d_{b}}}   \]
+\[ \nabla^{2}_{aa} \in \frac{1 \pm \eps}{d_{a}}; \hspace{5mm} \forall a \neq b: \|\nabla^{2}_{ab}\|_{op} \leq \frac{\lambda}{\sqrt{d_{a} d_{b}}}   \]
 \[ \nabla^{2} \preceq \sum_{a} E_{aa} \otimes \left( \frac{1+\eps}{d_{a}} I_{a} \right) + \sum_{a < b} E_{aa} \otimes \left( \frac{\lambda}{d_{a}} I_{a} \right) + E_{bb} \otimes \left( \frac{\lambda}{d_{b}} I_{b} \right)    \]
 \[ \preceq \sum_{a} E_{aa} \otimes \frac{1+\eps+(k-1)\lambda}{d_{a}} I_{a}  \]
-The same sequence of inequalities can be reversed to show a lower bound. So in fact we can show the above bounds on blocks shows $O(\eps + k \lambda)$-condition number bound on the Hessian in norm $\|\cdot\|$.
+The same sequence of inequalities can be reversed to show a lower bound. So in fact we can show the above bounds on blocks shows $1+O(\eps + k \lambda)$-condition number bound on the Hessian in norm $\|\cdot\|_{d}$.
 \end{proof}
 We now show our second strong convexity result, namely that if our function is strongly convex at the origin then it is also strongly convex in an operator norm ball about the origin.
 
@@ -647,15 +647,15 @@ For perturbation $v \to \otimes_{a} e^{\delta_{a}} \cdot v =: w$ where $\forall 
 The same is true for the diagonal blocks.
 \end{lemma}
 \begin{proof}
-To lower bound the diagonal block, we just need a spectral lower bound on $\{Q_{a}\}$, since $\langle vec(X), M^{a} (vec(X)) \rangle := \langle Q_{a}, X^{2} \rangle$.
-\[ \| e^{\delta_{a}} Q_{a} e^{\delta_{a}} - Q_{a}\|_{op} \leq O(\|\delta_{a}\|_{op}) \|Q_{a}\|_{op}   \]
+To lower bound the diagonal block, we just need a spectral lower bound on $\{\rho^{a}\}$, since $\langle vec(X), \nabla_{aa}^{2} (vec(X)) \rangle := \langle \rho^{a}, X^{2} \rangle$.
+\[ \| e^{\delta_{a}} \rho^{a} e^{\delta_{a}} - Q_{a}\|_{op} \leq O(\|\delta_{a}\|_{op}) \|Q_{a}\|_{op}   \]
 Now we address a perturbation on $b \neq a$. For a spectral lower bound, we choose test $Z \succeq 0$ and let $\delta := e^{2\delta_{b}} - I$:
-\[ \langle e^{\delta_{b}} v v^{*} e^{\delta_{b}} - v v^{*}, I_{\overline{a}} \otimes Z_{a} \rangle
-= \langle v v^{*}, \delta \otimes Z \rangle = \langle Z, V^{*} \delta V \rangle   \]
-Here $V \in \R^{d_{b} \times d_{a}}$ is the matricized version of $v$. But now since $Z \succeq 0$, the argument is clear
-\[ \leq \langle Z, V^{*} |\delta| V \rangle \leq \|\delta\|_{op} \langle Z, V^{*} I V \rangle = \|\delta\|_{op} \langle v v^{*}, I_{\overline{a}} \otimes Z \rangle \leq \|\delta\|_{op} \|Q_{a}\|_{op} \|Z\|_{1}    \]
+\[ \langle e^{\delta_{b}} \rho e^{\delta_{b}} - \rho, I_{\overline{a}} \otimes Z_{a} \rangle
+= \langle \rho, \delta \otimes Z \rangle = \langle Z, V^{*} \delta V \rangle   \]
+Here $V \in \R^{d_{b} \times d_{a}}$ is the matricized version of $\rho$. But now since $Z \succeq 0$, the argument is clear
+\[ \leq \langle Z, V^{*} |\delta| V \rangle \leq \|\delta\|_{op} \langle Z, V^{*} I V \rangle = \|\delta\|_{op} \langle \rho, I_{\overline{a}} \otimes Z \rangle \leq \|\delta\|_{op} \|\rho^{a}\|_{op} \|Z\|_{1}    \]
 
-The argument for the off-diagonal blocks is similar. We first argue the change of $\sigma^{ab}$ is small under perturbations where $\forall c \neq a,b: \delta_{c} = 0$. Let $M^{ab}$ be the matrix versions of the bipartite operators:
+The argument for the off-diagonal blocks is similar. We first argue the change is small under perturbations just on those parts. 
 \[ \langle vec(Y), M_{v}^{ab}(vec(Z)) \rangle := \langle v v^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle \]
 \[ \langle vec(Y), M_{w}^{ab}(vec(Z)) \rangle := \langle w w^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle\]
 
@@ -663,13 +663,13 @@ The argument for the off-diagonal blocks is similar. We first argue the change o
 \[ \implies \|M_{w} - M_{v}\|_{op} \leq O(\|\delta_{a}\|_{op} + \|\delta_{b}\|_{op}) \|M_{v}\|_{op}   \]
 where in the last step we used $\delta \ll 1$.
 \CF{comment things that we wouldn't want to accidentally leave in, as I have done in the next sentence}
-The more difficult part of the argument to see \AR{at least for me} is how $\sigma^{ab}$ changes if some other part $c \neq a,b$ is changed, i.e. $\forall d \neq c: \delta_{d} = 0$. First we define $\delta := e^{2 \delta_{c}} - I$, and test vectors $Z,Y$:
+The more difficult part of the argument to see \AR{at least for me} is the change caused be some other part $c \neq a,b$. First we define $\delta := e^{2 \delta_{c}} - I$, and test vectors $Z,Y$:
 \[ \langle w w^{*} - v v^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle = \langle v v^{*}, \delta \otimes Z \otimes Y \rangle  = \langle Z \otimes Y, V^{*} \delta V \rangle \]
 Here $V \in \R^{d_{c} \times d_{a}d_{b}}$ is the matricized version of $v$, i.e. the $k$-th element of $ij$-th column is $(V_{ij})_{k} := v_{ijk}$. Now in order to use our operator norm bounds, we need to deal with cancelations, so we split into positive and negative parts $Z := Z_{+} - Z_{-}, Y := Y_{+} - Y_{-}$:
 \[ |\langle Z \otimes Y, V^{*} \delta V \rangle| \leq |\langle Z_{\pm} \otimes Y_{\pm}, V^{*} \delta V \rangle |  \]
-Now we analyze one of these terms (by abuse of notation $Z, Y \succ 0$):
-\[ \leq \langle Z \otimes Y, V^{*} |\delta| V \rangle \leq \|\delta\|_{op} \langle Z \otimes Y, V^{*} V \rangle = \|\delta\|_{op} \langle v v^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle   \]
-Each of these terms we can bound by $\sigma^{ab}_{1} \|Z\|_{F} \|Y\|_{F}$. (Note we can save a $2$-factor on these four terms since they are decompositions of $Z,Y$). So by iterating this argument over all $c$, we get the desired bound.
+Now we analyze each of these terms:
+\[ \leq |\langle Z_{\pm} \otimes Y_{\pm}, V^{*} |\delta| V \rangle| \leq \|\delta\|_{op} |\langle Z_{\pm} \otimes Y_{\pm}, V^{*} V \rangle| = \|\delta\|_{op} |\langle v v^{*}, I_{\overline{ab}} \otimes Z_{\pm} \otimes Y_{\pm} \rangle|   \]
+Each of these terms we can bound by $\sigma^{ab}_{1} \|Z\|_{F} \|Y\|_{F}$. So by iterating this argument over all $c$, we get the desired bound.
 \end{proof}
 
 \begin{remark}
@@ -683,17 +683,17 @@ One fantastic thing about the above proof is that it generalizes quite well to a
 After one more simple lemma, we will be ready to prove our second strong convexity result, \cref{lem:perturbation}.
 \begin{lemma} [Lemma 3.6 in \TODO{cite KLR}; \CF{where is this used?}]
 \AR{The amount we lose in robustness is related to the worst quadratic form in the whole space (not $\perp I$) since we have to break up into $\pm$ parts. }
-\[ \|M^{ab}\|_{F \to F}^{2} \leq \|M^{a}\|_{F \to F} \|M^{b}\|_{F \to F}   \]
+\[ \|\nabla_{ab}^{2}\|_{F \to F}^{2} \leq \|\nabla_{aa}^{2}\|_{F \to F} \|\nabla_{bb}^{2}\|_{F \to F}   \]
 \end{lemma}
 \begin{proof}
-New simple proof: by convexity we know $\begin{pmatrix} M^{a} & M^{ab} \\ M^{ba} & M^{b}  \end{pmatrix} \succeq 0$.
+New simple proof: by convexity we know $\begin{pmatrix} \nabla_{aa}^{2} & \nabla_{ab}^{2} \\ \nabla_{ba}^{2} & \nabla_{bb}^{2}  \end{pmatrix} \succeq 0$. The result follows from e.g. Schur complements. 
 \end{proof}
 
 \begin{proof}[Proof of \cref{lem:perturbation}]
 \[ \langle X, \nabla_{aa}^{2} X \rangle = \langle \rho^{a}, X^{2} \rangle \leq \|\rho^{a}\|_{op} \|X^{2}\|_{1} = \|\rho^{a}\|_{op} \|X\|_{F}^{2} \]
 \AR{I am probably wrong on dimension factors here, but it's the right idea}
 By the condition on the gradient \TODO{what condition? cref it}, we have that
-\[ \forall a,b: \|M^{ab}\|_{op}^{2} \leq \|M^{a}\|_{op} \|M^{b}\|_{op} \leq \frac{1+\eps}{d_{a} d_{b}}   \]
+\[ \forall a,b: \|\nabla_{ab}^{2}\|_{op}^{2} \leq \|\nabla_{aa}^{2}\|_{op} \|\nabla_{bb}^{2}\|_{op} = \|\rho^{a}\|_{op} \|\rho^{b}\|_{op} \leq \frac{1+\eps}{d_{a} d_{b}}   \]
 We apply the perturbation lemma to each part sucessively, and if $\delta$ are small enough we can assume this bound holds in weaker form $1+\epsilon \leq 2$ for all iterations. The above lemma shows for each part and any test vectors
 \[ \langle w w^{*} - v v^{*}, I_{\overline{ab}} \otimes \frac{Z}{\|Z\|_{F}} \otimes \frac{Y}{\|Y\|_{F}} \rangle \leq \frac{O( \sum_{a} \delta_{a} )}{\sqrt{d_{a} d_{b}}} =: \frac{\delta}{\sqrt{d_{a} d_{b}}}   \]
 Here the suppressed constants are $\leq 7$. Therefore the difference between Hessians can be bounded
