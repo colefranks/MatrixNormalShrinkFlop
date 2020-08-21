@@ -19,6 +19,7 @@
 \DeclareMathOperator{\Lie}{Lie}
 \DeclareMathOperator{\Lin}{L}
 \DeclareMathOperator{\ope}{op}
+\DeclareMathOperator{\poly}{poly}
 
 \DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
 \DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
@@ -376,7 +377,7 @@ Since $Z$ was arbitrary, this shows that $f(\Theta') > f(\Theta)$ for any $\Thet
 \end{proof}
 
 %-----------------------------------------------------------------------------
-\subsection{Bounding the Gradient}
+\subsection{Bounding the gradient}
 %-----------------------------------------------------------------------------
 As suggested in the plan from the previous section, we now compute the gradient of $f_{\vec X}$ and bound it using basic matrix concentration results.
 
@@ -547,7 +548,7 @@ Then the Riemannian Hessian $\nabla^2 f_{\vec X}$ at the identity is given by
   \frac1{d_a} \tr Y (\nabla^2_{aa} f_{\vec X}) Y
 &= \tr \rho^{(a)} Y^2 - \bigl(\tr Y \rho^{(a)}\bigr)^2 \\
   \frac1{d_a} \tr Y (\nabla^2_{ab} f_{\vec X}) Z
-&= \tr \rho^{(ab)} \left( Y \ot Z \right) - \bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr) \qquad\text{\MW{i think the dimension factor here was wrong}}
+&= \tr \rho^{(ab)} \left( Y \ot Z \right) - \bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr) \qquad\text{\MW{Please check.}}
 \end{align*}
 for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d_b\times d_b$ matrices~$Z$.
 \end{lemma}
@@ -594,14 +595,21 @@ for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d
   % \end{align*}
 \end{proof}
 
+We now state our strong convexity result at the identity:
+
+\begin{theorem}\label{thm:tensor-convexity}
+Let $\vec X = (X_1,\dots,X_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples is $N \geq k^2 \max_{a=1}^k d_a^2 / D$.
+Then, with probability at least $1 - 1/{\color{red}\poly(D)}$, $f_{\vec X}$ is {\color{red}$\Omega(1)$}-strongly geodesically convex at~$I$.
+\end{theorem}
+
+To prove this, we need the following result on quantum expansion (cf.\ \cref{sec:matrix-normal}).
+The result is essentially Theorem~16.6 in~\cite{pisier2012grothendieck} for real Gaussians, together with a standard symmetrization trick (e.g., Proof of Lemma~4.1 in~\cite{P14}).
+To be self-contained we give a succinct proof.
+
 \MW{Michael continue here.}
 
-
 \TODO{Fix for new inner product and dimension issue}
-\begin{theorem}\label{thm:tensor-convexity}
-Suppose the number of samples is at least $k^{2} \max_{a} d_{a}^{2}/D$. Then with failure probability $\leq 1/poly(D)$, $f$ is $\Omega(1)$-strongly convex at $I$ w.r.t. $\|\cdot \|_{\vec d}$.
-\end{theorem}
-To prove this, we need some results on quantum expansion from \TODO{cite}. \CF{I also suggest that these be simplified - can we just state the corollary directly?}
+
 \begin{theorem}[\TODO{source?}]
 Let $P$ denote the projection onto $(\vec{I_{n}},\vec{I_{m}})$, then the following holds with $1/poly(mn)$ failure probability
 \[ \|\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i} (I - P) \|_{op} \leq O \left( \sqrt{\sum_{i} \alpha_{i}^{2}} \right) \left( \E \|Y\|_{op} \right)^{2} \]
