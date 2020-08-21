@@ -126,7 +126,7 @@ $\langle \cdot, \cdot \rangle$ is the $\ell_2$ inner product of vectors
 \item $f_{\vec X}$ for the function in \cref{dfn:function}, mostly drop $\vec X$.
 \item $\Sym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite, $\Sym_d^0$ for traceless symmetric, $\PD_d^1$ for $\det=1$ positive definite?
 \item $\Theta$ for big tensor product pd concentration matrix, $\Theta_a$ for individual pd's.
-\item I'm going to call $\GL = \oplus \GL_{d_i}, \PD = \oplus \PD_{d_i}^1, \Sym = \oplus \Sym_{d_i}^0$. Explain somewhere how $\Sym$ is the tangent space of $\PD$.
+\item I'm going to call $\SL = \oplus \SL_{d_i}, \PD = \oplus \PD_{d_i}^1, \Sym = \oplus \Sym_{d_i}^0$. Explain somewhere how $\Sym$ is the tangent space of $\PD$. \MW{Suppressing the $^1$ and $^0$ is a bit confusing I think. Maybe $\operatorname{SPD}$ for $\PD$ with $\det=1$? I still feel that $\Sym$ looks somewhat horrible (with or without subscript, but I am not sure what would be better).}
 \item $\nabla, \nabla^2$ for Riemannian Hessians and gradients, $\nabla_a f$, $\nabla^2_{ab} f$ for components. $\nabla f$ means at the identity.
 \item $C, c$ large (resp. small) constants that change line to line.
 \item $\rho^{(a)}$, $\rho^{(ab)}$ for marginals.
@@ -321,9 +321,8 @@ Now say that $B_\kappa(I) = \{ e^Z : \norm Z_{\vec d} \leq \kappa \}$ is the bal
 
 \begin{lemma}\label{lem:convex-ball}
 Let $f\colon P\to \R$ be geodesically convex everywhere, and $\lambda$-strongly geodesically convex in a ball of radius~$\kappa>0$ about~$I$.
-Further assume the Riemannian gradient satisfies $\norm{\nabla f(I)}_{\vec d} \leq \eps < \lambda \kappa / 2$.
+Further assume the Riemannian gradient satisfies $\norm{\nabla f(I)}_{\vec d} \leq \eps < \lambda \kappa / 2$. \MW{Please check that added factor $1/2$ is indeed necessary.}
 Then $f$ has a unique minimizer, which is contained in the ball of radius~$\eps/\lambda$ about~$I$.
-\MW{Check factor 2.}
 \end{lemma}
 \begin{proof}
 We first show that $f$ has a minimum.
@@ -429,7 +428,7 @@ Then the components of the Riemannian gradient $\nabla f_{\vec X}$ at the identi
 \end{proof}
 
 Having calculated the gradient, we are ready to state our bound:
-\MW{Please check that I did not introduce problems in \cref{prop:gradient-bound} and its proof. Can we take $\eps<1$ so that we can choose $C=16$?}
+\MW{Please check updated proof. Can we assume $\eps<1$ and simply take~$C=16$?}
 
 \begin{prop}\label{prop:gradient-bound}
 Let $\vec X = (X_1,\dots,X_n)$ be independent standard Gaussian random variables in $\R^D$, where $D=d_1\cdots{}d_k$.
@@ -603,8 +602,8 @@ Then, with probability at least $1 - 1/{\color{red}\poly(D)}$, $f_{\vec X}$ is {
 \end{theorem}
 
 To prove this, we need the following result on quantum expansion (cf.\ \cref{sec:matrix-normal}).
-The result is essentially Theorem~16.6 in~\cite{pisier2012grothendieck} for real Gaussians, together with a standard symmetrization trick (e.g., Proof of Lemma~4.1 in~\cite{P14}).
-To be self-contained we give a succinct proof.
+The result is essentially Theorem~16.6 in~\cite{pisier2012grothendieck}, together with a standard symmetrization trick (e.g., Proof of Lemma~4.1 in~\cite{P14}).
+To be self-contained we give a succinct proof in the real case.
 
 \MW{Michael continue here.}
 
