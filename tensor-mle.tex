@@ -131,7 +131,7 @@ $\langle \cdot, \cdot \rangle$ is the $\ell_2$ inner product of vectors
 \item $C, c$ large (resp. small) constants that change line to line.
 \item $\rho^{(a)}$, $\rho^{(ab)}$ for marginals.
 \item $I$ for an identity matrix, $I_a$ for the $d_a \times d_a$ identity matrix
-%\MW{this looks like a power. I would either do $\rho^{(a)}$ or $\rho_a$; the latter is perhaps a bit awkward if we often look at matrix elements.}
+\item $\norm{\cdot}_p$ for the $\ell_p$ norm of vectors and the Schatten-$p$ norm of operators
 \end{itemize}
 
 \subsection{Results}
@@ -185,7 +185,6 @@ One may wonder why in the above theorems we consider the distances for the indiv
 
 %=============================================================================
 \section{Tensor normal models}
-
 %=============================================================================
 \TODO{In this section, \dots}
 
@@ -209,8 +208,7 @@ Indeed, the two functions have the same maximizers up to rescaling.%
 The result is $\lambda = n D / \sum_{i=1}^n \braket{X_i, \Theta X_i}$, hence $\sup_{\Theta\in\PD_D} \ell_{\vec X}(\Theta) = \sup_{\Theta'\in\PD_D^1} \frac {nD}2 \left( \log(nD) - 1 \right) + \frac{nD}2 \tilde\ell_{\vec X}(\Theta')$.}
 One may think of \cref{eq:tilde ell} as proportional \MW{or additive constant?} to the log-likelihood of $\Sigma$ after receiving $[X_1, \dots, X_n]$, the equivalence class of the tuple of samples in projective space.
 
-
-Both log-likelihoods are geodesically convex \RMO{concave? the negations are convex, right?}, as will be defined precisely in the next section, but only the latter function has geodesically Lipschitz gradients, i.e., is geodesically smooth~\cite{burgisser2019towards}.
+Both log-likelihoods are geodesically concave, as will be defined precisely in the next section, but only the latter function has geodesically Lipschitz gradients, i.e., is geodesically smooth~\cite{burgisser2019towards}.
 This suggests it is more amenable to geodesically convex optimization, our main tool in this work.
 
 The tensor normal model for dimensions~$\vec d=(d_1,\dots,d_k)$ consists of the normal distributions~$\cN(0,\Sigma)$, where $D = \prod_{a=1}^k d_a$ and the covariance matrix is a Kronecker product $\Sigma = \bigotimes_{a=1}^k \Sigma_a$ of positive definite $d_a\times d_a$-matrices $\Sigma_a$.
@@ -602,22 +600,25 @@ Then, with probability at least $1 - 1/{\color{red}\poly(D)}$, $f_{\vec X}$ is {
 \end{theorem}
 
 To prove this, we need the following result on quantum expansion (cf.\ \cref{sec:matrix-normal}).
-The result is essentially Theorem~16.6 in~\cite{pisier2012grothendieck}, together with a standard symmetrization trick (e.g., Proof of Lemma~4.1 in~\cite{P14}).
-To be self-contained we give a succinct proof in the real case.
+The result is essentially Theorem~16.6 in~\cite{pisier2012grothendieck}, together with a standard symmetrization trick (e.g., Proof of Lemma~4.1 in~\cite{P14}). \MW{Give proof in an appendix?}
+
+\begin{theorem}[Pisier]
+There is an absolute constant~$C>0$ such that, for all $n,m\in\N$ and any scalar sequence $a_i \in \R^n$ the following holds with probability at least $1-1/{\color{red}\poly(n,m)}$:
+\begin{align*}
+  \norm{ \sum_{i=1}^n \alpha_i (Y_i \ot Y_i) (I - P) }_{\op}
+\leq C \norm{\alpha}_2 \left( \E \norm{Y}_{\op} \right)^2,
+\end{align*}
+where $Y_1,\dots,Y_n,Y$ are independent $m\times m$ standard Gaussian random matrices and $P$ denotes the orthogonal projection onto multiples of $\sum_{i=1}^m e_i \ot e_i$.
+\end{theorem}
 
 \MW{Michael continue here.}
 
 \TODO{Fix for new inner product and dimension issue}
 
-\begin{theorem}[\TODO{source?}]\label{thm:pisier}
-Let $P$ denote the projection onto $(\vec{I_{n}},\vec{I_{m}})$, then the following holds with $1/poly(mn)$ failure probability
-\[ \|\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i} (I - P) \|_{op} \leq O \left( \sqrt{\sum_{i} \alpha_{i}^{2}} \right) \left( \E \|Y\|_{op} \right)^{2} \]
-\end{theorem}
-
 \begin{corollary}
-For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kraus operator is of the form $\frac{1}{\sqrt{TD}} Y$, and our off-diagonal operator is
-\[ \sum_{k=1}^{TD/d_{a}d_{b}} \frac{1}{TD} Y_{k} \otimes Y_{k}   \]
-By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is of the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} TD}}$, so for constant expansion it suffices that $TD \gg \max_{a} d_{a}^{2}$
+For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kraus operator is of the form $\frac{1}{\sqrt{nD}} Y$, and our off-diagonal operator is
+\[ \sum_{k=1}^{nD/d_{a}d_{b}} \frac{1}{nD} Y_{k} \otimes Y_{k}   \]
+By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is of the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}}$, so for constant expansion it suffices that $nD \gg \max_{a} d_{a}^{2}$
 \end{corollary}
 \begin{proof}[Proof of \cref{thm:tensor-convexity}]
 We can in fact show that $\nabla^{2}$ is well-conditioned using the following:
