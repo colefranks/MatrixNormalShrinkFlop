@@ -679,6 +679,21 @@ Now we analyze each of these terms:
 Each of these terms we can bound by $\sigma^{ab}_{1} \|Z\|_{F} \|Y\|_{F}$. So by iterating this argument over all $c$, we get the desired bound.
 \end{proof}
 
+\begin{proof}[Proof of \cref{lem:perturbation}]
+\[ \langle X, \nabla_{aa}^{2} X \rangle = \langle \rho^{a}, X^{2} \rangle \leq \|\rho^{a}\|_{op} \|X^{2}\|_{1} = \|\rho^{a}\|_{op} \|X\|_{F}^{2} \]
+\AR{I am probably wrong on dimension factors here, but it's the right idea}
+By the condition on the gradient \TODO{what condition? cref it}, we have that
+\[ \forall a,b: \|\nabla_{ab}^{2}\|_{op}^{2} \leq \|\nabla_{aa}^{2}\|_{op} \|\nabla_{bb}^{2}\|_{op} = \|\rho^{a}\|_{op} \|\rho^{b}\|_{op} \leq \frac{1+\eps}{d_{a} d_{b}}   \]
+We apply the perturbation lemma to each part sucessively, and if $\delta$ are small enough we can assume this bound holds in weaker form $1+\epsilon \leq 2$ for all iterations. The above lemma shows for each part and any test vectors
+\[ \langle w w^{*} - v v^{*}, I_{\overline{ab}} \otimes \frac{Z}{\|Z\|_{F}} \otimes \frac{Y}{\|Y\|_{F}} \rangle \leq \frac{O( \sum_{a} \delta_{a} )}{\sqrt{d_{a} d_{b}}} =: \frac{\delta}{\sqrt{d_{a} d_{b}}}   \]
+Here the suppressed constants are $\leq 7$. Therefore the difference between Hessians can be bounded
+\[ |\langle Y, \nabla^{2} f(e^{Z}) - \nabla^{2} f(I), Y \rangle|  \leq \delta \left( \sum_{a} \frac{\|Y_{a}\|_{F}^{2}}{d_{a}} + \sum_{a \neq b} \frac{\|Y_{a}\|_{F} \|Y_{b}\|_{F}}{\sqrt{d_{a} d_{b}}} \right) \leq k \delta \|Y\|^{2}   \]
+\end{proof}
+
+
+
+\subsubsection{Some Remarks on Extensions}
+
 \begin{remark}
 One fantastic thing about the above proof is that it generalizes quite well to a statement about $\|\cdot\|_{p \to p}$. Explicitly, if $\sigma := \|M\|_{p \to p}$, then we have the following bound:
 \[ |\langle v v^{*}, I_{\overline{ab}} \otimes Z_{\pm} \otimes Y_{\pm} \rangle| \leq \sigma \|Z_{\pm} \|_{p} \|Y_{\pm} \|_{q}    \]
@@ -696,16 +711,29 @@ After one more simple lemma, we will be ready to prove our second strong convexi
 New simple proof: by convexity we know $\begin{pmatrix} \nabla_{aa}^{2} & \nabla_{ab}^{2} \\ \nabla_{ba}^{2} & \nabla_{bb}^{2}  \end{pmatrix} \succeq 0$. The result follows from e.g. Schur complements. 
 \end{proof}
 
-\begin{proof}[Proof of \cref{lem:perturbation}]
-\[ \langle X, \nabla_{aa}^{2} X \rangle = \langle \rho^{a}, X^{2} \rangle \leq \|\rho^{a}\|_{op} \|X^{2}\|_{1} = \|\rho^{a}\|_{op} \|X\|_{F}^{2} \]
-\AR{I am probably wrong on dimension factors here, but it's the right idea}
-By the condition on the gradient \TODO{what condition? cref it}, we have that
-\[ \forall a,b: \|\nabla_{ab}^{2}\|_{op}^{2} \leq \|\nabla_{aa}^{2}\|_{op} \|\nabla_{bb}^{2}\|_{op} = \|\rho^{a}\|_{op} \|\rho^{b}\|_{op} \leq \frac{1+\eps}{d_{a} d_{b}}   \]
-We apply the perturbation lemma to each part sucessively, and if $\delta$ are small enough we can assume this bound holds in weaker form $1+\epsilon \leq 2$ for all iterations. The above lemma shows for each part and any test vectors
-\[ \langle w w^{*} - v v^{*}, I_{\overline{ab}} \otimes \frac{Z}{\|Z\|_{F}} \otimes \frac{Y}{\|Y\|_{F}} \rangle \leq \frac{O( \sum_{a} \delta_{a} )}{\sqrt{d_{a} d_{b}}} =: \frac{\delta}{\sqrt{d_{a} d_{b}}}   \]
-Here the suppressed constants are $\leq 7$. Therefore the difference between Hessians can be bounded
-\[ |\langle Y, \nabla^{2} f(e^{Z}) - \nabla^{2} f(I), Y \rangle|  \leq \delta \left( \sum_{a} \frac{\|Y_{a}\|_{F}^{2}}{d_{a}} + \sum_{a \neq b} \frac{\|Y_{a}\|_{F} \|Y_{b}\|_{F}}{\sqrt{d_{a} d_{b}}} \right) \leq k \delta \|Y\|^{2}   \]
+We can in fact move a more general statement quite simply. This line of reasoning also applies to the operator on $\perp I$, but shows why Pisier's theorem is spectacular. 
+
+\begin{fact}
+$\|\nabla_{ab}^{2}\|_{op \to op} = \|\rho^{a}\|_{op}$, and dually $\|\nabla_{ab}^{2}\|_{1 \to 1} = \|\rho^{b}\|_{op}$. 
+\end{fact}
+\begin{proof}
+\[ \|\nabla_{ab}^{2}\|_{op \to op} = \sup_{\|X\|_{op} \leq 1, \|Y\|_{1} \leq 1} \langle \rho^{ab}, X \otimes Y \rangle  \]
+Choose $U,V$ to be the bases of the optimizers. Then restricting to this torus, we really have a matrix $M_{ij} := \langle \rho^{ab}, u_{i} u_{i}^{*} \otimes v_{j} v_{j}^{*} \rangle$, and $\|\nabla_{ab}^{2}\|_{op \to op} = \|M\|_{\infty \to \infty}$ for this basis. 
+\[ \|M\|_{\infty \to \infty} = \max_{i} \sum_{j} |M_{ij}| = \max_{i} \sum_{j} \langle \rho^{ab}, u_{i} u_{i}^{*} \otimes v_{j} v_{j}^{*} \rangle = \max_{i} \langle u_{i} u_{i}^{*}, \rho^{a} \rangle \leq \|\rho^{a}\|_{op}   \]
+The second statement follows since $(\nabla_{ab}^{2})^{*} = \nabla_{ba}^{2}$. 
 \end{proof}
+
+\begin{theorem} [Riesz-Thorin]
+Given $\|T\|_{p_{0} \to q_{0}}, \|T\|_{p_{1} \to q_{1}} < \infty$, we have the following log convexity: if $\frac{1}{p_{\theta}} = \frac{\theta}{p_{0}} + \frac{1-\theta}{p_{1}}$ and $q_{\theta}$ defined similarly:
+\[ \|T\|_{p_{\theta} \to q_{\theta}} \leq \|T\|_{p_{0} \to q_{0}}^{\theta} \|T\|_{p_{1} \to q_{1}}^{1-\theta}    \]
+\end{theorem}
+
+\begin{corollary}
+For $p_{0} = 1, p_{1} = \infty$, we have $\frac{1}{p} = \frac{1/p}{1} + \frac{1-1/p}{\infty}$. 
+\[ \|\nabla_{ab}^{2}\|_{p \to p} \leq \|\nabla_{ab}^{2}\|_{1 \to 1}^{1/p} \|\nabla_{ab}^{2}\|_{op \to op}^{1-1/p} = \|\rho^{b}\|_{op}^{1/p} \|\rho^{a}\|_{op}^{1-1/p}  \]
+\end{corollary}
+
+In our setting, we actually care about $\nabla^{2} (I-P)$ where we project away from $I$. As shown elsewhere, for matrices we can actually establish improved bounds by a net argument, which by the above corollary shows that a matrix of $\chi^{2}$ variables actually shrinks all $p$-norms of inputs $\perp 1$. Unfortunately the net argument for the quantum setting loses an important dimension factor. Further, for the low sample regime, it can be shown that the above projection does not improve the bound $\|\nabla_{ab}^{2} (I-P)\|_{op \to op}$. This is another reason Pisier's result is astonishing. 
 
 
 \subsection{Proof of \cref{thm:tensor-frobenius}}
