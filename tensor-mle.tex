@@ -121,7 +121,8 @@ It remains an open question to show tight bounds for convergence of the MLE in s
 \item Number of samples $n$, dimensions $d_1, \dots, d_k$. $D$ for product of these.
 \item $X$ for the tensor random variable, $X_1, \dots, X_n$ for the samples, $\vec X = (X_1, \dots, X_n)$ for the random tuple of samples.
 $\rho = \vec X \vec X^T/\|\vec X\|_F^2$.
-\item $\braket{\cdot,\cdot}_{\vec d}$ denote the modified Hilbert-Schmidt inner product,
+\item $\braket{\cdot,\cdot}_{\vec d}$ denote modified Hilbert-Schmidt inner products
+\MW{sadly the corresponding norms look like $\ell_p$ norms},
 $\langle \cdot, \cdot \rangle$ is the $\ell_2$ inner product of vectors
 \item $f_{\vec X}$ for the function in \cref{dfn:function}, mostly drop $\vec X$.
 \item $\Sym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite, $\Sym_d^0$ for traceless symmetric, $\PD_d^1$ for $\det=1$ positive definite?
@@ -389,7 +390,7 @@ for all $d_a \times d_a$ matrices $Z$, where $Z_a = (I_1 \ot \cdots \ot I_{a-1} 
 Here and in the following we write $I_a$ for the $d_a\times d_a$ identity matrix.
 \end{definition}
 
-% \MW{If you prefer we can also write $\rho = \frac{\vec X \vec X^T}{\norm{\vec X}_F^2}$ below, but then we need to say somewhere that we now think of $\vec X$ as a $D\times n$-matrix. But I would not do this unless we have a great reason.}
+\MW{Explain how to compute in terms of $\vec X$. Ref above \cref{cor:vershynin}.}
 
 \begin{lemma}[Riemannian gradient]\label{lem:gradient}
 Let $\rho = \sum_{i=1}^n X_i X_i^T / \norm{\vec X}_2^2$.
@@ -594,6 +595,8 @@ for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d
   % = \tr \rho^{(ab)} \left( Y \ot Z \right) - (\tr Y \rho^{(a)})(\tr Z \rho^{(b)})
   % \end{align*}
 \end{proof}
+
+\MW{Explain that this looks like $\frac1{\norm X_2^2} \sum_i X_i \ot X_i - \dots$ if we think of \dots}
 
 We now state our strong convexity result at the identity:
 
