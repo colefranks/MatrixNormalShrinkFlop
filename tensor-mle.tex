@@ -609,7 +609,7 @@ To be self-contained we give a succinct proof in the real case.
 
 \TODO{Fix for new inner product and dimension issue}
 
-\begin{theorem}[\TODO{source?}]
+\begin{theorem}[\TODO{source?}]\label{thm:pisier}
 Let $P$ denote the projection onto $(\vec{I_{n}},\vec{I_{m}})$, then the following holds with $1/poly(mn)$ failure probability
 \[ \|\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i} (I - P) \|_{op} \leq O \left( \sqrt{\sum_{i} \alpha_{i}^{2}} \right) \left( \E \|Y\|_{op} \right)^{2} \]
 \end{theorem}
@@ -625,15 +625,33 @@ We can in fact show that $\nabla^{2}$ is well-conditioned using the following:
 \preceq \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}
 \preceq \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
 \]
-We can rewrite the Hessian using shorthand $\{M_{a}\}$ for the diagonal blocks and $\{M_{ab}\}$ for off-diagonal blocks: \CF{why not just write $\nabla^2_{ab}f$?} \CF{Also, the matrices $E_{aa} \otimes M_a$ are not all of the same size} 
+%We can rewrite the Hessian using shorthand $\{M_{a}\}$ for the diagonal blocks and $\{M_{ab}\}$ for off-diagonal blocks: \CF{why not just write $\nabla^2_{ab}f$?} \CF{Also, the matrices $E_{aa} \otimes M_a$ are not all of the same size} 
 \\ \AR{Ya $\nabla_{ab}$ notation is fine, just needed something that was a matrix of the right dimensions, so shorthand M was to avoid weird things with $\rho$}
-\\ \AR{It's fine if they're of different sizes, we enumerate the basis of the whole space as $\cup_{a} e_{a} \otimes \{e_{i \in [d_{a}]}\}$ }
+\\ \AR{It's fine if they're of different sizes, we enumerate the basis of the whole space as $\cup_{a} e_{a} \otimes \{e_{i \in [d_{a}]}\}$ }\\
+\CF{$E_{aa} \otimes \nabla^2_{aa}$ is $k d_a^2 \times k d_a^2$ dimensional. So how does this make sense? Maybe needs to be updated along the lines of the next proof.}
 \[ \nabla^{2} f = \sum_{a} E_{aa} \otimes \nabla^{2}_{aa} + \sum_{a \neq b} E_{ab} \otimes \nabla^{2}_{ab}  \]
 Now we can again use the high-probability bounds derived above: \TODO{actually cref them}
-\[ \nabla^{2}_{aa} \in \frac{1 \pm \eps}{d_{a}}; \hspace{5mm} \forall a \neq b: \|\nabla^{2}_{ab}\|_{op} \leq \frac{\lambda}{\sqrt{d_{a} d_{b}}}   \]
+\begin{align}\nabla^{2}_{aa} \in \frac{1 \pm \eps}{d_{a}}; \hspace{5mm} \forall a \neq b: \|\nabla^{2}_{ab}\|_{op} \leq \frac{\lambda}{\sqrt{d_{a} d_{b}}} \label{eq:expansion-thing}  \end{align}
 \[ \nabla^{2} \preceq \sum_{a} E_{aa} \otimes \left( \frac{1+\eps}{d_{a}} I_{a} \right) + \sum_{a < b} E_{aa} \otimes \left( \frac{\lambda}{d_{a}} I_{a} \right) + E_{bb} \otimes \left( \frac{\lambda}{d_{b}} I_{b} \right)    \]
 \[ \preceq \sum_{a} E_{aa} \otimes \frac{1+\eps+(k-1)\lambda}{d_{a}} I_{a}  \]
-The same sequence of inequalities can be reversed to show a lower bound. So in fact we can show the above bounds on blocks shows $1+O(\eps + k \lambda)$-condition number bound on the Hessian in norm $\|\cdot\|_{d}$.
+\CF{also confused. Why does $1/\sqrt{d_a d_b}$ become $1/d_a$ and $1/d_b$, resp?}
+
+The same sequence of inequalities can be reversed to show a lower bound. So in fact we can show the above bounds on blocks shows $1+O(\eps + k \lambda)$-condition number bound on the Hessian in norm $\|\cdot\|_{d}$. 
+\end{proof}
+
+\begin{proof}[Proof.] \CF{An attempt where I understand the basic premise, but the numbers aren't coming out right} We wish to show that, restricted to the subspace $\oplus_a $ 
+
+
+We will use the inequality $$- \begin{bmatrix} \sqrt{B B^T} & 0 \\ 0 & \sqrt{B^T B} \end{bmatrix} \preceq \begin{bmatrix} 0  & B \\ B^T & 0 \end{bmatrix} \preceq \begin{bmatrix} \sqrt{B B^T} & 0 \\ 0 & \sqrt{B^T B} \end{bmatrix},$$ for block matrices, which can be seen from computing Schur complements. Applying this to the two-by-two upper left block submatrix of $\nabla^2f$, we see 
+\begin{align*}
+  \nabla^2 f \succeq \begin{bmatrix}
+  \nabla_{11}^2 f - \sqrt{\nabla_{12}^2 f (\nabla_{12}^2 f)^T} & 0 & \hdots &  \nabla_{1k}^2 f  \\
+0 & \nabla_{22}^2 f - \sqrt{(\nabla_{12}^2 f)^T \nabla_{12}^2 f} & \ddots & \vdots \\
+\vdots & \ddots & \ddots & \vdots\\
+  \nabla_{k1}^2 f & \hdots &  \hdots & \nabla_{kk}^2 f \\
+  \end{bmatrix}.
+\end{align*}
+Here $\succeq$ is understood to refer to the Loewner ordering on the space $\oplus_a \Sym^0_{d_a}$ on which $\nabla^2 f$ is a linear operator. \CF{This proof doesn't yet make perfect sense, because we haven't specified what inner product we want for psd-ness. Actually it should be the $d$-norm.}
 \end{proof}
 We now show our second strong convexity result, namely that if our function is strongly convex at the origin then it is also strongly convex in an operator norm ball about the origin.
 
