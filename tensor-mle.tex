@@ -639,7 +639,10 @@ Now we can again use the high-probability bounds derived above: \TODO{actually c
 The same sequence of inequalities can be reversed to show a lower bound. So in fact we can show the above bounds on blocks shows $1+O(\eps + k \lambda)$-condition number bound on the Hessian in norm $\|\cdot\|_{d}$. 
 \end{proof}
 
-\begin{proof}[Proof.] \CF{An attempt where I understand the basic premise, but the numbers aren't coming out right} We wish to show that, restricted to the subspace $\oplus_a $ 
+\begin{proof}[Proof.] 
+\AR{The lemma is $\begin{bmatrix} A & K \\ K^{*} & B \end{bmatrix} \succeq 0$ iff $A, B \succeq 0, \|A^{-1/2} K B^{-1/2}\|_{op} \leq 1$. This means $\begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix} \preceq \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}$ for any $A,B \succeq 0, \|A^{-1/2} K B^{-1/2}\|_{op} \leq 1$ }
+
+\CF{An attempt where I understand the basic premise, but the numbers aren't coming out right} We wish to show that, restricted to the subspace $\oplus_a $ 
 
 
 We will use the inequality $$- \begin{bmatrix} \sqrt{B B^T} & 0 \\ 0 & \sqrt{B^T B} \end{bmatrix} \preceq \begin{bmatrix} 0  & B \\ B^T & 0 \end{bmatrix} \preceq \begin{bmatrix} \sqrt{B B^T} & 0 \\ 0 & \sqrt{B^T B} \end{bmatrix},$$ for block matrices, which can be seen from computing Schur complements. Applying this to the two-by-two upper left block submatrix of $\nabla^2f$, we see 
