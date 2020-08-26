@@ -522,8 +522,11 @@ As a block matrix,
 where $\nabla_{ab}^2f$ is an operator from $\Sym_{d_b}^0$ to $\Sym_{d_a}^0$.
 \end{definition}
 
-We note that $\braket{Z, \nabla^2 f(\Theta) Z}_{\vec d} = \partial^2_{t=0} f(\Theta^{1/2} e^{tZ} \Theta^{1/2})$ for all $Z\in S$.
-Thus, $f$~is geodesically convex if and only if the Riemannian Hessian is positive semidefinite, i.e., $\nabla^2 f(\Theta) \succeq 0$ in the Loewner order, and $f$ is $\lambda$-strongly geodesically convex if and only if $\nabla^2 f(\Theta) \succeq \lambda I$, i.e., the Hessian is positive definite with eigenvalues larger or equals to~$\lambda$.
+We note that the Riemannian Hessian is symmetric with respect to the inner product~$\braket{\cdot,\cdot}_{\vec d}$ on $S$.
+Furthermore, $\braket{Z, \nabla^2 f(\Theta) Z}_{\vec d} = \partial^2_{t=0} f(\Theta^{1/2} e^{tZ} \Theta^{1/2})$ for all $Z\in S$.
+Thus, $f$~is geodesically convex if and only if the Riemannian Hessian is positive semidefinite, that is, $\nabla^2 f(\Theta) \succeq 0$.
+Similarly, $f$ is $\lambda$-strongly geodesically convex if and only if $\nabla^2 f(\Theta) \succeq \lambda I$, i.e., the Hessian is positive definite with eigenvalues larger or equals to~$\lambda$.
+\MW{Here, $\succeq$ denotes the Loewner order with respect to $\braket{\cdot,\cdot}_{\vec d}$.}
 
 Similarly as for the gradient, we can compute the components of the Hessian in terms of a partial trace, as in the following definition and lemma.
 
@@ -600,18 +603,19 @@ Then, with probability at least $1 - 1/{\color{red}\poly(D)}$, $f_{\vec X}$ is {
 \end{theorem}
 
 To prove this, we need the following result on quantum expansion (cf.\ \cref{sec:matrix-normal}).
-The result is essentially Theorem~16.6 in~\cite{pisier2012grothendieck}, together with a standard symmetrization trick (e.g., Proof of Lemma~4.1 in~\cite{P14}). \MW{Give proof in an appendix?}
-
-\begin{theorem}[Pisier]
-There is an absolute constant~$C>0$ such that, for all $n,m\in\N$ and any scalar sequence $a_i \in \R^n$ the following holds with probability at least $1-1/{\color{red}\poly(n,m)}$:
-\begin{align*}
-  \norm{ \sum_{i=1}^n \alpha_i (Y_i \ot Y_i) (I - P) }_{\op}
-\leq C \norm{\alpha}_2 \left( \E \norm{Y}_{\op} \right)^2,
-\end{align*}
-where $Y_1,\dots,Y_n,Y$ are independent $m\times m$ standard Gaussian random matrices and $P$ denotes the orthogonal projection onto multiples of $\sum_{i=1}^m e_i \ot e_i$.
-\end{theorem}
+The result is essentially Theorem~16.6 in~\cite{pisier2012grothendieck}, together with a standard symmetrization trick (e.g., Proof of Lemma~4.1 in~\cite{P14}).
 
 \MW{Michael continue here.}
+
+\begin{theorem}[Pisier]
+There is an absolute constant~$C>0$ such that, for all $N,n,m\in\N$ and any scalar sequence $a_i \in \R^N$ the following holds with probability at least $1-1/{\color{red}\poly(???)}$:
+\begin{align*}
+  \norm{ \sum_{i=1}^N \alpha_i (Y_i \ot Y_i) (I - P_m) }_{\op}
+\leq C \norm{\alpha}_2 \left( \E \norm{Y}_{\op} \right)^2,
+\end{align*}
+where $Y_1,\dots,Y_N,Y$ are independent $n\times m$ standard Gaussian random matrices and $P_m$ denotes the orthogonal projection onto multiples of $\sum_{i=1}^m e_i \ot e_i$.
+\MW{Is this a precise version of the Pisier result that we need? I think he proves something like this for complex tensors and square $Y_i$ (i.e., $n=m$). Should add a proof to an Appendix.}
+\end{theorem}
 
 \TODO{Fix for new inner product and dimension issue}
 
@@ -620,6 +624,7 @@ For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kr
 \[ \sum_{k=1}^{nD/d_{a}d_{b}} \frac{1}{nD} Y_{k} \otimes Y_{k}   \]
 By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is of the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}}$, so for constant expansion it suffices that $nD \gg \max_{a} d_{a}^{2}$
 \end{corollary}
+
 \begin{proof}[Proof of \cref{thm:tensor-convexity}]
 We can in fact show that $\nabla^{2}$ is well-conditioned using the following:
 \[ -\begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
