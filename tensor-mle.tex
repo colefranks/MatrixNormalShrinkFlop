@@ -628,7 +628,7 @@ For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kr
 By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is of the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}}$, so for constant expansion it suffices that $nD \gg \max_{a} d_{a}^{2}$
 \end{corollary}
 
-\begin{proof}[Proof of \cref{thm:tensor-convexity}]
+\begin{proof}[Proof: \CF{Akshay's conceptual proof of \cref{thm:tensor-convexity}}]
 We can in fact show that $\nabla^{2}$ is well-conditioned using the following:
 \[ -\begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
 \preceq \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}
@@ -648,23 +648,27 @@ Now we can again use the high-probability bounds derived above: \TODO{actually c
 The same sequence of inequalities can be reversed to show a lower bound. So in fact we can show the above bounds on blocks shows $1+O(\eps + k \lambda)$-condition number bound on the Hessian in norm $\|\cdot\|_{d}$. 
 \end{proof}
 
-\begin{proof}[Proof.] 
-\AR{The lemma is $\begin{bmatrix} A & K \\ K^{*} & B \end{bmatrix} \succeq 0$ iff $A, B \succeq 0, \|A^{-1/2} K B^{-1/2}\|_{op} \leq 1$. This means $\begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix} \preceq \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}$ for any $A,B \succeq 0, \|A^{-1/2} K B^{-1/2}\|_{op} \leq 1$ }
 
-\CF{An attempt where I understand the basic premise, but the numbers aren't coming out right} We wish to show that, restricted to the subspace $\oplus_a $ 
+\begin{proof}[Rigorous proof of \cref{thm:tensor-convexity}]
+We use the inequality $\begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix} \succeq - \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}$ for any $A,B \succeq 0$ such that $\|A^{-1/2} K B^{-1/2}\|_{op} \leq 1,$ which may be proved by computing Schur complements. 
 
-
-We will use the inequality $$- \begin{bmatrix} \sqrt{B B^T} & 0 \\ 0 & \sqrt{B^T B} \end{bmatrix} \preceq \begin{bmatrix} 0  & B \\ B^T & 0 \end{bmatrix} \preceq \begin{bmatrix} \sqrt{B B^T} & 0 \\ 0 & \sqrt{B^T B} \end{bmatrix},$$ for block matrices, which can be seen from computing Schur complements. Applying this to the two-by-two upper left block submatrix of $\nabla^2f$, we see 
-\begin{align*}
-  \nabla^2 f \succeq \begin{bmatrix}
-  \nabla_{11}^2 f - \sqrt{\nabla_{12}^2 f (\nabla_{12}^2 f)^T} & 0 & \hdots &  \nabla_{1k}^2 f  \\
-0 & \nabla_{22}^2 f - \sqrt{(\nabla_{12}^2 f)^T \nabla_{12}^2 f} & \ddots & \vdots \\
+Let $\underline{\nabla}^2 f$ denote the gradient in the Hilbert-Schmidt inner product, or $\underline{\nabla}^2_{ab} f = \frac{1}{d_a} \nabla_{ab}^2 f$. By \cref{eq:expansion-thing}, with probability $\CF{good}$, the map $Z \to \tr_2 \rho^{(a,b)} (I \ot Z)$ has operator norm at most $\lambda/\sqrt{d_a d_b}$ restricted to traceless $Z$ and $\|\rho^{(a)} - I_{d_a}/{d_a}\|_{op} \leq \eps/d_a, \|\rho^{(b)} - I_{d_b}/d_b\|_{op} \leq \eps/d_b$. Thus for traceless $Z$ we have
+$$ \rho^{(a)}\bigl(\tr Z \rho^{(b)}\bigr) \leq \| \rho^{(a)}\|_F \eps /\sqrt{d_a} \leq (1 + \eps) \eps /\sqrt{d_a d_b}.$$
+Together, we have 
+$\|\underline{\nabla}_{ab}^2 f \|_{op} \leq (\lambda + \eps(1 + \eps))/\sqrt{d_a d_b}.$ We assume $\eps \leq c$, so we may apply the inequality with $A = (\lambda + 2\eps) I_{d_a}/d_{a}$, $B = (\lambda + 2\eps)I_{d_b}/d_{b}$. For $a = 1, b = 2$, we have \begin{align*}
+  \underline{\nabla}^2 f \succeq \begin{bmatrix}
+  \underline{\nabla}_{11}^2 f - \frac{\lambda + 2\eps}{d_a} I_{d_a} & 0 & \hdots &  \underline{\nabla}_{1k}^2 f  \\
+0 & \underline{\nabla}_{22}^2 f - \frac{\lambda + 2\eps}{d_b} I_{d_b} & \ddots & \vdots \\
 \vdots & \ddots & \ddots & \vdots\\
-  \nabla_{k1}^2 f & \hdots &  \hdots & \nabla_{kk}^2 f \\
-  \end{bmatrix}.
-\end{align*}
-Here $\succeq$ is understood to refer to the Loewner ordering on the space $\oplus_a \Sym^0_{d_a}$ on which $\nabla^2 f$ is a linear operator. \CF{This proof doesn't yet make perfect sense, because we haven't specified what inner product we want for psd-ness. Actually it should be the $d$-norm.}
-\end{proof}
+  \underline{\nabla}_{k1}^2 f & \hdots &  \hdots & \underline{\nabla}_{kk}^2 f \\
+  \end{bmatrix},\end{align*} where $\succeq$ is understood to be the Loewner ordering restricted to $\oplus_a \Sym^0_{d_a}$. Continuing this process, we'll find that \CF{continue here}.\end{proof}
+
+
+
+%$$\bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr)$$
+
+
+
 We now show our second strong convexity result, namely that if our function is strongly convex at the origin then it is also strongly convex in an operator norm ball about the origin.
 
 
