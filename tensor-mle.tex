@@ -94,6 +94,7 @@
 \item Replace the failure probability $1/poly(D)$ by an actual expression.
 \item Fix the dimension issue in \cref{thm:tensor-convexity}.
 \item Small annoying thing - we assume determinant 1. This can be handled easily, but needs to be done.
+\item When not random, use lower case $x$.
 \end{enumerate}
 
 }
@@ -120,12 +121,12 @@ It remains an open question to show tight bounds for convergence of the MLE in s
 \begin{itemize}
 \item Number of samples $n$, dimensions $d_1, \dots, d_k$. $D$ for product of these.
 \item $X$ for the tensor random variable, $X_1, \dots, X_n$ for the samples, $\vec X = (X_1, \dots, X_n)$ for the random tuple of samples.
-$\rho = \vec X \vec X^T/\|\vec X\|_F^2$.
+$\rho = \vec X \vec X^T/\|\vec X\|_F^2$. Lower case $x$ for samples.
 \item $\braket{\cdot,\cdot}_{\vec d}$ denote modified Hilbert-Schmidt inner products
 \MW{sadly the corresponding norms look like $\ell_p$ norms},
 $\langle \cdot, \cdot \rangle$ is the $\ell_2$ inner product of vectors
 \item $f_{\vec X}$ for the function in \cref{dfn:function}, mostly drop $\vec X$.
-\item $\Sym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite, $\Sym_d^0$ for traceless symmetric, $\PD_d^1$ for $\det=1$ positive definite?
+\item $\Sym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite, $\Sym_d^0$ for traceless symmetric, $\PD_d^1$ for $\det=1$ positive definite? $\mathcal{S}?$. 
 \item $\Theta$ for big tensor product pd concentration matrix, $\Theta_a$ for individual pd's.
 \item I'm going to call $\SL = \oplus \SL_{d_i}, \PD = \oplus \PD_{d_i}^1, \Sym = \oplus \Sym_{d_i}^0$. Explain somewhere how $\Sym$ is the tangent space of $\PD$. \MW{Suppressing the $^1$ and $^0$ is a bit confusing I think. Maybe $\operatorname{SPD}$ for $\PD$ with $\det=1$? I still feel that $\Sym$ looks somewhat horrible (with or without subscript, but I am not sure what would be better).}
 \item $\nabla, \nabla^2$ for Riemannian Hessians and gradients, $\nabla_a f$, $\nabla^2_{ab} f$ for components. $\nabla f$ means at the identity.
@@ -207,7 +208,7 @@ Instead of maximizing the function~$\ell_{\vec X}$, we may instead maximize the 
 Indeed, the two functions have the same maximizers up to rescaling.%
 \footnote{To see this, write $\Theta = \lambda \Theta'$ for $\lambda>0$ and $\Theta'\in\PD_D^1$ and maximize over~$\lambda$.
 The result is $\lambda = n D / \sum_{i=1}^n \braket{X_i, \Theta X_i}$, hence $\sup_{\Theta\in\PD_D} \ell_{\vec X}(\Theta) = \sup_{\Theta'\in\PD_D^1} \frac {nD}2 \left( \log(nD) - 1 \right) + \frac{nD}2 \tilde\ell_{\vec X}(\Theta')$.}
-One may think of \cref{eq:tilde ell} as proportional \MW{or additive constant?} to the log-likelihood of $\Sigma$ after receiving $[X_1, \dots, X_n]$, the equivalence class of the tuple of samples in projective space.
+One may think of \cref{eq:tilde ell} as proportional, up to an additive constant, to the log-likelihood of $\Sigma$ after receiving $[X_1, \dots, X_n]$, the equivalence class of the tuple of samples in projective space.
 
 Both log-likelihoods are geodesically concave, as will be defined precisely in the next section, but only the latter function has geodesically Lipschitz gradients, i.e., is geodesically smooth~\cite{burgisser2019towards}.
 This suggests it is more amenable to geodesically convex optimization, our main tool in this work.
@@ -225,7 +226,7 @@ Thus we are led to minimizing the following function:
 \begin{definition}[Objective]\label{dfn:function}
 Given $n$ samples $\vec{X} = (X_1, \dots, X_n)$ in $\R^D$, define the function $f_{\vec X}\colon\prod_{a=1}^k \PD_{d_a}^1 \to \R$ by
 \begin{align}\label{eq:projective-likelihood}
-  f_{\vec X}(\Theta_1,\dots,\Theta_k) = \log \sum_{i=1}^n \braket{X_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) X_i}.
+  f_{\vec X}(\Theta_1,\dots,\Theta_k) = \log \sum_{i=1}^n \braket{X_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a^{\sqrt{d_a}} \right) X_i}.
 \end{align}
 Let $(\widehat{\Theta}_{\vec X,1}, \dots, \widehat{\Theta}_{\vec X,k})$ denote the minimizer of $f_{\vec X}$ if it exists and is unique.
 \end{definition}
@@ -235,11 +236,14 @@ As explained above, $\widehat{\Theta}_{\vec X} = \widehat{\Theta}_{\vec X,1} \ot
 We will often identify $\Theta$ with the tuple $(\Theta_1,\dots,\Theta_k)$, and similarly for $\widehat{\Theta}_{\vec X}$.
 When $\vec X$ is clear from context we will drop it.
 
-\MW{Should we write lower case $x$ when the $x$ are not random (above) and $X$ when they (e.g., in the `rather simple plan' below)?}
 
 %-----------------------------------------------------------------------------
 \subsection{Sample complexity from geodesic convexity}\label{subsec:outline}
 %-----------------------------------------------------------------------------
+\TODO{
+\begin{itemize}
+\item change variables instead of using $d$-norm
+\end{itemize}}
 Following \cite{FM20}, and in spirit also \CF{cite weisel}, we use geodesic convexity to prove \cref{thm:tensor-frobenius}.
 \Cref{thm:matrix-normal}, proven later in \cref{sec:matrix-normal}, requires the stronger notion of \emph{quantum expansion}.
 
@@ -320,7 +324,7 @@ Now say that $B_\kappa(I) = \{ e^Z : \norm Z_{\vec d} \leq \kappa \}$ is the bal
 
 \begin{lemma}\label{lem:convex-ball}
 Let $f\colon P\to \R$ be geodesically convex everywhere, and $\lambda$-strongly geodesically convex in a ball of radius~$\kappa>0$ about~$I$.
-Further assume the Riemannian gradient satisfies $\norm{\nabla f(I)}_{\vec d} \leq \eps < \lambda \kappa / 2$. \MW{Please check that added factor $1/2$ is indeed necessary.}
+Further assume the Riemannian gradient satisfies $\norm{\nabla f(I)}_{\vec d} \leq \eps < \lambda \kappa / 2$.
 Then $f$ has a unique minimizer, which is contained in the ball of radius~$\eps/\lambda$ about~$I$.
 \end{lemma}
 \begin{proof}
@@ -427,16 +431,16 @@ Then the components of the Riemannian gradient $\nabla f_{\vec X}$ at the identi
 \end{proof}
 
 Having calculated the gradient, we are ready to state our bound:
-\MW{Please check updated proof. Can we assume $\eps<1$ and simply take~$C=16$?}
-
+%\MW{Please check updated proof. Can we assume $\eps<1$ and simply take~$C=16$?}
+\MW{Make pretty by manipulating $C$}
 \begin{prop}\label{prop:gradient-bound}
 Let $\vec X = (X_1,\dots,X_n)$ be independent standard Gaussian random variables in $\R^D$, where $D=d_1\cdots{}d_k$.
-Let $\eps>0$ and $C = 16\max\{\eps^2,1\}$.
+Let $\eps>0$ and $C = 16^2\max\{\eps^2,1\}$.
 Suppose that, for all $a \in [k]$,
 \begin{align*}
   N_a := \frac{n D}{d_a} \geq C \frac{d_a}{\eps^2}.
 \end{align*}
-Then, with probability at least $1 - 2 \sum_{a=1}^k e^{-N_a \eps^2/(2C^2)}$ we have that
+Then, with probability at least $1 - 2 \sum_{a=1}^k e^{-N_a \eps^2/2C}$ we have that
 \begin{align*}
   \norm{\nabla_a f_{\vec X}}_{\op} \leq \eps
 \end{align*}
@@ -465,16 +469,16 @@ By \cref{cor:vershynin}, we have the following with $\leq 2 \exp(-t^2/2)$ failur
 \begin{align*}
   \sqrt{N} \left( 1 -  \frac{\sqrt{d} + t }{\sqrt{N}}  \right)\leq s_{\min}(Y) \leq s_{\max}(Y) \leq  \sqrt{N} \left( 1 + \frac{\sqrt{d} + t }{\sqrt{N}} \right).
 \end{align*}
-Let $t = \sqrt{N} \eps / C$.
-Because $d \leq N \eps^2 / C$, this shows that all singular values are in $\sqrt{N} \left( 1 \pm 2\eps/C \right)$.
-It follows that the eigenvalues of $YY^T$ are in $N \left( 1 \pm 8\eps/C \right)$.
+Let $t = \sqrt{N} \eps / \sqrt{C}$.
+Because $d \leq N \eps^2 / \sqrt{C}$, this shows that all singular values are in $\sqrt{N} \left( 1 \pm 2\eps/\sqrt{C} \right)$.
+It follows that the eigenvalues of $YY^T$ are in $N \left( 1 \pm 8\eps/\sqrt{C} \right)$.
 Since there are at most $d \leq N$ nonzero eigenvalues, this implies in turn that the eigenvalues of $Y Y^T/\|Y\|_F^2$ are in
 \begin{align*}
-\frac {\left( 1 \pm 8\eps/C \right)} {d \left( 1 \pm 8\eps/C \right)} \subseteq \frac1d \left( 1 \pm 16\eps/C \right) \subseteq \frac1d \left( 1 \pm \eps \right),
+\frac {\left( 1 \pm 8\eps/\sqrt{C} \right)} {d \left( 1 \pm 8\eps/\sqrt{C} \right)} \subseteq \frac1d \left( 1 \pm 16\eps/\sqrt{C} \right) \subseteq \frac1d \left( 1 \pm \eps \right),
 \end{align*}
 Thus,
 $\norm{\nabla_a f_{\vec X}}_{\op} \leq \eps$
-with failure probability at most $2 \exp(-N \eps^2/(2C^2))$.
+with failure probability at most $2 \exp(-N \eps^2/2C)$.
 Applying the union bound over $[k]$ completes the proof of the proposition.
 % Next, observe that $\|Y\|_F^2$ is a $\chi^2$-distribution with $Nd$ degrees of freedom, and thus satisfies
 % \begin{align*}
@@ -549,7 +553,7 @@ Then the Riemannian Hessian $\nabla^2 f_{\vec X}$ at the identity is given by
   \frac1{d_a} \tr Y (\nabla^2_{aa} f_{\vec X}) Y
 &= \tr \rho^{(a)} Y^2 - \bigl(\tr Y \rho^{(a)}\bigr)^2 \\
   \frac1{d_a} \tr Y (\nabla^2_{ab} f_{\vec X}) Z
-&= \tr \rho^{(ab)} \left( Y \ot Z \right) - \bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr) \qquad\text{\MW{Please check.}}
+&= \tr \rho^{(ab)} \left( Y \ot Z \right) - \bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr) 
 \end{align*}
 for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d_b\times d_b$ matrices~$Z$.
 \end{lemma}
@@ -597,7 +601,7 @@ for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d
 \end{proof}
 
 \MW{Explain that this looks like $\frac1{\norm X_2^2} \sum_i X_i \ot X_i - \dots$ if we think of \dots}
-
+\CF{most important part of hessian is this $\rho^{ab}$ part ( a channel), discuss that there are three ways to look at it: partial trace, channel (cpm), and natural representation. Cite Pisier in channel form. In appendix prove by translating to channel}
 We now state our strong convexity result at the identity:
 
 \begin{theorem}\label{thm:tensor-convexity}
@@ -621,7 +625,7 @@ where $Y_1,\dots,Y_N,Y$ are independent $n\times m$ standard Gaussian random mat
 \end{theorem}
 
 \TODO{Fix for new inner product and dimension issue}
-
+\CF{Separate lemma for probability of the off diagonal terms; precise version of the below incluing assumptions/probabilities.}
 \begin{corollary}
 For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kraus operator is of the form $\frac{1}{\sqrt{nD}} Y$, and our off-diagonal operator is
 \[ \sum_{k=1}^{nD/d_{a}d_{b}} \frac{1}{nD} Y_{k} \otimes Y_{k}   \]
@@ -652,13 +656,13 @@ The same sequence of inequalities can be reversed to show a lower bound. So in f
 \begin{proof}[Rigorous proof of \cref{thm:tensor-convexity}]
 We use the inequality $\begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix} \succeq - \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}$ for any $A,B \succeq 0$ such that $\|A^{-1/2} K B^{-1/2}\|_{op} \leq 1,$ which may be proved by computing Schur complements. 
 
-Let $\underline{\nabla}^2 f$ denote the gradient in the Hilbert-Schmidt inner product, or $\underline{\nabla}^2_{ab} f = \frac{1}{d_a} \nabla_{ab}^2 f$. By \cref{eq:expansion-thing}, with probability $\CF{good}$, the map $Z \to \tr_2 \rho^{(a,b)} (I \ot Z)$ has operator norm at most $\lambda/\sqrt{d_a d_b}$ restricted to traceless $Z$ and $\|\rho^{(a)} - I_{d_a}/{d_a}\|_{op} \leq \eps/d_a, \|\rho^{(b)} - I_{d_b}/d_b\|_{op} \leq \eps/d_b$. Thus for traceless $Z$ we have
-$$ \rho^{(a)}\bigl(\tr Z \rho^{(b)}\bigr) \leq \| \rho^{(a)}\|_F \eps /\sqrt{d_a} \leq (1 + \eps) \eps /\sqrt{d_a d_b}.$$
+Let $\underline{\nabla}^2 f$ denote the gradient in the Hilbert-Schmidt inner product, or $\underline{\nabla}^2_{ab} f = \frac{1}{d_a} \nabla_{ab}^2 f$. By \cref{eq:expansion-thing} (\CF{which needs to actually be proved}), with probability $\CF{good}$, the map $Z \to \tr_2 \rho^{(a,b)} (I \ot Z)$ has operator norm at most $\lambda/\sqrt{d_a d_b}$ restricted to traceless $Z$ and $\|\rho^{(a)} - I_{d_a}/{d_a}\|_{op} \leq \eps/d_a, \|\rho^{(b)} - I_{d_b}/d_b\|_{op} \leq \eps/d_b$. Thus for traceless $Z$ we have $|\tr Z \rho^{(b)}| \leq  \eps \|Z\|_F /\sqrt{d_b}$, and hence
+$$(\tr Y \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr) \leq \eps^2 \|Z\|_F\|Y\|_F /\sqrt{d_a d_b} .$$
 Together, we have 
-$\|\underline{\nabla}_{ab}^2 f \|_{op} \leq (\lambda + \eps(1 + \eps))/\sqrt{d_a d_b}.$ We assume $\eps \leq c$, so we may apply the inequality with $A = (\lambda + 2\eps) I_{d_a}/d_{a}$, $B = (\lambda + 2\eps)I_{d_b}/d_{b}$. For $a = 1, b = 2$, we have \begin{align*}
+$\|\underline{\nabla}_{ab}^2 f \|_{op} \leq (\lambda + \eps^2)/\sqrt{d_a d_b}.$ Thus we may apply the inequality with $A = (\lambda + \eps^2) I_{d_a}/d_{a}$, $B = (\lambda + \eps^2)I_{d_b}/d_{b}$. For $a = 1, b = 2$, we have \begin{align*}
   \underline{\nabla}^2 f \succeq \begin{bmatrix}
-  \underline{\nabla}_{11}^2 f - \frac{\lambda + 2\eps}{d_1} I_{d_1} & 0 & \hdots &  \underline{\nabla}_{1k}^2 f  \\
-0 & \underline{\nabla}_{22}^2 f - \frac{\lambda + 2\eps}{d_2} I_{d_2} & \ddots & \vdots \\
+  \underline{\nabla}_{11}^2 f - \frac{\lambda + \eps^2}{d_1} I_{d_1} & 0 & \hdots &  \underline{\nabla}_{1k}^2 f  \\
+0 & \underline{\nabla}_{22}^2 f - \frac{\lambda + \eps^2}{d_2} I_{d_2} & \ddots & \vdots \\
 \vdots & \ddots & \ddots & \vdots\\
   \underline{\nabla}_{k1}^2 f & \hdots &  \hdots & \underline{\nabla}_{kk}^2 f \\
   \end{bmatrix},\end{align*} where $\succeq$ is understood to be the Loewner ordering restricted to $\oplus_a \Sym^0_{d_a}$. Continuing this process, we'll find that \CF{continue here}.\end{proof}
