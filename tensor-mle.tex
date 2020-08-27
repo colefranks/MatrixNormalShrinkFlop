@@ -276,9 +276,9 @@ Further, say $f$ is \emph{$\lambda$-strongly geodesically convex} at a point $\T
 Here we use the norm $\norm{\cdot}_{\vec d}$ induced by the rescaled Hilbert-Schmidt inner product $\braket{X, Y}_{\vec d} = \sum_{a=1}^k \frac1{d_a} \tr(X_a Y_a)$ for $X, Y \in S$.
 \end{definition}
 
-The function $f_{\vec X}$ defined in \cref{dfn:function} is geodesically convex%and $L$-geo\-de\-si\-cal\-ly smooth for $L=\TODO{XXX NEW NORM}$
-~\cite{burgisser2019towards}.
-Moreover, for all $\Theta \in P$, $A \in G$, and $\vec X=(X_1,\dots,X_n)$, we have that
+The function $f_{\vec X}$ defined in \cref{dfn:function} is geodesically convex~\cite{burgisser2019towards}. One might wonder why we use the unusual Riemannian metric $\langle X, Y \rangle_{\vec d}$. Oddly enough, our function $f_{\vec X}$ will not be strongly convex in the usual Hilbert-Schmidt inner product! Defining the gradient and Hessian according to this metric improves the ratio between the norm of the gradient of $f_{\vec X}$ and its strong geodesic convexity parameter - a ratio which controls the quality of our statistical estimate. \CF{does this motivation belong here?}
+
+We also note that $f$ has a certain useful transformation property or ``equivariance." For all $\Theta \in P$, $A \in G$, and $\vec X=(X_1,\dots,X_n)$, we have that
 \begin{align}\label{eq:equivariance}
   f_{A^{-1} \vec X}(A^T \Theta A) = f_{\vec X}(\Theta),
 \end{align}
@@ -632,39 +632,27 @@ For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kr
 By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is of the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}}$, so for constant expansion it suffices that $nD \gg \max_{a} d_{a}^{2}$
 \end{corollary}
 
-\begin{proof}[Proof: \CF{Akshay's conceptual proof of \cref{thm:tensor-convexity}}]
-We can in fact show that $\nabla^{2}$ is well-conditioned using the following:
-\[ -\begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
-\preceq \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}
-\preceq \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
-\]
-%We can rewrite the Hessian using shorthand $\{M_{a}\}$ for the diagonal blocks and $\{M_{ab}\}$ for off-diagonal blocks: \CF{why not just write $\nabla^2_{ab}f$?} \CF{Also, the matrices $E_{aa} \otimes M_a$ are not all of the same size} 
-\\ \AR{Ya $\nabla_{ab}$ notation is fine, just needed something that was a matrix of the right dimensions, so shorthand M was to avoid weird things with $\rho$}
-\\ \AR{It's fine if they're of different sizes, we enumerate the basis of the whole space as $\cup_{a} e_{a} \otimes \{e_{i \in [d_{a}]}\}$ }\\
-\CF{$E_{aa} \otimes \nabla^2_{aa}$ is $k d_a^2 \times k d_a^2$ dimensional. So how does this make sense? Maybe needs to be updated along the lines of the next proof.}
-\[ \nabla^{2} f = \sum_{a} E_{aa} \otimes \nabla^{2}_{aa} + \sum_{a \neq b} E_{ab} \otimes \nabla^{2}_{ab}  \]
-Now we can again use the high-probability bounds derived above: \TODO{actually cref them}
-\begin{align}\nabla^{2}_{aa} \in \frac{1 \pm \eps}{d_{a}}; \hspace{5mm} \forall a \neq b: \|\nabla^{2}_{ab}\|_{op} \leq \frac{\lambda}{\sqrt{d_{a} d_{b}}} \label{eq:expansion-thing}  \end{align}
-\[ \nabla^{2} \preceq \sum_{a} E_{aa} \otimes \left( \frac{1+\eps}{d_{a}} I_{a} \right) + \sum_{a < b} E_{aa} \otimes \left( \frac{\lambda}{d_{a}} I_{a} \right) + E_{bb} \otimes \left( \frac{\lambda}{d_{b}} I_{b} \right)    \]
-\[ \preceq \sum_{a} E_{aa} \otimes \frac{1+\eps+(k-1)\lambda}{d_{a}} I_{a}  \]
-\CF{also confused. Why does $1/\sqrt{d_a d_b}$ become $1/d_a$ and $1/d_b$, resp?}
-
-The same sequence of inequalities can be reversed to show a lower bound. So in fact we can show the above bounds on blocks shows $1+O(\eps + k \lambda)$-condition number bound on the Hessian in norm $\|\cdot\|_{d}$. 
-\end{proof}
 
 
-\begin{proof}[Rigorous proof of \cref{thm:tensor-convexity}]
-We use the inequality $\begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix} \succeq - \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}$ for any $A,B \succeq 0$ such that $\|A^{-1/2} K B^{-1/2}\|_{op} \leq 1,$ which may be proved by computing Schur complements. 
+\begin{proof}[Proof of \cref{thm:tensor-convexity}] It will be convenient to write the matrix of $\nabla^2 f$ down in a basis that is an orthonormal basis for $\langle \cdot, \cdot \rangle_{\vec d}$, because then the usual Loewner ordering on matrices will match that for $\langle \cdot, \cdot \rangle_{\vec d}$. If $Q$ is the matrix for $\nabla^2 f$ in this basis, to show that $f$ is $\alpha$-strongly convex it is enough to show that $Q \succeq \alpha I$. To write $Q$, let the new basis be given by the columns of $D = \oplus \sqrt{d_a} I_{\mathcal S_{d}}$, i.e., the matrix $Q$ for $\nabla^2 f$ in this basis will be $D^{-1} \nabla^2 f D$. In block form, write
+$$Q = \begin{bmatrix} 
+Q_{11} & \dots &  Q_{1k} \\ 
+\vdots & \ddots & \vdots \\ 
+Q_{k1} & \dots &  Q_{kk}  \end{bmatrix} $$
+denote this matrix in block form. One checks that $Q_{ab} = (\sqrt{d_a}/\sqrt{d_b}) \nabla^2_{ab} f$.
 
-Let $\underline{\nabla}^2 f$ denote the gradient in the Hilbert-Schmidt inner product, or $\underline{\nabla}^2_{ab} f = \frac{1}{d_a} \nabla_{ab}^2 f$. By \cref{eq:expansion-thing} (\CF{which needs to actually be proved}), with probability $\CF{good}$, the map $Z \to \tr_2 \rho^{(a,b)} (I \ot Z)$ has operator norm at most $\lambda/\sqrt{d_a d_b}$ restricted to traceless $Z$ and $\|\rho^{(a)} - I_{d_a}/{d_a}\|_{op} \leq \eps/d_a, \|\rho^{(b)} - I_{d_b}/d_b\|_{op} \leq \eps/d_b$. Thus for traceless $Z$ we have $|\tr Z \rho^{(b)}| \leq  \eps \|Z\|_F /\sqrt{d_b}$, and hence
+
+We use the inequality $\begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix} \succeq - \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}$ for any $A,B \succeq 0$ such that $\|A^{-1/2} K B^{-1/2}\|_{op} \leq 1,$ which may be proved by computing Schur complements. We will sequentially apply this inequality to $Q$ until we are left with a diagonal matrix. 
+
+By \cref{eq:expansion-thing} (\CF{which needs to actually be proved}), with probability $\CF{good}$, the map $Z \to \tr_2 \rho^{(a,b)} (I \ot Z)$ has operator norm at most $\lambda/\sqrt{d_a d_b}$ restricted to traceless $Z$ and $\|\rho^{(a)} - I_{d_a}/{d_a}\|_{op} \leq \eps/d_a, \|\rho^{(b)} - I_{d_b}/d_b\|_{op} \leq \eps/d_b$. Thus for traceless $Z$ we have $|\tr Z \rho^{(b)}| \leq  \eps \|Z\|_F /\sqrt{d_b}$, and hence
 $$(\tr Y \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr) \leq \eps^2 \|Z\|_F\|Y\|_F /\sqrt{d_a d_b} .$$
-Together, we have 
-$\|\underline{\nabla}_{ab}^2 f \|_{op} \leq (\lambda + \eps^2)/\sqrt{d_a d_b}.$ Thus we may apply the inequality with $A = (\lambda + \eps^2) I_{d_a}/d_{a}$, $B = (\lambda + \eps^2)I_{d_b}/d_{b}$. For $a = 1, b = 2$, we have \begin{align*}
-  \underline{\nabla}^2 f \succeq \begin{bmatrix}
-  \underline{\nabla}_{11}^2 f - \frac{\lambda + \eps^2}{d_1} I_{d_1} & 0 & \hdots &  \underline{\nabla}_{1k}^2 f  \\
-0 & \underline{\nabla}_{22}^2 f - \frac{\lambda + \eps^2}{d_2} I_{d_2} & \ddots & \vdots \\
+Together, we have that restricted to traceless $Z$,
+$\|Q_{ab}\|_{op} \leq (\lambda + \eps^2).$ Thus we may apply the inequality with $A = (\lambda + \eps^2) I_{d_a}$, $B = (\lambda + \eps^2)I_{d_b}$. For $a = 1, b = 2$, we have \begin{align*}
+Q \succeq \begin{bmatrix}
+ Q_{11} - (\lambda + \eps^2) I_{d_1} & 0 & \hdots &  Q_{1k} \\
+0 & Q_{22} - (\lambda + \eps^2) I_{d_2} & \ddots & \vdots \\
 \vdots & \ddots & \ddots & \vdots\\
-  \underline{\nabla}_{k1}^2 f & \hdots &  \hdots & \underline{\nabla}_{kk}^2 f \\
+Q_{k1} & \hdots &  \hdots & Q_{kk} \\
   \end{bmatrix},\end{align*} where $\succeq$ is understood to be the Loewner ordering restricted to $\oplus_a \Sym^0_{d_a}$. Continuing this process, we'll find that \CF{continue here}.\end{proof}
 
 
@@ -1597,6 +1585,25 @@ Now we can use our high probability bounds derived above:
 \[ \geq \sum_{a} \frac{1-\eps+\lambda}{d_{a}} \|Z_{a}\|_{F}^{2} - k\lambda \sum_{a} \frac{1}{d_{a}} \|Z_{a}\|_{F}^{2} \]
 \[ = (1-\eps-(k-1)\lambda) \|Z\|^{2}    \]
 Choosing $\eps,\lambda$ small enough gives the theorem.
+\end{proof}
+
+\begin{proof}[Proof: \CF{Akshay's conceptual proof of \cref{thm:tensor-convexity}}]
+We can in fact show that $\nabla^{2}$ is well-conditioned using the following:
+\[ -\begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
+\preceq \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}
+\preceq \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
+\]
+%We can rewrite the Hessian using shorthand $\{M_{a}\}$ for the diagonal blocks and $\{M_{ab}\}$ for off-diagonal blocks: \CF{why not just write $\nabla^2_{ab}f$?} \CF{Also, the matrices $E_{aa} \otimes M_a$ are not all of the same size} 
+\\ \AR{Ya $\nabla_{ab}$ notation is fine, just needed something that was a matrix of the right dimensions, so shorthand M was to avoid weird things with $\rho$}
+\\ \AR{It's fine if they're of different sizes, we enumerate the basis of the whole space as $\cup_{a} e_{a} \otimes \{e_{i \in [d_{a}]}\}$ }\\
+\CF{$E_{aa} \otimes \nabla^2_{aa}$ is $k d_a^2 \times k d_a^2$ dimensional. So how does this make sense? Maybe needs to be updated along the lines of the next proof.}
+\[ \nabla^{2} f = \sum_{a} E_{aa} \otimes \nabla^{2}_{aa} + \sum_{a \neq b} E_{ab} \otimes \nabla^{2}_{ab}  \]
+Now we can again use the high-probability bounds derived above: \TODO{actually cref them}
+\begin{align}\nabla^{2}_{aa} \in \frac{1 \pm \eps}{d_{a}}; \hspace{5mm} \forall a \neq b: \|\nabla^{2}_{ab}\|_{op} \leq \frac{\lambda}{\sqrt{d_{a} d_{b}}} \label{eq:expansion-thing}  \end{align}
+\[ \nabla^{2} \preceq \sum_{a} E_{aa} \otimes \left( \frac{1+\eps}{d_{a}} I_{a} \right) + \sum_{a < b} E_{aa} \otimes \left( \frac{\lambda}{d_{a}} I_{a} \right) + E_{bb} \otimes \left( \frac{\lambda}{d_{b}} I_{b} \right)    \]
+\[ \preceq \sum_{a} E_{aa} \otimes \frac{1+\eps+(k-1)\lambda}{d_{a}} I_{a}  \]
+
+The same sequence of inequalities can be reversed to show a lower bound. So in fact we can show the above bounds on blocks shows $1+O(\eps + k \lambda)$-condition number bound on the Hessian in norm $\|\cdot\|_{d}$. 
 \end{proof}
 
 
