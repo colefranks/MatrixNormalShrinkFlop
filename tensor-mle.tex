@@ -610,9 +610,11 @@ for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d
 \CF{most important part of hessian is this $\rho^{ab}$ part ( a channel), discuss that there are three ways to look at it: partial trace, channel (cpm), and natural representation. Cite Pisier in channel form. In appendix prove by translating to channel}
 We now state our strong convexity result at the identity:
 
-\begin{theorem}\label{thm:tensor-convexity}
-Let $\vec X = (X_1,\dots,X_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples is $N \geq k^2 \max_{a=1}^k d_a^2 / D$.
-Then, with probability at least $1 - 1/{\color{red}\poly(D)}$, $f_{\vec X}$ is {\color{red}$\Omega(1)$}-strongly geodesically convex at~$I$.
+\begin{theorem}
+Let $\vec X = (X_1,\dots,X_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples is $N \geq k^2 \max_{a=1}^k d_a^2 / D$. Then, with probability at least $1 - 1/{\color{red}\poly(D)}$, 
+$$ (1 - (k - 1) \lambda - k \eps^2 - \eps) I \preceq 
+ \nabla^2 f_{\vec X} \preceq (1 + (k - 1) \lambda + k \eps^2 + \eps) I.$$
+ In particular, $f_{\vec X}$ is $\Omega(1)$ strongly convex with probability $\CF{good}$. 
 \end{theorem}
 
 To prove this, we need the following result on quantum expansion (cf.\ \cref{sec:matrix-normal}).
@@ -639,28 +641,25 @@ By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b}
 \end{corollary}
 
 
+\begin{proof}[\CF{new } Proof of \cref{thm:tensor-convexity}] 
+We use the inequality for block matrices 
+$$\begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix} \succeq - \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}$$ for any $A,B \succeq 0$ such that $\|A^{-1/2} K B^{-1/2}\|_{op} \leq 1,$ which may be proved by computing Schur complements. We will sequentially apply this inequality to the block matrix $\nabla^2 f$ until we are left with a diagonal matrix. 
 
-\begin{proof}[Proof of \cref{thm:tensor-convexity}] It will be convenient to write the matrix of $\nabla^2 f$ down in a basis that is an orthonormal basis for $\langle \cdot, \cdot \rangle_{\vec d}$, because then the usual Loewner ordering on matrices will match that for $\langle \cdot, \cdot \rangle_{\vec d}$. If $Q$ is the matrix for $\nabla^2 f$ in this basis, to show that $f$ is $\alpha$-strongly convex it is enough to show that $Q \succeq \alpha I$. To write $Q$, let the new basis be given by the columns of $D = \oplus \sqrt{d_a} I_{\mathcal S_{d}}$, i.e., the matrix $Q$ for $\nabla^2 f$ in this basis will be $D^{-1} \nabla^2 f D$. In block form, write
-$$Q = \begin{bmatrix} 
-Q_{11} & \dots &  Q_{1k} \\ 
-\vdots & \ddots & \vdots \\ 
-Q_{k1} & \dots &  Q_{kk}  \end{bmatrix} $$
-denote this matrix in block form. One checks that $Q_{ab} = (\sqrt{d_a}/\sqrt{d_b}) \nabla^2_{ab} f$.
-
-
-We use the inequality $\begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix} \succeq - \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}$ for any $A,B \succeq 0$ such that $\|A^{-1/2} K B^{-1/2}\|_{op} \leq 1,$ which may be proved by computing Schur complements. We will sequentially apply this inequality to $Q$ until we are left with a diagonal matrix. 
-
-By \cref{eq:expansion-thing} (\CF{which needs to actually be proved}), with probability $\CF{good}$, the map $Z \to \tr_2 \rho^{(a,b)} (I \ot Z)$ has operator norm at most $\lambda/\sqrt{d_a d_b}$ restricted to traceless $Z$ and $\|\rho^{(a)} - I_{d_a}/{d_a}\|_{op} \leq \eps/d_a, \|\rho^{(b)} - I_{d_b}/d_b\|_{op} \leq \eps/d_b$. Thus for traceless $Z$ we have $|\tr Z \rho^{(b)}| \leq  \eps \|Z\|_F /\sqrt{d_b}$, and hence
+To implement this, we proceed to bound the operator norm of $\nabla^2_{ab} f: \Sym^0_{d_b} \to \Sym^0_{d_a}$ for $a \neq b$. The gradient is the sum of two terms; the first of which is dominated in the Loewner ordering by the map $Z \mapsto \sqrt{d_a d_b} \tr_2 \rho^{(a,b)} (I \ot Z)$. By \cref{eq:expansion-thing} (\CF{which needs to actually be proved}), with probability $\CF{good}$, the map $Z \to \tr_2 \rho^{(a,b)} (I \ot Z)$ has operator norm at most $\lambda/\sqrt{d_a d_b}$ restricted to traceless $Z$. The second term defines the quadratic form $Y,Z \mapsto \sqrt{d_a d_b} (\tr Y \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr)$. As $\|\rho^{(a)} - I_{d_a}/{d_a}\|_{op} \leq \eps/d_a, \|\rho^{(b)} - I_{d_b}/d_b\|_{op} \leq \eps/d_b$, we have
 $$(\tr Y \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr) \leq \eps^2 \|Z\|_F\|Y\|_F /\sqrt{d_a d_b} .$$
-Together, we have that restricted to traceless $Z$,
-$\|Q_{ab}\|_{op} \leq (\lambda + \eps^2).$ Thus we may apply the inequality with $A = (\lambda + \eps^2) I_{d_a}$, $B = (\lambda + \eps^2)I_{d_b}$. For $a = 1, b = 2$, we have \begin{align*}
-Q \succeq \begin{bmatrix}
- Q_{11} - (\lambda + \eps^2) I_{d_1} & 0 & \hdots &  Q_{1k} \\
-0 & Q_{22} - (\lambda + \eps^2) I_{d_2} & \ddots & \vdots \\
+Taken together, $\|\nabla^2_{ab} f\|_{op} \leq (\lambda + \eps^2)$ as a map $\Sym^0_{d_b} \to \Sym^0_{d_a}$. We first apply the inequality to the upper-left two by two block, or $a = 1$ and $b = 2$. By our bound on $\|\nabla^2_{ab} f\|_{op}$, we may take 
+   $A = (\lambda + \eps^2) I_{d_1}$, $B = (\lambda + \eps^2)I_{d_2}$ to find that 
+   \begin{align*}
+\nabla^2 f \succeq \begin{bmatrix}
+ \nabla^2_{11} f - (\lambda + \eps^2) I_{d_1} & 0 & \hdots &  \nabla^2_{1k} f \\
+0 & \nabla^2_{22} f - (\lambda + \eps^2) I_{d_2} & \ddots & \vdots \\
 \vdots & \ddots & \ddots & \vdots\\
-Q_{k1} & \hdots &  \hdots & Q_{kk} \\
-  \end{bmatrix},\end{align*} where $\succeq$ is understood to be the Loewner ordering restricted to $\oplus_a \Sym^0_{d_a}$. Continuing this process, we'll find that \CF{continue here}.\end{proof}
-
+\nabla^2_{k1}f & \hdots &  \hdots & \nabla^2_{kk} f \\
+  \end{bmatrix}.\end{align*}
+ Applying this for all $a < b$ we find that 
+ $$\nabla^2 f  \succeq \bigoplus_{a \in [k]} \nabla^2_{aa} f - (k - 1) (\lambda + \eps^2) I_{d_a}.$$ 
+The last thing we need is a lower bound on $\nabla^2_{aa} f.$ This operator is again a sum of two terms, the latter of which we have already analyzed. The former defines the quadratic form $Y \mapsto d_a \tr \rho^{(a)} Y^2$ on $\Sym^0_{d_a}$, and using the bound $\|\rho^{(a)} - I_{d_a}/{d_a}\|_{op} \leq \eps/d_a$ one checks that $\tr \rho^{(a)} Y^2 \in \frac{1 \pm \eps }{d_a} \tr Y^2 = \frac{1 \pm \eps }{d_a} \|Y\|^2. $ Combining this bound with the bound on the second term, we have $\nabla^2_{aa} f \succeq (1 -  \eps  - \eps^2 ) I_{d_a}$. Plugging this into the direct sum, we have $\nabla^2 f \succeq (1  - \eps - \eps^2  - (k - 1) (\lambda + \eps^2)) I$. Reversing the inequalities in all the steps also yields $\nabla^2 f \preceq (1  + \eps + \eps^2  + (k - 1) (\lambda + \eps^2))$.
+\end{proof}
 
 
 %$$\bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr)$$
