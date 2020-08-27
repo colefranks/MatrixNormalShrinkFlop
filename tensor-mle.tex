@@ -447,13 +447,13 @@ Suppose that, for all $a \in [k]$,
 \end{align*}
 Then, with probability at least $1 - 2 \sum_{a=1}^k e^{-N_a \eps^2/2C}$ we have that
 \begin{align*}
-  \norm{\nabla_a f_{\vec X}}_{\op} \leq \eps
+  \norm{\nabla_a f_{\vec X}}_{\op} \leq \eps/\sqrt{d_a}
 \end{align*}
-for all $a\in[k]$, and hence $\norm{\nabla f_{\vec X}}_{\vec d}^2 \leq k \eps^2$.
+for all $a\in[k]$, and hence $\norm{\nabla f_{\vec X}}^2 \leq k \eps^2$.
 \end{prop}
 
 To prove this we will need a standard result in matrix concentration.
-Recall that $\nabla_a f_{\vec X} = d_a \rho^{(a)} - I_a$ by \cref{lem:gradient}.
+Recall that $\nabla_a f_{\vec X} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}$ by \cref{lem:gradient}.
 It is not hard to see that $\rho^{(a)}$ is distributed as $Y Y^T / \norm{Y}_F^2$, where $Y$ is a $d_a \times N_a$ matrix with independent Gaussian entries.
 The following result that bounds the singular values of such random matrices.
 
@@ -469,7 +469,7 @@ where $s_{\min}$ and $s_{\max}$ denote the smallest and largest singular value, 
 \begin{proof}[Proof of \cref{prop:gradient-bound}]
 We first consider a fixed $a\in[k]$ and later take a union bound.
 Let $d = d_a$ and $N = N_a = n D/d_a$.
-Again, $\nabla_a f_{\vec X} = d_a \rho^{(a)} - I_a$ where $\rho^{(a)}$ is distributed as $Y Y^T/\|Y\|_F^2$, where $Y$ is a $d \times N$ matrix with independent Gaussian entries.
+Again, $\nabla_a f_{\vec X} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}$ where $\rho^{(a)}$ is distributed as $Y Y^T/\|Y\|_F^2$, where $Y$ is a $d \times N$ matrix with independent Gaussian entries.
 By \cref{cor:vershynin}, we have the following with $\leq 2 \exp(-t^2/2)$ failure probability:
 \begin{align*}
   \sqrt{N} \left( 1 -  \frac{\sqrt{d} + t }{\sqrt{N}}  \right)\leq s_{\min}(Y) \leq s_{\max}(Y) \leq  \sqrt{N} \left( 1 + \frac{\sqrt{d} + t }{\sqrt{N}} \right).
@@ -482,7 +482,7 @@ Since there are at most $d \leq N$ nonzero eigenvalues, this implies in turn tha
 \frac {\left( 1 \pm 8\eps/\sqrt{C} \right)} {d \left( 1 \pm 8\eps/\sqrt{C} \right)} \subseteq \frac1d \left( 1 \pm 16\eps/\sqrt{C} \right) \subseteq \frac1d \left( 1 \pm \eps \right),
 \end{align*}
 Thus,
-$\norm{\nabla_a f_{\vec X}}_{\op} \leq \eps$
+$\norm{\nabla_a f_{\vec X}}_{\op} \leq \eps/\sqrt{d_a}$
 with failure probability at most $2 \exp(-N \eps^2/2C)$.
 Applying the union bound over $[k]$ completes the proof of the proposition.
 % Next, observe that $\|Y\|_F^2$ is a $\chi^2$-distribution with $Nd$ degrees of freedom, and thus satisfies
