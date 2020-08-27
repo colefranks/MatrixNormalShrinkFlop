@@ -398,39 +398,39 @@ For $\rho \in \PD_D$ and $a\in[k]$, let $\rho^{(a)} \in \PD_{d_a}$ denote the \e
 for all $d_a \times d_a$ matrices $Z$, where $Z_a = (I_1 \ot \cdots \ot I_{a-1} \ot Z \ot I_{a+1} \ot \cdots \ot I_k)$.
 Here and in the following we write $I_a$ for the $d_a\times d_a$ identity matrix.
 \end{definition}
-
+\CF{the above definition conflicts a bit with just referring to $Z_a$ as the $a^{th}$ component, which I have done elsewhere. How to resolve?}
 \MW{Explain how to compute in terms of $\vec X$. Ref above \cref{cor:vershynin}.}
 
 \begin{lemma}[Riemannian gradient]\label{lem:gradient}
 Let $\rho = \sum_{i=1}^n X_i X_i^T / \norm{\vec X}_2^2$.
 Then the components of the Riemannian gradient $\nabla f_{\vec X}$ at the identity are given by
 \begin{align*}
-  \nabla_a f_{\vec X} = d_a \rho^{(a)} - I_a \qquad \text{ for } a \in [k].
+  \nabla_a f_{\vec A} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a} \qquad \text{ for } a \in [k].
 \end{align*}
 \end{lemma}
 \begin{proof}
   Let $F_{\vec X}(\Theta) = \tr \rho \, \Theta$.
   Then, we have, for all $a\in[k]$, that
   \begin{align*}
-    \frac1{d_a} \tr (\nabla_a F_{\vec X}) Z
+   \tr (\nabla_a F_{\vec X}) Z
   % = \partial_{t=0} F_{\vec X}(I_1,\dots,I_{a-1}, e^{tZ}, I_{a+1},\dots,I_n)
-  = \partial_{t=0} \tr \rho \, e^{t Z_a}
-  = \tr \rho Z_a
-  = \tr \rho^{(a)} Z
+  = \partial_{t=0} \tr \rho \, e^{t \sqrt{d_a} Z_a}
+  = \sqrt{d_a} \tr \rho Z_a
+  = \sqrt{d_a} \tr \rho^{(a)} Z
   \end{align*}
   for all traceless symmetric $d_a \times d_a$ matrices $Z$.
   Since $\nabla_a F$ is traceless and symmetric by definition, this implies that
   \begin{align*}
     \nabla_a F_{\vec X}
-  = d_a \rho^{(a)} - \tr(\rho^{(a)}) I_a
-  = d_a \rho^{(a)} - I_a.
+  = \sqrt{d_a} \rho^{(a)} - \tr(\rho^{(a)}) I_a /\sqrt{d_a}
+  = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}.
   \end{align*}
   Finally, note that $f_{\vec X}(\Theta) = \log F_{\vec X}(\Theta) + \log \norm{\vec X}_2^2$, so
   \begin{align*}
     \nabla_a f_{\vec X}
   = \frac{\nabla_a F_{\vec X}}{F_{\vec X}(I)}
   = \nabla_a F_{\vec X}
-  = d_a \rho^{(a)} - I_a,
+  = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a},
   \end{align*}
   using that $F_{\vec X}(I) = \tr \rho = 1$.
 \end{proof}
