@@ -226,7 +226,7 @@ Thus we are led to minimizing the following function:
 \begin{definition}[Objective]\label{dfn:function}
 Given $n$ samples $\vec{X} = (X_1, \dots, X_n)$ in $\R^D$, define the function $f_{\vec X}\colon\prod_{a=1}^k \PD_{d_a}^1 \to \R$ by
 \begin{align}\label{eq:projective-likelihood}
-  f_{\vec X}(\Theta_1,\dots,\Theta_k) = \log \sum_{i=1}^n \braket{X_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a^{\sqrt{d_a}} \right) X_i}.
+  f_{\vec X}(\Theta_1,\dots,\Theta_k) = \log \sum_{i=1}^n \braket{X_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) X_i}.
 \end{align}
 Let $(\widehat{\Theta}_{\vec X,1}, \dots, \widehat{\Theta}_{\vec X,k})$ denote the minimizer of $f_{\vec X}$ if it exists and is unique.
 \end{definition}
@@ -517,7 +517,7 @@ We then show strong convexity \emph{at} the origin, and later show strong convex
 \begin{definition}[Riemannian Hessian]
 For $\Theta \in P$, the \emph{Riemannian Hessian}~$\nabla^2 f(\Theta)$ is the unique linear operator on $S$ such that
 \begin{align*}
-  \braket{Y, \nabla^2 f(\Theta) Z}_{\vec d} = \partial_{s=0} \partial_{t=0} f(\Theta^{1/2} e^{sY + tZ} \Theta^{1/2})
+  \braket{Y, \nabla^2 f(\Theta) Z} = \partial_{s=0} \partial_{t=0} f(\exp_{\Theta}(sY + tZ))
 \end{align*}
 for all $Y, Z\in S$.
 We often abbreviate $\nabla^2 f = \nabla^2 f(I)$.
@@ -532,11 +532,11 @@ As a block matrix,
 where $\nabla_{ab}^2f$ is an operator from $\Sym_{d_b}^0$ to $\Sym_{d_a}^0$.
 \end{definition}
 
-We note that the Riemannian Hessian is symmetric with respect to the inner product~$\braket{\cdot,\cdot}_{\vec d}$ on $S$.
-Furthermore, $\braket{Z, \nabla^2 f(\Theta) Z}_{\vec d} = \partial^2_{t=0} f(\Theta^{1/2} e^{tZ} \Theta^{1/2})$ for all $Z\in S$.
+We note that the Riemannian Hessian is symmetric with respect to the inner product~$\braket{\cdot,\cdot}$ on $S$.
+Furthermore, $\braket{Z, \nabla^2 f(\Theta) Z} = \partial^2_{t=0} f(\exp_{\Theta}(tZ))$ for all $Z\in S$.
 Thus, $f$~is geodesically convex if and only if the Riemannian Hessian is positive semidefinite, that is, $\nabla^2 f(\Theta) \succeq 0$.
-Similarly, $f$ is $\lambda$-strongly geodesically convex if and only if $\nabla^2 f(\Theta) \succeq \lambda I$, i.e., the Hessian is positive definite with eigenvalues larger or equals to~$\lambda$.
-\MW{Here, $\succeq$ denotes the Loewner order with respect to $\braket{\cdot,\cdot}_{\vec d}$.}
+Similarly, $f$ is $\lambda$-strongly geodesically convex at $\Theta$ if and only if $\nabla^2 f(\Theta) \succeq \lambda I$, i.e., the Hessian is positive definite with eigenvalues larger or equals to~$\lambda$.
+%\MW{Here, $\succeq$ denotes the Loewner order with respect to $\braket{\cdot,\cdot}_{\vec d}$.}
 
 Similarly as for the gradient, we can compute the components of the Hessian in terms of a partial trace, as in the following definition and lemma.
 
@@ -545,7 +545,7 @@ For $\rho \in \PD_D$ and $a \neq b\in[k]$, let $\rho^{(ab)} \in \PD_{d_a \times 
 \begin{align*}
   \tr \rho^{(ab)} (Y \ot Z) = \tr \rho Y_a Z_b,
 \end{align*}
-for all $d_a \times d_a$ matrices $Y$ and $d_b \times d_b$ matrices $Z$, where, as before, we write~$Y_a = (I_1 \ot \cdots \ot I_{a-1} \ot Y \ot I_{a+1} \ot \cdots \ot I_k)$ and similarly for $Z_b$.
+for all $d_a \times d_a$ matrices $Y$ and $d_b \times d_b$ matrices $Z$, where, as before, we write~$Y_a = (I_1 \ot \cdots \ot I_{a-1} \ot Y \ot I_{a+1} \ot \cdots \ot I_k)$ and similarly for $Z_b$. \CF{does partial trace really need to be defined twice?}
 \end{definition}
 
 \noindent
@@ -555,9 +555,9 @@ This definition is consistent with \cref{def:single marginal} in the sense that 
 Let $\rho = \sum_{i=1}^n X_i X_i^T / \norm{\vec X}_2^2$.
 Then the Riemannian Hessian $\nabla^2 f_{\vec X}$ at the identity is given by
 \begin{align*}
-  \frac1{d_a} \tr Y (\nabla^2_{aa} f_{\vec X}) Y
-&= \tr \rho^{(a)} Y^2 - \bigl(\tr Y \rho^{(a)}\bigr)^2 \\
-  \frac1{d_a} \tr Y (\nabla^2_{ab} f_{\vec X}) Z
+ \frac{1}{d_a} \tr Y (\nabla^2_{aa} f_{\vec X}) Y
+&= \left( \tr \rho^{(a)} Y^2 - \bigl(\tr Y \rho^{(a)}\bigr)^2 \right) \\
+  \frac1{\sqrt{d_a d_b}} \tr Y (\nabla^2_{ab} f_{\vec X}) Z
 &= \tr \rho^{(ab)} \left( Y \ot Z \right) - \bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr) 
 \end{align*}
 for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d_b\times d_b$ matrices~$Z$.
@@ -566,23 +566,24 @@ for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d
   Let $F_{\vec X}(\Theta) = \tr \rho \, \Theta$ as in the proof of \cref{lem:gradient}.
   Then,
   \begin{align*}
-    \frac 1{d_a} \tr Y \left( \nabla^2_{aa} F_{\vec X} \right) Y
-  &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{(s+t) Y_a} \\
-  &= \partial_{s=0} \partial_{t=0} \tr \rho^{(a)} e^{(s+t) Y}
-  = \tr \rho^{(a)} Y^2,
+   \tr Y \left( \nabla^2_{aa} F_{\vec X} \right) Y
+  &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{(s+t)\sqrt{d_a}  Y_a} \\
+  &= \partial_{s=0} \partial_{t=0} \tr \rho^{(a)} e^{(s+t)  \sqrt{d_a}Y}
+  = d_a \tr \rho^{(a)} Y^2,
   \end{align*}
   while for $a\neq b$ we have
   \begin{align*}
-    \frac 1{d_a} \tr Y_a \left( \nabla^2_{ab} F_{\vec X} \right) Z_b
-  &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s Y_a + t Z_b} \\
-  &= \partial_{s=0} \partial_{t=0} \tr \rho^{(ab)} \left( e^{s Y} \ot e^{t Z} \right)
-  = \tr \rho^{(ab)} \left( Y \ot Z \right).
+    \tr Y_a \left( \nabla^2_{ab} F_{\vec X} \right) Z_b
+  &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s \sqrt{d_a}Y_a + t \sqrt{d_b} Z_b} \\
+  &= \partial_{s=0} \partial_{t=0} \tr \rho^{(ab)} \left( e^{s \sqrt{d_a}  Y} \ot e^{t \sqrt{d_b} Z} \right)\\
+  &= \sqrt{d_a d_b} \tr \rho^{(ab)} \left( Y \ot Z \right).
   \end{align*}
-  Since $f_{\vec X}(\Theta) = \log F_{\vec X}(\Theta) + \log \norm{\vec X}_2^2$, we have
+  %Since $f_{\vec X}(\Theta) = \log F_{\vec X}(\Theta) + \log \norm{\vec X}_2^2$, we have
+  Since $f_{\vec X}(\Theta) = \log F_{\vec X}(\Theta)$ \CF{deleted a term; please see commented text to check}, we have
   \begin{align*}
-    \braket{Y, (\nabla^2 f_{\vec X}) Z}_{\vec d}
-  &= \frac{\braket{Y, (\nabla^2 F_{\vec X}) Z}_{\vec d}}{F_{\vec X}(I)} - \frac{\braket{Y, \nabla F_{\vec X}}_{\vec d} \braket{\nabla F_{\vec X}, Z}_{\vec d}}{F_{\vec X}(I)^2} \\
-  &= \frac{\braket{Y, (\nabla^2 F_{\vec X}) Z}_{\vec d}}{F_{\vec X}(I)} - \braket{Y, \nabla f_{\vec X}}_{\vec d} \braket{\nabla f_{\vec X}, Z}_{\vec d}.
+    \braket{Y, (\nabla^2 f_{\vec X}) Z}
+  &= \frac{\braket{Y, (\nabla^2 F_{\vec X}) Z}}{F_{\vec X}(I)} - \frac{\braket{Y, \nabla F_{\vec X}} \braket{\nabla F_{\vec X}, Z}}{F_{\vec X}(I)^2} \\
+  &= \frac{\braket{Y, (\nabla^2 F_{\vec X}) Z}}{F_{\vec X}(I)} - \braket{Y, \nabla f_{\vec X}} \braket{\nabla f_{\vec X}, Z}.
   \end{align*}
   % \begin{align*}
   %   \nabla^2 f_{\vec X}
