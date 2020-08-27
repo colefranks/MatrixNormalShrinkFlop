@@ -255,29 +255,33 @@ Then, $A^T e^Z A \in \PD_d^1$ for any $A \in \SL_d$ and $Z\in\Sym_d$.
 % Any matrix in $\PD_d^1$ can be written as the matrix exponential of a matrix in $\Sym_d^0$.
 Finally, let $G = \prod_{a=1}^k \SL_{d_a}$, $P = \prod_{a=1}^k \PD_{d_a}^1$, and $S = \bigoplus_{a=1}^k \Sym_{d_a}^0$.
 We denote by $AB=(A_1B_1,\dots,A_kB_k)$ and $e^Z=(e^{Z_1},\dots,e^{Z_k})$ the componentwise product and matrix exponential, respectively, of matrix tuples $A, B \in G$ and $Z\in S$.
-Then, $\Theta(t) = A^T e^{tZ} A = (A_1^T e^{t Z_1} A_1, \dots, A_k^T e^{t Z_k} A_k)$ is a geodesic or `straight line' through $\Theta = A^T A$ with direction~$Z$ for a natural Riemannian metric on~$P$~\cite{bhatia2009positive}.
+
+%\CF{technically $\Theta(t)$ is ill-defined} Then, the curve $\Theta(t) = A^T e^{tZ} A = (A_1^T e^{t Z_1} A_1, \dots, A_k^T e^{t Z_k} A_k)$ is a geodesic or `straight line' through $\Theta = A^T A$ with direction~$Z$ for a natural Riemannian metric on~$P$~\cite{bhatia2009positive}.
 This motivates the following definition.
 
-\begin{definition}[Geodesic convexity]
-A function $f\colon P \to \R$ is said to be \emph{geodesically convex} if, for all $A \in G$ and $Z \in S$, the following function is convex:
-\begin{align*}
-  \R \to \R, \quad t \mapsto f(A^T e^{t Z} A)
-\end{align*}
-That is, $\partial^2_t f(A^T e^{t Z} A) \geq 0$ assuming $f$ is twice differentiable.
+\begin{definition}[Geodesic convexity] Let $\Theta \in P$. The \emph{exponential map} $\exp_\Theta:S \to P$ at $\Theta$ is defined by 
+$$ \exp_\Theta(Z) = \Theta^{1/2} e^{\sqrt{\vec d}Z} \Theta^{1/2},$$
+where $\sqrt{\vec d} Z$ denotes the componentwise product $(\sqrt{d_1} Z_1, \dots, \sqrt{d_k}Z_k)$.
+The \emph{geodesics} through $\Theta$ are the curves $t\mapsto \exp_\Theta(tZ)$ for $t \in \R$. These curves are in fact geodesics, or ``straight lines,'' through $\Theta$ for a natural Riemannian metric on~$P$~\cite{bhatia2009positive}.
+% The length of the curve given by restricting $\gamma$ to $[0,1]$, or $\gamma|_{[0,1]}$, is defined to be $\|Z\|_F$. 
+
+
+A function $f\colon P \to \R$ is said to be \emph{geodesically convex} if the function 
+$$\R \to \R, \quad t \mapsto f (\exp_\Theta( tZ))$$ is convex for every $\Theta \in P, Z \in S$, i.e. the function $f \circ \gamma$ is convex for every geodesic $\gamma$. Equivalently, assuming $f$ is twice differentiable, $\partial^2_t f(\exp_\Theta(tZ)) \geq 0.$ 
 
 Further, say $f$ is \emph{$\lambda$-strongly geodesically convex} at a point $\Theta \in P$ if, for some (equivalently, for any) $A \in G$ with $\Theta = A^T A$ and for any $Z \in S$, we have
 \begin{align*}
-  \partial^2_{t=0} f(A^T e^{t Z} A) \geq \lambda \norm{Z}_{\vec d}^2.
+  \partial^2_{t=0} f(\exp_\Theta(tZ)) \geq \lambda \norm{Z}^2.
 \end{align*}
 % and \emph{$L$-geodesically smooth} with respect to the norm $\norm\cdot$ if
 % \begin{align*}
 %   \partial^2_t f(A^T e^{t Z} A) \leq L \norm{Z}^2 \qquad (\forall Z\in S).
 % \end{align*}
-Here we use the norm $\norm{\cdot}_{\vec d}$ induced by the rescaled Hilbert-Schmidt inner product $\braket{X, Y}_{\vec d} = \sum_{a=1}^k \frac1{d_a} \tr(X_a Y_a)$ for $X, Y \in S$.
+%Here we use the norm $\norm{\cdot}_{\vec d}$ induced by the rescaled Hilbert-Schmidt inner product $\braket{X, Y}_{\vec d} = \sum_{a=1}^k \frac1{d_a} \tr(X_a Y_a)$ for $X, Y \in S$.
 \end{definition}
 
-The function $f_{\vec X}$ defined in \cref{dfn:function} is geodesically convex~\cite{burgisser2019towards}. One might wonder why we use the unusual Riemannian metric $\langle X, Y \rangle_{\vec d}$. Oddly enough, our function $f_{\vec X}$ will not be strongly convex in the usual Hilbert-Schmidt inner product! Defining the gradient and Hessian according to this metric improves the ratio between the norm of the gradient of $f_{\vec X}$ and its strong geodesic convexity parameter - a ratio which controls the quality of our statistical estimate. \CF{does this motivation belong here?}
-
+The function $f_{\vec X}$ defined in \cref{dfn:function} is geodesically convex~\cite{burgisser2019towards}. \CF{see the commented out motivation. Where to put it?}
+%One might wonder why we define $\exp_\Theta$ using the componentwise multiplication by $\sqrt{\vec d}$. In fact, this is equal to the exponential map for the Riemannian metric $\braket{X, Y}_{\vec d} = \sum_{a=1}^k \frac1{d_a} \tr(X_a Y_a)$. Oddly enough, defining the gradient and Hessian according to this metric, rather than the usual Hilbert-Schmidt inner product, improves the ratio between the norm of the gradient of $f_{\vec X}$ and its strong geodesic convexity parameter - a ratio which controls the quality of our statistical estimate. 
 We also note that $f$ has a certain useful transformation property or ``equivariance." For all $\Theta \in P$, $A \in G$, and $\vec X=(X_1,\dots,X_n)$, we have that
 \begin{align}\label{eq:equivariance}
   f_{A^{-1} \vec X}(A^T \Theta A) = f_{\vec X}(\Theta),
@@ -313,29 +317,29 @@ To make this discussion more concrete, we now define the gradient formally and s
 \begin{definition}[Riemannian gradient]
 For $\Theta \in P$, the \emph{Riemannian gradient}~$\nabla f(\Theta)$ is the unique element in $S$ such that
 \begin{align*}
-  \braket{\nabla f(\Theta), Z}_{\vec d} = \partial_{t=0} f(\Theta^{1/2} e^{tZ} \Theta^{1/2})
+  \braket{\nabla f(\Theta), Z} = \partial_{t=0} f(\exp_{\Theta}(Zt))
 \end{align*}
 for all $Z\in S$.
 We often abbreviate $\nabla f = \nabla f(I)$ and write $\nabla f = (\nabla_1 f, \dots, \nabla_k f)$.
 \end{definition}
 
 \noindent
-Now say that $B_\kappa(I) = \{ e^Z : \norm Z_{\vec d} \leq \kappa \}$ is the ball of radius $\kappa>0$ about~$I$.
+Now say that $B_\kappa(\Theta) = \{ \exp_{\Theta}(Z) : \norm Z \leq \kappa \}$ is the ball of radius $\kappa>0$ about~$\Theta$.
 
 \begin{lemma}\label{lem:convex-ball}
 Let $f\colon P\to \R$ be geodesically convex everywhere, and $\lambda$-strongly geodesically convex in a ball of radius~$\kappa>0$ about~$I$.
-Further assume the Riemannian gradient satisfies $\norm{\nabla f(I)}_{\vec d} \leq \eps < \lambda \kappa / 2$.
+Further assume the Riemannian gradient satisfies $\norm{\nabla f(I)} \leq \eps < \lambda \kappa / 2$.
 Then $f$ has a unique minimizer, which is contained in the ball of radius~$\eps/\lambda$ about~$I$.
 \end{lemma}
 \begin{proof}
 We first show that $f$ has a minimum.
-Consider $g(t) := f(e^{t Z})$, where $Z\in S$ is an arbitrary vector of unit norm~$\norm Z_{\vec d} = 1$.
+Consider $g(t) := f(\exp_I(tZ))$, where $Z\in S$ is an arbitrary vector of unit norm~$\norm Z = 1$.
 Then, using the assumption on the gradient,
 \begin{align}\label{eq:grad bound}
   g'(0)
-= \partial_{t=0} f(e^{t Z})
-= \braket{\nabla f(I), Z}_{\vec d}
-\geq -\norm{\nabla f(I)}_{\vec d} \, \norm Z_{\vec d}
+= \partial_{t=0} f(\exp_{I}(tZ))
+= \braket{\nabla f(I), Z}
+\geq -\norm{\nabla f(I)} \, \norm Z
 \geq -\eps.
 \end{align}
 Since moreover $f$ is $\lambda$-strongly geodesically convex on $B_\kappa(I)$, we have $g''(t) \geq \lambda$ for all $\abs t\leq\kappa$.
@@ -353,14 +357,14 @@ Since $g$ is also convex due to the geodesic convexity of $f$, it follows that, 
 \end{align*}
 hence
 \begin{align*}
-  f(I) = g(0) < g(t) = f(e^{tZ}).
+  f(I) = g(0) < g(t) = f(\exp_{I}(tZ)).
 \end{align*}
 It follows that the sublevel set of~$f(I)$ is contained in the ball of radius~$\kappa$, which is a compact set.
 In particular, $f$ has a minimum in this ball.
 
 Next, we prove that any minimizer of $f$ is necessarily contained in the (smaller) ball of radius~$\eps/\lambda$.
-To see this, take an arbitrary minimizer and write it in the form $e^{TZ}$, where $Z\in S$ is a unit vector and $T>0$.
-As before, we consider the function $g(t) = f(e^{t Z})$.
+To see this, take an arbitrary minimizer and write it in the form $\exp_I(TZ)$, where $Z\in S$ is a unit vector and $T>0$.
+As before, we consider the function $g(t) = f(\exp_I(tZ))$.
 Then, using \cref{eq:grad bound}, the convexity of~$g(t)$ for all $t\in\R$ and the strong convexity of $g(t)$ for $\abs t \leq \kappa$, we have
 \begin{align*}
   0 = g'(T) = \int_0^T g''(t) \, dt + g'(0) \geq \lambda \min(T, \kappa) - \eps.
@@ -369,10 +373,11 @@ If $T>\kappa$ then we have a contradiction as $\lambda\kappa - \eps > \lambda\ka
 Therefore, we must have $T\leq\kappa$ and hence $\lambda T - \eps \leq 0$, so $T \leq \eps/\lambda$.
 Thus we have proved that any minimizer of $f$ is contained in the ball of radius $\eps/\lambda$.
 
-We still need to show that the minimizer is unique.
-This follows again by strong convexity.
-Indeed, suppose that $\Theta$ is a minimizer and let $Z\in S$ be arbitrary.
-Consider $h(t) = f(\sqrt\Theta e^{tZ} \sqrt\Theta)$.
+%\CF{just track down some ref, or proceed as in commented text.} 
+%To see that the minimimizer $\Theta$ is unique, we observe that geodesic strong convexity implies strong star convexity of the function $f \circ \exp_{\Theta}$, which has a unique global minimizer at $0$ if and only if $\Theta$ is the unique minimizer of $f$. It is easy to see that function that is strongly star convex in a neighborhood of the origin is uniquely minimized at the origin.
+
+We still need to show that the minimizer is unique; that this follows from strong convexity is convex optimization ``folklore,'' but we include a proof nonetheless. Indeed, suppose that $\Theta$ is a minimizer and let $Z\in S$ be arbitrary.
+Consider $h(t) := f(\exp_{\Theta}(tZ))$.
 Then the function $h(t)$ is convex, has a minimum at $t=0$, and satisfies $h''(0) > 0$, since $f$ is $\lambda$-strongly geodesically convex at $\Theta$ by what we showed above.
 It follows that $h(t) > h(0)$ for any $t\neq0$.
 Since $Z$ was arbitrary, this shows that $f(\Theta') > f(\Theta)$ for any $\Theta'\neq\Theta$.
