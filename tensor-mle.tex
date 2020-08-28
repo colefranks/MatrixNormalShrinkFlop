@@ -80,7 +80,7 @@
 \newcommand{\TODO}[1]{{\color{blue}[TODO: #1]}}
 
 
-\title{Logarithmic sample complexity for dense matrix models}
+\title{Logarithmic sample complexity for dense matrix and tensor normal models}
 \author{Cole Franks, Rafael Oliveira, Akshay Ramachandran, Michael Walter}
 \date{February 2020}
 
@@ -281,6 +281,7 @@ Further, say $f$ is \emph{$\lambda$-strongly geodesically convex} at a point $\T
 \end{definition}
 
 The function $f_{\vec X}$ defined in \cref{dfn:function} is geodesically convex~\cite{burgisser2019towards}. \CF{see the commented out motivation. Where to put it?}
+\MW{Write $\norm Z_F^2 = \sum_i \norm{Z_i}_F^2$???}
 %One might wonder why we define $\exp_\Theta$ using the componentwise multiplication by $\sqrt{\vec d}$. In fact, this is equal to the exponential map for the Riemannian metric $\braket{X, Y}_{\vec d} = \sum_{a=1}^k \frac1{d_a} \tr(X_a Y_a)$. Oddly enough, defining the gradient and Hessian according to this metric, rather than the usual Hilbert-Schmidt inner product, improves the ratio between the norm of the gradient of $f_{\vec X}$ and its strong geodesic convexity parameter - a ratio which controls the quality of our statistical estimate. 
 We also note that $f$ has a certain useful transformation property or ``equivariance." For all $\Theta \in P$, $A \in G$, and $\vec X=(X_1,\dots,X_n)$, we have that
 \begin{align}\label{eq:equivariance}
