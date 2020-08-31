@@ -1518,6 +1518,36 @@ To bound $\|A\|_{\infty \to \infty} \ll 1/k d_{a}$, we choose $t \ll \frac{\|y\|
 To make this robust to perturbations we could either give a deterministic bound on how a perturbation affects $\|A\|_{\infty \to \infty}$; or we could run the net over all perturbations near $I$ of size $\exp( \sum_{a} d_{a} )$. Either way we should get that $\|\mu\|_{op}$ is decreasing for all time when $nD \sim \Tilde{O}_{k}(\max_{ab} d_{a} d_{b} )$
 
 
+\subsection{A silly trick}
+
+The same idea that showed monotonicity of the operator norm for operator scaling can be used to very slightly improve the required expansion for $k$-tensors. In the proper norm, our gradient direction will be $\{d_{a} \mu^{a}\}$, and so to use robustness we need a bound on perturbation size $\sum_{a} d_{a} \|\mu^{a}\|_{op} =: \sum_{a} \eps_{a}$ for all time. Let $\eps := \max_{a} \eps_{a}$. In the proper norm, we have weak two sided bounds at any time:
+\[ \eps^{2} = d_{a}^{2} \|\mu_{a}\|_{op}^{2} \leq d_{a}^{2} \|\mu^{a}\|_{F}^{2} \leq d_{a} \left( \sum_{b} d_{b} \|\mu^{b}\|_{F}^{2} \right) \leq d_{a} \left( \sum_{b} \eps_{b}^{2} \right) \leq d_{a} k \eps^{2}   \]
+
+Now recall the change in operator norm under negative gradient flow:
+\[ -\partial_{t} \eps := - d_{a} \partial_{t} \langle u u^{*}, \mu^{a} \rangle = d_{a} \left(\langle \rho^{a}, (u u^{*}) (d_{a} \mu^{a}) \rangle + \sum_{b \neq a} \langle \rho^{ab}, u u^{*} \otimes d_{b} \mu^{b} \rangle \right)   \]
+\[ \geq (1 \pm \eps) \left( \eps_{a} - \sum_{b \neq a} \eps_{b} \right) \geq (1 \pm \eps) (k-2) \eps    \]
+Here we've used that $\eps_{a}$ is the biggest. To see the transition for the first to second line, recall $\|d_{b} \mu^{b}\|_{op} = \eps_{b} \leq \eps$, and for any basis $\{v_{i}\} \subseteq \R^{d_{b}}$ we have
+\[ \langle \rho^{ab}, u u^{*} \otimes d_{b} \mu^{b} \rangle \leq \langle \rho^{ab}, u u^{*} \otimes \eps_{b} I_{b} \rangle = \eps_{b} \langle \rho^{a}, u u^{*} \rangle = \eps_{b} \frac{1 \pm \eps}{d_{a}}    \]
+Here we've used $\pm$ depending on whether $\eps$ comes from a largest or a smallest eigenvalue. So what the above inequalities show is $\partial_{t} (\log \eps) \leq (1+\eps) (k-2) \approxeq (k-2)$. From here on I'll be ignoring low order terms. I'll mention later that they add a small error to the main theorem. Therefore we assume we initially have $1-o(1) \approxeq 1$ strong convergence at time $0$ and further that this is true up to another $o(1)$ term while our perturbation size is $o(1)$. 
+
+\begin{claim}
+$\forall t: \eps(t) \lesssim d^{\frac{(k-2)}{1 + 2(k-2)}} \eps(0)$
+\end{claim}
+\begin{proof}
+Let $T$ be the first time when $\eps(t) \geq d^{(k-2) c} \eps(0)$: 
+\[ (\log \eps)' \leq k-2 \implies T \geq \frac{\log \eps(T) - \log \eps(0)}{k-2} = c \log d  \]
+On the other hand let $T^{*}$ be the last time when $\eps(T^{*}) \leq o(1)$, so up to this time we have very strong convergence:
+\[ \foral t \leq T^{*}: \sum_{a} d_{a} \|\mu^{a}\|_{F}^{2} (t) \leq e^{-t} \sum_{a} d_{a} \|\mu^{a}\|_{F}^{2} (0) \leq e^{-t} k \eps(0)^{2}    \]
+In particular if $T^{*} > \log k d^{1 - 2(k-2)c}$:
+\[ \eps(T^{*})^{2} \leq e^{-T^{*}} d k \eps(0)^{2} < d^{2(k-2)c} \eps(0)^{2} = \eps(T)^{2}    \]
+This would be a contradiction if $T \geq T^{*}$, so matching terms we get
+\[ c \log d = \log k + (1 - 2(k-2)c) \log d \iff c = \frac{1}{1 + 2(k-2)}     \]
+Again we ignore the lower order $\log k$ term. So if we have strong convergence up to time $T^{*}$ then the claim is proven. 
+\end{proof}
+
+The above claim shows that if $d^{\frac{(k-2)}{1 + 2(k-2)}} \eps < o(1)$, and we have $1-o(1)$ at time $0$, then in fact we have $1-o(1)$ strong convergence at all time and we remain in an $d^{\frac{(k-2)}{1 + 2(k-2)}} \eps < o(1)$ sized operator norm ball the whole time. Therefore it suffices to take $d^{3 - \frac{1}{1 + 2(k-2)}}$ samples to get strong convergence. Forgive me the $k$'s and this is our savings on samples. 
+
+
 
 \section{Old stuff}
 
