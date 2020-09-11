@@ -178,8 +178,8 @@ $$ d_F(\underline{\Sigma}, \hat{\Sigma}) \leq \eps $$
 in $O(\TODO{\log(1/\eps)})$ iterations with probability at least $\TODO{}$.
 \end{theorem}
 
-\begin{theorem}[Matrix flip-flop]\label{thm:matrix-flipflop} If $(\hat{\Sigma}_1, \hat{\Sigma}_2) $ denotes the MLE estimator for for $(\Sigma_1, \Sigma_2)$, then provided $n \geq \TODO{}$ the flip-flop algorithm computes $(\underline{\Sigma}_1, \underline{\Sigma}_2)$ with
-$$ d_F(\underline{\Sigma}_i, \hat{\Sigma}_i) \leq \eps $$
+\begin{theorem}[Matrix flip-flop]\label{thm:matrix-flipflop} If $(\hat{\Theta}_1, \hat{\Theta}_2) $ denotes the MLE estimator for $(\Theta_1, \Theta_2)$, then provided $n \geq \TODO{}$ the flip-flop algorithm computes $(\underline{\Theta}_1, \underline{\Theta}_2)$ with
+$$ d_F(\underline{\Theta}_i, \hat{\Theta}_i) \leq \eps $$
 for $i \in \{1,2\}$ in $O(\TODO{\log(1/\eps)})$ iterations with probability at least $\TODO{}$.
 \end{theorem}
 
@@ -251,7 +251,7 @@ Before defining our notion of convexity, we introduce some notation.
 Let~$\SL_d$ denote the group of matrices with unit determinant.
 Recall that $\PD_d^1$ denotes the positive definite matrices with unit determinant.
 Let $\Sym_d^0$ denote the vector space of $d\times d$ traceless symmetric matrices.
-Then, $A^T e^Z A \in \PD_d^1$ for any $A \in \SL_d$ and $Z\in\Sym_d$.
+Then, $A^T e^Z A \in \PD_d^1$ for any $A \in \SL_d$ and $Z\in\Sym_d^0$.
 % Any matrix in $\PD_d^1$ can be written as the matrix exponential of a matrix in $\Sym_d^0$.
 Finally, let $G = \prod_{a=1}^k \SL_{d_a}$, $P = \prod_{a=1}^k \PD_{d_a}^1$, and $S = \bigoplus_{a=1}^k \Sym_{d_a}^0$.
 We denote by $AB=(A_1B_1,\dots,A_kB_k)$ and $e^Z=(e^{Z_1},\dots,e^{Z_k})$ the componentwise product and matrix exponential, respectively, of matrix tuples $A, B \in G$ and $Z\in S$.
@@ -283,6 +283,7 @@ Further, say $f$ is \emph{$\lambda$-strongly geodesically convex} at a point $\T
 The function $f_{\vec X}$ defined in \cref{dfn:function} is geodesically convex~\cite{burgisser2019towards}. \CF{see the commented out motivation. Where to put it?}
 \MW{Write $\norm Z_F^2 = \sum_i \norm{Z_i}_F^2$???}
 %One might wonder why we define $\exp_\Theta$ using the componentwise multiplication by $\sqrt{\vec d}$. In fact, this is equal to the exponential map for the Riemannian metric $\braket{X, Y}_{\vec d} = \sum_{a=1}^k \frac1{d_a} \tr(X_a Y_a)$. Oddly enough, defining the gradient and Hessian according to this metric, rather than the usual Hilbert-Schmidt inner product, improves the ratio between the norm of the gradient of $f_{\vec X}$ and its strong geodesic convexity parameter - a ratio which controls the quality of our statistical estimate. 
+%RMO: Is this oddity simply because of the structure of the g-convex function that we are studying, the fact that it is a function over $\otimes \Theta_i$ and therefore we will get these $d_i$'s naturally? (todo for myself: do these calculations and see)
 We also note that $f$ has a certain useful transformation property or ``equivariance." For all $\Theta \in P$, $A \in G$, and $\vec X=(X_1,\dots,X_n)$, we have that
 \begin{align}\label{eq:equivariance}
   f_{A^{-1} \vec X}(A^T \Theta A) = f_{\vec X}(\Theta),
@@ -343,7 +344,7 @@ Then, using the assumption on the gradient,
 \geq -\norm{\nabla f(I)} \, \norm Z
 \geq -\eps.
 \end{align}
-Since moreover $f$ is $\lambda$-strongly geodesically convex on $B_\kappa(I)$, we have $g''(t) \geq \lambda$ for all $\abs t\leq\kappa$.
+Since $f$ is $\lambda$-strongly geodesically convex on $B_\kappa(I)$, we have $g''(t) \geq \lambda$ for all $\abs t\leq\kappa$.
 For $t=\kappa$, it follows in particular that
 \begin{align*}
   g(\kappa)
@@ -352,7 +353,7 @@ For $t=\kappa$, it follows in particular that
 = g(0) + \left( \frac{\lambda\kappa}2 - \eps \right) \kappa
 > g(0)
 \end{align*}
-Since $g$ is also convex due to the geodesic convexity of $f$, it follows that, for any~$t \geq \kappa$,
+Since $g$ is convex due to the geodesic convexity of $f$, it follows that, for any~$t \geq \kappa$,
 \begin{align*}
   g(0) < g(\kappa) \leq \left( 1-\frac{\kappa}t \right) g(0) + \frac{\kappa}t g(t),
 \end{align*}
@@ -406,12 +407,12 @@ Here and in the following we write $I_a$ for the $d_a\times d_a$ identity matrix
 Let $\rho = \sum_{i=1}^n X_i X_i^T / \norm{\vec X}_2^2$.
 Then the components of the Riemannian gradient $\nabla f_{\vec X}$ at the identity are given by
 \begin{align*}
-  \nabla_a f_{\vec A} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a} \qquad \text{ for } a \in [k].
+  \nabla_a f_{\vec X} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a} \qquad \text{ for } a \in [k].
 \end{align*}
 \end{lemma}
 \begin{proof}
   Let $F_{\vec X}(\Theta) = \tr \rho \, \Theta$.
-  Then, we have, for all $a\in[k]$, that
+  Then, for all $a\in[k]$, we have
   \begin{align*}
    \tr (\nabla_a F_{\vec X}) Z
   % = \partial_{t=0} F_{\vec X}(I_1,\dots,I_{a-1}, e^{tZ}, I_{a+1},\dots,I_n)
@@ -456,7 +457,7 @@ for all $a\in[k]$, and hence $\norm{\nabla f_{\vec X}}^2 \leq k \eps^2$.
 To prove this we will need a standard result in matrix concentration.
 Recall that $\nabla_a f_{\vec X} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}$ by \cref{lem:gradient}.
 It is not hard to see that $\rho^{(a)}$ is distributed as $Y Y^T / \norm{Y}_F^2$, where $Y$ is a $d_a \times N_a$ matrix with independent Gaussian entries.
-The following result that bounds the singular values of such random matrices.
+The following result bounds the singular values of such random matrices.
 
 \begin{theorem}[Corollary 5.35 of \cite{vershynin2010introduction}]\label{cor:vershynin}
 Let $Y \in \R^{d \times N}$ have independent standard Gaussian entries.
@@ -476,7 +477,7 @@ By \cref{cor:vershynin}, we have the following with $\leq 2 \exp(-t^2/2)$ failur
   \sqrt{N} \left( 1 -  \frac{\sqrt{d} + t }{\sqrt{N}}  \right)\leq s_{\min}(Y) \leq s_{\max}(Y) \leq  \sqrt{N} \left( 1 + \frac{\sqrt{d} + t }{\sqrt{N}} \right).
 \end{align*}
 Let $t = \sqrt{N} \eps / \sqrt{C}$.
-Because $d \leq N \eps^2 / \sqrt{C}$, this shows that all singular values are in $\sqrt{N} \left( 1 \pm 2\eps/\sqrt{C} \right)$.
+Because $d \leq N \eps^2 / C$, this shows that all singular values are in $\sqrt{N} \left( 1 \pm 2\eps/\sqrt{C} \right)$.
 It follows that the eigenvalues of $YY^T$ are in $N \left( 1 \pm 8\eps/\sqrt{C} \right)$.
 Since there are at most $d \leq N$ nonzero eigenvalues, this implies in turn that the eigenvalues of $Y Y^T/\|Y\|_F^2$ are in
 \begin{align*}
@@ -536,7 +537,7 @@ where $\nabla_{ab}^2f$ is an operator from $\Sym_{d_b}^0$ to $\Sym_{d_a}^0$.
 We note that the Riemannian Hessian is symmetric with respect to the inner product~$\braket{\cdot,\cdot}$ on $S$.
 Furthermore, $\braket{Z, \nabla^2 f(\Theta) Z} = \partial^2_{t=0} f(\exp_{\Theta}(tZ))$ for all $Z\in S$.
 Thus, $f$~is geodesically convex if and only if the Riemannian Hessian is positive semidefinite, that is, $\nabla^2 f(\Theta) \succeq 0$.
-Similarly, $f$ is $\lambda$-strongly geodesically convex at $\Theta$ if and only if $\nabla^2 f(\Theta) \succeq \lambda I$, i.e., the Hessian is positive definite with eigenvalues larger or equals to~$\lambda$.
+Similarly, $f$ is $\lambda$-strongly geodesically convex at $\Theta$ if and only if $\nabla^2 f(\Theta) \succeq \lambda I$, i.e., the Hessian is positive definite with eigenvalues larger than or equal to~$\lambda$.
 %\MW{Here, $\succeq$ denotes the Loewner order with respect to $\braket{\cdot,\cdot}_{\vec d}$.}
 
 Similarly as for the gradient, we can compute the components of the Hessian in terms of a partial trace, as in the following definition and lemma.
@@ -1546,6 +1547,7 @@ Again we ignore the lower order $\log k$ term. So if we have strong convergence 
 \end{proof}
 
 The above claim shows that if $d^{\frac{(k-2)}{1 + 2(k-2)}} \eps < o(1)$, and we have $1-o(1)$ at time $0$, then in fact we have $1-o(1)$ strong convergence at all time and we remain in an $d^{\frac{(k-2)}{1 + 2(k-2)}} \eps < o(1)$ sized operator norm ball the whole time. Therefore it suffices to take $d^{3 - \frac{1}{1 + 2(k-2)}}$ samples to get strong convergence. Forgive me the $k$'s and this is our savings on samples. 
+
 
 
 
