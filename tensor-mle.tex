@@ -3,8 +3,9 @@
 \usepackage{amsmath}
 \usepackage{amsthm,mathtools,braket}
 \usepackage{amssymb,bm, hyperref}
-\usepackage{xcolor}
+\usepackage{xcolor, float}
 \usepackage[capitalize]{cleveref}
+
 \newtheorem{theorem}{Theorem}
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{prop}[theorem]{Proposition}
@@ -15,6 +16,7 @@
 \newtheorem{remark}{Remark}
 \newtheorem{definition}{Definition}
 \newtheorem{example}{Example}
+\floatstyle{boxed}\newfloat{Algorithm}{ht}{alg}
 
 \DeclareMathOperator{\Lie}{Lie}
 \DeclareMathOperator{\Lin}{L}
@@ -78,6 +80,8 @@
 \newcommand{\RMO}[1]{{\color{red}[RMO: #1]}}
 \newcommand{\MW}[1]{{\color{red}[MW: #1]}}
 \newcommand{\TODO}[1]{{\color{blue}[TODO: #1]}}
+
+\crefname{Algorithm}{Algorithm}{Algorithms}
 
 
 \title{Logarithmic sample complexity for dense matrix normal models and bla bla}
@@ -406,21 +410,21 @@ Here and in the following we write $I_a$ for the $d_a\times d_a$ identity matrix
 Let $\rho = \sum_{i=1}^n X_i X_i^T / \norm{\vec X}_2^2$.
 Then the components of the Riemannian gradient $\nabla f_{\vec X}$ at the identity are given by
 \begin{align*}
-  \nabla_a f_{\vec A} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a} \qquad \text{ for } a \in [k].
+  \nabla_a f_{\vec X} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a} \qquad \text{ for } a \in [k].
 \end{align*}
 \end{lemma}
 \begin{proof}
   Let $F_{\vec X}(\Theta) = \tr \rho \, \Theta$.
   Then, we have, for all $a\in[k]$, that
   \begin{align*}
-   \tr (\nabla_a F_{\vec X}) Z
+   \langle \nabla_a F_{\vec X} , Z \rangle
   % = \partial_{t=0} F_{\vec X}(I_1,\dots,I_{a-1}, e^{tZ}, I_{a+1},\dots,I_n)
   = \partial_{t=0} \tr \rho \, e^{t \sqrt{d_a} Z_a}
   = \sqrt{d_a} \tr \rho Z_a
   = \sqrt{d_a} \tr \rho^{(a)} Z
   \end{align*}
   for all traceless symmetric $d_a \times d_a$ matrices $Z$.
-  Since $\nabla_a F$ is traceless and symmetric by definition, this implies that
+  Since $\nabla_a F_{\vec X}$ is traceless and symmetric by definition, this implies
   \begin{align*}
     \nabla_a F_{\vec X}
   = \sqrt{d_a} \rho^{(a)} - \tr(\rho^{(a)}) I_a /\sqrt{d_a}
@@ -456,7 +460,7 @@ for all $a\in[k]$, and hence $\norm{\nabla f_{\vec X}}^2 \leq k \eps^2$.
 To prove this we will need a standard result in matrix concentration.
 Recall that $\nabla_a f_{\vec X} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}$ by \cref{lem:gradient}.
 It is not hard to see that $\rho^{(a)}$ is distributed as $Y Y^T / \norm{Y}_F^2$, where $Y$ is a $d_a \times N_a$ matrix with independent Gaussian entries.
-The following result that bounds the singular values of such random matrices.
+The following result bounds the singular values of such random matrices.
 
 \begin{theorem}[Corollary 5.35 of \cite{vershynin2010introduction}]\label{cor:vershynin}
 Let $Y \in \R^{d \times N}$ have independent standard Gaussian entries.
@@ -556,9 +560,9 @@ This definition is consistent with \cref{def:single marginal} in the sense that 
 Let $\rho = \sum_{i=1}^n X_i X_i^T / \norm{\vec X}_2^2$.
 Then the Riemannian Hessian $\nabla^2 f_{\vec X}$ at the identity is given by
 \begin{align*}
- \frac{1}{d_a} \tr Y (\nabla^2_{aa} f_{\vec X}) Y
+ \frac{1}{d_a} \langle Y_a,  \left( \nabla^2_{aa} f_{\vec X} \right) Y_a \rangle
 &= \left( \tr \rho^{(a)} Y^2 - \bigl(\tr Y \rho^{(a)}\bigr)^2 \right) \\
-  \frac1{\sqrt{d_a d_b}} \tr Y (\nabla^2_{ab} f_{\vec X}) Z
+  \frac1{\sqrt{d_a d_b}} \langle Y_a,  \left( \nabla^2_{ab} f_{\vec X} \right) Z_b \rangle
 &= \tr \rho^{(ab)} \left( Y \ot Z \right) - \bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr) 
 \end{align*}
 for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d_b\times d_b$ matrices~$Z$.
@@ -567,14 +571,14 @@ for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d
   Let $F_{\vec X}(\Theta) = \tr \rho \, \Theta$ as in the proof of \cref{lem:gradient}.
   Then,
   \begin{align*}
-   \tr Y \left( \nabla^2_{aa} F_{\vec X} \right) Y
+   \langle Y_a,  \left( \nabla^2_{aa} F_{\vec X} \right) Y_a \rangle
   &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{(s+t)\sqrt{d_a}  Y_a} \\
   &= \partial_{s=0} \partial_{t=0} \tr \rho^{(a)} e^{(s+t)  \sqrt{d_a}Y}
   = d_a \tr \rho^{(a)} Y^2,
   \end{align*}
   while for $a\neq b$ we have
   \begin{align*}
-    \tr Y_a \left( \nabla^2_{ab} F_{\vec X} \right) Z_b
+    \langle Y_a,  \left( \nabla^2_{ab} F_{\vec X} \right) Z_b \rangle
   &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s \sqrt{d_a}Y_a + t \sqrt{d_b} Z_b} \\
   &= \partial_{s=0} \partial_{t=0} \tr \rho^{(ab)} \left( e^{s \sqrt{d_a}  Y} \ot e^{t \sqrt{d_b} Z} \right)\\
   &= \sqrt{d_a d_b} \tr \rho^{(ab)} \left( Y \ot Z \right).
@@ -981,6 +985,29 @@ To prove \cref{thm:operator-cheeger}, we apply \cref{lem:op-cheeger} using \cref
 
 
 \section{Convergence of flip-flop algorithms}
+
+In this section we prove that the flip-flop algorithms for the matrix and tensor normal models converge quickly to the MLE estimator with high probability. We begin by stating the flip-flop algorithm and then... 
+
+\begin{Algorithm}
+\textbf{Input}: Samples $\vec{X} = (X_1, \ldots, X_n)$ where $X_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $X_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
+
+\textbf{Output}: $\underline{\Sigma} \in \PD_D$ such that $d_F(\underline{\Sigma}, \hat{\Sigma}) < \eps$, where $\hat{\Sigma}$ is the MLE for $\Sigma$. \\[.3ex]
+
+\textbf{Algorithm}:
+\begin{enumerate}
+\item\label{it:flip-flop step 1} Set $\Theta_a = I_a$ for each $a \in [k]$.
+\item\label{it:flip-flop step 2} For $t=1,\dots,T = \poly(D, b) \cdot \log(1/\eps)$, repeat the following:
+\begin{itemize}
+\item Compute each component of the gradient $\nabla_a := \nabla_a f_{\vec X}(\Theta_1, \ldots, \Theta_k)$ of $\nabla f_{\vec X}(\Theta_1, \ldots, \Theta_k)$ and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest. 
+\item
+If $\norm{\nabla_a}_F < \eps/k$, output $\left( \bigotimes_{a =1}^k \Theta_a \right)^{-1}$ and return.
+% S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
+\item Otherwise, set $\Theta_a \leftarrow \det(\rho^{(a)})^{1/d_a} (\rho^{(a)})^{-1} \cdot \Theta_a$.
+\end{itemize}
+\end{enumerate}
+\caption{Flip-flop algorithm}\label{alg:flip-flop}
+\end{Algorithm}
+
 \TODO{General descent-lemma + strong convexity folklore}
 \subsection{Tensor flip-flop convergence}
 \TODO{Proof of \cref{thm:tensor-flipflop}; vanilla strong convexity in a sublevel set stuff.}
@@ -1537,7 +1564,7 @@ $\forall t: \eps(t) \lesssim d^{\frac{(k-2)}{1 + 2(k-2)}} \eps(0)$
 Let $T$ be the first time when $\eps(t) \geq d^{(k-2) c} \eps(0)$: 
 \[ (\log \eps)' \leq k-2 \implies T \geq \frac{\log \eps(T) - \log \eps(0)}{k-2} = c \log d  \]
 On the other hand let $T^{*}$ be the last time when $\eps(T^{*}) \leq o(1)$, so up to this time we have very strong convergence:
-\[ \foral t \leq T^{*}: \sum_{a} d_{a} \|\mu^{a}\|_{F}^{2} (t) \leq e^{-t} \sum_{a} d_{a} \|\mu^{a}\|_{F}^{2} (0) \leq e^{-t} k \eps(0)^{2}    \]
+\[ \forall t \leq T^{*}: \sum_{a} d_{a} \|\mu^{a}\|_{F}^{2} (t) \leq e^{-t} \sum_{a} d_{a} \|\mu^{a}\|_{F}^{2} (0) \leq e^{-t} k \eps(0)^{2}    \]
 In particular if $T^{*} > \log k d^{1 - 2(k-2)c}$:
 \[ \eps(T^{*})^{2} \leq e^{-T^{*}} d k \eps(0)^{2} < d^{2(k-2)c} \eps(0)^{2} = \eps(T)^{2}    \]
 This would be a contradiction if $T \geq T^{*}$, so matching terms we get
