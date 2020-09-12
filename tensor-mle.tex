@@ -1577,7 +1577,9 @@ The above claim shows that if $d^{\frac{(k-2)}{1 + 2(k-2)}} \eps < o(1)$, and we
 
 
 \subsection{The Final Concentration}
-Above we were trying to bound competing forces on the largest eigenvalue of $\mu$ for all time to make sure our scaling remains inside a small $\|\cdot\|_{op}$ ball. Here we will show it is enough to have small forces initially. 
+Above we were trying to bound competing forces on the largest eigenvalue of $\mu$ for all time to make sure our scaling remains inside a small $\|\cdot\|_{op}$ ball. \AR{Here we will show it is enough to have small forces initially. }
+
+\AR{Correction: the following line of argument isn't really good enough. This naive way of bounding the competing forces means that our $\|\mu\|_{op}$ jumps into the worst regime (exponentially increasing) within a constant amount of time. This is because our bound on the force is proportional to the size of the perturbation. }
 
 If our input at time $t$ is scaled by $e^{\delta}$, then we have the following rough bound on our errors:
 \[ \|\mu_{b}(t) - \mu_{b}(0)\|_{op} = \sup_{v} \langle (e^{\delta} - I) \cdot \rho^{ab}, I_{a} \otimes v v^{*} \rangle \lesssim \delta \|T^{*}\|_{op_{a} \to op_{b}} \|I_{a}\|_{op} \|v v^{*} \|_{1} \leq \delta \|\rho^{b}\|_{op}    \]
@@ -1587,16 +1589,12 @@ Let $\mu_{b}(t) := \mu_{b}(0) + Y =: \mu_{b} + Y$
 \[ \|T^{t}(\mu_{b}(t)) - T^{0}(\mu_{b}(0))\|_{op} \leq \|T^{t}(\mu_{b} + Y) - T^{t}(\mu_{b})\|_{op} + \|T^{t}(\mu_{b}) - T^{0}(\mu_{b})\|_{op}     \]
 \[ \leq \|T^{t}\|_{op_{b} \to op_{a}} \|Y\|_{op} + \delta \|T^{0}\|_{op_{b} \to op_{b}} \|\mu_{b}\|_{op}    \]
 \[ \leq \delta \|\rho^{a}(t)\|_{op} \|\rho_{b}\|_{op} + \delta \|\rho_{a}\|_{op} \|\mu_{b}\|_{op}   \]
-This is on the order of $\delta/ d_{a} d_{b}$. Recall the formula for the top eigenvalue change:
+Assuming $\|\mu_{b}\|_{op} \ll \delta/d_{b}$, this is on the order of $\delta/ d_{a} d_{b}$. Recall the formula for the top eigenvalue change:
 \[ -\partial_{t} d_{a} \|\mu_{a}\|_{op} = \|d_{a} \rho^{a}\|_{op} \|d_{a} \mu^{a}\|_{op} + \sum_{b \neq a} d_{a} d_{b} \langle \rho^{\{a,b\}}, u u^{*} \otimes \mu_{b} \rangle     \]
-\[ \geq  \|d_{a} \rho^{a}\|_{op} \|d_{a} \mu^{a}\|_{op} -  \sum_{b \neq a} d_{a} d_{b} \|T_{b \to a}(\mu_{b})\|_{op}   \]
+\[ \geq  (1 \pm d_{a} \|\mu_{a}\|_{op}) \|d_{a} \mu^{a}\|_{op} -  \sum_{b \neq a} d_{a} d_{b} \|T_{b \to a}(\mu_{b})\|_{op}   \]
 \[ \geq (1 \pm \epsilon_{a}) \epsilon_{a} - (k-1) \delta  \]
 This is the competing force at time $t$, assuming it is very small at time $0$. Therefore we have that any (normalized) eigenvalue of $\mu$ that is greater than $(k-1) \delta$ at time $t$ is decreasing in absolute value. It should be enough to have $\delta \ll 1/k \log D$, and then in total the scaling should be of operator norm $\ll 1$, so we will have convergence. 
 
-\begin{theorem}
-If we have the following condition initially, then we have strong convergence. 
-$\forall a,b: \sup_{u \in \R^{a}} d_{a} d_{b} \langle \rho^{ab}, u u^{*} \otimes \mu_{b} \rangle \ll (k \log D)^{-c} $
-\end{theorem}
 
 
 
