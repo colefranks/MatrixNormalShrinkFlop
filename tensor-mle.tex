@@ -1140,7 +1140,7 @@ Choosing $t \sim \sqrt{d_{a}}$ and $nD \gtrsim d_{a}^{2} \log^{2} d_{a}$ gives t
 
 \subsection{Pisier's proof of expansion}
 We have shown above that the diagonal blocks $(\nabla^{2})_{aa} \approx \frac{1}{d_{a}} I_{a}$. Therefore to show strong convexity we would like to bound the off diagonal blocks
-\[ \forall X,Y:  \langle Q^{ab}, X \otimes Y \rangle \leq \lambda \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}}   \]
+\[ \forall X \perp I_{a},Y \perp I_{b}:  \langle Q^{ab}, X \otimes Y \rangle \leq \lambda \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}}   \]
 Pisier's method of proof uses the trace method along with Gaussian concentration in Banach spaces.
 
 \begin{theorem}
@@ -1151,52 +1151,58 @@ We denote a random gaussian matrix $Y \in \R^{m \times n}$ (for $m < n$) with $Y
 %
 
 \begin{theorem} [Pisier]
-For any Banach space $\sigma_{B}^{2} := \sup \{ \E \langle Y, \xi \rangle^{2} \mid \|\xi\|_{*} \leq 1 \} $
-\[ \implies \Pr [ | \|Y\| - \E \|Y\| | \geq t ] \leq \exp \left( - \frac{\Omega(t^{2})}{\sigma^{2}} \right)   \]
+Let $Y$ be a standard gaussian in Banach space with norm $\|\cdot\|$. Then $\|Y\|$ is subgaussian with parameter $\sigma^{2} := \sup \{ \E \langle Y, \xi \rangle^{2} \mid \|\xi\|_{*} \leq 1 \} $
+\[ \Pr [ | \|Y\| - \E \|Y\| | \geq t ] \leq \exp \left( - \frac{\Omega(t^{2})}{\sigma^{2}} \right)   \]
 \end{theorem}
 
 \begin{corollary}
 \[ (\E \|Y\|^{p})^{\frac{1}{p}} \leq \E \|Y\| + O \left( \sqrt{\frac{p}{\sigma^{2}}} \right)   \]
 \end{corollary}
 
- Appendix - \url{https://arxiv.org/abs/1209.2059}
- Theorem 16.6 - \url{https://arxiv.org/pdf/1101.4195.pdf}
+% Appendix - \url{https://arxiv.org/abs/1209.2059}
+% Theorem 16.6 - \url{https://arxiv.org/pdf/1101.4195.pdf}
 \begin{theorem}
-Let $P$ denote the projection onto $(\vec{I_{n}},\vec{I_{m}})$, then the following holds with $1/poly(mn)$ failure probability
+Let $P$ denote the projection onto $vec{I_{m}} \in \R^{m^{2}}$, and $\{Y_{i}\}$ are iid standard gaussians in $\R^{m \times n}$ where $m \leq n$. Then for any small enough $c$, the  following holds with FAILURE PROBABILITY $\leq (mn)^{-c}$
 \[ \|\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i} (I - P) \|_{op} \leq O \left( \sqrt{\sum_{i} \alpha_{i}^{2}} \right) \left( \E \|Y\|_{op} \right)^{2} \]
 \end{theorem}
 \begin{proof}
-We first begin by a standard symmetrization trick so that there are no products of variables
+We first begin by a standard symmetrization trick to linearize:
 \[\E Y^{*} I_{m} Y = m I_{n} \implies \E Y \otimes Y (I-P) = 0\]
+Therefore we can add the like term with new iid variables $\{Z_{i}\}$:
 \[ \E_{Y} \|\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i} (I - P)\|_{op} \leq \E_{Y,Z} \|\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i} (I - P) - \sum_{i=1}^{N} \alpha_{i} Z_{i} \otimes Z_{i} (I - P) \|_{op}  \]
-Now note $(Y,Z)$ has the same distribution as $(\frac{Y+Z}{\sqrt{2}},\frac{Y-Z}{\sqrt{2}})$
+Here we have used Jensen's because the $Z$ term is mean 0. Now note $(Y,Z)$ has the same distribution as $(\frac{Y+Z}{\sqrt{2}},\frac{Y-Z}{\sqrt{2}})$
 \[ = \frac{1}{2}\E_{Y,Z} \|\sum_{i=1}^{N} \alpha_{i} (Y_{i}+Z_{i}) \otimes (Y_{i}+Z_{i}) (I - P) - \sum_{i=1}^{N} \alpha_{i} (Y_{i}-Z_{i}) \otimes (Y_{i}-Z_{i}) (I - P) \|_{op}  \]
 \[ = \E_{Y,Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} (I-P) + \alpha_{i} Z_{i} \otimes Y_{i} (I-P)\|_{op}  \]
 \[ \leq 2 \E_{Y,Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}\|_{op}   \]
-Note we've gotten rid of the projection $(I-P)$, but now the left and right Kraus operators are independent. Now we apply the trace method to this operator
+Note we've lost the projection $(I-P)$, but the left and right Kraus operators are independent. Now we apply the trace method to this operator
 \[ \E \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}\|_{2p}^{2p} \]
 \[ = \E Tr [ \left( \sum_{ij} \alpha_{i} \alpha_{j} Y_{i}^{*} Y_{j} \otimes Z_{i}^{*} Z_{j} \right)^{p} ]  \]
 \[ = \sum_{\vec{i},\vec{j} \in [N]^{p}} \alpha^{\vec{i}} \alpha^{\vec{j}} \E_{Y,Z} Tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} \otimes Z_{i_{1}}^{*} Z_{j_{1}} ... Z_{i_{p}}^{*} Z_{j_{p}}  ]   \]
 \[ = \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{Y} Tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) (\E_{Z} Tr [ Z_{i_{1}}^{*} Z_{j_{1}} ... Z_{i_{p}}^{*} Z_{j_{p}} ] )  \]
-Here we used independence of $(Y,Z)$. We eventually want to charge to a term $\E \|\sum_{i} \alpha_{i} Y_{i}\|_{op}$. To this end we notice that since any expectations of polynomials of gaussians with positive coefficients are nonnegative and positive iff the polynomial is even; therefore $\alpha^{\vec{i}} \alpha^{\vec{j}}$ is also positive for all non-vanishing terms. So we can upper bound the term individually by the nc-Holder inequality below
+Here we used independence of $(Y,Z)$. We eventually want to charge to a term $\E \|\sum_{i} \alpha_{i} Y_{i}\|_{op}$. We note expectations of gaussian monomials are non-zero and positive iff the polynomial is even. Therefore the coefficient $\alpha^{\vec{i}} \alpha^{\vec{j}}$ from all non-vanishing terms is a square, and in particular positive. So we can upper bound each term individually by the nc-Holder inequality below
 \[ \leq  \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{Y} Tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) ( \E_{Z} \|Z_{i_{1}}^{*}\|_{2p} ... \|Z_{j_{p}}\|_{2p} )  \]
 
-We have $\E \|Z\|_{2p}^{k} \leq ( \E \|Z\|_{2p}^{2p} )^{k/2p}$ by Jensen's inequality, so we can collect like terms together:
+Denoting $Z$ also an iid gaussian, we have $\E \|Z\|_{2p}^{k} \leq ( \E \|Z\|_{2p}^{2p} )^{k/2p}$ by Jensen's inequality, so we can collect like terms together:
 
 %\begin{claim}
 %For iid $\{Z_{i}\}$ and $\sum_{i} q_{i} = 2p$:
 %\[ \E \|Z_{1}\|_{2p}^{q_{1}} ... \|Z_{k}\|_{2p}^{q_{k}} \leq \prod_{i} (\E \|Z_{i}\|_{2p}^{q_{i} \cdot 2p/q_{i}} )^{q_{i}/2p} = \E \|Z\|_{2p}^{2p}    \]
 %\end{claim}
 
-\[ \implies \E \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}\|_{2p}^{2p}
-\leq \E_{Z} \|Z\|_{2p}^{2p} \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{Y} Tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) \]
-\[ = \E_{Z} \|Z\|_{2p}^{2p} \left\| \sum_{i} \alpha_{i} Y_{i} \right\|_{2p}^{2p}
-= \E_{Z} \|Z\|_{2p}^{2p} \left( \sum_{i} \alpha_{i}^{2} \right)^{p} \E_{Y} \|Y\|_{2p}^{2p}     \]
-In the last step we used that $\sum_{i} c_{i} Y_{i}$ has the same distribution as $\|c\|_{2} Y$ where $\{Y_{i}\}, Y$ are independent gaussians with the same covariance.
+\[ \E \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}\|_{2p}^{2p}
+\leq \left( \E_{Z} \|Z\|_{2p}^{2p} \right) \left( \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{Y} Tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) \right) \]
+\[ = \left( \E_{Z} \|Z\|_{2p}^{2p} \right) \left( \E_{Y} \left\| \sum_{i} \alpha_{i} Y_{i} \right\|_{2p}^{2p} \right)
+= \left( \E_{Z} \|Z\|_{2p}^{2p} \right) \left( \sum_{i} \alpha_{i}^{2} \right)^{p} \left( \E_{Y} \|Y\|_{2p}^{2p} \right)    \]
+In the last step we used unitary invariance of the joint $\{Y_{i}\}$ distribution, so $\sum_{i} c_{i} Y_{i}$ has the same distribution as $\|c\|_{2} Y$.
 Finally we can bound $\|\cdot\|_{op}$ by the trace method. Assume wlog (by homogeneity) that $\|\alpha\|_{2} = 1$:
 \[ \E_{Y,Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} \|_{op}^{2p} \leq \E_{Y,Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} \|_{2p}^{2p} \]
-\[ \leq ( \E \|Y\|_{2p}^{2p} )^{2} \leq ( m \E \|Y\|_{op}^{2p} )^{2} \leq m^{2} \left(\E \|Y\|_{op} + O(\sqrt{\frac{2p}{m+n}}) \right)^{4p} \]
-So choosing $p \sim \log m$ gives the bound.
+\[ \leq ( \E \|Y\|_{2p}^{2p} )^{2} \leq ( m \E \|Y\|_{op}^{2p} )^{2} \leq m^{2} \left(\E \|Y\|_{op} + O(\sqrt{\frac{2p}{\sigma^{2}}})  \right)^{4p} \]
+Here we've used that $\|Y\|_{op}$ is subgaussian with parameter $\sigma^{2} \leq \E \|Y\|_{op}^{2} \sim (\sqrt{m} + \sqrt{n})^{2}$ up to universal constants.
+So again assuming $\|\alpha\|_{2} = 1$ and choosing $p = 2c \log mn$, where the only constraint is 
+\[  p^{3/2} \ll (\sqrt{m} + \sqrt{n})^{2} \iff c \ll \frac{(\sqrt{m} + \sqrt{n})^{4/3}}{\log mn}  \] 
+We can apply Markov's to get the bound:
+\[ Pr[\|\sum_{i} \alpha_{i} Y_{i} \otimes Y_{i}\|_{op} \geq e (\E \|Y\|_{op})^{2} ] \leq    \frac{m^{2} (\E\|Y\|_{op} + \frac{C \sqrt{2p}}{\sqrt{m} + \sqrt{n}} )^{4p}}{e^{2p} (\E\|Y\|_{op})^{4p}}    \]
+\[ \leq \frac{m^{2} \exp \left(\frac{C' p^{3/2}}{(\sqrt{m} + \sqrt{n})^{2}} \right) }{e^{2p}} < \frac{1}{(mn)^{c}}  \]
 \end{proof}
 
 \begin{theorem}
@@ -1207,10 +1213,12 @@ For $p = 2^{m}$, we have the following (Holder's type) inequality
 Done by induction. Note if $A$ are Hermitian, there is a simple tensor trick which allows us to prove the above for all $p \in \mathbb{N}$.
 \end{proof}
 
+\AR{I may have made a calculation error but it seems we could even pick $c \sim \frac{n^{2/3}}{\log n}$ so that we get $\exp(-\frac{n^{2/3}}{\log n})$ failure probability?}
+
 \begin{corollary}
 For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kraus operator is of the form $\frac{1}{\sqrt{TD}} Y$, and our off-diagonal operator is
 \[ \sum_{k=1}^{TD/d_{a}d_{b}} \frac{1}{TD} Y_{k} \otimes Y_{k}   \]
-By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is of the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} TD}}$, so for constant expansion it suffices that $TD \gg \max_{a} d_{a}^{2}$
+By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is of the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} TD}}$ whp, so for constant expansion it suffices that $TD \gg \max_{a} d_{a}^{2}$
 \end{corollary}
 
 
