@@ -1,0 +1,202 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsthm,mathtools,braket}
+\usepackage{amssymb,bm, hyperref}
+\usepackage{xcolor, float}
+\usepackage[capitalize]{cleveref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corol}[theorem]{Corollary}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{remark}{Remark}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\floatstyle{boxed}\newfloat{Algorithm}{ht}{alg}
+
+\DeclareMathOperator{\Lie}{Lie}
+\DeclareMathOperator{\Lin}{L}
+\DeclareMathOperator{\ope}{op}
+\DeclareMathOperator{\poly}{poly}
+
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+\DeclarePairedDelimiter{\ip}{\langle}{\rangle}
+
+
+\newcommand{\junk}[1]{}
+
+
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\C}{{\mathbb{C}}}
+\newcommand{\ot}{\otimes}
+\newcommand{\mat}{\operatorname{Mat}}
+\newcommand{\op}{\operatorname{op}}
+\newcommand{\ch}{\operatorname{ch}}
+\newcommand{\cut}{\operatorname{cut}}
+\newcommand{\vol}{\operatorname{vol}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\N}{{\mathbb{N}}}
+\renewcommand{\vec}{\bm}
+\newcommand{\Z}{{\mathbb{Z}}}
+\renewcommand{\S}{\mathbb{S}}
+
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\Pr}{\mathbb{P}}
+
+\newcommand\eps{\varepsilon}
+
+\newcommand\cN{\mathcal{N}}
+\newcommand\FF{\mathcal{F}}
+\newcommand\HH{\mathcal{H}}
+\newcommand\GG{\mathcal{G}}
+\newcommand\SL{\operatorname{SL}}
+\newcommand\PD{\operatorname{PD}}
+\newcommand\Herm{\operatorname{Herm}}
+\newcommand\Sym{\operatorname{Sym}}
+\newcommand\GL{\operatorname{GL}}
+\newcommand\TT{\mathcal{T}}
+\newcommand\PP{\mathcal{P}}
+\newcommand\tr{\operatorname{Tr}}
+\newcommand\rk{\operatorname{rk}}
+\newcommand\RR{\mathcal{R}}
+\newcommand\CC{\mathcal{C}}
+\newcommand\BB{\mathcal{B}}
+\newcommand\II{\mathcal{I}}
+\renewcommand\AA{\mathcal{A}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand\AP{\mathcal{AP}}
+
+\newcommand{\eqdef}{:=}
+\newcommand{\maps}{\colon}
+\newcommand{\ale}{\lesssim}
+\newcommand{\age}{\gtrsim}
+\newcommand{\CF}[1]{{\color{purple}[CF: #1]}}
+\newcommand{\AR}[1]{{\color{orange}[AR: #1]}}
+\newcommand{\RMO}[1]{{\color{red}[RMO: #1]}}
+\newcommand{\MW}[1]{{\color{red}[MW: #1]}}
+\newcommand{\TODO}[1]{{\color{blue}[TODO: #1]}}
+
+\crefname{Algorithm}{Algorithm}{Algorithms}
+
+
+\title{Logarithmic sample complexity for dense matrix normal models and bla bla}
+\author{Cole Franks, Rafael Oliveira, Akshay Ramachandran, Michael Walter}
+\date{February 2020}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+
+\section{Old stuff}
+
+\subsection{Different Inner Product}
+
+\begin{definition}
+For desired marginals $\{R_{a}^{2}\}_{a \in [k]}$ (assume for now $R$ are Hermitian though we can pick different square roots if required), define inner product
+\[ \langle Z, Y \rangle_{R} := \sum_{a} \langle R_{a} Z R_{a}^{*}, Y \rangle \]
+\[ \|Z\|_{R}^{2} := \langle Z, Z \rangle_{R} = \sum_{a} \|R_{a} Z_{a}\|_{F}^{2}   \]
+\end{definition}
+
+We restate the projective likelihood function and define gradient and Hessian in this metric:
+
+\begin{definition}
+\[ f_{\vec X}(\Theta_1, \dots, \Theta_n) = \log \left\langle \sum_{i \in [n]} X_{i} X_{i}^{*},  \bigotimes_{a \in [k]} \Theta_a \right\rangle - \sum_{a \in [k]} \frac{1}{d_a} \log\det \Theta_a  \]
+Also $\rho := \sum_{i} X_{i} X_{i}^{*}$ and $\{\rho^{S}\}_{S \subseteq [k]}$ are marginals.
+\end{definition}
+
+\begin{fact}
+\[ (\nabla f(I))_{a} = d_{a} \rho^{\{a\}} - I_{a}  \]
+\end{fact}
+\begin{proof}
+We can define $\nabla f$ dually as $\forall Z: \langle \nabla f(I), Z \rangle_{R} := \partial_{t=0} f(e^{tZ})$
+\[ \partial_{t=0} f(e^{t Z_{a}}) = \partial_{t=0} \langle \rho, I_{\overline{a}} \otimes e^{tZ_{a}}  \rangle - \partial_{t=0} \frac{1}{d_{a}} \log\det e^{t Z_{a}}  \]
+\[ = \left\langle \rho^{\{a\}} - \frac{1}{d_{a}} I_{a}, Z_{a} e^{t Z_{a}} \right\rangle|_{t=0} = \left\langle R_{a}^{-1} \left( \rho^{\{a\}} - \frac{1}{d_{a}} I_{a} \right) R_{a}^{-1}, Z_{a} \right\rangle_{R}   \]
+
+Similarly we define the Hessian as
+\[ \partial_{s=t=0} f(e^{tZ_{a} + sY_{b}}) = \langle \rho, \{ I_{\overline{a}} \otimes Z_{a}, I_{\overline{b}} \otimes Y_{b} \} \rangle   \]
+\[ \implies (\nabla^{2} f(I))_{aa} = \langle R_{a}^{-1} \rho^{\{a\}} R_{a}^{-1}, \{Z, Y\} \rangle_{R}    \]
+\[ \implies (\nabla^{2} f(I))_{ab} = \langle \rho^{\{a,b\}}, Z \otimes Y \rangle   \]
+\end{proof}
+
+\AR{Not sure how to define Hessian. I think I'd like the Hessian to be
+\[  \sum_{a} E_{aa} \otimes (1 \pm \epsilon) I + \sum_{a \neq b} E_{ab} \otimes \pm \lambda  \]
+for some small $\epsilon,\lambda$. Then the Hessian will be $1-\epsilon - (k-1) \lambda$-strongly convex. }
+
+
+
+\begin{lemma} [Restatement of \cref{lem:convex-ball}]
+Let $f$ be geodesically convex everywhere. All the below quantities are wrt metric $\langle \cdot, \cdot \rangle_{R}$. Assume $f$ and $\lambda$-strongly geodesically convex ball of radius $\kappa$ about $I$; further assume the geodesic gradient satisfies $\|\nabla f(I)\|_{R} = \eps < \lambda \kappa$. Then there is an optimizer within an $\eps/\lambda$-ball.
+\end{lemma}
+\begin{proof} [Proof of \cref{lem:convex-ball}]
+The proof is exactly the same except the following:
+\[ g'(0) = \langle \nabla f(I), Z \rangle_{R} \geq - \|\nabla f(I)\|_{R} \|Z\|_{R} \geq - \eps     \]
+\end{proof}
+
+\begin{remark}
+Note the perturbation lemma then gives the following strategy. By Cole's lemma, we have that $c \|\nabla f(I)\|_{R} \geq \|\nabla f(I)\|_{op}$. If we can say the same thing for the optimizer $Z$, then it is enough for $\lambda \kappa \geq \Omega(1/c) > \eps$ and we can improve sample complexity to $nD > c \max_{a} d_{a}^{2}$.
+
+A similar thing is true if we can show the above inequality for the gradient flow for $\log \max_{a} d_{a}$ time.
+\end{remark}
+
+\begin{lemma}
+$\lambda$-strong convexity is a sufficient condition for fast convergence of the gradient flow:
+\[ - \partial_{t=0} \|\nabla f(e^{-t\nabla f(I)})\|_{R}^{2} = -\partial_{t=0}^{2} f(e^{-t\nabla f(I)}) = \langle \nabla^{2} f, \nabla f \otimes \nabla f \rangle \geq \lambda \|\nabla f\|_{R}^{2}    \]
+\AR{Not sure how to write the third term above, the inner product with Hessian}
+\end{lemma}
+
+\subsection{Old proof of \cref{thm:tensor-convexity}}
+
+
+\begin{proof} [Proof of \cref{thm:tensor-convexity}]
+Take any quadratic form of the Hessian for $\{Z_{a} \perp I_{a}\}$:
+\[ \partial_{t=0}^{2} f(e^{t Z}) = \sum_{a} \langle Q^{a}, Z_{a}^{2} \rangle + \sum_{a \neq b} \langle Q^{ab}, Z_{a} \otimes Z_{b} \rangle   \]
+\[ \geq \sum_{a} \lambda_{\min}(Q^{a}) \|Z_{a}\|_{F}^{2} - \sum_{a \neq b} \|Q^{ab} (I-P_{ab})\|_{op} \|Z_{a}\|_{F} \|Z_{b}\|_{F}    \]
+Now we can use our high probability bounds derived above:
+\[ \forall a: Q^{a} \succeq \frac{1-\epsilon}{d_{a}} I_{a}; \hspace{10mm}
+\forall a \neq b: \|Q^{ab} (I-P_{ab})\|_{op} < \frac{\lambda}{\sqrt{d_{a} d_{b}}}   \]
+\[ \implies \partial_{t=0}^{2} f(e^{t Z}) \geq \sum_{a} \frac{1-\eps}{d_{a}} \|Z_{a}\|_{F}^{2} - \sum_{a \neq b} \frac{\lambda}{\sqrt{d_{a} d_{b}}} \|Z_{a}\|_{F} \|Z_{b}\|_{F}  \]
+\[ \geq \sum_{a} \frac{1-\eps+\lambda}{d_{a}} \|Z_{a}\|_{F}^{2} - \lambda \left( \sum_{a} \frac{1}{\sqrt{d_{a}}} \|Z_{a}\|_{F}   \right)^{2}   \]
+\[ \geq \sum_{a} \frac{1-\eps+\lambda}{d_{a}} \|Z_{a}\|_{F}^{2} - k\lambda \sum_{a} \frac{1}{d_{a}} \|Z_{a}\|_{F}^{2} \]
+\[ = (1-\eps-(k-1)\lambda) \|Z\|^{2}    \]
+Choosing $\eps,\lambda$ small enough gives the theorem.
+\end{proof}
+
+\begin{proof}[Proof: \CF{Akshay's conceptual proof of \cref{thm:tensor-convexity}}]
+We can in fact show that $\nabla^{2}$ is well-conditioned using the following:
+\[ -\begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
+\preceq \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}
+\preceq \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
+\]
+%We can rewrite the Hessian using shorthand $\{M_{a}\}$ for the diagonal blocks and $\{M_{ab}\}$ for off-diagonal blocks: \CF{why not just write $\nabla^2_{ab}f$?} \CF{Also, the matrices $E_{aa} \otimes M_a$ are not all of the same size} 
+\\ \AR{Ya $\nabla_{ab}$ notation is fine, just needed something that was a matrix of the right dimensions, so shorthand M was to avoid weird things with $\rho$}
+\\ \AR{It's fine if they're of different sizes, we enumerate the basis of the whole space as $\cup_{a} e_{a} \otimes \{e_{i \in [d_{a}]}\}$ }\\
+\CF{$E_{aa} \otimes \nabla^2_{aa}$ is $k d_a^2 \times k d_a^2$ dimensional. So how does this make sense? Maybe needs to be updated along the lines of the next proof.}
+\[ \nabla^{2} f = \sum_{a} E_{aa} \otimes \nabla^{2}_{aa} + \sum_{a \neq b} E_{ab} \otimes \nabla^{2}_{ab}  \]
+Now we can again use the high-probability bounds derived above: \TODO{actually cref them}
+\begin{align}\nabla^{2}_{aa} \in \frac{1 \pm \eps}{d_{a}}; \hspace{5mm} \forall a \neq b: \|\nabla^{2}_{ab}\|_{op} \leq \frac{\lambda}{\sqrt{d_{a} d_{b}}} \label{eq:expansion-thing}  \end{align}
+\[ \nabla^{2} \preceq \sum_{a} E_{aa} \otimes \left( \frac{1+\eps}{d_{a}} I_{a} \right) + \sum_{a < b} E_{aa} \otimes \left( \frac{\lambda}{d_{a}} I_{a} \right) + E_{bb} \otimes \left( \frac{\lambda}{d_{b}} I_{b} \right)    \]
+\[ \preceq \sum_{a} E_{aa} \otimes \frac{1+\eps+(k-1)\lambda}{d_{a}} I_{a}  \]
+
+The same sequence of inequalities can be reversed to show a lower bound. So in fact we can show the above bounds on blocks shows $1+O(\eps + k \lambda)$-condition number bound on the Hessian in norm $\|\cdot\|_{d}$. 
+\end{proof}
+
+
+
+
+
+%If $\langle \cdot , \cdot \rangle_P$ is the metric at a point $P$, then the new metric $\langle \cdot, \cdot \rangle_{R,P}$ will be given by
+%$$ \langle X, Y \rangle_{R,P} = \langle R^{1/2} X R^{1/2}, R^{1/2} Y R^{1/2} \rangle_{P}.$$
+
+%At the identity the metric takes the form $\langle X, Y \rangle_R = \tr \sqrt{R} X  \sqrt{R} Y $. In particular the length of the geodesic $t\mapsto \sqrt{P}e^{Xt}\sqrt{P}$ for $t \in [0,1]$ is $\langle X, X \rangle_R$.
+
+\bibliographystyle{alpha}
+\bibliography{refs}
+
+\end{document}
