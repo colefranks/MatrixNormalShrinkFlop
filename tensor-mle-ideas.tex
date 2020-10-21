@@ -426,6 +426,42 @@ To bound $\|A\|_{\infty \to \infty} \ll 1/k d_{a}$, we choose $t \ll \frac{\|y\|
 To make this robust to perturbations we could either give a deterministic bound on how a perturbation affects $\|A\|_{\infty \to \infty}$; or we could run the net over all perturbations near $I$ of size $\exp( \sum_{a} d_{a} )$. Either way we should get that $\|\mu\|_{op}$ is decreasing for all time when $nD \sim \Tilde{O}_{k}(\max_{ab} d_{a} d_{b} )$
 
 
+\subsection{Some Remarks on Extensions}
+
+\begin{remark}
+One fantastic thing about Michael's proof of \cref{lem:perturbation} is that it generalizes quite well to a statement about $\|\cdot\|_{p \to p}$. Explicitly, if $\sigma := \|M\|_{p \to p}$, then we have the following bound:
+\[ |\langle v v^{*}, I_{\overline{ab}} \otimes Z_{\pm} \otimes Y_{\pm} \rangle| \leq \sigma \|Z_{\pm} \|_{p} \|Y_{\pm} \|_{q}    \]
+\[ \|Z_{+}\|_{p} \|Y_{+}\|_{q} + \|Z_{+}\|_{p} \|Y_{-}\|_{q} + \|Z_{-}\|_{p} \|Y_{+}\|_{q} + \|Z_{-}\|_{p} \|Y_{-}\|_{q} \]
+\[ \leq (2 \|Z_{+}\|_{p}^{p} + 2 \|Z_{-}\|_{p}^{p})^{1/p} (2 \|Y_{+}\|_{q}^{q} + 2 \|Y_{-}\|_{q}^{q})^{1/q} = 2 \|Z\|_{p} \|Y\|_{q}    \]
+\AR{We may want to use this result for $p \in \{1,\infty\}$ to bound the confounding forces towards $\|\mu\|_{op}$.} 
+\end{remark}
+
+We can in fact move a more general statement quite simply. This line of reasoning also applies to the operator on $\perp I$, but shows why Pisier's theorem is spectacular. 
+
+\begin{fact}
+$\|\nabla_{ab}^{2}\|_{op \to op} = \|\rho^{a}\|_{op}$, and dually $\|\nabla_{ab}^{2}\|_{1 \to 1} = \|\rho^{b}\|_{op}$. 
+\end{fact}
+\begin{proof}
+\[ \|\nabla_{ab}^{2}\|_{op \to op} = \sup_{\|X\|_{op} \leq 1, \|Y\|_{1} \leq 1} \langle \rho^{ab}, X \otimes Y \rangle  \]
+Choose $U,V$ to be the bases of the optimizers. Then restricting to this torus, we really have a matrix $M_{ij} := \langle \rho^{ab}, u_{i} u_{i}^{*} \otimes v_{j} v_{j}^{*} \rangle$, and $\|\nabla_{ab}^{2}\|_{op \to op} = \|M\|_{\infty \to \infty}$ for this basis. 
+\[ \|M\|_{\infty \to \infty} = \max_{i} \sum_{j} |M_{ij}| = \max_{i} \sum_{j} \langle \rho^{ab}, u_{i} u_{i}^{*} \otimes v_{j} v_{j}^{*} \rangle = \max_{i} \langle u_{i} u_{i}^{*}, \rho^{a} \rangle \leq \|\rho^{a}\|_{op}   \]
+The second statement follows since $(\nabla_{ab}^{2})^{*} = \nabla_{ba}^{2}$. 
+\end{proof}
+
+\begin{theorem} [Riesz-Thorin]
+Given $\|T\|_{p_{0} \to q_{0}}, \|T\|_{p_{1} \to q_{1}} < \infty$, we have the following log convexity: if $\frac{1}{p_{\theta}} = \frac{\theta}{p_{0}} + \frac{1-\theta}{p_{1}}$ and $q_{\theta}$ defined similarly:
+\[ \|T\|_{p_{\theta} \to q_{\theta}} \leq \|T\|_{p_{0} \to q_{0}}^{\theta} \|T\|_{p_{1} \to q_{1}}^{1-\theta}    \]
+\end{theorem}
+
+\begin{corollary}
+For $p_{0} = 1, p_{1} = \infty$, we have $\frac{1}{p} = \frac{1/p}{1} + \frac{1-1/p}{\infty}$. 
+\[ \|\nabla_{ab}^{2}\|_{p \to p} \leq \|\nabla_{ab}^{2}\|_{1 \to 1}^{1/p} \|\nabla_{ab}^{2}\|_{op \to op}^{1-1/p} = \|\rho^{b}\|_{op}^{1/p} \|\rho^{a}\|_{op}^{1-1/p}  \]
+\end{corollary}
+
+In our setting, we actually care about $\nabla^{2} (I-P)$ where we project away from $I$. As shown elsewhere, for matrices we can actually establish improved bounds by a net argument, which by the above corollary shows that a matrix of $\chi^{2}$ variables actually shrinks all $p$-norms of inputs $\perp 1$. Unfortunately the net argument for the quantum setting loses an important dimension factor. Further, for the low sample regime, it can be shown that the above projection does not improve the bound $\|\nabla_{ab}^{2} (I-P)\|_{op \to op}$. This is another reason Pisier's result is astonishing. 
+
+
+
 \subsection{A silly trick}
 
 The same idea that showed monotonicity of the operator norm for operator scaling can be used to very slightly improve the required expansion for $k$-tensors. In the proper norm, our gradient direction will be $\{d_{a} \mu^{a}\}$, and so to use robustness we need a bound on perturbation size $\sum_{a} d_{a} \|\mu^{a}\|_{op} =: \sum_{a} \eps_{a}$ for all time. Let $\eps := \max_{a} \eps_{a}$. In the proper norm, we have weak two sided bounds at any time:

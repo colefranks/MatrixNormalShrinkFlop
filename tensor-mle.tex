@@ -617,7 +617,7 @@ for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d
 \CF{most important part of hessian is this $\rho^{ab}$ part ( a channel), discuss that there are three ways to look at it: partial trace, channel (cpm), and natural representation. Cite Pisier in channel form. In appendix prove by translating to channel}
 We now state our strong convexity result at the identity:
 
-\begin{theorem}
+\begin{theorem}\label{thm:tensor-convexity}
 Let $\vec X = (X_1,\dots,X_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples is $N \geq k^2 \max_{a=1}^k d_a^2 / D$. Then, with probability at least $1 - 1/{\color{red}\poly(D)}$, 
 $$ (1 - (k - 1) \lambda - k \eps^2 - \eps) I \preceq 
  \nabla^2 f_{\vec X} \preceq (1 + (k - 1) \lambda + k \eps^2 + \eps) I.$$
@@ -647,12 +647,19 @@ For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kr
 By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is of the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}}$, so for constant expansion it suffices that $nD \gg \max_{a} d_{a}^{2}$
 \end{corollary}
 
+\CF{The old proof had the following sentence: 
+Now we can again use the high-probability bounds derived above: \TODO{actually cref them}
+\begin{align}\nabla^{2}_{aa} f \in \frac{1 \pm \eps}{d_{a}}; \hspace{5mm} \forall a \neq b: \|\nabla^{2}_{ab}\|_{op} \leq \frac{\lambda}{\sqrt{d_{a} d_{b}}}. \label{eq:expansion-thing}  \end{align}
+This needs to be elaborated.
+}
+
 
 \begin{proof}[\CF{new } Proof of \cref{thm:tensor-convexity}] 
 We use the inequality for block matrices 
 $$\begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix} \succeq - \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}$$ for any $A,B \succeq 0$ such that $\|A^{-1/2} K B^{-1/2}\|_{op} \leq 1,$ which may be proved by computing Schur complements. We will sequentially apply this inequality to the block matrix $\nabla^2 f$ until we are left with a diagonal matrix. 
 
-To implement this, we proceed to bound the operator norm of $\nabla^2_{ab} f: \Sym^0_{d_b} \to \Sym^0_{d_a}$ for $a \neq b$. The gradient is the sum of two terms; the first of which is dominated in the Loewner ordering by the map $Z \mapsto \sqrt{d_a d_b} \tr_2 \rho^{(a,b)} (I \ot Z)$. By \cref{eq:expansion-thing} (\CF{which needs to actually be proved}), with probability $\CF{good}$, the map $Z \to \tr_2 \rho^{(a,b)} (I \ot Z)$ has operator norm at most $\lambda/\sqrt{d_a d_b}$ restricted to traceless $Z$. The second term defines the quadratic form $Y,Z \mapsto \sqrt{d_a d_b} (\tr Y \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr)$. As $\|\rho^{(a)} - I_{d_a}/{d_a}\|_{op} \leq \eps/d_a, \|\rho^{(b)} - I_{d_b}/d_b\|_{op} \leq \eps/d_b$, we have
+To implement this, we proceed to bound the operator norm of $\nabla^2_{ab} f: \Sym^0_{d_b} \to \Sym^0_{d_a}$ for $a \neq b$. The gradient is the sum of two terms; the first of which is dominated in the Loewner ordering by the map $Z \mapsto \sqrt{d_a d_b} \tr_2 \rho^{(a,b)} (I \ot Z)$. By \cref{eq:expansion-thing} (\CF{which needs to actually be proved}), with probability $\CF{good}$, the map $Z \to \tr_2 \rho^{(a,b)} (I \ot Z)$ has operator norm at most $\lambda/\sqrt{d_a d_b}$ restricted to traceless $Z$. The second term defines the quadratic form 
+$$Y,Z \mapsto \sqrt{d_a d_b} (\tr Y \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr).$$ As $\|\rho^{(a)} - I_{d_a}/{d_a}\|_{op} \leq \eps/d_a, \|\rho^{(b)} - I_{d_b}/d_b\|_{op} \leq \eps/d_b$, we have
 $$(\tr Y \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr) \leq \eps^2 \|Z\|_F\|Y\|_F /\sqrt{d_a d_b} .$$
 Taken together, $\|\nabla^2_{ab} f\|_{op} \leq (\lambda + \eps^2)$ as a map $\Sym^0_{d_b} \to \Sym^0_{d_a}$. We first apply the inequality to the upper-left two by two block, or $a = 1$ and $b = 2$. By our bound on $\|\nabla^2_{ab} f\|_{op}$, we may take 
    $A = (\lambda + \eps^2) I_{d_1}$, $B = (\lambda + \eps^2)I_{d_2}$ to find that 
@@ -729,49 +736,15 @@ Here the suppressed constants are $\leq 7$. Therefore the difference between Hes
 \end{proof}
 
 
-
-\subsubsection{Some Remarks on Extensions}
-
-\begin{remark}
-One fantastic thing about the above proof is that it generalizes quite well to a statement about $\|\cdot\|_{p \to p}$. Explicitly, if $\sigma := \|M\|_{p \to p}$, then we have the following bound:
-\[ |\langle v v^{*}, I_{\overline{ab}} \otimes Z_{\pm} \otimes Y_{\pm} \rangle| \leq \sigma \|Z_{\pm} \|_{p} \|Y_{\pm} \|_{q}    \]
-\[ \|Z_{+}\|_{p} \|Y_{+}\|_{q} + \|Z_{+}\|_{p} \|Y_{-}\|_{q} + \|Z_{-}\|_{p} \|Y_{+}\|_{q} + \|Z_{-}\|_{p} \|Y_{-}\|_{q} \]
-\[ \leq (2 \|Z_{+}\|_{p}^{p} + 2 \|Z_{-}\|_{p}^{p})^{1/p} (2 \|Y_{+}\|_{q}^{q} + 2 \|Y_{-}\|_{q}^{q})^{1/q} = 2 \|Z\|_{p} \|Y\|_{q}    \]
-\AR{We may want to use this result for $p \in \{1,\infty\}$ to bound the confounding forces towards $\|\mu\|_{op}$.} 
-\end{remark}
-
 After one more simple lemma, we will be ready to prove our second strong convexity result, \cref{lem:perturbation}.
 \begin{lemma} [Lemma 3.6 in \TODO{cite KLR}; \CF{where is this used?}]
 \AR{The amount we lose in robustness is related to the worst quadratic form in the whole space (not $\perp I$) since we have to break up into $\pm$ parts. }
 \[ \|\nabla_{ab}^{2}\|_{F \to F}^{2} \leq \|\nabla_{aa}^{2}\|_{F \to F} \|\nabla_{bb}^{2}\|_{F \to F}   \]
 \end{lemma}
 \begin{proof}
-New simple proof: by convexity we know $\begin{pmatrix} \nabla_{aa}^{2} & \nabla_{ab}^{2} \\ \nabla_{ba}^{2} & \nabla_{bb}^{2}  \end{pmatrix} \succeq 0$. The result follows from e.g. Schur complements. 
+\AR{New simple proof:} By convexity we know $\begin{pmatrix} \nabla_{aa}^{2} & \nabla_{ab}^{2} \\ \nabla_{ba}^{2} & \nabla_{bb}^{2}  \end{pmatrix} \succeq 0$. The result follows from e.g. Schur complements. 
 \end{proof}
 
-We can in fact move a more general statement quite simply. This line of reasoning also applies to the operator on $\perp I$, but shows why Pisier's theorem is spectacular. 
-
-\begin{fact}
-$\|\nabla_{ab}^{2}\|_{op \to op} = \|\rho^{a}\|_{op}$, and dually $\|\nabla_{ab}^{2}\|_{1 \to 1} = \|\rho^{b}\|_{op}$. 
-\end{fact}
-\begin{proof}
-\[ \|\nabla_{ab}^{2}\|_{op \to op} = \sup_{\|X\|_{op} \leq 1, \|Y\|_{1} \leq 1} \langle \rho^{ab}, X \otimes Y \rangle  \]
-Choose $U,V$ to be the bases of the optimizers. Then restricting to this torus, we really have a matrix $M_{ij} := \langle \rho^{ab}, u_{i} u_{i}^{*} \otimes v_{j} v_{j}^{*} \rangle$, and $\|\nabla_{ab}^{2}\|_{op \to op} = \|M\|_{\infty \to \infty}$ for this basis. 
-\[ \|M\|_{\infty \to \infty} = \max_{i} \sum_{j} |M_{ij}| = \max_{i} \sum_{j} \langle \rho^{ab}, u_{i} u_{i}^{*} \otimes v_{j} v_{j}^{*} \rangle = \max_{i} \langle u_{i} u_{i}^{*}, \rho^{a} \rangle \leq \|\rho^{a}\|_{op}   \]
-The second statement follows since $(\nabla_{ab}^{2})^{*} = \nabla_{ba}^{2}$. 
-\end{proof}
-
-\begin{theorem} [Riesz-Thorin]
-Given $\|T\|_{p_{0} \to q_{0}}, \|T\|_{p_{1} \to q_{1}} < \infty$, we have the following log convexity: if $\frac{1}{p_{\theta}} = \frac{\theta}{p_{0}} + \frac{1-\theta}{p_{1}}$ and $q_{\theta}$ defined similarly:
-\[ \|T\|_{p_{\theta} \to q_{\theta}} \leq \|T\|_{p_{0} \to q_{0}}^{\theta} \|T\|_{p_{1} \to q_{1}}^{1-\theta}    \]
-\end{theorem}
-
-\begin{corollary}
-For $p_{0} = 1, p_{1} = \infty$, we have $\frac{1}{p} = \frac{1/p}{1} + \frac{1-1/p}{\infty}$. 
-\[ \|\nabla_{ab}^{2}\|_{p \to p} \leq \|\nabla_{ab}^{2}\|_{1 \to 1}^{1/p} \|\nabla_{ab}^{2}\|_{op \to op}^{1-1/p} = \|\rho^{b}\|_{op}^{1/p} \|\rho^{a}\|_{op}^{1-1/p}  \]
-\end{corollary}
-
-In our setting, we actually care about $\nabla^{2} (I-P)$ where we project away from $I$. As shown elsewhere, for matrices we can actually establish improved bounds by a net argument, which by the above corollary shows that a matrix of $\chi^{2}$ variables actually shrinks all $p$-norms of inputs $\perp 1$. Unfortunately the net argument for the quantum setting loses an important dimension factor. Further, for the low sample regime, it can be shown that the above projection does not improve the bound $\|\nabla_{ab}^{2} (I-P)\|_{op \to op}$. This is another reason Pisier's result is astonishing. 
 
 
 \subsection{Proof of \cref{thm:tensor-frobenius}}
