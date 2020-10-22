@@ -134,7 +134,9 @@ $\langle \cdot, \cdot \rangle$ is the $\ell_2$ inner product of vectors
 \item $\Sym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite, $\Sym_d^0$ for traceless symmetric, $\PD_d^1$ for $\det=1$ positive definite? $\mathcal{S}?$ $\mathfrak{S}?$. 
 \item $\Theta$ for big tensor product pd concentration matrix, $\Theta_a$ for individual pd's.
 \item I'm going to call $\SL = \oplus \SL_{d_i}, \PD = \oplus \PD_{d_i}^1, \Sym = \oplus \Sym_{d_i}^0$. Explain somewhere how $\Sym$ is the tangent space of $\PD$. \MW{Suppressing the $^1$ and $^0$ is a bit confusing I think. Maybe $\operatorname{SPD}$ for $\PD$ with $\det=1$? I still feel that $\Sym$ looks somewhat horrible (with or without subscript, but I am not sure what would be better).}
-\item $\nabla, \nabla^2$ for Riemannian Hessians and gradients, $\nabla_a f$, $\nabla^2_{ab} f$ for components. $\nabla f$ means at the identity.
+\item $G = \prod_{a=1}^k \SL_{d_a}$, $P = \prod_{a=1}^k \PD_{d_a}^1$, and $S = \bigoplus_{a=1}^k \Sym_{d_a}^0$.
+
+\item $\nabla, \nabla^2$ for Riemannian Hessians and gradients, $\nabla_a f$, $\nabla^2_{ab} f$ for components. $\nabla f$ means at the identity. $\|\nabla^2_{ab}f\|_{op}:=\|\nabla^2_{ab}f\|_{F\to F}$.
 \item $C, c$ large (resp. small) constants that change line to line.
 \item $\rho^{(a)}$, $\rho^{(ab)}$ for marginals.
 \item $I$ for an identity matrix, $I_a$ for the $d_a \times d_a$ identity matrix
@@ -191,7 +193,7 @@ for $i \in \{1,2\}$ in $O(\TODO{\log(1/\eps)})$ iterations with probability at l
 One may wonder why in the above theorems we consider the distances for the individual tensor factors and not the covariance matrix itself, but tight bounds for the covariance matrix itself follow from the above bounds (apart from the logarithmic factor in the matrix normal case and a constant factor in general).
 
 %=============================================================================
-\section{Tensor normal models}
+\section{The tensor normal model}
 %=============================================================================
 \TODO{In this section, \dots}
 
@@ -264,7 +266,8 @@ We denote by $AB=(A_1B_1,\dots,A_kB_k)$ and $e^Z=(e^{Z_1},\dots,e^{Z_k})$ the co
 %\CF{technically $\Theta(t)$ is ill-defined} Then, the curve $\Theta(t) = A^T e^{tZ} A = (A_1^T e^{t Z_1} A_1, \dots, A_k^T e^{t Z_k} A_k)$ is a geodesic or `straight line' through $\Theta = A^T A$ with direction~$Z$ for a natural Riemannian metric on~$P$~\cite{bhatia2009positive}.
 This motivates the following definition.
 
-\begin{definition}[Geodesic convexity] Let $\Theta \in P$. The \emph{exponential map} $\exp_\Theta:S \to P$ at $\Theta$ is defined by 
+\begin{definition}[Geodesic convexity]\label{dfn:g-convexity}
+ Let $\Theta \in P$. The \emph{exponential map} $\exp_\Theta:S \to P$ at $\Theta$ is defined by 
 $$ \exp_\Theta(Z) = \Theta^{1/2} e^{\sqrt{\vec d}Z} \Theta^{1/2},$$
 where $\sqrt{\vec d} Z$ denotes the componentwise product $(\sqrt{d_1} Z_1, \dots, \sqrt{d_k}Z_k)$.
 The \emph{geodesics} through $\Theta$ are the curves $t\mapsto \exp_\Theta(tZ)$ for $t \in \R$. These curves are in fact geodesics, or ``straight lines,'' through $\Theta$ for a natural Riemannian metric on~$P$~\cite{bhatia2009positive}.
@@ -682,23 +685,37 @@ The last thing we need is a lower bound on $\nabla^2_{aa} f.$ This operator is a
 
 We now show our second strong convexity result, namely that if our function is strongly convex at the origin then it is also strongly convex in an operator norm ball about the origin.
 
-
-\begin{lemma}\label{lem:perturbation}
+\CF{I think right now this doesn't use our convention in \cref{dfn:g-convexity} which leads to the Hessian in \cref{lem:hessian} }
+\begin{lemma}\label{lem:perturbation-old}
 If $f$ is $\lambda$-strongly convex at $I$ and $\forall a: d_{a} \|(\nabla f)_{a}\|_{op} \leq \eps \ll 1/k$, then for $Z$ such that $\forall a: \|Z_{a}\|_{op} \leq \delta_{a} \ll 1/k$, the function $f$ at $e^{Z}$ is $\lambda - O(k \sum_{a} \delta_{a})$ strongly convex.
+\end{lemma}
+
+\begin{lemma}\label{lem:perturbation} \CF{what I think this lemma should say} Let $f = f_{\vec X}$. There is a constant $c > 0$ such that if $f$ is $\lambda$-strongly convex at $I$ and that $\|(\nabla f)_{a}\|_{op} \leq \eps \leq c k ^{-1}$ for all $ a \in [k]$, then the function $f$ is 
+$$ \lambda - O(k \sum \|Z_a\|_{op})$$
+-strongly convex at $Z \in P$ provided $\|Z_a\|_{op} \leq c k^{-1}$ for all $a \in [k]$. \CF{just define operator norm on $P$?}
+
 \end{lemma}
 
 
 
 
-The bulk of the work goes towards an intermediate lemma showing that each block of the Hessian changes fairly little on the operator ball.
+The bulk of the work goes towards an intermediate lemma showing that each block $\nabla^2_{ab} f$ of the Hessian changes fairly little on the operator norm ball.
 
 
-\begin{lemma}\label{lem:block-perturbation}
+\begin{lemma}\label{lem:block-perturbation-old}
 For perturbation $v \to \otimes_{a} e^{\delta_{a}} \cdot v =: w$ where $\forall a: \|\delta_{a}\|_{op} \ll 1$, and let $\{\sigma_{1}^{ab}, \sigma_{2}^{ab}\}$ be the matrix norm $\|\cdot\|_{F} \to \|\cdot\|_{F}$ and matrix norm on subspace $\perp$ to $(I,I)$ for each bipartite part respectively:
 \[ \forall a,b: \sigma_{2}^{ab}(w w^{*}) - \sigma_{2}^{ab}(v v^{*}) \leq O \left( \sum_{a} \|\delta_{a}\|_{op}  \right) \sigma_{1}^{ab}(v v^{*})   \]
 The same is true for the diagonal blocks.
 \end{lemma}
-\begin{proof}
+
+\CF{I think we are safe to just say $\|\nabla^2_{ab}f\|_{op}:=\|\nabla^2_{ab}f\|_{F\to F}$.}
+
+\begin{lemma}\label{lem:block-perturbation}\CF{prev lemma in new notation; not married to the $\Pi$'s.} Let $\Pi$ denote the projection to the traceless matrices. There is a constant $c>0$ such that if $\|Z_a\|_{op} \leq c $ for all $a \in [k]$ we have
+$$\|\nabla^2_{ab} f(Z) \circ \Pi\|_{op} - \|\nabla^2_{ab}f(I)  \circ \Pi \|_{op}  = O\left( \sum_{a \in [k]} \|Z_a\|_{op} \|\nabla^2_{ab}f\|_{op}\right)$$
+for all $a,b \in [k]$.
+
+\end{lemma}
+\begin{proof}\CF{needs to be updated to new notation. At this point in the paper, there's no $M$.}
 To lower bound the diagonal block, we just need a spectral lower bound on $\{\rho^{a}\}$, since $\langle vec(X), \nabla_{aa}^{2} (vec(X)) \rangle := \langle \rho^{a}, X^{2} \rangle$.
 \[ \| e^{\delta_{a}} \rho^{a} e^{\delta_{a}} - Q_{a}\|_{op} \leq O(\|\delta_{a}\|_{op}) \|Q_{a}\|_{op}   \]
 Now we address a perturbation on $b \neq a$. For a spectral lower bound, we choose test $Z \succeq 0$ and let $\delta := e^{2\delta_{b}} - I$:
@@ -758,7 +775,7 @@ We next bound $\kappa$. By \cref{thm:tensor-convexity}, with failure probability
 By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\max_a \sqrt{d_a} $ there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$. The inequality follows from our second assumption on $\eps$. Because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) = O( \|\log \widehat{\Theta}\|_{\vec d} \sqrt{d_a})  \leq C \delta \sqrt{k d_a}.$ Applying $\eps = \delta \sqrt{k \max d_a}$ completes the proof.
 \end{proof}
 
-\section{Matrix normal models}\label{sec:matrix-normal}
+\section{Improvements for the matrix normal model}\label{sec:matrix-normal}
 We now prove \cref{thm:matrix-normal}, an improvement to \cref{thm:tensor-frobenius} in the case $k=2$. The results for $k = 2$ are stronger in that the MLE can be shown to be close to the truth in operator norm rather than the looser Frobenius norm, and that the failure probability is inverse exponential rather than inverse polynomial.
 
 
