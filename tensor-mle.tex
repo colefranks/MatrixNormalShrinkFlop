@@ -1132,7 +1132,7 @@ Choosing $t \sim \sqrt{d_{a}}$ and $nD \gtrsim d_{a}^{2} \log^{2} d_{a}$ gives t
 \subsection{Pisier's proof of expansion}
 We have shown above that the diagonal blocks $\nabla^{2}_{aa} f \approx I$ \CF{ I got rid of the $1/{d_a}$ factor to reflect \cref{lem:hessian}, and changed $I_{a}$ to $I$ because it's an $I$ on matrices not $\CC^{d_a}$, we should figure out how to denote it properly at some point}. Therefore to show strong convexity we would like to bound the off-diagonal blocks
 \[ \forall X \perp I_{a},Y \perp I_{b}:  \langle \nabla^{2}_{ab} f, X \otimes Y \rangle \leq \lambda \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}}   \]
-\CF{based on new convention (see \cref{dfn:g-convexity,lem:hessian}) we may want to omit the denominator $\sqrt{d_{a} d_{b}}$ now.} Pisier's method of proof uses the trace method along with Gaussian concentration in Banach spaces.
+\CF{based on new convention (see \cref{dfn:g-convexity,lem:hessian}) we may want to omit the denominator $\sqrt{d_{a} d_{b}}$ now.} \AR{I think it makes sense to implement our new notational convention in the corollary we use, but this proof is more clear if it's about standard gaussian imo} Pisier's method of proof uses the trace method along with Gaussian concentration in Banach spaces.
 
 \begin{theorem}
 We denote a random gaussian matrix $Y \in \R^{m \times n}$ (for $m < n$) with $Y_{ij} \sim \mathcal{N}(0,1)$, we have the following bound
@@ -1142,42 +1142,54 @@ We denote a random gaussian matrix $Y \in \R^{m \times n}$ (for $m < n$) with $Y
 %
 
 \begin{theorem} [Pisier]
-Let $Y$ be a standard gaussian in \CF{real, finite dimensional?} Banach space with norm $\|\cdot\|$. Then $\|Y\|$ is subgaussian with parameter $\sigma^{2} := \sup \{ \E \langle Y, \xi \rangle^{2} \mid \|\xi\|_{*} \leq 1 \}; $ that is
+Let $Y$ be a standard gaussian in \CF{real, finite dimensional?} \AR{Theorem 1.5 in https://link.springer.com/chapter/10.1007/BFb0076302 gives the only constraint that the Banach space is separable} Banach space with norm $\|\cdot\|$. Then $\|Y\|$ is subgaussian with parameter $\sigma^{2} := \sup \{ \E \langle Y, \xi \rangle^{2} \mid \|\xi\|_{*} \leq 1 \}; $ that is
 \[ \Pr [ | \|Y\| - \E \|Y\| | \geq t ] \leq \exp \left( - \frac{\Omega(t^{2})}{\sigma^{2}} \right).   \]
 \end{theorem}
 
-\begin{corollary}\CF{is there a constraint on $p$?}
-\[ (\E \|Y\|^{p})^{\frac{1}{p}} \leq \E \|Y\| + O \left( \sqrt{\frac{p}{\sigma^{2}}} \right)   \]
+\begin{corollary}\CF{is there a constraint on $p$?} \AR{Added $p \geq 2$ constraint}
+\[ \forall p \geq 2: (\E \|Y\|^{p})^{\frac{1}{p}} \leq \E \|Y\| + O \left( \sqrt{\frac{p}{\sigma^{2}}} \right)   \]
 \end{corollary}
+
+\begin{theorem}[Non-commutative H\"older inequality]\label{thm:holder}
+For $p = 2^{m}$, we have the following (Holder's type) inequality
+\[ |\tr[\prod_{i=1}^{p} A_{i}]| \leq \prod_{i=1}^{p} \|A_{i}\|_{p}   \]
+\end{theorem}
+\begin{proof}
+\AR{Tao notes} Done by induction. Note if $A$ are Hermitian, there is a simple tensor trick which allows us to prove the above for all $p \in \mathbb{N}$.
+\end{proof}
 
 % Appendix - \url{https://arxiv.org/abs/1209.2059}
 % Theorem 16.6 - \url{https://arxiv.org/pdf/1101.4195.pdf}
 \CF{$P$ already is used to mean a subset of positive-definite matrices. Maybe just switch to $\Pi$, a projection to traceless matrices.} \CF{at some point include a sentence about the setting of $\alpha_i$, maybe in the main body}\CF{choose different letter for $n$}
 \begin{theorem}
-Let $P: \mat(m) \to \mat(m)$ denote the projection onto the span of $I_m$, and $\{Y_{i}\}$ are iid standard gaussians in $\mat(n,m)$ \CF{ I changed it to $\mat$ because this needs to go $\mat(m) \to \mat(n)$ if I understand correctly}. There is a constant $c > 0$ such that for all $m \leq n$ we have 
-\[ \|\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i} (I - P) \|_{op} \leq O \left( \sqrt{\sum_{i} \alpha_{i}^{2}} \right) \left( \E \|Y\|_{op} \right)^{2} \]
-with probability at least $ 1- (mn)^{-c}$.
+Let $\Pi: \mat(m) \to \mat(m)$ denote the projection onto the span of $I_m$, and $\{Y_{i}\}$ are iid standard gaussians in $\mat(n,m)$ \CF{ I changed it to $\mat$ because this needs to go $\mat(m) \to \mat(n)$ if I understand correctly}. There is a constant $c > 0$ such that for all $m \leq n$ we have 
+\[ \|\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i} (I - \Pi) \|_{op} \leq O \left( \sqrt{\sum_{i} \alpha_{i}^{2}} \right) \left( \E \|Y\|_{op} \right)^{2} \]
+with probability at least $ 1- (mn)^{-c}$. \AR{Should we put the best possible}
 \end{theorem}
 \begin{proof}
-We first begin by a standard symmetrization trick to linearize: if $Y$ is a standard Gaussian on $\mat(n,m)$, then $\E Y \otimes Y (I-P) = 0$ because for any $X \in \mat(m)$ we have
-$$ \E Y \otimes Y (I-P)X = \E (Y \ot Y) X - \frac{1}{m} (\tr X) \E (Y \ot Y)  I_m,$$ which is easily calculated to be zero.
-
+We first begin by a standard symmetrization trick to linearize: if $Y$ is a standard Gaussian on $\mat(n,m)$, then by an entrywise calculation, 
+\[ \E Y \otimes Y (I - \Pi) = vec(I_{n}) vec(I_{m})^{*} (I - \Pi) = 0  \]
+%then $\E Y \otimes Y (I-\Pi) = 0$ because for any $X \in \mat(m)$ we have
+%$$ \E Y \otimes Y (I-\Pi)X = \E (Y \ot Y) X - \frac{1}{m} (\tr X) \E (Y \ot Y)  I_m,$$ which is easily calculated to be zero.
 %\CF{I think $m$ and $n$ are switched below}
-%\[\E Y^{*} I_{m} Y = m I_{n} \implies \E Y \otimes Y (I-P) = 0\]
+%\[\E Y^{*} I_{m} Y = m I_{n} \implies \E Y \otimes Y (I-P) = vec(I_{n}) vec(I_{m})^{*} (I-\Pi) = 0\]
 Therefore we can add the like term with new iid variables $\{Z_{i}\}$: using Jensen's inequality and the convexity of the operator norm, we have
-\[ \E_{Y} \|\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i} (I - P)\|_{op} \leq \E_{Y,Z} \|\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i} (I - P) - \sum_{i=1}^{N} \alpha_{i} Z_{i} \otimes Z_{i} (I - P) \|_{op}  \] Now note $(Y,Z)$ has the same distribution as $(\frac{Y+Z}{\sqrt{2}},\frac{Y-Z}{\sqrt{2}})$, so the right-hand-side of the above equation is
-\[\frac{1}{2}\E_{Y,Z} \|\sum_{i=1}^{N} \alpha_{i} (Y_{i}+Z_{i}) \otimes (Y_{i}+Z_{i}) (I - P) - \sum_{i=1}^{N} \alpha_{i} (Y_{i}-Z_{i}) \otimes (Y_{i}-Z_{i}) (I - P) \|_{op}  \]
-\[ = \E_{Y,Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} (I-P) + \alpha_{i} Z_{i} \otimes Y_{i} (I-P)\|_{op}  \]
+\[ \E_{Y} \|\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i} (I - \Pi)\|_{op} \leq \E_{Y,Z} \|\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i} (I - \Pi) - \sum_{i=1}^{N} \alpha_{i} Z_{i} \otimes Z_{i} (I - \Pi) \|_{op}  \] Now note $(Y,Z)$ has the same distribution as $(\frac{Y+Z}{\sqrt{2}},\frac{Y-Z}{\sqrt{2}})$, so the right-hand-side of the above equation is
+\[\frac{1}{2}\E_{Y,Z} \|\sum_{i=1}^{N} \alpha_{i} (Y_{i}+Z_{i}) \otimes (Y_{i}+Z_{i}) (I - \Pi) - \sum_{i=1}^{N} \alpha_{i} (Y_{i}-Z_{i}) \otimes (Y_{i}-Z_{i}) (I - \Pi) \|_{op}  \]
+\[ = \E_{Y,Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} (I-\Pi) + \alpha_{i} Z_{i} \otimes Y_{i} (I-\Pi)\|_{op}  \]
 \[ \leq 2 \E_{Y,Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}\|_{op}.   \]
-Note we've lost the projection $(I-P)$, but the left and right Kraus operators are independent. Now we apply the trace method to this operator \CF{quick blurb about what the trace method is to motivate calculation, basically what's done at the end of the proof}
+Note we've lost the projection, but the left and right operators are independent. The operator norm is not continuous, but is well-approximated by the Schatten $p$-norm for a high enough $p$; and we can control these norms using concentration of moments of gaussians.  
+\CF{quick blurb about what the trace method is to motivate calculation, basically what's done at the end of the proof. } \AR{Ok with this blurb?}
 \begin{align*} \E \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}\|_{2p}^{2p} & = \E \tr [ \left( \sum_{ij} \alpha_{i} \alpha_{j} Y_{i}^{*} Y_{j} \otimes Z_{i}^{*} Z_{j} \right)^{p} ]  \\
 & = \sum_{\vec{i},\vec{j} \in [N]^{p}} \alpha^{\vec{i}} \alpha^{\vec{j}} \E_{Y,Z} \tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} \otimes Z_{i_{1}}^{*} Z_{j_{1}} ... Z_{i_{p}}^{*} Z_{j_{p}}  ]   \\
 & = \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{Y} \tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) (\E_{Z} \tr [ Z_{i_{1}}^{*} Z_{j_{1}} ... Z_{i_{p}}^{*} Z_{j_{p}} ] )  
 \end{align*}
-Here we used independence of $(Y,Z)$. We eventually want to charge to a term $\E \|\sum_{i} \alpha_{i} Y_{i}\|_{op}$. We note expectations of gaussian monomials are non-zero and positive iff the polynomial is even. Therefore the coefficient $\alpha^{\vec{i}} \alpha^{\vec{j}}$ from all non-vanishing terms is a square, and in particular positive. So we can upper bound each term individually by the nc-Holder inequality (\cref{thm:holder} below) to find that 
+Here we used independence of $(Y,Z)$. We eventually want to charge to $\E \|\sum_{i} \alpha_{i} Y_{i}\|_{op}$. First note that expectations of gaussian monomials are non-zero and positive iff the polynomial is even. Therefore the coefficient $\alpha^{\vec{i}} \alpha^{\vec{j}}$ from all non-vanishing terms is a square, and in particular positive. So we can upper bound each term individually by the nc-Holder inequality (\cref{thm:holder}) to find: 
 \[\E \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}\|_{2p}^{2p} \leq \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{Y} \tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) ( \E_{Z} \|Z_{i_{1}}^{*}\|_{2p} ... \|Z_{j_{p}}\|_{2p} )  \]
 
-We now consider the term $\E_{Z} \|Z_{i_{1}}^{*}\|_{2p} ... \|Z_{j_{p}}\|_{2p}$. It need not factor into a product of $2p$ expectations because some of the indices may be repeated. However, for an index $j$ repeated $k$ times we can use that $\E \|Z_j\|_{2p}^{k} = \E (\|Z_j\|_{2p}^{2p})^{k/{2p}} \leq  ( \E \|Z_j\|_{2p}^{2p} )^{k/2p}$ for $k \leq 2p$ by Jensen's inequality. Thus, we can collect like terms together:
+We now consider the term $\E_{Z} \|Z_{i_{1}}^{*}\|_{2p} ... \|Z_{j_{p}}\|_{2p}$. Different indeces are independent, and for a repeated index we use Jensen's: 
+\[ \forall k \leq 2p: \E \|Z_j\|_{2p}^{k} = \E (\|Z_j\|_{2p}^{2p})^{k/{2p}} \leq  ( \E \|Z_j\|_{2p}^{2p} )^{k/2p}  \] 
+Thus, we can collect like terms:
 
 %\begin{claim}
 %For iid $\{Z_{i}\}$ and $\sum_{i} q_{i} = 2p$:
@@ -1192,23 +1204,17 @@ In the last step we used unitary invariance of the joint $\{Y_{i}\}$ distributio
 Finally we can bound $\|\cdot\|_{op}$ by the trace method. Assume wlog (by homogeneity) that $\|\alpha\|_{2} = 1$:
 \[ \E_{Y,Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} \|_{op}^{2p} \leq \E_{Y,Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} \|_{2p}^{2p} \]
 \[ \leq ( \E \|Y\|_{2p}^{2p} )^{2} \leq ( m \E \|Y\|_{op}^{2p} )^{2} \leq m^{2} \left(\E \|Y\|_{op} + O(\sqrt{\frac{2p}{\sigma^{2}}})  \right)^{4p} \]
-Here we've used that $\|Y\|_{op}$ is subgaussian with parameter $\sigma^{2} \leq \E \|Y\|_{op}^{2} \sim (\sqrt{m} + \sqrt{n})^{2}$ up to universal constants.
-So again assuming $\|\alpha\|_{2} = 1$ and choosing $p = 2c \log mn$, where the only constraint is \CF{where's this constraint come from?}
-\[  p^{3/2} \ll (\sqrt{m} + \sqrt{n})^{2} \iff c \ll \frac{(\sqrt{m} + \sqrt{n})^{4/3}}{\log mn}  \] 
-We can apply Markov's to get the bound: \CF{define probabilty macro}
-\[ \Pr[\|\sum_{i} \alpha_{i} Y_{i} \otimes Y_{i}\|_{op} \geq e (\E \|Y\|_{op})^{2} ] \leq    \frac{m^{2} (\E\|Y\|_{op} + \frac{C \sqrt{2p}}{\sqrt{m} + \sqrt{n}} )^{4p}}{e^{2p} (\E\|Y\|_{op})^{4p}}    \]
-\[ \leq \frac{m^{2} \exp \left(\frac{C' p^{3/2}}{(\sqrt{m} + \sqrt{n})^{2}} \right) }{e^{2p}} < \frac{1}{(mn)^{c}}  \]
+Here we've used that $\|Y\|_{op}$ is subgaussian with parameter 
+\[ \sigma^{2} = \sup_{\xi} \frac{ \E \langle Y, \xi \rangle^{2} }{\|\xi\|_{1}^{2}} = \E Y_{11}^{2} \sup_{\xi} \frac{ \|\xi\|_{F}^{2} }{\|\xi\|_{1}^{2} } = 1     \]
+So again assuming $\|\alpha\|_{2} = 1$ and choosing $p = 2c \log mn$, where we choose $c$ at the end, we can apply Markov's to get the bound: \CF{define probabilty macro}
+\[ \Pr[\|\sum_{i} \alpha_{i} Y_{i} \otimes Y_{i}\|_{op} \geq e (\E \|Y\|_{op})^{2} ] \leq    \frac{m^{2} (\E\|Y\|_{op} + C \sqrt{p} )^{4p}}{e^{2p} (\E\|Y\|_{op})^{4p}}    \]
+Now we choose $c \ll \frac{(\sqrt{m} + \sqrt{n})^{2/3}}{\log mn}$ so that $p \leq p^{3/2} \leq o(\E \|Y\|_{op})$ and we bound: 
+\[ (\E \|Y\|_{op} + C \sqrt{p})^{4p} = (\E \|Y\|_{op})^{4p} \left(1 + \frac{C \sqrt{p}}{\E \|Y\|_{op}} \right)^{4p} < (\E \|Y\|_{op})^{4p} \exp\left( \frac{4 C p^{3/2}}{\E \|Y\|_{op}} \right)  \]
+This allows us to cancel the $\E \|Y\|_{op}$ and bound the probability:
+\[ \leq \frac{m^{2} \exp \left(\frac{C' p^{3/2}}{\E \|Y\|_{op}} \right) }{e^{2p}} < \frac{1}{(mn)^{c}}  \]
 \end{proof}
 
-\begin{theorem}[Non-commutative H\"older inequality]\label{thm:holder}
-For $p = 2^{m}$, we have the following (Holder's type) inequality
-\[ |\tr[\prod_{i=1}^{p} A_{i}]| \leq \prod_{i=1}^{p} \|A_{i}\|_{p}   \]
-\end{theorem}
-\begin{proof}
-\AR{Tao notes} Done by induction. Note if $A$ are Hermitian, there is a simple tensor trick which allows us to prove the above for all $p \in \mathbb{N}$.
-\end{proof}
-
-\AR{I may have made a calculation error but it seems we could even pick $c \sim \frac{n^{2/3}}{\log n}$ so that we get $\exp(-\frac{n^{2/3}}{\log n})$ failure probability?} \CF{ I agree - let's implement it!}
+\AR{I may have made a calculation error but it seems we could even pick $c \sim \frac{n^{1/3}}{\log mn}$ so that we get $\exp(-\Omega(\frac{n^{1/3}}{\log n}))$ failure probability?} \CF{ I agree - let's implement it!}
 
 \begin{corollary}
 For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kraus operator is of the form $\frac{1}{\sqrt{TD}} Y$, and our off-diagonal operator is
