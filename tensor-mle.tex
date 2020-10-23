@@ -563,7 +563,7 @@ This definition is consistent with \cref{def:single marginal} in the sense that 
 
 \begin{lemma}[Riemannian Hessian]\label{lem:hessian}
 Let $\rho = \sum_{i=1}^n X_i X_i^T / \norm{\vec X}_2^2$.
-Then the Riemannian Hessian $\nabla^2 f_{\vec X}$ at the identity is given by
+Then the Riemannian Hessian $\nabla^2 f_{\vec X}$ at the identity is given by \CF{fix $Y_a$ here}
 \begin{align*}
  \frac{1}{d_a} \langle Y_a,  \left( \nabla^2_{aa} f_{\vec X} \right) Y_a \rangle
 &= \left( \tr \rho^{(a)} Y^2 - \bigl(\tr Y \rho^{(a)}\bigr)^2 \right) \\
@@ -826,98 +826,9 @@ We follow the same structure as the proof of convexity, letting $\{X'_{i} := e^{
 \[ \|\nabla^2 f_{X'} - \nabla^{2} f_{X}\|_{op} \leq C \|\delta\|_{op} \|\{I_{ab}\}_{a,b \in [k]}\|_{op} \leq k C \|\delta\|_{op}  \]
 \end{proof}
 
-\AR{I can fix the $k$-dependency, but I think each $C_{k}$ is $O(k)$ and therefore this one is $O(k^{3})$. Also I'm missing dependence on $\mu$, will look into that later.}
 
 
 \CF{I think right now this doesn't use our convention in \cref{dfn:g-convexity} which leads to the Hessian in \cref{lem:hessian} }
-\begin{lemma}\label{lem:perturbation-old}
-If $f$ is $\lambda$-strongly convex at $I$ and $\forall a: d_{a} \|(\nabla f)_{a}\|_{op} \leq \eps \ll 1/k$, then for $Z$ such that $\forall a: \|Z_{a}\|_{op} \leq \delta_{a} \ll 1/k$, the function $f$ at $e^{Z}$ is $\lambda - O(k \sum_{a} \delta_{a})$ strongly convex.
-\end{lemma}
-
-\begin{lemma}\label{lem:perturbation} \CF{what I think this lemma should say} Let $f = f_{\vec X}$. There is a constant $c > 0$ such that if $f$ is $\lambda$-strongly convex at $I$ and that $\|(\nabla f)_{a}\|_{op} \leq \eps \leq c k ^{-1}$ for all $ a \in [k]$, then the function $f$ is 
-$$ \lambda - O(k \sum \|Z_a\|_{op})$$
--strongly convex at $Z \in P$ provided $\|Z_a\|_{op} \leq c k^{-1}$ for all $a \in [k]$. \CF{just define operator norm on $P$?}
-
-\end{lemma}
-
-
-
-
-The bulk of the work goes towards an intermediate lemma showing that each block $\nabla^2_{ab} f$ of the Hessian changes fairly little on the operator norm ball.
-
-
-\begin{lemma}\label{lem:block-perturbation-old}
-For perturbation $v \to \otimes_{a} e^{\delta_{a}} \cdot v =: w$ where $\forall a: \|\delta_{a}\|_{op} \ll 1$, and let $\{\sigma_{1}^{ab}, \sigma_{2}^{ab}\}$ be the matrix norm $\|\cdot\|_{F} \to \|\cdot\|_{F}$ and matrix norm on subspace $\perp$ to $(I,I)$ for each bipartite part respectively:
-\[ \forall a,b: \sigma_{2}^{ab}(w w^{*}) - \sigma_{2}^{ab}(v v^{*}) \leq O \left( \sum_{a} \|\delta_{a}\|_{op}  \right) \sigma_{1}^{ab}(v v^{*})   \]
-The same is true for the diagonal blocks.
-\end{lemma}
-
-\CF{I think we are safe to just say $\|\nabla^2_{ab}f\|_{op}:=\|\nabla^2_{ab}f\|_{F\to F}$.}
-
-\begin{lemma}\label{lem:block-perturbation}\CF{prev lemma in new notation; not married to the $\Pi$'s.} Let $\Pi$ denote the projection to the traceless matrices. There is a constant $c>0$ such that if $\|Z_a\|_{op} \leq c $ for all $a \in [k]$ we have
-$$\|\nabla^2_{ab} f(Z) \circ \Pi\|_{op} - \|\nabla^2_{ab}f(I)  \circ \Pi \|_{op}  = O\left( \sum_{a \in [k]} \|Z_a\|_{op} \|\nabla^2_{ab}f\|_{op}\right)$$
-for all $a,b \in [k]$.
-
-\end{lemma}
-\begin{proof}\CF{needs to be updated to new notation. At this point in the paper, there's no $M$.}
-To lower bound the diagonal block, we just need a spectral lower bound on $\{\rho^{a}\}$, since $\langle vec(X), \nabla_{aa}^{2} (vec(X)) \rangle := \langle \rho^{a}, X^{2} \rangle$.
-\[ \| e^{\delta_{a}} \rho^{a} e^{\delta_{a}} - Q_{a}\|_{op} \leq O(\|\delta_{a}\|_{op}) \|Q_{a}\|_{op}   \]
-Now we address a perturbation on $b \neq a$. For a spectral lower bound, we choose test $Z \succeq 0$ and let $\delta := e^{2\delta_{b}} - I$:
-\[ \langle e^{\delta_{b}} \rho e^{\delta_{b}} - \rho, I_{\overline{a}} \otimes Z_{a} \rangle
-= \langle \rho, \delta \otimes Z \rangle = \langle Z, V^{*} \delta V \rangle   \]
-Here $V \in \R^{d_{b} \times d_{a}}$ is the matricized version of $\rho$. But now since $Z \succeq 0$, the argument is clear
-\[ \leq \langle Z, V^{*} |\delta| V \rangle \leq \|\delta\|_{op} \langle Z, V^{*} I V \rangle = \|\delta\|_{op} \langle \rho, I_{\overline{a}} \otimes Z \rangle \leq \|\delta\|_{op} \|\rho^{a}\|_{op} \|Z\|_{1}    \]
-
-The argument for the off-diagonal blocks is similar. We first argue the change is small under perturbations just on those parts. 
-\[ \langle vec(Y), M_{v}^{ab}(vec(Z)) \rangle := \langle v v^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle \]
-\[ \langle vec(Y), M_{w}^{ab}(vec(Z)) \rangle := \langle w w^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle\]
-
-\[ \implies M_{w} = (e^{\delta_{b}} \otimes e^{\delta_{b}}) M_{v} (e^{\delta_{a}} \otimes e^{\delta_{a}})   \]
-\[ \implies \|M_{w} - M_{v}\|_{op} \leq O(\|\delta_{a}\|_{op} + \|\delta_{b}\|_{op}) \|M_{v}\|_{op}   \]
-where in the last step we used $\delta \ll 1$.
-\CF{comment things that we wouldn't want to accidentally leave in, as I have done in the next sentence}
-The more difficult part of the argument to see \AR{at least for me} is the change caused be some other part $c \neq a,b$. First we define $\delta := e^{2 \delta_{c}} - I$, and test vectors $Z,Y$:
-\[ \langle w w^{*} - v v^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle = \langle v v^{*}, \delta \otimes Z \otimes Y \rangle  = \langle Z \otimes Y, V^{*} \delta V \rangle \]
-Here $V \in \R^{d_{c} \times d_{a}d_{b}}$ is the matricized version of $v$, i.e. the $k$-th element of $ij$-th column is $(V_{ij})_{k} := v_{ijk}$. Now in order to use our operator norm bounds, we need to deal with cancelations, so we split into positive and negative parts $Z := Z_{+} - Z_{-}, Y := Y_{+} - Y_{-}$:
-\[ |\langle Z \otimes Y, V^{*} \delta V \rangle| \leq |\langle Z_{\pm} \otimes Y_{\pm}, V^{*} \delta V \rangle |  \]
-Now we analyze each of these terms:
-\[ \leq |\langle Z_{\pm} \otimes Y_{\pm}, V^{*} |\delta| V \rangle| \leq \|\delta\|_{op} |\langle Z_{\pm} \otimes Y_{\pm}, V^{*} V \rangle| = \|\delta\|_{op} |\langle v v^{*}, I_{\overline{ab}} \otimes Z_{\pm} \otimes Y_{\pm} \rangle|   \]
-Each of these terms we can bound by $\sigma^{ab}_{1} \|Z\|_{F} \|Y\|_{F}$. So by iterating this argument over all $c$, we get the desired bound.
-\end{proof}
-
-\begin{proof}[Proof of \cref{lem:perturbation}]
-\[ \langle X, \nabla_{aa}^{2} X \rangle = \langle \rho^{a}, X^{2} \rangle \leq \|\rho^{a}\|_{op} \|X^{2}\|_{1} = \|\rho^{a}\|_{op} \|X\|_{F}^{2} \]
-\AR{I am probably wrong on dimension factors here, but it's the right idea}
-By the condition on the gradient \TODO{what condition? cref it}, we have that
-\[ \forall a,b: \|\nabla_{ab}^{2}\|_{op}^{2} \leq \|\nabla_{aa}^{2}\|_{op} \|\nabla_{bb}^{2}\|_{op} = \|\rho^{a}\|_{op} \|\rho^{b}\|_{op} \leq \frac{1+\eps}{d_{a} d_{b}}   \]
-We apply the perturbation lemma to each part sucessively, and if $\delta$ are small enough we can assume this bound holds in weaker form $1+\epsilon \leq 2$ for all iterations. The above lemma shows for each part and any test vectors
-\[ \langle w w^{*} - v v^{*}, I_{\overline{ab}} \otimes \frac{Z}{\|Z\|_{F}} \otimes \frac{Y}{\|Y\|_{F}} \rangle \leq \frac{O( \sum_{a} \delta_{a} )}{\sqrt{d_{a} d_{b}}} =: \frac{\delta}{\sqrt{d_{a} d_{b}}}   \]
-Here the suppressed constants are $\leq 7$. Therefore the difference between Hessians can be bounded
-\[ |\langle Y, \nabla^{2} f(e^{Z}) - \nabla^{2} f(I), Y \rangle|  \leq \delta \left( \sum_{a} \frac{\|Y_{a}\|_{F}^{2}}{d_{a}} + \sum_{a \neq b} \frac{\|Y_{a}\|_{F} \|Y_{b}\|_{F}}{\sqrt{d_{a} d_{b}}} \right) \leq k \delta \|Y\|^{2}   \]
-\end{proof}
-
-
-After one more simple lemma, we will be ready to prove our second strong convexity result, \cref{lem:perturbation}.
-\begin{lemma} [Lemma 3.6 in \TODO{cite KLR}; \CF{where is this used?}]
-\AR{The amount we lose in robustness is related to the worst quadratic form in the whole space (not $\perp I$) since we have to break up into $\pm$ parts. }
-\[ \|\nabla_{ab}^{2}\|_{F \to F}^{2} \leq \|\nabla_{aa}^{2}\|_{F \to F} \|\nabla_{bb}^{2}\|_{F \to F}   \]
-\end{lemma}
-\begin{proof}
-\AR{New simple proof:} By convexity we know $\begin{pmatrix} \nabla_{aa}^{2} & \nabla_{ab}^{2} \\ \nabla_{ba}^{2} & \nabla_{bb}^{2}  \end{pmatrix} \succeq 0$. The result follows from e.g. Schur complements. 
-\end{proof}
-
-
-
-\subsection{Proof of \cref{thm:tensor-frobenius}}
-We are now ready to prove the main result of this section according to the plan outlined in \cref{subsec:outline}.
-\TODO{restate it here?}
-\begin{proof}[Proof of \cref{thm:tensor-frobenius}]By \cref{it:reduce} in \cref{subsec:outline}, it is enough to prove the theorem assuming $\Theta = I$.
-We seek to apply \cref{lem:convex-ball}, so we need $\lambda \kappa > \|\nabla f\|_{\vec d}$, where $\lambda$ is the strong convexity we can maintain in a $\kappa$-ball. Set $\delta = \eps/\max \sqrt{k d_a}$; by our first assumption on $\eps$, we have $N_a \geq C d_a/\delta^2$ for all $a \in [k]$, we may apply \cref{prop:gradient-bound}. Thus, with failure probability $O\left( \sum_a \exp ( - N_a \delta^2)\right)$ we have $\|(\nabla f)_{a}\|_{op} \leq \frac{\delta}{d_{a}}$ for all $a \in [k]$ and so
-\[  \|\nabla f\|_{\vec d}^{2} = \sum_{a} d_{a} \|(\nabla f)_{a}\|_{F}^{2} \leq  k \delta^{2}.  \]
-We next bound $\kappa$. By \cref{thm:tensor-convexity}, with failure probability $\CF{1/poly(D)}$ we have that $f$ is $1-o_{d}(1)$ strongly convex in norm $\|\cdot\|_{\vec d}$ at $I$, and further by \cref{lem:perturbation} $f$ is $1/2$ strongly convex at any point $e^{Z}$ with $\forall a: \|Z_{a}\|_{op} \leq  c/k$ for $c$ a small enough constant. Because $\|Z_a\|_{op} \leq \|Z_a\|_F \leq \sqrt{d_a} \|Z\|_{\vec d},$ we may take $\kappa = c/\max_a \sqrt{d_a}$ and $\lambda = 1/2$.
-
-By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\max_a \sqrt{d_a} $ there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$. The inequality follows from our second assumption on $\eps$. Because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) = O( \|\log \widehat{\Theta}\|_{\vec d} \sqrt{d_a})  \leq C \delta \sqrt{k d_a}.$ Applying $\eps = \delta \sqrt{k \max d_a}$ completes the proof.
-\end{proof}
 
 \section{Improvements for the matrix normal model}\label{sec:matrix-normal}
 We now prove \cref{thm:matrix-normal}, an improvement to \cref{thm:tensor-frobenius} in the case $k=2$. The results for $k = 2$ are stronger in that the MLE can be shown to be close to the truth in operator norm rather than the looser Frobenius norm, and that the failure probability is inverse exponential rather than inverse polynomial.
@@ -1365,6 +1276,99 @@ For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kr
 \[ \sum_{k=1}^{TD/d_{a}d_{b}} \frac{1}{TD} Y_{k} \otimes Y_{k}   \]
 By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is of the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} TD}}$ whp, so for constant expansion it suffices that $TD \gg \max_{a} d_{a}^{2}$
 \end{corollary}
+
+
+\section{Some old}
+
+\begin{lemma}\label{lem:perturbation-old}
+If $f$ is $\lambda$-strongly convex at $I$ and $\forall a: d_{a} \|(\nabla f)_{a}\|_{op} \leq \eps \ll 1/k$, then for $Z$ such that $\forall a: \|Z_{a}\|_{op} \leq \delta_{a} \ll 1/k$, the function $f$ at $e^{Z}$ is $\lambda - O(k \sum_{a} \delta_{a})$ strongly convex.
+\end{lemma}
+
+\begin{lemma}\label{lem:perturbation} \CF{what I think this lemma should say} Let $f = f_{\vec X}$. There is a constant $c > 0$ such that if $f$ is $\lambda$-strongly convex at $I$ and that $\|(\nabla f)_{a}\|_{op} \leq \eps \leq c k ^{-1}$ for all $ a \in [k]$, then the function $f$ is 
+$$ \lambda - O(k \sum \|Z_a\|_{op})$$
+-strongly convex at $Z \in P$ provided $\|Z_a\|_{op} \leq c k^{-1}$ for all $a \in [k]$. \CF{just define operator norm on $P$?}
+
+\end{lemma}
+
+
+
+
+The bulk of the work goes towards an intermediate lemma showing that each block $\nabla^2_{ab} f$ of the Hessian changes fairly little on the operator norm ball.
+
+
+\begin{lemma}\label{lem:block-perturbation-old}
+For perturbation $v \to \otimes_{a} e^{\delta_{a}} \cdot v =: w$ where $\forall a: \|\delta_{a}\|_{op} \ll 1$, and let $\{\sigma_{1}^{ab}, \sigma_{2}^{ab}\}$ be the matrix norm $\|\cdot\|_{F} \to \|\cdot\|_{F}$ and matrix norm on subspace $\perp$ to $(I,I)$ for each bipartite part respectively:
+\[ \forall a,b: \sigma_{2}^{ab}(w w^{*}) - \sigma_{2}^{ab}(v v^{*}) \leq O \left( \sum_{a} \|\delta_{a}\|_{op}  \right) \sigma_{1}^{ab}(v v^{*})   \]
+The same is true for the diagonal blocks.
+\end{lemma}
+
+\CF{I think we are safe to just say $\|\nabla^2_{ab}f\|_{op}:=\|\nabla^2_{ab}f\|_{F\to F}$.}
+
+\begin{lemma}\label{lem:block-perturbation}\CF{prev lemma in new notation; not married to the $\Pi$'s.} Let $\Pi$ denote the projection to the traceless matrices. There is a constant $c>0$ such that if $\|Z_a\|_{op} \leq c $ for all $a \in [k]$ we have
+$$\|\nabla^2_{ab} f(Z) \circ \Pi\|_{op} - \|\nabla^2_{ab}f(I)  \circ \Pi \|_{op}  = O\left( \sum_{a \in [k]} \|Z_a\|_{op} \|\nabla^2_{ab}f\|_{op}\right)$$
+for all $a,b \in [k]$.
+
+\end{lemma}
+\begin{proof}\CF{needs to be updated to new notation. At this point in the paper, there's no $M$.}
+To lower bound the diagonal block, we just need a spectral lower bound on $\{\rho^{a}\}$, since $\langle vec(X), \nabla_{aa}^{2} (vec(X)) \rangle := \langle \rho^{a}, X^{2} \rangle$.
+\[ \| e^{\delta_{a}} \rho^{a} e^{\delta_{a}} - Q_{a}\|_{op} \leq O(\|\delta_{a}\|_{op}) \|Q_{a}\|_{op}   \]
+Now we address a perturbation on $b \neq a$. For a spectral lower bound, we choose test $Z \succeq 0$ and let $\delta := e^{2\delta_{b}} - I$:
+\[ \langle e^{\delta_{b}} \rho e^{\delta_{b}} - \rho, I_{\overline{a}} \otimes Z_{a} \rangle
+= \langle \rho, \delta \otimes Z \rangle = \langle Z, V^{*} \delta V \rangle   \]
+Here $V \in \R^{d_{b} \times d_{a}}$ is the matricized version of $\rho$. But now since $Z \succeq 0$, the argument is clear
+\[ \leq \langle Z, V^{*} |\delta| V \rangle \leq \|\delta\|_{op} \langle Z, V^{*} I V \rangle = \|\delta\|_{op} \langle \rho, I_{\overline{a}} \otimes Z \rangle \leq \|\delta\|_{op} \|\rho^{a}\|_{op} \|Z\|_{1}    \]
+
+The argument for the off-diagonal blocks is similar. We first argue the change is small under perturbations just on those parts. 
+\[ \langle vec(Y), M_{v}^{ab}(vec(Z)) \rangle := \langle v v^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle \]
+\[ \langle vec(Y), M_{w}^{ab}(vec(Z)) \rangle := \langle w w^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle\]
+
+\[ \implies M_{w} = (e^{\delta_{b}} \otimes e^{\delta_{b}}) M_{v} (e^{\delta_{a}} \otimes e^{\delta_{a}})   \]
+\[ \implies \|M_{w} - M_{v}\|_{op} \leq O(\|\delta_{a}\|_{op} + \|\delta_{b}\|_{op}) \|M_{v}\|_{op}   \]
+where in the last step we used $\delta \ll 1$.
+\CF{comment things that we wouldn't want to accidentally leave in, as I have done in the next sentence}
+The more difficult part of the argument to see \AR{at least for me} is the change caused be some other part $c \neq a,b$. First we define $\delta := e^{2 \delta_{c}} - I$, and test vectors $Z,Y$:
+\[ \langle w w^{*} - v v^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle = \langle v v^{*}, \delta \otimes Z \otimes Y \rangle  = \langle Z \otimes Y, V^{*} \delta V \rangle \]
+Here $V \in \R^{d_{c} \times d_{a}d_{b}}$ is the matricized version of $v$, i.e. the $k$-th element of $ij$-th column is $(V_{ij})_{k} := v_{ijk}$. Now in order to use our operator norm bounds, we need to deal with cancelations, so we split into positive and negative parts $Z := Z_{+} - Z_{-}, Y := Y_{+} - Y_{-}$:
+\[ |\langle Z \otimes Y, V^{*} \delta V \rangle| \leq |\langle Z_{\pm} \otimes Y_{\pm}, V^{*} \delta V \rangle |  \]
+Now we analyze each of these terms:
+\[ \leq |\langle Z_{\pm} \otimes Y_{\pm}, V^{*} |\delta| V \rangle| \leq \|\delta\|_{op} |\langle Z_{\pm} \otimes Y_{\pm}, V^{*} V \rangle| = \|\delta\|_{op} |\langle v v^{*}, I_{\overline{ab}} \otimes Z_{\pm} \otimes Y_{\pm} \rangle|   \]
+Each of these terms we can bound by $\sigma^{ab}_{1} \|Z\|_{F} \|Y\|_{F}$. So by iterating this argument over all $c$, we get the desired bound.
+\end{proof}
+
+\begin{proof}[Proof of \cref{lem:perturbation}]
+\[ \langle X, \nabla_{aa}^{2} X \rangle = \langle \rho^{a}, X^{2} \rangle \leq \|\rho^{a}\|_{op} \|X^{2}\|_{1} = \|\rho^{a}\|_{op} \|X\|_{F}^{2} \]
+\AR{I am probably wrong on dimension factors here, but it's the right idea}
+By the condition on the gradient \TODO{what condition? cref it}, we have that
+\[ \forall a,b: \|\nabla_{ab}^{2}\|_{op}^{2} \leq \|\nabla_{aa}^{2}\|_{op} \|\nabla_{bb}^{2}\|_{op} = \|\rho^{a}\|_{op} \|\rho^{b}\|_{op} \leq \frac{1+\eps}{d_{a} d_{b}}   \]
+We apply the perturbation lemma to each part sucessively, and if $\delta$ are small enough we can assume this bound holds in weaker form $1+\epsilon \leq 2$ for all iterations. The above lemma shows for each part and any test vectors
+\[ \langle w w^{*} - v v^{*}, I_{\overline{ab}} \otimes \frac{Z}{\|Z\|_{F}} \otimes \frac{Y}{\|Y\|_{F}} \rangle \leq \frac{O( \sum_{a} \delta_{a} )}{\sqrt{d_{a} d_{b}}} =: \frac{\delta}{\sqrt{d_{a} d_{b}}}   \]
+Here the suppressed constants are $\leq 7$. Therefore the difference between Hessians can be bounded
+\[ |\langle Y, \nabla^{2} f(e^{Z}) - \nabla^{2} f(I), Y \rangle|  \leq \delta \left( \sum_{a} \frac{\|Y_{a}\|_{F}^{2}}{d_{a}} + \sum_{a \neq b} \frac{\|Y_{a}\|_{F} \|Y_{b}\|_{F}}{\sqrt{d_{a} d_{b}}} \right) \leq k \delta \|Y\|^{2}   \]
+\end{proof}
+
+
+After one more simple lemma, we will be ready to prove our second strong convexity result, \cref{lem:perturbation}.
+\begin{lemma} [Lemma 3.6 in \TODO{cite KLR}; \CF{where is this used?}]
+\AR{The amount we lose in robustness is related to the worst quadratic form in the whole space (not $\perp I$) since we have to break up into $\pm$ parts. }
+\[ \|\nabla_{ab}^{2}\|_{F \to F}^{2} \leq \|\nabla_{aa}^{2}\|_{F \to F} \|\nabla_{bb}^{2}\|_{F \to F}   \]
+\end{lemma}
+\begin{proof}
+\AR{New simple proof:} By convexity we know $\begin{pmatrix} \nabla_{aa}^{2} & \nabla_{ab}^{2} \\ \nabla_{ba}^{2} & \nabla_{bb}^{2}  \end{pmatrix} \succeq 0$. The result follows from e.g. Schur complements. 
+\end{proof}
+
+
+
+\subsection{Proof of \cref{thm:tensor-frobenius}}
+We are now ready to prove the main result of this section according to the plan outlined in \cref{subsec:outline}.
+\TODO{restate it here?}
+\begin{proof}[Proof of \cref{thm:tensor-frobenius}]By \cref{it:reduce} in \cref{subsec:outline}, it is enough to prove the theorem assuming $\Theta = I$.
+We seek to apply \cref{lem:convex-ball}, so we need $\lambda \kappa > \|\nabla f\|_{\vec d}$, where $\lambda$ is the strong convexity we can maintain in a $\kappa$-ball. Set $\delta = \eps/\max \sqrt{k d_a}$; by our first assumption on $\eps$, we have $N_a \geq C d_a/\delta^2$ for all $a \in [k]$, we may apply \cref{prop:gradient-bound}. Thus, with failure probability $O\left( \sum_a \exp ( - N_a \delta^2)\right)$ we have $\|(\nabla f)_{a}\|_{op} \leq \frac{\delta}{d_{a}}$ for all $a \in [k]$ and so
+\[  \|\nabla f\|_{\vec d}^{2} = \sum_{a} d_{a} \|(\nabla f)_{a}\|_{F}^{2} \leq  k \delta^{2}.  \]
+We next bound $\kappa$. By \cref{thm:tensor-convexity}, with failure probability $\CF{1/poly(D)}$ we have that $f$ is $1-o_{d}(1)$ strongly convex in norm $\|\cdot\|_{\vec d}$ at $I$, and further by \cref{lem:perturbation} $f$ is $1/2$ strongly convex at any point $e^{Z}$ with $\forall a: \|Z_{a}\|_{op} \leq  c/k$ for $c$ a small enough constant. Because $\|Z_a\|_{op} \leq \|Z_a\|_F \leq \sqrt{d_a} \|Z\|_{\vec d},$ we may take $\kappa = c/\max_a \sqrt{d_a}$ and $\lambda = 1/2$.
+
+By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\max_a \sqrt{d_a} $ there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$. The inequality follows from our second assumption on $\eps$. Because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) = O( \|\log \widehat{\Theta}\|_{\vec d} \sqrt{d_a})  \leq C \delta \sqrt{k d_a}.$ Applying $\eps = \delta \sqrt{k \max d_a}$ completes the proof.
+\end{proof}
+
 
 
 %If $\langle \cdot , \cdot \rangle_P$ is the metric at a point $P$, then the new metric $\langle \cdot, \cdot \rangle_{R,P}$ will be given by
