@@ -1229,9 +1229,9 @@ For $p = 2^{m}$, we have the following (Holder's type) inequality
 % Theorem 16.6 - \url{https://arxiv.org/pdf/1101.4195.pdf}
 \CF{$P$ already is used to mean a subset of positive-definite matrices. Maybe just switch to $\Pi$, a projection to traceless matrices.} \CF{at some point include a sentence about the setting of $\alpha_i$, maybe in the main body}\CF{choose different letter for $n$}
 \begin{theorem}
-Let $\Pi: \mat(m) \to \mat(m)$ denote the projection onto the span of $I_m$, and $\{Y_{i}\}$ are iid standard gaussians in $\mat(n,m)$ \CF{ I changed it to $\mat$ because this needs to go $\mat(m) \to \mat(n)$ if I understand correctly}. There is a constant $c > 0$ such that for all $m \leq n$ we have 
-\[ \|\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i} (I - \Pi) \|_{op} \leq O \left( \sqrt{\sum_{i} \alpha_{i}^{2}} \right) \left( \E \|Y\|_{op} \right)^{2} \]
-with probability at least $ 1- \exp(-c(m+n))$. \AR{Should we put the best possible}
+Let $\Pi: \mat(m) \to \mat(m)$ denote the projection onto the span of $I_m$, and $\{Y_{i}\}$ are iid standard gaussians in $\mat(n,m)$ \CF{ I changed it to $\mat$ because this needs to go $\mat(m) \to \mat(n)$ if I understand correctly}. There are constants $c,C > 0$ such that for all $m \leq n$ we have 
+\[ \|\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i} (I - \Pi) \|_{op} \leq C t^{2} \|\alpha\|_{2} \left( \E \|Y\|_{op} \right)^{2} \]
+with probability at least $ 1- t^{-c(m+n)}$. 
 \end{theorem}
 \begin{proof}
 We first begin by a standard symmetrization trick to linearize: if $Y$ is a standard Gaussian on $\mat(n,m)$, then by an entrywise calculation, 
@@ -1274,18 +1274,18 @@ Finally we can bound $\|\cdot\|_{op}$ by the trace method. Assume wlog (by homog
 Here we've used that $\|Y\|_{op}$ is subgaussian with parameter 
 \[ \sigma^{2} = \sup_{\xi} \frac{ \E \langle Y, \xi \rangle^{2} }{\|\xi\|_{1}^{2}} = \E Y_{11}^{2} \sup_{\xi} \frac{ \|\xi\|_{F}^{2} }{\|\xi\|_{1}^{2} } = 1     \]
 So again assuming $\|\alpha\|_{2} = 1$, we can apply Markov's to get the bound: \CF{define probabilty macro}
-\[ \Pr[\|\sum_{i} \alpha_{i} Y_{i} \otimes Y_{i}\|_{op} \geq (2e \E \|Y\|_{op})^{2} ] \leq    \frac{m^{2} (\E\|Y\|_{op} + C \sqrt{p} )^{4p}}{(2e \E\|Y\|_{op})^{4p}}    \]
+\[ \Pr[\|\sum_{i} \alpha_{i} Y_{i} \otimes Y_{i}\|_{op} \geq (2t \E \|Y\|_{op})^{2} ] \leq    \frac{m^{2} (\E\|Y\|_{op} + C \sqrt{p} )^{4p}}{(2t \E\|Y\|_{op})^{4p}}    \]
 Now we choose $C\sqrt{p} \leq \E \|Y\|_{op} = \sqrt{m} + \sqrt{n}$, i.e. $p = \left( \frac{\sqrt{m} + \sqrt{n}}{C} \right)^{2}$: 
-\[ \leq \frac{m^{2} (2\E \|Y\|_{op})^{4p}}{(2e \E \|Y\|_{op})^{4p}} \leq \frac{m^{2}}{\exp(\frac{4}{C^{2}} (\sqrt{m} + \sqrt{n})^{2})}    \]
+\[ \leq \frac{m^{2} (2\E \|Y\|_{op})^{4p}}{(2t \E \|Y\|_{op})^{4p}} \leq \frac{m^{2}}{\exp(\frac{4 \log t}{C^{2}} (\sqrt{m} + \sqrt{n})^{2})}    \]
 The statement follows by $m \leq n$. 
 \end{proof}
 
 \AR{I may have made a calculation error but it seems we could even pick $c \sim \frac{n^{1/3}}{\log mn}$ so that we get $\exp(-\Omega(\frac{n^{1/3}}{\log n}))$ failure probability?} \CF{ I agree - let's implement it!}
 
 \begin{corollary}
-For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kraus operator is of the form $\frac{1}{\sqrt{TD}} Y$, and our off-diagonal operator is
-\[ \sum_{k=1}^{TD/d_{a}d_{b}} \frac{1}{TD} Y_{k} \otimes Y_{k}   \]
-By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is of the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} TD}}$ whp, so for constant expansion it suffices that $TD \gg \max_{a} d_{a}^{2}$
+For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our $n$ samples give Kraus operators of the form $\frac{1}{\sqrt{nD}} Y$, and our off-diagonal operator is
+\[ \sum_{i=1}^{nD/d_{a}d_{b}} \frac{1}{nD} Y_{i} \otimes Y_{i}   \]
+The norm $\|\cdot\|_{0}$ on its restriction to $\Sym_{d_{b}}^{0} \to \Sym_{d_{a}}^{0}$ is less than the quantity in the theorem, which is on the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}}$ whp, so for constant expansion it suffices that $nD \gg \max_{a} d_{a}^{2}$
 \end{corollary}
 
 
