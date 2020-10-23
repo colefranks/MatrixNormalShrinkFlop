@@ -737,7 +737,7 @@ Recall from \cref{lem:hessian} that $\frac{1}{d_{a}}\langle Y_{a}, \nabla^{2}_{a
  |\langle \rho_{X'}^{a} - \rho_{X}^{a}, Y^{2} \rangle| 
  &\leq \sum_{j=1}^{k} |\langle \rho_{X_{j}}^{(a)} - \rho_{X_{j-1}}^{(a)}, Y^{2} \rangle| 
 \underset{\ref{atoaaRobustness},\;\ref{btoaaRobustness}}{\leq} \sum_{j=1}^{k}  C\|\delta_{j}\|_{op} \|\rho_{X_{j-1}}^{(a)}\|_{op} \|Y^{2}\|_{1} \\
-& \leq \left( \prod_{j=1}^k (1+C\|\delta_{j}\|_{op}) - 1 \right) \|\rho_{X}^{(a)}\|_{op} \|Y\|_{F}^{2} \leq C'_{k} \|\delta\|_{op} \|\rho_{X}^{(a)}\|_{op} \|Y\|_{F}^{2}.   \end{align*}
+& \leq \left( \prod_{j=1}^k (1+C\|\delta_{j}\|_{op}) - 1 \right) \|\rho_{X}^{(a)}\|_{op} \|Y\|_{F}^{2} \leq C' \|\delta\|_{op} \|\rho_{X}^{(a)}\|_{op} \|Y\|_{F}^{2}.   \end{align*}
 We next bound the rank-one term $\langle \rho_{X}^{(a)}, Y \rangle^{2}$:
 \[ |\langle \rho_{X'}^{(a)}, Y \rangle^{2} - \langle \rho_{X}^{(a)}, Y \rangle^{2}| = |\langle \rho_{X'}^{(a)}, Y \rangle - \langle \rho_{X}^{(a)}, Y \rangle| |\langle \rho_{X'}^{(a)}, Y \rangle + \langle \rho_{X}^{(a)}, Y \rangle|    \]
 \[ \leq C' \|\delta\|_{op} (2+C' \|\delta\|_{op}) (\|\rho_{X}^{(a)}\|_{op} \|Y\|_{1})^{2} \leq (d_{a} \|\rho_{X}^{(a)}\|_{op} C'' \|\delta\|_{op}) \|\rho_{X}^{(a)}\|_{op} \|Y\|_{F}^{2}       \]
@@ -760,7 +760,7 @@ For input $\rho_{X}$ and fixed $a,b$, define
 \end{definition}
 
 \begin{lemma} \label{inftyto2}
-$\|H_{X}^{ab} f(I)\|_{F \to F}^{2} \leq \|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op}$
+$\|H_{X}^{ab}\|_{F \to F}^{2} \leq \|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op}$
 \end{lemma}
 \begin{proof}
 This was already in KLR and we have two new proofs: one by convexity, and one by Riesz-Thorin. \AR{The proofs are in some other file, we can add it if we like}
