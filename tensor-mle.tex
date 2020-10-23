@@ -700,14 +700,14 @@ There is a constant $c>0$ such that the following holds. For input $\{X_{i}\}$ a
 
 Letting $\delta' := e^{\delta} - I_{d_{a}}$, we can bound $\|(e^{\delta})_{a} X\|_{2} \in \|X\|_{2}(1 \pm \|\delta'\|_{op})$ \CF{what is $X$ and is $2$-norm Euclidean here?} so let $\|(e^{\delta})_{a} X\|_{2}^{-2} = \|X\|_{2}^{-2} (1 + \eta)$; note that $|\eta| = O(\|\delta\|_{op})$ provided $c$ is small enough. Assuming without loss of generality that $\|Z\|_{1} = 1$, we have \CF{added $a$ subscript on $(I + \delta');$ please check}
 \[ | \langle Z_{a}, (1+\eta) (I+\delta')_a \rho_{X} (I+\delta')_a - \rho_{X} \rangle | \]
-\[ \leq (2\|\delta'\|_{op} + |\eta| + O(\|\delta\|_{op}^{2}) \|\rho^{(a)}\|_{op} \|Z\|_{1}    \]
+\[ \leq (\|\delta'\|_{op}(2 + \|\delta\|_{op}) + |\eta|(1+3\|\delta'\|_{op})) \|\rho^{(a)}\|_{op} \|Z\|_{1}    \]
 \[ = O(\|\delta\|_{op}) \|\rho^{(a)}\|_{op}    \]
 Here we used that $\|\delta\|_{op} \leq c$.
 \end{proof}
 
 \CF{ I think we should combine these lemmas into a single one with two items.}
 \begin{lemma} \label{btoaaRobustness}
-For input $\{X_{i}\}$ and perturbation $\|\delta\|_{op} \ll 1$ giving $\{X'_{i} := (e^{\delta})_{b} X_{i} \}$, there is a universal constant $C$ (different from above):
+For input $\{X_{i}\}$ and perturbation $\|\delta\|_{op} \ll 1$ giving $\{X'_{i} := (e^{\delta})_{b} X_{i} \}$ for $b \neq a$, there is a universal constant $C$ (different from above):
 \[ \|\rho_{X'}^{a} - \rho_{X}^{a}\|_{op} \leq C \|\delta\|_{op} \|\rho_{X}^{a}\|_{op}      \]
 \end{lemma}
 \begin{proof} 
@@ -736,15 +736,15 @@ Recall from \cref{lem:hessian} that $\frac{1}{d_{a}}\langle Y_{a}, \nabla^{2}_{a
 \begin{align*}
  |\langle \rho_{X'}^{a} - \rho_{X}^{a}, Y^{2} \rangle| 
  &\leq \sum_{j=1}^{k} |\langle \rho_{X_{j}}^{(a)} - \rho_{X_{j-1}}^{(a)}, Y^{2} \rangle| 
-\underset{\ref{atoaaRobustness},\;\ref{btoaaRobustness}}{\leq} \sum_{j=1}^{k} (1+ C\|\delta_{j}\|_{op}) \|\rho_{X_{j-1}}^{(a)}\|_{op} \|Y^{2}\|_{1} \\
-& < k \prod_{j=1}^k (1+C\|\delta_{j}\|_{op}) \|\rho_{X}^{(a)}\|_{op} \|Y\|_{F}^{2} \leq C'_{k} \|\delta\|_{op} \|\rho_{X}^{(a)}\|_{op} \|Y\|_{F}^{2}.   \end{align*}
+\underset{\ref{atoaaRobustness},\;\ref{btoaaRobustness}}{\leq} \sum_{j=1}^{k}  C\|\delta_{j}\|_{op} \|\rho_{X_{j-1}}^{(a)}\|_{op} \|Y^{2}\|_{1} \\
+& \leq \left( \prod_{j=1}^k (1+C\|\delta_{j}\|_{op}) - 1 \right) \|\rho_{X}^{(a)}\|_{op} \|Y\|_{F}^{2} \leq C'_{k} \|\delta\|_{op} \|\rho_{X}^{(a)}\|_{op} \|Y\|_{F}^{2}.   \end{align*}
 We next bound the rank-one term $\langle \rho_{X}^{(a)}, Y \rangle^{2}$:
 \[ |\langle \rho_{X'}^{(a)}, Y \rangle^{2} - \langle \rho_{X}^{(a)}, Y \rangle^{2}| = |\langle \rho_{X'}^{(a)}, Y \rangle - \langle \rho_{X}^{(a)}, Y \rangle| |\langle \rho_{X'}^{(a)}, Y \rangle + \langle \rho_{X}^{(a)}, Y \rangle|    \]
-\[ \leq C'_{k} \|\delta\|_{op} (2+C'_{k} \|\delta\|_{op}) (\|\rho_{X}^{(a)}\|_{op} \|Y\|_{1})^{2} \leq (d_{a} \|\rho_{X}^{(a)}\|_{op} C''_{k} \|\delta\|_{op}) \|\rho_{X}^{(a)}\|_{op} \|Y\|_{F}^{2}       \]
-So assuming $d_{a} \|\rho_{X}^{(a)}\|_{op} \leq O(1)$, this is some some fixed function of $k$. 
+\[ \leq C' \|\delta\|_{op} (2+C' \|\delta\|_{op}) (\|\rho_{X}^{(a)}\|_{op} \|Y\|_{1})^{2} \leq (d_{a} \|\rho_{X}^{(a)}\|_{op} C'' \|\delta\|_{op}) \|\rho_{X}^{(a)}\|_{op} \|Y\|_{F}^{2}       \]
+So assuming $d_{a} \|\rho_{X}^{(a)}\|_{op} \leq O(1)$, this is some fixed constant. 
 
 In toto this gives the corollary:
-\[ \frac{1}{d_{a}}\|\nabla^{2}_{aa} f(e^{\delta}) - \nabla^{2}_{aa} f(I)\|_{op} \leq (C'_{k} + C''_{k}) \|\delta\|_{op} \|\rho_{X}^{(a)}\|_{op}    \]
+\[ \frac{1}{d_{a}}\|\nabla^{2}_{aa} f(e^{\delta}) - \nabla^{2}_{aa} f(I)\|_{op} \leq (C' + C'') \|\delta\|_{op} \|\rho_{X}^{(a)}\|_{op}    \]
 \CF{one can calculate $k$ to be ...}
 \end{proof}
 
@@ -798,23 +798,23 @@ Again using the definition of $\|\cdot\|_{0}$ we get the lemma.
 
 \begin{corollary} \label{offdiagRobustness}
 For input $\{X_{i}\}$ and perturbation $\sum_{a} \|\delta_{a}\|_{op} \ll 1$ small enough:
-\[ \frac{1}{\sqrt{d_{a} d_{b}}} \|\nabla^{2}_{ab} f(e^{\delta}) - \nabla^{2}_{ab} f(I)\|_{op} \leq O_{k}(\|\delta\|_{op}) \|\rho_{X}^{(a)}\|_{op}      \]
+\[ \frac{1}{\sqrt{d_{a} d_{b}}} \|\nabla^{2}_{ab} f(e^{\delta}) - \nabla^{2}_{ab} f(I)\|_{op} \leq O(\|\delta\|_{op}) \|\rho_{X}^{(a)}\|_{op}      \]
 \end{corollary}
 \begin{proof}
 Recall $\frac{1}{\sqrt{d_{a} d_{b}}} \langle Y_{a}, \nabla^{2}_{aa} f_{X} Z_{b} \rangle = \langle \rho_{X}^{(ab)}, Y^{2} \rangle - \langle \rho_{X}^{(a)}, Y \rangle^{2}$. Using the same iterative strategy as $\ref{diagRobustness}$ we can show: 
-\[ |\langle Y, (\rho_{X'}^{(ab)} - \rho_{X}^{(ab)}) Z \rangle| \leq C'_{k} \|\delta\|_{op} \|H_{X}\|_{F \to F} \|Y\|_{F} \|Z\|_{F}    \]
+\[ |\langle Y, (\rho_{X'}^{(ab)} - \rho_{X}^{(ab)}) Z \rangle| \leq C' \|\delta\|_{op} \|H_{X}\|_{F \to F} \|Y\|_{F} \|Z\|_{F}    \]
 We used $\ref{btoabRobustness}$ for $\{a,b\}$ and $\ref{ctoabRobustness}$ for the rest. 
 
 We can similarly bound the off-diagonal "rank-one" terms:
 \[ |\langle \rho_{X'}^{(a)}, Y \rangle \langle \rho_{X'}^{(b)}, Z \rangle - \langle \rho_{X}^{(a)}, Y \rangle \langle \rho_{X}^{(b)}, Z \rangle|    \]
 \[ \leq |\langle \rho_{X'}^{(a)} - \rho_{X}^{(a)}, Y \rangle \langle \rho_{X'}^{(b)}, Z \rangle| + |\langle \rho_{X}^{(a)}, Y \rangle \langle \rho_{X'}^{(b)} - \rho_{X}^{(b)}, Z \rangle|   \]
-\[ 2 C'_{k} \|\delta\|_{op} (1+C'_{k} \|\delta\|_{op}) \|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op} \|Y\|_{1} \|Z\|_{1}    \]
-\[ \leq C''_{k} \|\delta\|_{op} (\sqrt{d_{a} d_{b}} \|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op}) \|Y\|_{F} \|Z\|_{F}    \]
-Again assuming our one-body marginals are constantly balanced, this is a fixed function of $k$. 
+\[ 2 C' \|\delta\|_{op} (1+C'\|\delta\|_{op}) \|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op} \|Y\|_{1} \|Z\|_{1}    \]
+\[ \leq C'' \|\delta\|_{op} (\sqrt{d_{a} d_{b}} \|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op}) \|Y\|_{F} \|Z\|_{F}    \]
+Again assuming our one-body marginals are $O(1)$-balanced, this is a fixed function of $k$. 
 
 In toto this gives the lemma:
-\[ \frac{1}{\sqrt{d_{a} d_{b}}} \|\nabla^{2}_{ab} f(e^{\delta}) - \nabla^{2}_{ab} f(I)\|_{op} \leq \|\delta\|_{op}(C'_{k} \|H_{X}\|_{F \to F}) + C''_{k} (\sqrt{d_{a} d_{b}} \|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op})) \]
-\[ \leq \|\delta\|_{op} (C'_{k} + C''_{k}) \sqrt{\|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op}}     \]
+\[ \frac{1}{\sqrt{d_{a} d_{b}}} \|\nabla^{2}_{ab} f(e^{\delta}) - \nabla^{2}_{ab} f(I)\|_{op} \leq \|\delta\|_{op}(C' \|H_{X}\|_{F \to F}) + C'' (\sqrt{d_{a} d_{b}} \|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op})) \]
+\[ \leq \|\delta\|_{op} (C' + C'') \sqrt{\|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op}}     \]
 We used $\ref{inftyto2}$ for the first term and balanced marginals for the second. 
 \end{proof}
 
@@ -822,8 +822,8 @@ We used $\ref{inftyto2}$ for the first term and balanced marginals for the secon
 If $f_{X}$ is $\alpha$-strongly convex at $I$ and $\sum_{a} \|\delta_{a}\|_{op} \ll 1/k$, then $f$ is $\geq (\alpha - O_{k}( \|\delta\|_{op}))$-strongly convex at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$. 
 \end{lemma}
 \begin{proof}
-We follow the same structure as the proof of convexity, letting $\{X'_{i} := e^{\delta} X\}$. Then by $\ref{diagRobustness}$ we have a bound on the diagonal blocks, and by $\ref{offdiagRobustness}$ we have a bound on the off-diagonal blocks:
-\[ \|\nabla^2 f_{X'} - \nabla^{2} f_{X}\|_{op} \leq \|\delta\|_{op} (k C_{k} + k(k-1) C_{k}) \leq O_{k}( \|\delta\|_{op} )  \]
+We follow the same structure as the proof of convexity, letting $\{X'_{i} := e^{\delta} X\}$. Then by $\ref{diagRobustness}$ we have a bound on the diagonal blocks, and by $\ref{offdiagRobustness}$ we have a bound on the off-diagonal blocks. Finally we use the same Schur-complement inequality for block matrices for $J_{k} \otimes I \preceq k I_{k} \otimes I$:
+\[ \|\nabla^2 f_{X'} - \nabla^{2} f_{X}\|_{op} \leq C \|\delta\|_{op} \|\{I_{ab}\}_{a,b \in [k]}\|_{op} \leq k C \|\delta\|_{op}  \]
 \end{proof}
 
 \AR{I can fix the $k$-dependency, but I think each $C_{k}$ is $O(k)$ and therefore this one is $O(k^{3})$. Also I'm missing dependence on $\mu$, will look into that later.}
