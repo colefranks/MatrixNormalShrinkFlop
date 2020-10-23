@@ -520,16 +520,14 @@ Applying the union bound over $[k]$ completes the proof of the proposition.
 %-----------------------------------------------------------------------------
 \subsection{Strong convexity}
 %-----------------------------------------------------------------------------
-
+\CF{will move this to the appropriate place; rafael you can cite this for section 4 and just eventually put in the right probability bound.}
 \begin{theorem}\label{thm:ball-convexity}
-In particular, $f_{\vec X}$ is $\Omega(1)$ at all points $Z$ with 
+There is $c> 0$ such that the following holds: with probability at least \CF{good; akshay thinks at least $1 - n^{- \Omega(d_{min})}$} the function $f_{\vec X}$ is $\Omega(1)$-strongly convex at all points $Z$ with $\sum_{i = 1}^n \|\log Z_a\|_{op} < c/k.$ 
 
 
 
-strongly convex with probability $\CF{good}$ 
 
 \end{theorem}
-and $\sum_{a} \|\delta_{a}\|_{op} \ll 1/k$, then $f$ is $\geq (\alpha - O_{k}( \|\delta\|_{op}))$-strongly convex at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$. \\
 
 
 
@@ -644,7 +642,7 @@ $$ \|\nabla^{2} f_{\vec X} - I\|_{op} \leq (k - 1) \lambda + k \eps^2 + \eps $$
 To prove this, we need the following result on quantum expansion (cf.\ \cref{sec:matrix-normal}).
 The result is essentially Theorem~16.6 in~\cite{pisier2012grothendieck}, together with a standard symmetrization trick (e.g., Proof of Lemma~4.1 in~\cite{P14}).
 
-\MW{Michael continue here.}
+\MW{Michael continue here.} 
 
 \begin{theorem}[Pisier]
 There is an absolute constant~$C>0$ such that, for all $N,n,m\in\N$ and any scalar sequence $a_i \in \R^N$ the following holds with probability at least $1-1/{\color{red}\poly(???)}$:
