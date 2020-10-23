@@ -520,6 +520,19 @@ Applying the union bound over $[k]$ completes the proof of the proposition.
 %-----------------------------------------------------------------------------
 \subsection{Strong convexity}
 %-----------------------------------------------------------------------------
+
+\begin{theorem}\label{thm:ball-convexity}
+In particular, $f_{\vec X}$ is $\Omega(1)$ at all points $Z$ with 
+
+
+
+strongly convex with probability $\CF{good}$ 
+
+\end{theorem}
+and $\sum_{a} \|\delta_{a}\|_{op} \ll 1/k$, then $f$ is $\geq (\alpha - O_{k}( \|\delta\|_{op}))$-strongly convex at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$. \\
+
+
+
 We now prove our main strong convexity results in order to carry out step~\ref{it:convexity} of the plan from \cref{subsec:outline}.
 Just like in the Euclidean case, the Hessian is convenient to characterize strong convexity, and we begin by defining it formally in the Riemannian context.
 We then show strong convexity \emph{at} the origin, and later show strong convexity \emph{near} the origin.
@@ -818,6 +831,7 @@ In toto this gives the lemma:
 We used $\ref{inftyto2}$ for the first term and balanced marginals for the second. 
 \end{proof}
 
+\CF{Akshay: $\sum_{a} \|\delta_{a}\|_{op} = \|\delta\|_{op}.$}
 \begin{lemma} \label{convexRobustness}
 If $f_{X}$ is $\alpha$-strongly convex at $I$ and $\sum_{a} \|\delta_{a}\|_{op} \ll 1/k$, then $f$ is $\geq (\alpha - O_{k}( \|\delta\|_{op}))$-strongly convex at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$. 
 \end{lemma}
