@@ -727,7 +727,7 @@ The lemma follows by noting $\|Z\|_{1} = \|Z_{+}\|_{1} + \|Z_{-}\|_{1}$ as well 
 This gives a bound on the diagonal blocks of the Hessian as well as the rank-one term $\bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr)$ in all other blocks.
 
 \begin{corollary} \label{diagRobustness}
-For input $\{X_{i}\}$ and perturbation $\sum_{a} \|\delta_{a}\|_{op} \ll 1$ small enough:
+For input $\{X_{i}\}$ and perturbation $\delta := \sum_{a} (\delta_{a})_{a}$ with $\|\delta\|_{op} := \sum_{a} \|\delta_{a}\|_{op} \ll 1$ small enough:
 \[ \frac{1}{d_{a}} \|\nabla^{2}_{aa} f(e^{\delta}) - \nabla^{2}_{aa} f(I)\|_{op} \leq O_{k}(\|\delta\|_{op}) \|\rho_{X}^{(a)}\|_{op}      \]
 \end{corollary}
 \CF{technically $f(e^{\delta})$ corresponds to $e^{\delta/2} \vec X$}
