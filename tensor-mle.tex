@@ -126,11 +126,10 @@ It remains an open question to show tight bounds for convergence of the MLE in s
 \subsection{Notation}
 \CF{temporary}
 \begin{itemize}
-\item Number of samples $n$, dimensions $d_1, \dots, d_k$. $D$ for product of these.
+\item Number of samples $n$, dimensions $d_1\leq \dots \leq d_k$. $D$ for product of these. \CF{can we just assume $d_i$'s sorted like I have here? I want to avoid writing min everywhere.}
 \item $X$ for the tensor random variable, $X_1, \dots, X_n$ for the samples, $\vec X = (X_1, \dots, X_n)$ for the random tuple of samples.
 $\rho = \vec X \vec X^T/\|\vec X\|_F^2$. Lower case $x$ for samples.
-\item $\braket{\cdot,\cdot}_{\vec d}$ denote modified Hilbert-Schmidt inner products
-\MW{sadly the corresponding norms look like $\ell_p$ norms},
+%\item $\braket{\cdot,\cdot}_{\vec d}$ denote modified Hilbert-Schmidt inner products\MW{sadly the corresponding norms look like $\ell_p$ norms},
 $\langle \cdot, \cdot \rangle$ is the $\ell_2$ inner product of vectors
 \item $f_{\vec X}$ for the function in \cref{dfn:function}, mostly drop $\vec X$.
 \item $\Sym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite, $\Sym_d^0$ for traceless symmetric, $\PD_d^1$ for $\det=1$ positive definite? 
@@ -232,7 +231,7 @@ or equivalently minimize its negation.
 Since this function is also invariant under rescaling the~$\Theta_a$, we may restrict to $\PD_{d_a}^1$, the $d_a\times d_a$ positive definite matrices with unit determinant.
 Thus we are led to minimizing the following function:
 
-\begin{definition}[Objective]\label{dfn:function}
+\begin{definition}[Objective function]\label{dfn:function}
 Given $n$ samples $\vec{X} = (X_1, \dots, X_n)$ in $\R^D$, define the function $f_{\vec X}\colon\prod_{a=1}^k \PD_{d_a}^1 \to \R$ by
 \begin{align}\label{eq:projective-likelihood}
   f_{\vec X}(\Theta_1,\dots,\Theta_k) = \log \sum_{i=1}^n \braket{X_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) X_i}.
@@ -407,7 +406,7 @@ For $\rho \in \PD_D$ and $a\in[k]$, let $\rho^{(a)} \in \PD_{d_a}$ denote the \e
   \tr \rho^{(a)} Z = \tr \rho Z_a,
 \end{align*}
 for all $d_a \times d_a$ matrices $Z$, where $Z_a = (I_1 \ot \cdots \ot I_{a-1} \ot Z \ot I_{a+1} \ot \cdots \ot I_k)$.
-Here and in the following we write $I_a$ for the $d_a\times d_a$ identity matrix.
+Here and in the following we write $I_a$ for the $d_a\times d_a$ identity matrix. \CF{can I suggest $Z_{(a)}$ instead to avoid the confusion with components below?}
 \end{definition}
 \CF{the above definition conflicts a bit with just referring to $Z_a$ as the $a^{th}$ component, which I have done elsewhere. How to resolve?}
 \MW{Explain how to compute in terms of $\vec X$. Ref above \cref{cor:vershynin}.}
@@ -522,19 +521,18 @@ Applying the union bound over $[k]$ completes the proof of the proposition.
 \subsection{Strong convexity}
 %-----------------------------------------------------------------------------
 \CF{will move this to the appropriate place; rafael you can cite this for section 4 and just eventually put in the right probability bound.}
+
+
+
+
+We now prove our main strong convexity result, \cref{thm:ball-convexity}, in order to carry out step~\ref{it:convexity} of the plan from \cref{subsec:outline}.
+
 \begin{theorem}\label{thm:ball-convexity}
-There is $c> 0$ such that the following holds: with probability at least \CF{good; akshay thinks at least $1 - n^{- \Omega(d_{min})}$} the function $f_{\vec X}$ is $\Omega(1)$-strongly convex at all points $Z$ with $\sum_{i = 1}^n \|\log Z_a\|_{op} < c/k.$ 
-
-
-
-
+There is $c> 0$ such that the following holds: with probability at least $1 - n^{c 2 (d_1 + d_2)}$, the function $f_{\vec X}$ is $c$-strongly convex at all points $Z\in \PD$ with $\sum_{i = 1}^n \|\log Z_a\|_{op} < c/k.$ 
 \end{theorem}
 
-
-
-We now prove our main strong convexity results in order to carry out step~\ref{it:convexity} of the plan from \cref{subsec:outline}.
 Just like in the Euclidean case, the Hessian is convenient to characterize strong convexity, and we begin by defining it formally in the Riemannian context.
-We then show strong convexity \emph{at} the origin, and later show strong convexity \emph{near} the origin.
+We next show strong convexity \emph{at} the origin, and finally show strong convexity \emph{near} the origin.
 
 \begin{definition}[Riemannian Hessian]
 For $\Theta \in \PD$, the \emph{Riemannian Hessian}~$\nabla^2 f(\Theta)$ is the unique linear operator on $\Sym$ such that
@@ -630,6 +628,13 @@ for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d
 
 \MW{Explain that this looks like $\frac1{\norm X_2^2} \sum_i X_i \ot X_i - \dots$ if we think of \dots}
 \CF{most important part of hessian is this $\rho^{ab}$ part ( a channel), discuss that there are three ways to look at it: partial trace, channel (cpm), and natural representation. Cite Pisier in channel form. In appendix prove by translating to channel}
+
+
+
+
+
+
+
 We now state our strong convexity result at the identity:
 
 \begin{theorem}\label{thm:tensor-convexity}
@@ -669,8 +674,15 @@ Now we can again use the high-probability bounds derived above: \TODO{actually c
 This needs to be elaborated.
 }
 
+\CF{motivation for, and statement of, Pisier theorem that is comprehensible from the point of view of our Hessian formulae.}
+The most interesting part of the Hessian is the quadratic form $Y,Z \mapsto \tr \rho^{(ab)} \left( Y \ot Z \right) = \langle Y, \tr_b \rho^{(ab)} \left(I \ot Z\right) \rangle$ appearing in the off-diagonal blocks. We show that, restricted to the traceless matrices, this quadratic form is small. More precisely, we bound the operator norm of the map $T: Z \mapsto \tr_2 \rho^{(ab)} \left(I \ot Z\right)$ restricted to the traceless symmetric matrices. Such maps are called \emph{quantum channels}, and we will revisit their properties later \CF{where? or earlier?}. The operator norm condition we desire for $T_{\rho}$ is equivalent to $T_{\rho}$ being a good \emph{quantum expander} - this led Pisier to bound the operator norm of $T_{\rho}$ for random $\rho$. \CF{one-sentence motivation of quantum expanders?}
 
-\begin{proof}[\CF{new } Proof of \cref{thm:tensor-convexity}] 
+\begin{theorem}\label{thm:hess-pisier} Let $\rho \in \PD(d_1,d_2)$. Let $T:\mat(d_2) \to \mat(d_1)$ denote the map $T:Z \mapsto \tr_2 \rho^{(ab)} \left(I \ot Z\right)$ \CF{continue}
+\end{theorem}
+Pisier's actual result is slightly different; \cref{thm:hess-pisier} is essentially Theorem~16.6 in~\cite{pisier2012grothendieck}, together with a standard symmetrization trick (e.g., Proof of Lemma~4.1 in~\cite{P14}). We present the details in an appendix \CF{cref it}. With Pisier's result in hand, we are ready to prove \cref{thm:tensor-convexity}.
+
+
+\begin{proof}[Proof of \cref{thm:tensor-convexity}] 
 We use the inequality for block matrices 
 $$\begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix} \succeq - \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}$$ for any $A,B \succeq 0$ such that $\|A^{-1/2} K B^{-1/2}\|_{op} \leq 1,$ which may be proved by computing Schur complements. We will sequentially apply this inequality to the block matrix $\nabla^2 f$ until we are left with a diagonal matrix. 
 
