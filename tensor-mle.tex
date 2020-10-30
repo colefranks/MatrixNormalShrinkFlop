@@ -710,32 +710,38 @@ The last thing we need is a lower bound on $\nabla^2_{aa} f.$ This operator is a
 
 We now show our second strong convexity result, namely that if our function is strongly convex at the origin then it is also strongly convex in an operator norm ball about the origin. We'll use an easy fact relating the exponential map and the operator norm.
 
-\begin{fact} For all symmetric $d\times d$ matrices $\delta $ such that $ \|\delta\|_{op} \leq \frac{1}{2}$, we have $$ \|e^{\delta} - I\|_{op} \leq 2 \|\delta\|_{op}.$$   \end{fact}
+\begin{fact} For all symmetric $d\times d$ matrices $\delta $ such that $ \|\delta\|_{op} \leq \frac{1}{2}$, we have 
+$$ \|e^{\delta} - I\|_{op} \leq \leq \|\delta\|_{op} + \|\delta\|_{op}^{2} \leq 2 \|\delta\|_{op}.$$ 
+\end{fact}
 
 We will follow the structure presented in the last proof by letting our input at the identity be represented $\{X_{i}\}$ and showing each block of the Hessian only changes a small amount under perturbation $\{X'_{i} := e^{\delta} X_{i}\}$ for $\delta \in \Sym$. \CF{ I am a little confused, is $\delta$ a single hermitian or a tuple of Hermitians? Right now our notation in the definition of $(Z)_{b}$ assumes $Z$ is a single matrix} In particular we will give bounds on each block under each component-wise perturbation $\{X'_{i} := (e^{\delta})_{b} X_{i}\}$. Recall (c.f. \cref{lem:hessian}) that the $a^{th}$ diagonal block of the Hessian depends only on $\rho^a_{\vec X}$. This motivates the next two lemmas quantifying the change of $\rho^{a}
 _{\vec X}$ under perturbations. 
 
 \CF{for the readers' sake some justification is needed for why perturbing $X$ this is the same as considering the Hessian of our function at another point in $\PD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
 \begin{lemma} \label{atoaaRobustness}
-There is a constant $c>0$ such that the following holds. For input $\{X_{i}\}$ and perturbation $\|\delta\|_{op} \leq c$ giving $\{X'_{i} := (e^{\delta})_{a} X_{i} \}$, there is a universal constant $C$:
-\[ \|\rho_{X'}^{a} - \rho_{X}^{a}\|_{op} = C \|\delta\|_{op} \|\rho_{X}^{a}\|_{op}     \]
+For input $\{X_{i}\}$ and perturbation $\|\delta\|_{op} \leq \frac{1}{20}$ giving $\{X'_{i} := (e^{\delta})_{a} X_{i} \}$:
+\[ \|\rho_{X'}^{a} - \rho_{X}^{a}\|_{op} \leq 4.5 \|\delta\|_{op} \|\rho_{X}^{a}\|_{op}     \]
 \end{lemma}
 \begin{proof} By definition, $\|\rho_{X'}^{(a)} - \rho_{X}^{(a)}\|_{op} = \sup_{\|Z\|_{1} \leq 1} \langle Z_{a}, \rho_{X'} - \rho_{X} \rangle $. 
 
-Choose $\eta$ such that  $\|(e^{\delta})_{a} X\|_{2}^{-1} = \|X\|_{2}^{-1} (1 + \eta)$; note that $|\eta| = O(\|\delta\|_{op})$ provided $c$ is small enough. Letting $\delta' := (1+\eta)e^{\delta} - I_{a}$. Assuming without loss of generality that $\|Z\|_{1} = 1$, we have \CF{added $a$ subscript on $(I + \delta');$ please check}
+Choose $\eta$ such that  $\|(e^{\delta})_{a} X\|_{2}^{-1} = \|X\|_{2}^{-1} (1 + \eta)$; let $\delta' := (1+\eta)e^{\delta} - I_{a}$; note $|\eta| \leq \|\delta\|_{op} + \|\delta\|_{op}^{2}$
+Assuming without loss of generality that $\|Z\|_{1} = 1$, we have \CF{added $a$ subscript on $(I + \delta');$ please check}
 \[ | \langle Z_{a}, (I+\delta')_a \rho_{X} (I+\delta')_a - \rho_{X} \rangle | \]
 \[ \leq (2\|\delta'\|_{op} + \|\delta'\|_{op}^{2}) \|\rho^{(a)}\|_{op} \|Z\|_{1}    \]
-from which the lemma follows since $\|\delta\|_{op} \leq c$.
+from which the lemma follows since 
+\[ \|\delta\|_{op} \leq .05 \implies \|\delta'\|_{op} \leq |\eta| + (1+|\eta|)(\|\delta\|_{op} + \|\delta\|_{op}^{2}) \leq  2.1 \|\delta\|_{op} \]
 \end{proof}
 
 \CF{ I think we should combine these lemmas into a single one with two items.}
 \AR{The proofs are different, and I like the similar structure for diagonal/off-diagonal blocks. It may clutter the statements more to combine. }
 \begin{lemma} \label{btoaaRobustness}
-There is a constant $c>0$ such that the following holds. For input $\{X_{i}\}$ and perturbation $\|\delta\|_{op} \leq c$ giving $\{X'_{i} := (e^{\delta})_{b} X_{i} \}$ for $b \neq a$, there is a universal constant $C$:
-\[ \|\rho_{X'}^{a} - \rho_{X}^{a}\|_{op} \leq C \|\delta\|_{op} \|\rho_{X}^{a}\|_{op}      \]
+For input $\{X_{i}\}$ and perturbation $\|\delta\|_{op} \leq \frac{1}{20}$ giving $\{X'_{i} := (e^{\delta})_{b} X_{i} \}$ for $b \neq a$, there is a universal constant $C$:
+\[ \|\rho_{X'}^{a} - \rho_{X}^{a}\|_{op} \leq 9.5 \|\delta\|_{op} \|\rho_{X}^{a}\|_{op}      \]
 \end{lemma}
 \begin{proof} 
-Choose $\eta$ such that $\|(e^{\delta})_{b} X\|_{2}^{-2} = (1+\eta) \|X\|_{2}^{-2}$ and let $\delta' := (1+\eta)e^{2\delta} - I$. We assume for now $Z \succeq 0$. 
+Choose $\eta$ such that $\|(e^{\delta})_{b} X\|_{2}^{-2} = (1+\eta) \|X\|_{2}^{-2}$; let $\delta' := (1+\eta)e^{2\delta} - I$. 
+\[ \|\delta\|_{op} \leq .1 \implies |\eta| \leq 2\|\delta\|_{op} + 4\|\delta\|_{op}^{2}, \hspace{3mm} \|\delta'\|_{op} \leq (2+|\eta|)(2\|\delta\|_{op} + 4\|\delta\|_{op}^{2}) \leq 9.24 \|\delta\|_{op} \]
+We assume for now $Z \succeq 0$. 
 \begin{align*} | \langle Z_{a}, (1+\eta) (e^{\delta})_{b} \rho_{X} (e^{\delta})_{b}^{*} - \rho_{X} \rangle| 
 & = | \langle Z_{a} \otimes \delta'_{b}, \rho_{X} \rangle   |  \\ 
 &\leq \langle Z \otimes |\delta'|, \rho_{X}^{(ab)} \rangle   
@@ -743,7 +749,7 @@ Choose $\eta$ such that $\|(e^{\delta})_{b} X\|_{2}^{-2} = (1+\eta) \|X\|_{2}^{-
 \end{align*}
 Here in the first inequality we used that $\rho_{X} \succeq 0, Z \succeq 0$; and the last inequality was by definition of marginals. 
 In general we decompose $Z = Z_{+} - Z_{-}$ and use the above to show
-\[ |\langle Z, \rho_{X'}^{(a)} - \rho_{X}^{(a)} \rangle| \leq O(\|\delta\|_{op}) (\|Z_{+}\|_{1} + \|Z_{-}\|_{1}) \|\rho_{X}^{(a)}\|_{op}     \]
+\[ |\langle Z, \rho_{X'}^{(a)} - \rho_{X}^{(a)} \rangle| \leq \|\delta'\|_{op} (\|Z_{+}\|_{1} + \|Z_{-}\|_{1}) \|\rho_{X}^{(a)}\|_{op}     \]
 The lemma follows by noting $\|Z\|_{1} = \|Z_{+}\|_{1} + \|Z_{-}\|_{1}$ and $\|\delta\|_{op} \leq c$:
 \[ \|\delta'\|_{op} = \|(1+\eta) e^{2 \delta} - I\|_{op} \leq |\eta|(1 + 2 \|\delta\|_{op}) + 2\|\delta\|_{op} \leq O(\|\delta\|_{op})   \qedhere  \]
 \end{proof}
@@ -751,8 +757,8 @@ The lemma follows by noting $\|Z\|_{1} = \|Z_{+}\|_{1} + \|Z_{-}\|_{1}$ and $\|\
 This gives a bound on the diagonal blocks of the Hessian as well as the rank-one term $\bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr)$ in all other blocks.
 
 \begin{corollary} \label{diagRobustness}
-There is a constant $c>0$ such that the following holds. For input $\{X_{i}\}$ such that $d_{a}\|\rho_{X}^{(a)}\|_{op} \leq (1+c)$; and perturbation $\delta := \sum_{a} (\delta_{a})_{a}$ with $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq c$ giving $\{X'_{i} := e^{\delta} X_{i} \}$, there is a universal constant $C$:
-\[ \frac{1}{d_{a}} \|\nabla^{2}_{aa} f(e^{2\delta}) - \nabla^{2}_{aa} f(I)\|_{op} \leq C \|\delta\|_{op} \|\rho_{X}^{(a)}\|_{op}      \]
+For input $\{X_{i}\}$ such that $d_{a}\|\rho_{X}^{(a)}\|_{op} \leq 1+\frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a})_{a}$ with $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$ giving $\{X'_{i} := e^{\delta} X_{i} \}$:
+\[ \frac{1}{d_{a}} \|\nabla^{2}_{aa} f(e^{2\delta}) - \nabla^{2}_{aa} f(I)\|_{op} \leq 40 \|\delta\|_{op} \|\rho_{X}^{(a)}\|_{op}      \]
 \end{corollary}
 %\CF{technically $f(e^{\delta})$ corresponds to $e^{\delta/2} \vec X$}
 \begin{proof}
@@ -762,15 +768,15 @@ We bound the first term $\langle \rho^{(a)}, Y^{2} \rangle$. We use $\ref{atoaaR
 \begin{align*}
  |\langle \rho_{X'}^{(a)} - \rho_{X}^{(a)}, Y^{2} \rangle| 
  &\leq \sum_{j=1}^{k} |\langle \rho_{X_{j}}^{(a)} - \rho_{X_{j-1}}^{(a)}, Y^{2} \rangle| 
-\underset{\ref{atoaaRobustness},\;\ref{btoaaRobustness}}{\leq} \sum_{j=1}^{k}  C\|\delta_{j}\|_{op} \|\rho_{X_{j-1}}^{(a)}\|_{op} \|Y^{2}\|_{1} \\
-& \leq \left( \prod_{j=1}^k (1+C\|\delta_{j}\|_{op}) - 1 \right) \|\rho_{X}^{(a)}\|_{op} \|Y\|_{F}^{2} \leq C' \|\delta\|_{op} \|\rho_{X}^{(a)}\|_{op} \|Y\|_{F}^{2}.   \end{align*}
-The term in parenthesis is shown by induction, and in the last step we used $\|\delta\|_{op} \leq c$. We next bound the rank-one term $\langle \rho_{X}^{(a)}, Y \rangle^{2}$:
+\underset{\ref{atoaaRobustness},\;\ref{btoaaRobustness}}{\leq} \sum_{j=1}^{k}  9.5 \|\delta_{j}\|_{op} \|\rho_{X_{j-1}}^{(a)}\|_{op} \|Y^{2}\|_{1} \\
+& \leq \left( \prod_{j=1}^k (1+9.5 \|\delta_{j}\|_{op}) - 1 \right) \|\rho_{X}^{(a)}\|_{op} \|Y\|_{F}^{2} \leq 10 \|\delta\|_{op} \|\rho_{X}^{(a)}\|_{op} \|Y\|_{F}^{2}.   \end{align*}
+The term in parenthesis is shown by induction, and in the last step we used $\|\delta\|_{op} \leq \frac{1}{20}$. We next bound the rank-one term $\langle \rho_{X}^{(a)}, Y \rangle^{2}$:
 \[ |\langle \rho_{X'}^{(a)}, Y \rangle^{2} - \langle \rho_{X}^{(a)}, Y \rangle^{2}| = |\langle \rho_{X'}^{(a)}, Y \rangle - \langle \rho_{X}^{(a)}, Y \rangle| |\langle \rho_{X'}^{(a)}, Y \rangle + \langle \rho_{X}^{(a)}, Y \rangle|    \]
-\[ \leq C' \|\delta\|_{op} (2+C' \|\delta\|_{op}) (\|\rho_{X}^{(a)}\|_{op} \|Y\|_{1})^{2} \leq C'' \|\delta\|_{op}) d_{a} \|\rho_{X}^{(a)}\|_{op}^{2} \|Y\|_{F}^{2}       \]
+\[ \leq 10 \|\delta\|_{op} (2+ 10 \|\delta\|_{op}) (\|\rho_{X}^{(a)}\|_{op} \|Y\|_{1})^{2} \leq 25 \|\delta\|_{op} d_{a} \|\rho_{X}^{(a)}\|_{op}^{2} \|Y\|_{F}^{2}       \]
 
 In toto this gives the corollary:
-\[ \frac{1}{d_{a}}\|\nabla^{2}_{aa} f(e^{2\delta}) - \nabla^{2}_{aa} f(I)\|_{op} \leq \|\delta\|_{op}(C' \|\rho_{X}^{(a)}\|_{op} + C'' \|\rho_{X}^{(a)}\|_{op}^{2})    \]
-from which the statement follows by the initial condition $\|d_{a} \rho_{X}^{(a)}\|_{op} \leq (1+c)$.
+\[ \frac{1}{d_{a}}\|\nabla^{2}_{aa} f(e^{2\delta}) - \nabla^{2}_{aa} f(I)\|_{op} \leq \|\delta\|_{op}(10 \|\rho_{X}^{(a)}\|_{op} + 25 \|\rho_{X}^{(a)}\|_{op}^{2})    \]
+from which the statement follows by the initial condition $\|d_{a} \rho_{X}^{(a)}\|_{op} \leq 1+\frac{1}{20}$.
 \CF{one can calculate $k$ to be ...}
 \end{proof}
 
@@ -793,20 +799,20 @@ This was already in KLR and we have two new proofs: one by convexity, and one by
 \end{proof}
 
 \begin{lemma} \label{btoabRobustness}
-There is a constant $c>0$ such that the following holds. For input $\{X_{i}\}$ and perturbation $\|\delta\|_{op} \leq c$ giving $\{X'_{i} := (e^{\delta})_{c} X_{i} \}$ for $c \in \{a,b\}$, there is a universal constant $C$:
-\[ \|H_{X'}^{ab} - H_{X}^{ab}\|_{0} \leq C \|\delta\|_{op} \|H_{X}^{ab}\|_{F \to F}    \]
+For input $\{X_{i}\}$ and perturbation $\|\delta\|_{op} \leq \frac{1}{20}$ giving $\{X'_{i} := (e^{\delta})_{c} X_{i} \}$ for $c \in \{a,b\}$:
+\[ \|H_{X'}^{ab} - H_{X}^{ab}\|_{0} \leq 4.5 \|\delta\|_{op} \|H_{X}^{ab}\|_{F \to F}    \]
 \end{lemma}
 \begin{proof}
 We will drop the superscript $(ab)$ since it doesn't change. By taking adjoints, we can assume wlog that $c = b$. Let $R : \mat(d_{b}) \to \mat(d_{b})$ be defined as $R(Z) := (1+\eta)^{2} e^{\delta} Z e^{\delta}$ for $\eta$ defined by our normalization $\|(e^{\delta})_{b} X\|_{2}^{-1} =: (1+\eta) \|X\|_{2}^{-1}$. The subspace $\Sym_{d_{b}}^{0}$ is not invariant under $R$, but we show $R \approx I$. Let $\delta' := (1+\eta) e^{\delta} - I$. 
-\[ \|R(Z) - Z\|_{F} \leq 2 \|\delta' Z\|_{F} + \|\delta' Z \delta'\|_{F} \leq 3 \|\delta'\|_{op} \|Z\|_{F}    \]
+\[ \|R(Z) - Z\|_{F} \leq 2 \|\delta' Z\|_{F} + \|\delta' Z \delta'\|_{F} \leq (2 \|\delta'\|_{op} + \|\delta'\|_{op}^{2}) \|Z\|_{F}    \]
 So using the definition of $\|\cdot\|_{0}$:
-\[ \sup_{Y \in \Sym_{d_{a}}^{0},Z \in \Sym_{d_{b}}^{0}} \frac{\langle Y, (H_{X'} - H_{X}) Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq O(\|\delta\|_{op}) \|H_{X}\|_{F \to F}  \]
-In the last step we used $\|\delta'\|_{op} \leq O(\|\delta\|_{op})$.
+\[ \sup_{Y \in \Sym_{d_{a}}^{0},Z \in \Sym_{d_{b}}^{0}} \frac{\langle Y, (H_{X'} - H_{X}) Z \rangle}{\|Y\|_{F} \|Z\|_{F}} = \frac{ \langle Y, H_{X} (R(Z) - Z) \rangle }{\|Y\|_{F} \|Z\|_{F}} \]
+To complete the proof, we use $\|\delta\|_{op} \leq \frac{1}{20}$ and the same calculation as in \ref{atoaaRobustness}.
 \end{proof}
 
 \begin{lemma} \label{ctoabRobustness}
-There is a constant $c>0$ such that the following holds. For input $\{X_{i}\}$ and perturbation $\|\delta\|_{op} \leq c$ giving $\{X'_{i} := (e^{\delta})_{c} X_{i} \}$ for $c \not\in \{a,b\}$, there is a universal constant $C$:
-\[ \|H_{X'}^{ab} - H_{X}^{ab}\|_{0} \leq C \|\delta\|_{op} \|H_{X}^{ab}\|_{F \to F}    \]
+For input $\{X_{i}\}$ and perturbation $\|\delta\|_{op} \leq \frac{1}{20}$ giving $\{X'_{i} := (e^{\delta})_{c} X_{i} \}$ for $c \not\in \{a,b\}$:
+\[ \|H_{X'}^{ab} - H_{X}^{ab}\|_{0} \leq 19 \|\delta\|_{op} \|H_{X}^{ab}\|_{F \to F}    \]
 \end{lemma}
 \begin{proof}
 Let $\delta' := (1+\eta) e^{2 \delta} - I_{c}$ for $\eta$ defined by normalization $\|(e^{\delta})_{c} X\|_{2}^{-1} =: (1+\eta) \|X\|_{2}^{-2}$
@@ -816,30 +822,30 @@ We will use a similar decomposition to lemma \ref{btoaaRobustness}, so first ass
 Here we again used that $\rho_{X}^{(abc)} \succeq 0$. This last term cannot be bounded by $\|H_{X}\|_{0}$ as $Y \succeq 0$; but $\|H_{X}\|_{F \to F}$ is good enough for our purposes. 
 
 To finish the lemma we decompose $Y = Y_{+} - Y_{-}, Z = Z_{+} - Z_{-}$ and bound
-\[ |\langle Y, (H_{X'} - H_{X}) Z \rangle| \leq O(\|\delta\|_{op}) \|H_{X}\|_{F \to F} \sum_{s,t \in \{+,-\}} \|Y_{s}\|_{F} \|Z_{t}\|_{F}   \]
+\[ |\langle Y, (H_{X'} - H_{X}) Z \rangle| \leq \|\delta'\|_{op} \|H_{X}\|_{F \to F} \sum_{s,t \in \{+,-\}} \|Y_{s}\|_{F} \|Z_{t}\|_{F}   \]
 These last four terms we can bound by Cauchy Schwarz:
 \[ \leq (2\|Y_{+}\|_{F}^{2} + 2\|Y_{-}\|_{F}^{2})^{1/2} (2\|Z_{+}\|_{F}^{2} + 2\|Z_{-}\|_{F}^{2})^{1/2} = 2 \|Y\|_{F} \|Z\|_{F}     \]
-Again using the definition of $\|\cdot\|_{0}$ we get the lemma. 
+Again using the definition of $\|\cdot\|_{0}$; and $\|\delta\|_{op} \leq .05$ to give the same calculation from \ref{btoaaRobustness} on $\|\delta'\| \leq 9.5 \|\delta\|_{op}$; we get the lemma. 
 \end{proof}
 
 \begin{corollary} \label{offdiagRobustness}
-There is a constant $c>0$ such that the following holds. For input $\{X_{i}\}$ such that $\|d_{a} \rho_{X}^{(a)}\|_{op}, \|d_{b} \rho_{X}^{(b)}\|_{op} \leq (1+c)$; perturbation $\delta := \sum_{a} (\delta_{a})_{a}$ with $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq c$ giving $\{X'_{i} := e^{\delta} X_{i} \}$, there is universal constant $C$:
-\[ \frac{1}{\sqrt{d_{a} d_{b}}} \|\nabla^{2}_{ab} f(e^{2 \delta}) - \nabla^{2}_{ab} f(I)\|_{op} \leq C \|\delta\|_{op} \sqrt{\|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op}}     \]
+For input $\{X_{i}\}$ such that $\|d_{a} \rho_{X}^{(a)}\|_{op}, \|d_{b} \rho_{X}^{(b)}\|_{op} \leq 1+\frac{1}{20}$; perturbation $\delta := \sum_{a} (\delta_{a})_{a}$ with $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$ giving $\{X'_{i} := e^{\delta} X_{i} \}$:
+\[ \frac{1}{\sqrt{d_{a} d_{b}}} \|\nabla^{2}_{ab} f(e^{2 \delta}) - \nabla^{2}_{ab} f(I)\|_{op} \leq 100 \|\delta\|_{op} \sqrt{\|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op}}     \]
 \end{corollary}
 \begin{proof}
 Recall $\frac{1}{\sqrt{d_{a} d_{b}}} \langle Y, \nabla^{2}_{aa} f_{X} Z \rangle = \langle \rho_{X}^{(ab)}, Y^{2} \rangle - \langle \rho_{X}^{(a)}, Y \rangle^{2}$. Using the same iterative strategy as $\ref{diagRobustness}$ we can show: 
-\[ |\langle Y, (\rho_{X'}^{(ab)} - \rho_{X}^{(ab)}) Z \rangle| \leq C' \|\delta\|_{op} \|H_{X}\|_{F \to F} \|Y\|_{F} \|Z\|_{F}    \]
+\[ |\langle Y, (\rho_{X'}^{(ab)} - \rho_{X}^{(ab)}) Z \rangle| \leq 20 \|\delta\|_{op} \|H_{X}\|_{F \to F} \|Y\|_{F} \|Z\|_{F}    \]
 We used $\ref{btoabRobustness}$ for $\{a,b\}$ and $\ref{ctoabRobustness}$ for the rest. 
 
 We can similarly bound the off-diagonal "rank-one" terms:
 \[ |\langle \rho_{X'}^{(a)}, Y \rangle \langle \rho_{X'}^{(b)}, Z \rangle - \langle \rho_{X}^{(a)}, Y \rangle \langle \rho_{X}^{(b)}, Z \rangle|    \]
 \[ \leq |\langle \rho_{X'}^{(a)} - \rho_{X}^{(a)}, Y \rangle \langle \rho_{X'}^{(b)}, Z \rangle| + |\langle \rho_{X}^{(a)}, Y \rangle \langle \rho_{X'}^{(b)} - \rho_{X}^{(b)}, Z \rangle|   \]
-\[ 2 C' \|\delta\|_{op} (1+C'\|\delta\|_{op}) \|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op} \|Y\|_{1} \|Z\|_{1}    \]
-\[ \leq C'' \|\delta\|_{op} (\sqrt{d_{a} d_{b}} \|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op}) \|Y\|_{F} \|Z\|_{F}    \]
+\[ 40 \|\delta\|_{op} (1+20\|\delta\|_{op}) \|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op} \|Y\|_{1} \|Z\|_{1}    \]
+\[ \leq 80 \|\delta\|_{op} (\sqrt{d_{a} d_{b}} \|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op}) \|Y\|_{F} \|Z\|_{F}    \]
 
 In toto this gives the lemma:
-\[ \frac{1}{\sqrt{d_{a} d_{b}}} \|\nabla^{2}_{ab} f(e^{2 \delta}) - \nabla^{2}_{ab} f(I)\|_{op} \leq \|\delta\|_{op}((C' \|H_{X}\|_{F \to F}) + C'' (\sqrt{d_{a} d_{b}} \|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op})) \]
-\[ \leq \|\delta\|_{op} (C' + C'') \sqrt{\|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op}}     \]
+\[ \frac{1}{\sqrt{d_{a} d_{b}}} \|\nabla^{2}_{ab} f(e^{2 \delta}) - \nabla^{2}_{ab} f(I)\|_{op} \leq \|\delta\|_{op}((20 \|H_{X}\|_{F \to F}) + 80 (\sqrt{d_{a} d_{b}} \|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op})) \]
+\[ \leq 100 \|\delta\|_{op} \sqrt{\|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op}}     \]
 We used $\ref{inftyto2}$ for the first term and balanced marginals for the second. 
 \end{proof}
 
