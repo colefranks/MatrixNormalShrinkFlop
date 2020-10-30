@@ -724,8 +724,8 @@ For input $\{X_{i}\}$ and perturbation $\|\delta\|_{op} \leq \frac{1}{20}$ givin
 \end{lemma}
 \begin{proof} By definition, $\|\rho_{X'}^{(a)} - \rho_{X}^{(a)}\|_{op} = \sup_{\|Z\|_{1} \leq 1} \langle Z_{a}, \rho_{X'} - \rho_{X} \rangle $. 
 
-Choose $\eta$ such that  $\|(e^{\delta})_{a} X\|_{2}^{-1} = \|X\|_{2}^{-1} (1 + \eta)$; let $\delta' := (1+\eta)e^{\delta} - I_{a}$; note $|\eta| \leq \|\delta\|_{op} + \|\delta\|_{op}^{2}$
-Assuming without loss of generality that $\|Z\|_{1} = 1$, we have \CF{added $a$ subscript on $(I + \delta');$ please check}
+
+Choose $\eta$ such that  $\|(e^{\delta})_{a} X\|_{2}^{-1} = \|X\|_{2}^{-1} (1 + \eta)$; note that $|\eta| = O(\|\delta\|_{op})$ provided $c$ is small enough. Letting $\delta' := (1+\eta)e^{\delta} - I_{a}$. Assuming without loss of generality that $\|Z\|_{1} = 1$, we have 
 \[ | \langle Z_{a}, (I+\delta')_a \rho_{X} (I+\delta')_a - \rho_{X} \rangle | \]
 \[ \leq (2\|\delta'\|_{op} + \|\delta'\|_{op}^{2}) \|\rho^{(a)}\|_{op} \|Z\|_{1}    \]
 from which the lemma follows since 
@@ -775,13 +775,12 @@ The term in parenthesis is shown by induction, and in the last step we used $\|\
 \[ \leq 10 \|\delta\|_{op} (2+ 10 \|\delta\|_{op}) (\|\rho_{X}^{(a)}\|_{op} \|Y\|_{1})^{2} \leq 25 \|\delta\|_{op} d_{a} \|\rho_{X}^{(a)}\|_{op}^{2} \|Y\|_{F}^{2}       \]
 
 In toto this gives the corollary:
-\[ \frac{1}{d_{a}}\|\nabla^{2}_{aa} f(e^{2\delta}) - \nabla^{2}_{aa} f(I)\|_{op} \leq \|\delta\|_{op}(10 \|\rho_{X}^{(a)}\|_{op} + 25 \|\rho_{X}^{(a)}\|_{op}^{2})    \]
-from which the statement follows by the initial condition $\|d_{a} \rho_{X}^{(a)}\|_{op} \leq 1+\frac{1}{20}$.
-\CF{one can calculate $k$ to be ...}
+
+\[ \frac{1}{d_{a}}\|\nabla^{2}_{aa} f(e^{2\delta}) - \nabla^{2}_{aa} f(I)\|_{op} \leq \|\delta\|_{op}(C' \|\rho_{X}^{(a)}\|_{op} + C'' \|\rho_{X}^{(a)}\|_{op}^{2})    \]
+from which the statement follows by the initial condition $\|d_{a} \rho_{X}^{(a)}\|_{op} \leq (1+c)$.
 \end{proof}
 
 
-\AR{The below definition is for brevity, but you guys can choose the right notation.}
 \begin{definition}
 For operator $M : \mat(d_{b}) \to \mat(d_{a})$, we let $\|M\|_{0}$ denote the $F \to F$ norm of its restriction to the traceless subspaces $\Sym^0_{d_b} \to \Sym^0_{d_a}$
 \end{definition}
@@ -790,13 +789,11 @@ For operator $M : \mat(d_{b}) \to \mat(d_{a})$, we let $\|M\|_{0}$ denote the $F
 For input $\rho_{X}$ and fixed $a,b$, define
 \[ \langle Y, H_{X}^{ab} Z \rangle := \langle (Y_{a})(Z_{b}), \rho_{X} \rangle = \langle Y \otimes Z , \rho_{X}^{(ab)} \rangle     \]
 \end{definition}
-
-\begin{lemma} \label{inftyto2}
+We use a lemma from \cite{klr}.
+\begin{lemma}[\cite{klr}] \label{inftyto2}
 $\|H_{X}^{ab}\|_{F \to F}^{2} \leq \|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op}$
 \end{lemma}
-\begin{proof}
-This was already in KLR and we have two new proofs: one by convexity, and one by Riesz-Thorin. \AR{The proofs are in some other file, we can add it if we like}
-\end{proof}
+%\begin{proof}This was already in KLR and we have two new proofs: one by convexity, and one by Riesz-Thorin. \AR{The proofs are in some other file, we can add it if we like}\end{proof}
 
 \begin{lemma} \label{btoabRobustness}
 For input $\{X_{i}\}$ and perturbation $\|\delta\|_{op} \leq \frac{1}{20}$ giving $\{X'_{i} := (e^{\delta})_{c} X_{i} \}$ for $c \in \{a,b\}$:
