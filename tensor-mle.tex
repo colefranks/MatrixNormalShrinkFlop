@@ -60,6 +60,10 @@
 \newcommand\Herm{\operatorname{Herm}}
 \newcommand\Sym{\mathcal{S}}
 
+\newcommand\samp{x}
+
+\newcommand\rv{X}
+
 \newcommand\GL{\operatorname{GL}}
 \newcommand\TT{\mathcal{T}}
 \newcommand\PP{\mathcal{P}}
@@ -127,11 +131,11 @@ It remains an open question to show tight bounds for convergence of the MLE in s
 \CF{temporary}
 \begin{itemize}
 \item Number of samples $n$, dimensions $d_1\leq \dots \leq d_k$. $D$ for product of these. \CF{can we just assume $d_i$'s sorted like I have here? I want to avoid writing min everywhere.}
-%\item $X$ for the tensor random variable, $X_1, \dots, X_n$ for each , $\vec X = (X_1, \dots, X_n)$ for the random tuple of samples. $\rho = \vec X \vec X^T/\|\vec X\|_F^2$. Lower case $x$ for samples.
+%\item $X$ for the tensor random variable, $X_1, \dots, X_n$ for each , $\samp = (X_1, \dots, X_n)$ for the random tuple of samples. $\rho = \samp \samp^T/\|\samp\|_F^2$. Lower case $x$ for samples.
 
-\item $X$ for the random tuple $(X_1, \dots, X_n)$, $x$ for the tuple of samples $(x_1, \dots, x_n)$ when no longer random. Think of $X$ as $D \times n$ matrix, $\rho = XX^T,xx^T$ etc.
+\item $\rv$ for the random tuple $(\rv_1, \dots, \rv_n)$, $x$ for the tuple of samples $(x_1, \dots, x_n)$ when no longer random. Think of $\rv$ as $D \times n$ matrix, $\rho = \rv\rv^T,xx^T$ etc.
 %\item $\braket{\cdot,\cdot}_{\vec d}$ denote modified Hilbert-Schmidt inner products\MW{sadly the corresponding norms look like $\ell_p$ norms},
-\item $f_{\vec X}$ for the function in \cref{dfn:function}, mostly drop $\vec X$. $\langle \cdot, \cdot \rangle$ is the $\ell_2$ inner product of vectors
+\item $f_{\rv}$ for the function in \cref{dfn:function}, mostly drop $\rv$. $\langle \cdot, \cdot \rangle$ is the $\ell_2$ inner product of vectors
 
 \item $\Sym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite, $\Sym_d^0$ for traceless symmetric, $\PD_d^1$ for $\det=1$ positive definite? 
 \item $\Theta$ for big tensor product pd concentration matrix, $\Theta_a$ for individual pd's.
@@ -203,20 +207,20 @@ One may wonder why in the above theorems we consider the distances for the indiv
 \subsection{Maximum-likelihood estimation}
 %-----------------------------------------------------------------------------
 We start by giving a precise definition of maximum-likelihood estimation in the tensor normal model.
-Recall that for a centered normal distribution~$\cN(0,\Sigma)$ with $D\times D$ covariance matrix~$\Sigma$, the log-likelihood function for given samples $X_1,\dots,X_n\in\R^D$ is (up to an additive constant)
+Recall that for a centered normal distribution~$\cN(0,\Sigma)$ with $D\times D$ covariance matrix~$\Sigma$, the log-likelihood function for given samples $\samp_1,\dots,X_n\in\R^D$ is (up to an additive constant)
 \begin{align*}
-  \ell_{\vec X}(\Theta)
+  \ell_{\samp}(\Theta)
 % = \frac n2 \log \det(\Theta/2\pi) - \sum_{i=1}^n \frac12 \braket{X_i, \Theta X_i} ~
   = \frac n2 \log \det \Theta - \frac12 \sum_{i=1}^n \braket{X_i, \Theta X_i},
 \end{align*}
 where $\Theta$ denotes the precision matrix $\Sigma^{-1}$.
-Instead of maximizing the function~$\ell_{\vec X}$, we may instead maximize the scale-invariant function
+Instead of maximizing the function~$\ell_{\samp}$, we may instead maximize the scale-invariant function
 \begin{align}\label{eq:tilde ell}
-  \tilde\ell_{\vec X}(\Theta) = \frac1D\log\det \Theta - \log \sum_{i=1}^n \braket{X_i, \Theta X_i}.
+  \tilde\ell_{\samp}(\Theta) = \frac1D\log\det \Theta - \log \sum_{i=1}^n \braket{X_i, \Theta X_i}.
 \end{align}
 Indeed, the two functions have the same maximizers up to rescaling.%
 \footnote{To see this, write $\Theta = \lambda \Theta'$ for $\lambda>0$ and $\Theta'\in\PD_D^1$ and maximize over~$\lambda$.
-The result is $\lambda = n D / \sum_{i=1}^n \braket{X_i, \Theta X_i}$, hence $\sup_{\Theta\in\PD_D} \ell_{\vec X}(\Theta) = \sup_{\Theta'\in\PD_D^1} \frac {nD}2 \left( \log(nD) - 1 \right) + \frac{nD}2 \tilde\ell_{\vec X}(\Theta')$.}
+The result is $\lambda = n D / \sum_{i=1}^n \braket{X_i, \Theta X_i}$, hence $\sup_{\Theta\in\PD_D} \ell_{\samp}(\Theta) = \sup_{\Theta'\in\PD_D^1} \frac {nD}2 \left( \log(nD) - 1 \right) + \frac{nD}2 \tilde\ell_{\samp}(\Theta')$.}
 One may think of \cref{eq:tilde ell} as proportional, up to an additive constant, to the log-likelihood of $\Sigma$ after receiving $[X_1, \dots, X_n]$, the equivalence class of the tuple of samples in projective space.
 
 Both log-likelihoods are geodesically concave, as will be defined precisely in the next section, but only the latter function has geodesically Lipschitz gradients, i.e., is geodesically smooth~\cite{burgisser2019towards}.
@@ -226,24 +230,24 @@ The tensor normal model for dimensions~$\vec d=(d_1,\dots,d_k)$ \CF{make unbold?
 Let $\Theta_a = \Sigma_a^{-1}$, so that the precision matrix is given by $\Theta = \bigotimes_{a=1}^k \Theta_a$.
 Then the same argument as above, restricted to precision matrices of this form, shows that to compute the MLE we may maximize the function
 \begin{align*}
-  \tilde\ell_{\vec X}(\Theta_1,\dots,\Theta_k) = \sum_{i=1}^k \frac1{d_a} \log \det \Theta_a - \log \sum_{i=1}^n \braket{X_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) X_i},
+  \tilde\ell_{\samp}(\Theta_1,\dots,\Theta_k) = \sum_{i=1}^k \frac1{d_a} \log \det \Theta_a - \log \sum_{i=1}^n \braket{X_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) X_i},
 \end{align*}
 or equivalently minimize its negation.
 Since this function is also invariant under rescaling the~$\Theta_a$, we may restrict to $\PD_{d_a}^1$, the $d_a\times d_a$ positive definite matrices with unit determinant.
 Thus we are led to minimizing the following function:
 
 \begin{definition}[Objective function]\label{dfn:function}
-Given $n$ samples $\vec{X} = (X_1, \dots, X_n)$ in $\R^D$, define the function $f_{\vec X}\colon\prod_{a=1}^k \PD_{d_a}^1 \to \R$ by
+Given $n$ samples $\rv = (X_1, \dots, X_n)$ in $\R^D$, define the function $f_{\samp}\colon\prod_{a=1}^k \PD_{d_a}^1 \to \R$ by
 \begin{align}\label{eq:projective-likelihood}
-  f_{\vec X}(\Theta_1,\dots,\Theta_k) = \log \sum_{i=1}^n \braket{X_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) X_i}.
+  f_{\samp}(\Theta_1,\dots,\Theta_k) = \log \sum_{i=1}^n \braket{X_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) X_i}.
 \end{align}
-Let $(\widehat{\Theta}_{\vec X,1}, \dots, \widehat{\Theta}_{\vec X,k})$ denote the minimizer of $f_{\vec X}$ if it exists and is unique.
+Let $(\widehat{\Theta}_{\samp,1}, \dots, \widehat{\Theta}_{\samp,k})$ denote the minimizer of $f_{\samp}$ if it exists and is unique.
 \end{definition}
 
 \noindent
-As explained above, $\widehat{\Theta}_{\vec X} = \widehat{\Theta}_{\vec X,1} \ot \cdots \ot \widehat{\Theta}_{\vec X,k}$ is directly related to the maximum likelihood estimator for the tensor normal model (namely, by an known overall multiplicative factor).
-We will often identify $\Theta$ with the tuple $(\Theta_1,\dots,\Theta_k)$, and similarly for $\widehat{\Theta}_{\vec X}$.
-When $\vec X$ is clear from context we will drop it.
+As explained above, $\widehat{\Theta}_{\samp} = \widehat{\Theta}_{\samp,1} \ot \cdots \ot \widehat{\Theta}_{\samp,k}$ is directly related to the maximum likelihood estimator for the tensor normal model (namely, by an known overall multiplicative factor).
+We will often identify $\Theta$ with the tuple $(\Theta_1,\dots,\Theta_k)$, and similarly for $\widehat{\Theta}_{\samp}$.
+When $\samp$ is clear from context we will drop it.
 
 
 %-----------------------------------------------------------------------------
@@ -289,39 +293,39 @@ Further, say $f$ is \emph{$\lambda$-strongly geodesically convex} at a point $\T
 %Here we use the norm $\norm{\cdot}_{\vec d}$ induced by the rescaled Hilbert-Schmidt inner product $\braket{X, Y}_{\vec d} = \sum_{a=1}^k \frac1{d_a} \tr(X_a Y_a)$ for $X, Y \in \Sym$.
 \end{definition}
 
-The function $f_{\vec X}$ defined in \cref{dfn:function} is geodesically convex~\cite{burgisser2019towards}. \CF{see the commented out motivation. Where to put it?}
+The function $f_{\samp}$ defined in \cref{dfn:function} is geodesically convex~\cite{burgisser2019towards}. \CF{see the commented out motivation. Where to put it?}
 \MW{Write $\norm Z_F^2 = \sum_i \norm{Z_i}_F^2$???}
-%One might wonder why we define $\exp_\Theta$ using the componentwise multiplication by $\sqrt{\vec d}$. In fact, this is equal to the exponential map for the Riemannian metric $\braket{X, Y}_{\vec d} = \sum_{a=1}^k \frac1{d_a} \tr(X_a Y_a)$. Oddly enough, defining the gradient and Hessian according to this metric, rather than the usual Hilbert-Schmidt inner product, improves the ratio between the norm of the gradient of $f_{\vec X}$ and its strong geodesic convexity parameter - a ratio which controls the quality of our statistical estimate. 
+%One might wonder why we define $\exp_\Theta$ using the componentwise multiplication by $\sqrt{\vec d}$. In fact, this is equal to the exponential map for the Riemannian metric $\braket{X, Y}_{\vec d} = \sum_{a=1}^k \frac1{d_a} \tr(X_a Y_a)$. Oddly enough, defining the gradient and Hessian according to this metric, rather than the usual Hilbert-Schmidt inner product, improves the ratio between the norm of the gradient of $f_{\samp}$ and its strong geodesic convexity parameter - a ratio which controls the quality of our statistical estimate. 
 %RMO: Is this oddity simply because of the structure of the g-convex function that we are studying, the fact that it is a function over $\otimes \Theta_i$ and therefore we will get these $d_i$'s naturally? (todo for myself: do these calculations and see)
-We also note that $f$ has a certain useful transformation property or ``equivariance." For all $\Theta \in \PD$, $A \in \SL$, and $\vec X=(X_1,\dots,X_n)$, we have that
+We also note that $f$ has a certain useful transformation property or ``equivariance." For all $\Theta \in \PD$, $A \in \SL$, and $\samp=(X_1,\dots,X_n)$, we have that
 \begin{align}\label{eq:equivariance}
-  f_{A^{-1} \vec X}(A^T \Theta A) = f_{\vec X}(\Theta),
+  f_{A^{-1} \samp}(A^T \Theta A) = f_{\samp}(\Theta),
 \end{align}
-where we write $A^{-1} \vec X = (A^{-1} X_1,\cdots,A^{-1} X_n)$.
+where we write $A^{-1} \samp = (A^{-1} X_1,\cdots,A^{-1} X_n)$.
 With these definitions in place, we are able to state the rather straightforward plan.
 
 \begin{enumerate}
 \item\label{it:reduce} \textbf{Reduce to identity:}
-Firstly, \cref{eq:equivariance} implies that $\widehat\Theta_{\Theta^{-1/2} \vec X} = \Theta^{1/2} \widehat\Theta_{\vec X} \Theta^{1/2}$ assuming either minimizer exists and is unique.
+Firstly, \cref{eq:equivariance} implies that $\widehat\Theta_{\Theta^{-1/2} \samp} = \Theta^{1/2} \widehat\Theta_{\samp} \Theta^{1/2}$ assuming either minimizer exists and is unique.
 Therefore,
 \begin{align*}
-  d_F(\widehat\Theta_{\Theta^{-1/2} \vec X}; \Theta)
-= \norm{ I - \Theta^{-1/2} \widehat\Theta_{\Theta^{-1/2} \vec X} \Theta^{-1/2} }_F
-% = \norm{ I - \widehat\Theta_{\Theta^{1/2} \vec X} }_F
-= d_F(\widehat\Theta_{\vec X}; I)
+  d_F(\widehat\Theta_{\Theta^{-1/2} \samp}; \Theta)
+= \norm{ I - \Theta^{-1/2} \widehat\Theta_{\Theta^{-1/2} \samp} \Theta^{-1/2} }_F
+% = \norm{ I - \widehat\Theta_{\Theta^{1/2} \samp} }_F
+= d_F(\widehat\Theta_{\samp}; I)
 \end{align*}
 and likewise for the distance $d_{\op}$.
-Now if $\vec X$ is distributed as $n$ independent samples from a standard Gaussian, $\Theta^{-1/2} \vec X$ is distributed as $n$ independent samples from $\cN(0, \Theta^{-1})$.
-This shows that to prove \cref{thm:tensor-frobenius} it is enough to consider the case that $\Theta = I$ and $\vec X$ is standard Gaussian.
+Now if $\rv$ is distributed as $n$ independent samples from a standard Gaussian, $\Theta^{-1/2} \rv$ is distributed as $n$ independent samples from $\cN(0, \Theta^{-1})$.
+This shows that to prove \cref{thm:tensor-frobenius} it is enough to consider the case that $\Theta = I$ and $\rv$ is standard Gaussian.
 \item\label{it:grad} \textbf{Bound the gradient:}
-Show that the gradient $\nabla f_{\vec X}(I)$ (defined below) is small with high probability.
+Show that the gradient $\nabla f_{\rv}(I)$ (defined below) is small with high probability.
 \item\label{it:convexity} \textbf{Show strong convexity:}
-Show that, with high probability, $f_{\vec X}$ is $\Omega(1)$-strongly geodesically convex near $I$.
+Show that, with high probability, $f_{\rv}$ is $\Omega(1)$-strongly geodesically convex near $I$.
 \end{enumerate}
 
 These together imply the desired sample complexity bounds -- as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far.
 Furthermore, like in the Euclidean case, if a function is strongly geodesically convex in a region and one can prove a \emph{descent lemma} for a sequence in the region, then it must converge exponentially quickly to an optimizer.
-It is well-known that various optimization algorithms applied to $f_{\vec X}$ satisfy such a descent lemma~\cite{burgisser2019towards}.
+It is well-known that various optimization algorithms applied to $f_{\samp}$ satisfy such a descent lemma~\cite{burgisser2019towards}.
 
 To make this discussion more concrete, we now define the gradient formally and state the lemma that we will use to relate the gradient and strong convexity to the distance to the optimizer as in the plan above.
 
@@ -397,7 +401,7 @@ Since $Z$ was arbitrary, this shows that $f(\Theta') > f(\Theta)$ for any $\Thet
 %-----------------------------------------------------------------------------
 \subsection{Bounding the gradient}
 %-----------------------------------------------------------------------------
-As suggested in the plan from the previous section, we now compute the gradient of $f_{\vec X}$ and bound it using basic matrix concentration results.
+As suggested in the plan from the previous section, we now compute the gradient of $f_{\samp}$ and bound it using basic matrix concentration results.
 
 To calculate the gradient, we need a definition from linear algebra.
 
@@ -410,47 +414,47 @@ for all $d_a \times d_a$ matrices $Z$, where $Z_a = (I_1 \ot \cdots \ot I_{a-1} 
 Here and in the following we write $I_a$ for the $d_a\times d_a$ identity matrix. \CF{can I suggest $Z_{(a)}$ instead to avoid the confusion with components below?}
 \end{definition}
 \CF{the above definition conflicts a bit with just referring to $Z_a$ as the $a^{th}$ component, which I have done elsewhere. How to resolve?}
-\MW{Explain how to compute in terms of $\vec X$. Ref above \cref{cor:vershynin}.}
+\MW{Explain how to compute in terms of $\samp$. Ref above \cref{cor:vershynin}.}
 
 \begin{lemma}[Riemannian gradient]\label{lem:gradient}
-Let $\rho = \sum_{i=1}^n X_i X_i^T / \norm{\vec X}_2^2$.
-Then the components of the Riemannian gradient $\nabla f_{\vec X}$ at the identity are given by
+Let $\rho = \sum_{i=1}^n X_i X_i^T / \norm{\samp}_2^2$.
+Then the components of the Riemannian gradient $\nabla f_{\samp}$ at the identity are given by
 \begin{align*}
-  \nabla_a f_{\vec X} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a} \qquad \text{ for } a \in [k].
+  \nabla_a f_{\samp} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a} \qquad \text{ for } a \in [k].
 \end{align*}
 \end{lemma}
 \begin{proof}
-  Let $F_{\vec X}(\Theta) = \tr \rho \, \Theta$.
+  Let $F_{\samp}(\Theta) = \tr \rho \, \Theta$.
   Then, for all $a\in[k]$, we have
   \begin{align*}
-   \langle \nabla_a F_{\vec X} , Z \rangle
-  % = \partial_{t=0} F_{\vec X}(I_1,\dots,I_{a-1}, e^{tZ}, I_{a+1},\dots,I_n)
+   \langle \nabla_a F_{\samp} , Z \rangle
+  % = \partial_{t=0} F_{\samp}(I_1,\dots,I_{a-1}, e^{tZ}, I_{a+1},\dots,I_n)
   = \partial_{t=0} \tr \rho \, e^{t \sqrt{d_a} Z_a}
   = \sqrt{d_a} \tr \rho Z_a
   = \sqrt{d_a} \tr \rho^{(a)} Z
   \end{align*}
   for all traceless symmetric $d_a \times d_a$ matrices $Z$.
-  Since $\nabla_a F_{\vec X}$ is traceless and symmetric by definition, this implies
+  Since $\nabla_a F_{\samp}$ is traceless and symmetric by definition, this implies
   \begin{align*}
-    \nabla_a F_{\vec X}
+    \nabla_a F_{\samp}
   = \sqrt{d_a} \rho^{(a)} - \tr(\rho^{(a)}) I_a /\sqrt{d_a}
   = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}.
   \end{align*}
-  Finally, note that $f_{\vec X}(\Theta) = \log F_{\vec X}(\Theta) + \log \norm{\vec X}_2^2$, so
+  Finally, note that $f_{\samp}(\Theta) = \log F_{\samp}(\Theta) + \log \norm{\samp}_2^2$, so
   \begin{align*}
-    \nabla_a f_{\vec X}
-  = \frac{\nabla_a F_{\vec X}}{F_{\vec X}(I)}
-  = \nabla_a F_{\vec X}
+    \nabla_a f_{\samp}
+  = \frac{\nabla_a F_{\samp}}{F_{\samp}(I)}
+  = \nabla_a F_{\samp}
   = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a},
   \end{align*}
-  using that $F_{\vec X}(I) = \tr \rho = 1$.
+  using that $F_{\samp}(I) = \tr \rho = 1$.
 \end{proof}
 
 Having calculated the gradient, we are ready to state our bound:
 %\MW{Please check updated proof. Can we assume $\eps<1$ and simply take~$C=16$?}
 \MW{Make pretty by manipulating $C$}
 \begin{prop}\label{prop:gradient-bound}
-Let $\vec X = (X_1,\dots,X_n)$ be independent standard Gaussian random variables in $\R^D$, where $D=d_1\cdots{}d_k$.
+Let $\rv = (X_1,\dots,X_n)$ be independent standard Gaussian random variables in $\R^D$, where $D=d_1\cdots{}d_k$.
 Let $\eps>0$ and $C = 16^2\max\{\eps^2,1\}$.
 Suppose that, for all $a \in [k]$,
 \begin{align*}
@@ -458,13 +462,13 @@ Suppose that, for all $a \in [k]$,
 \end{align*}
 Then, with probability at least $1 - 2 \sum_{a=1}^k e^{-N_a \eps^2/2C}$ we have that
 \begin{align*}
-  \norm{\nabla_a f_{\vec X}}_{\op} \leq \eps/\sqrt{d_a}
+  \norm{\nabla_a f_{\rv}}_{\op} \leq \eps/\sqrt{d_a}
 \end{align*}
-for all $a\in[k]$, and hence $\norm{\nabla f_{\vec X}}^2 \leq k \eps^2$.
+for all $a\in[k]$, and hence $\norm{\nabla f_{\rv}}^2 \leq k \eps^2$.
 \end{prop}
 
 To prove this we will need a standard result in matrix concentration.
-Recall that $\nabla_a f_{\vec X} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}$ by \cref{lem:gradient}.
+Recall that $\nabla_a f_{\samp} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}$ by \cref{lem:gradient}.
 It is not hard to see that $\rho^{(a)}$ is distributed as $Y Y^T / \norm{Y}_F^2$, where $Y$ is a $d_a \times N_a$ matrix with independent Gaussian entries.
 The following result bounds the singular values of such random matrices.
 
@@ -480,7 +484,7 @@ where $s_{\min}$ and $s_{\max}$ denote the smallest and largest singular value, 
 \begin{proof}[Proof of \cref{prop:gradient-bound}]
 We first consider a fixed $a\in[k]$ and later take a union bound.
 Let $d = d_a$ and $N = N_a = n D/d_a$.
-Again, $\nabla_a f_{\vec X} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}$ where $\rho^{(a)}$ is distributed as $Y Y^T/\|Y\|_F^2$, where $Y$ is a $d \times N$ matrix with independent Gaussian entries.
+Again, $\nabla_a f_{\rv} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}$ where $\rho^{(a)}$ is distributed as $Y Y^T/\|Y\|_F^2$, where $Y$ is a $d \times N$ matrix with independent Gaussian entries.
 By \cref{cor:vershynin}, we have the following with $\leq 2 \exp(-t^2/2)$ failure probability:
 \begin{align*}
   \sqrt{N} \left( 1 -  \frac{\sqrt{d} + t }{\sqrt{N}}  \right)\leq s_{\min}(Y) \leq s_{\max}(Y) \leq  \sqrt{N} \left( 1 + \frac{\sqrt{d} + t }{\sqrt{N}} \right).
@@ -493,7 +497,7 @@ Since there are at most $d \leq N$ nonzero eigenvalues, this implies in turn tha
 \frac {\left( 1 \pm 8\eps/\sqrt{C} \right)} {d \left( 1 \pm 8\eps/\sqrt{C} \right)} \subseteq \frac1d \left( 1 \pm 16\eps/\sqrt{C} \right) \subseteq \frac1d \left( 1 \pm \eps \right),
 \end{align*}
 Thus,
-$\norm{\nabla_a f_{\vec X}}_{\op} \leq \eps/\sqrt{d_a}$
+$\norm{\nabla_a f_{\rv}}_{\op} \leq \eps/\sqrt{d_a}$
 with failure probability at most $2 \exp(-N \eps^2/2C)$.
 Applying the union bound over $[k]$ completes the proof of the proposition.
 % Next, observe that $\|Y\|_F^2$ is a $\chi^2$-distribution with $Nd$ degrees of freedom, and thus satisfies
@@ -507,14 +511,14 @@ Applying the union bound over $[k]$ completes the proof of the proposition.
 % with probability $1 - 2 e^{- c N \eps^2}- 2 e^{- c Nd \eps^2} = 1 - 4 e^{- N\eps^2},$ provided $c$ is small enough.
 \end{proof}
 
-% Both $\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a$ and $\| \vec X\|_F^2 - Nd_a \leq .5 N d_a$ hold with probability \CF{blah}$. Now  $$ \|\rho^{\{a\}} - I_a/d_a\|_{op} \leq \|\rho^{\{a\}} - N I_{d_a}/ \|\vec X\|_F\|_{op} + $$
+% Both $\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a$ and $\| \samp\|_F^2 - Nd_a \leq .5 N d_a$ hold with probability \CF{blah}$. Now  $$ \|\rho^{\{a\}} - I_a/d_a\|_{op} \leq \|\rho^{\{a\}} - N I_{d_a}/ \|\samp\|_F\|_{op} + $$
 
 
 %Provided $c$ is small enough we then have
  %$$\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a.$$
 
 
-% Next, observe that $\|\vec X\|_F^2$ is a $\chi$-squared distribution with $Nd_a$ degrees of freedom, and thus satisfies $\| \vec X\|_F^2 - Nd_a \leq .5 N d_a$ with probability $1 - 2e^{- c N d_a}$. Both $\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a$ and $\| \vec X\|_F^2 - Nd_a \leq .5 N d_a$ hold with probability \CF{blah}$. Now  $$ \|\rho^{\{a\}} - I_a/d_a\|_{op} \leq \|\rho^{\{a\}} - N I_{d_a}/ \|\vec X\|_F\|_{op} + $$
+% Next, observe that $\|\samp\|_F^2$ is a $\chi$-squared distribution with $Nd_a$ degrees of freedom, and thus satisfies $\| \samp\|_F^2 - Nd_a \leq .5 N d_a$ with probability $1 - 2e^{- c N d_a}$. Both $\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a$ and $\| \samp\|_F^2 - Nd_a \leq .5 N d_a$ hold with probability \CF{blah}$. Now  $$ \|\rho^{\{a\}} - I_a/d_a\|_{op} \leq \|\rho^{\{a\}} - N I_{d_a}/ \|\samp\|_F\|_{op} + $$
 
 
 
@@ -529,7 +533,7 @@ Applying the union bound over $[k]$ completes the proof of the proposition.
 We now prove our main strong convexity result, \cref{thm:ball-convexity}, in order to carry out step~\ref{it:convexity} of the plan from \cref{subsec:outline}.
 
 \begin{theorem}\label{thm:ball-convexity}
-There is $c> 0$ such that the following holds: with probability at least $1 - k^{2} n^{c 2 (d_1 + d_2)}$, the function $f_{\vec X}$ is $c$-strongly convex at all points $Z\in \PD$ with $\sum_{i = 1}^n \|\log Z_a\|_{op} < c/k.$ 
+There is $c> 0$ such that the following holds: with probability at least $1 - k^{2} n^{c 2 (d_1 + d_2)}$, the function $f_{\rv}$ is $c$-strongly convex at all points $Z\in \PD$ with $\sum_{i = 1}^n \|\log Z_a\|_{op} < c/k.$ 
 \end{theorem}
 
 Just like in the Euclidean case, the Hessian is convenient to characterize strong convexity, and we begin by defining it formally in the Riemannian context.
@@ -573,56 +577,56 @@ for all $d_a \times d_a$ matrices $Y$ and $d_b \times d_b$ matrices $Z$, where, 
 This definition is consistent with \cref{def:single marginal} in the sense that $\tr \rho^{(ab)} (Y \ot I) = \tr \rho^{(a)} Y$ and $\tr \rho^{(ab)} (I \ot Z) = \tr \rho^{(b)} Z$ for all $\rho$, $Y$, $Z$.
 
 \begin{lemma}[Riemannian Hessian]\label{lem:hessian}
-Let $\rho = \sum_{i=1}^n X_i X_i^T / \norm{\vec X}_2^2$.
-Then the Riemannian Hessian $\nabla^2 f_{\vec X}$ at the identity is given by \CF{fix $Y_a$ here}
+Let $\rho = \sum_{i=1}^n X_i X_i^T / \norm{\samp}_2^2$.
+Then the Riemannian Hessian $\nabla^2 f_{\samp}$ at the identity is given by \CF{fix $Y_a$ here}
 \begin{align*}
- \frac{1}{d_a} \langle Y_a,  \left( \nabla^2_{aa} f_{\vec X} \right) Y_a \rangle
+ \frac{1}{d_a} \langle Y_a,  \left( \nabla^2_{aa} f_{\samp} \right) Y_a \rangle
 &= \left( \tr \rho^{(a)} Y^2 - \bigl(\tr Y \rho^{(a)}\bigr)^2 \right) \\
-  \frac1{\sqrt{d_a d_b}} \langle Y_a,  \left( \nabla^2_{ab} f_{\vec X} \right) Z_b \rangle
+  \frac1{\sqrt{d_a d_b}} \langle Y_a,  \left( \nabla^2_{ab} f_{\samp} \right) Z_b \rangle
 &= \tr \rho^{(ab)} \left( Y \ot Z \right) - \bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr) 
 \end{align*}
 for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d_b\times d_b$ matrices~$Z$.
 \end{lemma}
 \begin{proof}
-  Let $F_{\vec X}(\Theta) = \tr \rho \, \Theta$ as in the proof of \cref{lem:gradient}.
+  Let $F_{\samp}(\Theta) = \tr \rho \, \Theta$ as in the proof of \cref{lem:gradient}.
   Then,
   \begin{align*}
-   \langle Y_a,  \left( \nabla^2_{aa} F_{\vec X} \right) Y_a \rangle
+   \langle Y_a,  \left( \nabla^2_{aa} F_{\samp} \right) Y_a \rangle
   &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{(s+t)\sqrt{d_a}  Y_a} \\
   &= \partial_{s=0} \partial_{t=0} \tr \rho^{(a)} e^{(s+t)  \sqrt{d_a}Y}
   = d_a \tr \rho^{(a)} Y^2,
   \end{align*}
   while for $a\neq b$ we have
   \begin{align*}
-    \langle Y_a,  \left( \nabla^2_{ab} F_{\vec X} \right) Z_b \rangle
+    \langle Y_a,  \left( \nabla^2_{ab} F_{\samp} \right) Z_b \rangle
   &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s \sqrt{d_a}Y_a + t \sqrt{d_b} Z_b} \\
   &= \partial_{s=0} \partial_{t=0} \tr \rho^{(ab)} \left( e^{s \sqrt{d_a}  Y} \ot e^{t \sqrt{d_b} Z} \right)\\
   &= \sqrt{d_a d_b} \tr \rho^{(ab)} \left( Y \ot Z \right).
   \end{align*}
-  %Since $f_{\vec X}(\Theta) = \log F_{\vec X}(\Theta) + \log \norm{\vec X}_2^2$, we have
-  Since $f_{\vec X}(\Theta) = \log F_{\vec X}(\Theta)$ \CF{deleted a term; please see commented text to check}, we have
+  %Since $f_{\samp}(\Theta) = \log F_{\samp}(\Theta) + \log \norm{\samp}_2^2$, we have
+  Since $f_{\samp}(\Theta) = \log F_{\samp}(\Theta)$ \CF{deleted a term; please see commented text to check}, we have
   \begin{align*}
-    \braket{Y, (\nabla^2 f_{\vec X}) Z}
-  &= \frac{\braket{Y, (\nabla^2 F_{\vec X}) Z}}{F_{\vec X}(I)} - \frac{\braket{Y, \nabla F_{\vec X}} \braket{\nabla F_{\vec X}, Z}}{F_{\vec X}(I)^2} \\
-  &= \frac{\braket{Y, (\nabla^2 F_{\vec X}) Z}}{F_{\vec X}(I)} - \braket{Y, \nabla f_{\vec X}} \braket{\nabla f_{\vec X}, Z}.
+    \braket{Y, (\nabla^2 f_{\samp}) Z}
+  &= \frac{\braket{Y, (\nabla^2 F_{\samp}) Z}}{F_{\samp}(I)} - \frac{\braket{Y, \nabla F_{\samp}} \braket{\nabla F_{\samp}, Z}}{F_{\samp}(I)^2} \\
+  &= \frac{\braket{Y, (\nabla^2 F_{\samp}) Z}}{F_{\samp}(I)} - \braket{Y, \nabla f_{\samp}} \braket{\nabla f_{\samp}, Z}.
   \end{align*}
   % \begin{align*}
-  %   \nabla^2 f_{\vec X}
-  % = \frac {\nabla^2 F_{\vec X}} {F_{\vec X}(I)} - \frac{\nabla F_{\vec X} \braket{\nabla F_{\vec X}, \cdot}_{\vec d}}{F_{\vec X}(I)^2}
-  % = \frac {\nabla^2 F_{\vec X}} {F_{\vec X}(I)} - \nabla f_{\vec X} \braket{\nabla f_{\vec X}, \cdot}_{\vec d},
+  %   \nabla^2 f_{\samp}
+  % = \frac {\nabla^2 F_{\samp}} {F_{\samp}(I)} - \frac{\nabla F_{\samp} \braket{\nabla F_{\samp}, \cdot}_{\vec d}}{F_{\samp}(I)^2}
+  % = \frac {\nabla^2 F_{\samp}} {F_{\samp}(I)} - \nabla f_{\samp} \braket{\nabla f_{\samp}, \cdot}_{\vec d},
   % \end{align*}
   % where $\dagger$ denotes the adjoint with respect to the inner product $\braket{\cdot,\cdot}_{\vec d}$.
-  Since $F_{\vec X}(I)=1$, plugging in the above formulas and using \cref{lem:gradient} for the gradient completes the proof.
+  Since $F_{\samp}(I)=1$, plugging in the above formulas and using \cref{lem:gradient} for the gradient completes the proof.
   % Indeed,
   % \begin{align*}
-  %   \frac1{d_a} \tr Y (\nabla^2_{aa} f_{\vec X}) Y
-  % = \frac1{d_a} \tr Y (\nabla^2_{aa} F_{\vec X}) Y - \frac1{d_a} \tr Y (\nabla_a f_{\vec X}) \frac1{d_a} \tr Y (\nabla_a f_{\vec X})
+  %   \frac1{d_a} \tr Y (\nabla^2_{aa} f_{\samp}) Y
+  % = \frac1{d_a} \tr Y (\nabla^2_{aa} F_{\samp}) Y - \frac1{d_a} \tr Y (\nabla_a f_{\samp}) \frac1{d_a} \tr Y (\nabla_a f_{\samp})
   % = \tr \rho^{(a)} Y^2 - (\tr Y \rho^{(a)})^2
   % \end{align*}
   % and
   % \begin{align*}
-  %   \frac1{d_a} \tr Y (\nabla^2_{ab} f_{\vec X}) Z
-  % = \frac1{d_a} \tr Y (\nabla^2_{ab} F_{\vec X}) Z - \frac1{d_a} \tr Y (\nabla_a f_{\vec X}) \frac1{d_b} \tr Z (\nabla_b f_{\vec X})
+  %   \frac1{d_a} \tr Y (\nabla^2_{ab} f_{\samp}) Z
+  % = \frac1{d_a} \tr Y (\nabla^2_{ab} F_{\samp}) Z - \frac1{d_a} \tr Y (\nabla_a f_{\samp}) \frac1{d_b} \tr Z (\nabla_b f_{\samp})
   % = \tr \rho^{(ab)} \left( Y \ot Z \right) - (\tr Y \rho^{(a)})(\tr Z \rho^{(b)})
   % \end{align*}
 \end{proof}
@@ -639,11 +643,11 @@ for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d
 We now state our strong convexity result at the identity:
 
 \begin{theorem}\label{thm:tensor-convexity}
-Let $\vec X = (X_1,\dots,X_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples is $N \geq k^2 \max_{a=1}^k d_a^2 / D$. Then, with probability at least $1 - 1/{\color{red}\poly(D)}$, 
+Let $\rv = (X_1,\dots,X_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples is $N \geq k^2 \max_{a=1}^k d_a^2 / D$. Then, with probability at least $1 - 1/{\color{red}\poly(D)}$, 
 $$ (1 - (k - 1) \lambda - k \eps^2 - \eps) I \preceq 
- \nabla^2 f_{\vec X} \preceq (1 + (k - 1) \lambda + k \eps^2 + \eps) I.$$
-$$ \|\nabla^{2} f_{\vec X} - I\|_{op} \leq (k - 1) \lambda + k \eps^2 + \eps $$
- In particular, $f_{\vec X}$ is $\Omega(1)$ strongly convex with probability $\CF{good}$. 
+ \nabla^2 f_{\rv} \preceq (1 + (k - 1) \lambda + k \eps^2 + \eps) I.$$
+$$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq (k - 1) \lambda + k \eps^2 + \eps $$
+ In particular, $f_{\rv}$ is $\Omega(1)$ strongly convex with probability $\CF{good}$. 
 \end{theorem}
 
 To prove this, we need the following result on quantum expansion (cf.\ \cref{sec:matrix-normal}).
@@ -715,8 +719,8 @@ We now show our second strong convexity result, namely that if our function is s
 $$ \|e^{\delta} - I\|_{op} \leq \leq \|\delta\|_{op} + \|\delta\|_{op}^{2} \leq 2 \|\delta\|_{op}.$$ 
 \end{fact}
 
-We will follow the structure presented in the last proof by letting our input at the identity be represented $\{X_{i}\}$ and showing each block of the Hessian only changes a small amount under perturbation $\{X'_{i} := e^{\delta} X_{i}\}$ for $\delta \in \Sym$. \CF{ I am a little confused, is $\delta$ a single hermitian or a tuple of Hermitians? Right now our notation in the definition of $(Z)_{b}$ assumes $Z$ is a single matrix} In particular we will give bounds on each block under each component-wise perturbation $\{X'_{i} := (e^{\delta})_{b} X_{i}\}$. Recall (c.f. \cref{lem:hessian}) that the $a^{th}$ diagonal block of the Hessian depends only on $\rho^a_{\vec X}$. This motivates the next two lemmas quantifying the change of $\rho^{a}
-_{\vec X}$ under perturbations. 
+We will follow the structure presented in the last proof by letting our input at the identity be represented $\{X_{i}\}$ and showing each block of the Hessian only changes a small amount under perturbation $\{X'_{i} := e^{\delta} X_{i}\}$ for $\delta \in \Sym$. \CF{ I am a little confused, is $\delta$ a single hermitian or a tuple of Hermitians? Right now our notation in the definition of $(Z)_{b}$ assumes $Z$ is a single matrix} In particular we will give bounds on each block under each component-wise perturbation $\{X'_{i} := (e^{\delta})_{b} X_{i}\}$. Recall (c.f. \cref{lem:hessian}) that the $a^{th}$ diagonal block of the Hessian depends only on $\rho^a_{\samp}$. This motivates the next two lemmas quantifying the change of $\rho^{a}
+_{\samp}$ under perturbations. 
 
 \CF{for the readers' sake some justification is needed for why perturbing $X$ this is the same as considering the Hessian of our function at another point in $\PD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
 \begin{lemma} \label{atoaaRobustness}
@@ -759,10 +763,10 @@ This gives a bound on the diagonal blocks of the Hessian as well as the rank-one
 
 \CF{make consistent with def 4, hessian}
 \begin{corollary} \label{diagRobustness}
-For input $\vec X \in \CF{where?}$ such that $d_{a}\|\rho_{X}^{(a)}\|_{op} \leq 1+\frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a})_{a}$ with $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$ giving $\{X'_{i} := e^{\delta} X_{i} \}$:
+For input $\samp \in \CF{where?}$ such that $d_{a}\|\rho_{X}^{(a)}\|_{op} \leq 1+\frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a})_{a}$ with $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$ giving $\{X'_{i} := e^{\delta} X_{i} \}$:
 \[ \frac{1}{d_{a}} \|\nabla^{2}_{aa} f(e^{2\delta}) - \nabla^{2}_{aa} f(I)\|_{op} \leq 40 \|\delta\|_{op} \|\rho_{X}^{(a)}\|_{op}      \]
 \end{corollary}
-%\CF{technically $f(e^{\delta})$ corresponds to $e^{\delta/2} \vec X$}
+%\CF{technically $f(e^{\delta})$ corresponds to $e^{\delta/2} \samp$}
 \begin{proof}
 Recall from \cref{lem:hessian} that $\frac{1}{d_{a}}\langle Y, \nabla^{2}_{aa} f_{X} Y \rangle = \langle \rho_{X}^{(a)}, Y^{2} \rangle - \langle \rho_{X}^{(a)}, Y \rangle^{2}$. We treat the perturbation as the composition of $k$ perturbations; 
 \[ X_{0}:=X \to X_{1}:= (e^{\delta_{1}})_1 X_{0} \to ... \to X_{k}:=(e^{\delta_{k}})_{k} X_{k-1} = X'  \]
@@ -786,7 +790,6 @@ from which the statement follows by the initial condition $\|d_{a} \rho_{X}^{(a)
 \begin{definition}
 For operator $M : \mat(d_{b}) \to \mat(d_{a})$, we let $\|M\|_{0}$ denote the $F \to F$ norm of its restriction to the traceless subspaces $\Sym^0_{d_b} \to \Sym^0_{d_a}$
 \end{definition}
-\CF{I think we should change $X$ to $\vec X$ at many places in here. Alternately we can just start using $X$ to mean the entire tuple, but that conficts with it as a random variable, so idk} 
 \begin{definition}
 For input $\rho_{X}$ and fixed $a,b$, define
 \[ \langle Y, H_{X}^{ab} Z \rangle := \langle (Y_{a})(Z_{b}), \rho_{X} \rangle = \langle Y \otimes Z , \rho_{X}^{(ab)} \rangle     \]
@@ -798,7 +801,7 @@ $\|H_{X}^{ab}\|_{F \to F}^{2} \leq \|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{o
 %\begin{proof}This was already in KLR and we have two new proofs: one by convexity, and one by Riesz-Thorin. \AR{The proofs are in some other file, we can add it if we like}\end{proof}
 \begin{lemma} \label{btoabRobustness}
 \CF{add quantifiers}
-For $\vec X \in \CF{somewhere}$ and perturbation $\delta \in \Sym$ with $\|\delta\|_{op} \leq \frac{1}{20}$, if $X' = (e^{\delta})_c X$ for $c \in \{a,b\}$ we have 
+For $\samp \in \CF{somewhere}$ and perturbation $\delta \in \Sym$ with $\|\delta\|_{op} \leq \frac{1}{20}$, if $X' = (e^{\delta})_c X$ for $c \in \{a,b\}$ we have 
 %$\{X'_{i} := (e^{\delta})_{c} X_{i} \}$ for $c \in \{a,b\}$:
 \[ \|H_{X'}^{ab} - H_{X}^{ab}\|_{0} \leq 4.5 \|\delta\|_{op} \|H_{X}^{ab}\|_{F \to F}    \]
 \end{lemma}
@@ -837,7 +840,7 @@ Recall $\frac{1}{\sqrt{d_{a} d_{b}}} \langle Y, \nabla^{2}_{aa} f_{X} Z \rangle 
 \[ |\langle Y, (\rho_{X'}^{(ab)} - \rho_{X}^{(ab)}) Z \rangle| \leq 20 \|\delta\|_{op} \|H_{X}\|_{F \to F} \|Y\|_{F} \|Z\|_{F}    \]
 We used $\ref{btoabRobustness}$ for $\{a,b\}$ and $\ref{ctoabRobustness}$ for the rest. 
 
-We can similarly bound the off-diagonal "rank-one" terms:
+We can similarly bound the off-diagonal ``rank-one" terms:
 \[ |\langle \rho_{X'}^{(a)}, Y \rangle \langle \rho_{X'}^{(b)}, Z \rangle - \langle \rho_{X}^{(a)}, Y \rangle \langle \rho_{X}^{(b)}, Z \rangle|    \]
 \[ \leq |\langle \rho_{X'}^{(a)} - \rho_{X}^{(a)}, Y \rangle \langle \rho_{X'}^{(b)}, Z \rangle| + |\langle \rho_{X}^{(a)}, Y \rangle \langle \rho_{X'}^{(b)} - \rho_{X}^{(b)}, Z \rangle|   \]
 \[ 40 \|\delta\|_{op} (1+20\|\delta\|_{op}) \|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op} \|Y\|_{1} \|Z\|_{1}    \]
@@ -884,11 +887,11 @@ We now prove \cref{thm:matrix-normal}, an improvement to \cref{thm:tensor-froben
 
 
 The proof plan is similar to that in \cref{subsec:outline}, but rather than strong convexity we use the similar but stronger notion of quantum expansion \CF{cite klr, etc}, which allows us to obtain bounds on the distance to the optimizer from bounds on the \emph{operator norm} on the gradient rather than the Frobenius norm.
-
+\CF{move this to appropriate place?}
 \begin{definition}[Quantum expansion]
 $ $
 \begin{enumerate}
-\item Let $\Phi:\mat(d_1) \to \mat(d_2)$ be the operator defined by $\Phi(Y) = \tr_{\{1,3\}} ( Y \ot I_{d_2} \ot I_{n}) \vec X \vec X^T$. Equivalently,
+\item Let $\Phi:\mat(d_1) \to \mat(d_2)$ be the operator defined by $\Phi(Y) = \tr_{\{1,3\}} ( Y \ot I_{d_2} \ot I_{n}) \samp \samp^T$. Equivalently,
 $$\Phi(Y) = \sum_{i = 1}^n X_i^T Y X_i.$$
 $\Phi$ is known as the \emph{completely positive map} with Kraus operators $X_1, \dots, X_n$.
 \item $\Phi$ is said to be a \emph{$(1 - \lambda)$-quantum expander} if the second singular value $\sigma_2(\Phi)$ satisfies the following bound:
@@ -1083,7 +1086,7 @@ To prove \cref{thm:operator-cheeger}, we apply \cref{lem:op-cheeger} using \cref
 In this section we prove that the flip-flop algorithms for the matrix and tensor normal models converge quickly to the MLE estimator with high probability. We begin by stating the flip-flop algorithm and then... 
 
 \begin{Algorithm}
-\textbf{Input}: Samples $\vec{X} = (X_1, \ldots, X_n)$ where $X_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $X_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
+\textbf{Input}: Samples $\samp = (X_1, \ldots, X_n)$ where $X_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $X_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
 
 \textbf{Output}: $\underline{\Sigma} \in \PD_D$ such that $d_F(\underline{\Sigma}, \hat{\Sigma}) < \eps$, where $\hat{\Sigma}$ is the MLE for $\Sigma$. \\[.3ex]
 
@@ -1092,7 +1095,7 @@ In this section we prove that the flip-flop algorithms for the matrix and tensor
 \item\label{it:flip-flop step 1} Set $\Theta_a = I_a$ for each $a \in [k]$.
 \item\label{it:flip-flop step 2} For $t=1,\dots,T = \poly(D, b) \cdot \log(1/\eps)$, repeat the following:
 \begin{itemize}
-\item Compute each component of the gradient $\nabla_a := \nabla_a f_{\vec X}(\Theta_1, \ldots, \Theta_k)$ of $\nabla f_{\vec X}(\Theta_1, \ldots, \Theta_k)$ and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest. 
+\item Compute each component of the gradient $\nabla_a := \nabla_a f_{\samp}(\Theta_1, \ldots, \Theta_k)$ of $\nabla f_{\samp}(\Theta_1, \ldots, \Theta_k)$ and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest. 
 \item
 If $\norm{\nabla_a}_F < \eps/k$, output $\left( \bigotimes_{a =1}^k \Theta_a \right)^{-1}$ and return.
 % S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
@@ -1277,8 +1280,8 @@ We first begin by a standard symmetrization trick to linearize: if $Y$ is a stan
 %\CF{I think $m$ and $n$ are switched below}
 %\[\E Y^{*} I_{m} Y = m I_{n} \implies \E Y \otimes Y (I-P) = vec(I_{n}) vec(I_{m})^{*} (I-\Pi) = 0\]
 Therefore we can add the a copy of the sum with new iid variables $\{Z_{i}\}$: using Jensen's inequality and the convexity of the operator norm, we have
-\[ \E_{\vec Y} \left\|\left(\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i}\right) \circ \Pi\right\|_{op} \leq 
-\E_{\vec Y,\vec Z} \left\|\left(\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i}-\sum_{i=1}^{N} \alpha_{i} Z_{i} \otimes Z_{i}\right) \circ \Pi \right\|_{op}  \] Now note $(Y,Z)$ has the same distribution as $(\frac{Y+Z}{\sqrt{2}},\frac{Y-Z}{\sqrt{2}})$, so the right-hand-side of the above equation is
+\[ \E_{Y} \left\|\left(\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i}\right) \circ \Pi\right\|_{op} \leq 
+\E_{Y,Z} \left\|\left(\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i}-\sum_{i=1}^{N} \alpha_{i} Z_{i} \otimes Z_{i}\right) \circ \Pi \right\|_{op}  \] Now note $(Y,Z)$ has the same distribution as $(\frac{Y+Z}{\sqrt{2}},\frac{Y-Z}{\sqrt{2}})$, so the right-hand-side of the above equation is
 \begin{align}\frac{1}{2}\E &\left\|\left(\sum_{i=1}^{N} \alpha_{i} (Y_{i}+Z_{i}) \otimes (Y_{i}+Z_{i})  - \sum_{i=1}^{N} \alpha_{i} (Y_{i}-Z_{i}) \otimes (Y_{i}-Z_{i})\right)\circ \Pi \right\|_{op}\nonumber \\ 
 & = \E \left\|\left(\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}  + \alpha_{i} Z_{i} \otimes Y_{i} \right) \circ \Pi \right\|_{op}  \nonumber\\
 & \leq 2 \E \left\|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}\right\|_{op}.   \label{eq:yz}
@@ -1287,12 +1290,12 @@ Note we've lost the projection, but the left and right operators are independent
 
 \begin{align*} \E \left\|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}\right\|_{2p}^{2p} & = \E \tr \left[ \left( \sum_{ij} \alpha_{i} \alpha_{j} Y_{i}^{*} Y_{j} \otimes Z_{i}^{*} Z_{j} \right)^{p} \right]  \\
 & = \sum_{\vec{i},\vec{j} \in [N]^{p}} \alpha^{\vec{i}} \alpha^{\vec{j}} \E \tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} \otimes Z_{i_{1}}^{*} Z_{j_{1}} ... Z_{i_{p}}^{*} Z_{j_{p}}  ]   \\
-& = \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{\vec Y} \tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) (\E_{\vec Z} \tr [ Z_{i_{1}}^{*} Z_{j_{1}} ... Z_{i_{p}}^{*} Z_{j_{p}} ] )  
+& = \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{Y} \tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) (\E_{Z} \tr [ Z_{i_{1}}^{*} Z_{j_{1}} ... Z_{i_{p}}^{*} Z_{j_{p}} ] )  
 \end{align*}
 Here we used independence of $(Y,Z)$. We eventually want to charge to $\E \|\sum_{i} \alpha_{i} Y_{i}\|_{op}$. First note that expectations of Gaussian monomials are non-zero and positive iff the polynomial is even. Therefore the coefficient $\alpha^{\vec{i}} \alpha^{\vec{j}}$ from all non-vanishing terms is a square, and in particular positive. So we can upper bound each term individually by the nc-Holder inequality (\cref{thm:holder}) to find: 
-\[\E \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}\|_{2p}^{2p} \leq \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{\vec Y} \tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) ( \E_{\vec Z} \|Z_{i_{1}}^{*}\|_{2p} ... \|Z_{j_{p}}\|_{2p} )  \]
+\[\E \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}\|_{2p}^{2p} \leq \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{Y} \tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) ( \E_{Z} \|Z_{i_{1}}^{*}\|_{2p} ... \|Z_{j_{p}}\|_{2p} )  \]
 
-We now consider the term $\E_{\vec Z} \|Z_{i_{1}}^{*}\|_{2p} ... \|Z_{j_{p}}\|_{2p}$. Different indeces are independent, and for a repeated index we use Jensen's: 
+We now consider the term $\E_{Z} \|Z_{i_{1}}^{*}\|_{2p} ... \|Z_{j_{p}}\|_{2p}$. Different indeces are independent, and for a repeated index we use Jensen's: 
 \[ \forall k \leq 2p: \E \|Z_j\|_{2p}^{k} = \E (\|Z_j\|_{2p}^{2p})^{k/{2p}} \leq  ( \E \|Z_j\|_{2p}^{2p} )^{k/2p}  \] 
 Thus, we can collect like terms:
 
@@ -1307,7 +1310,7 @@ Thus, we can collect like terms:
 = \left( \E \|Z\|_{2p}^{2p} \right) \left( \sum_{i} \alpha_{i}^{2} \right)^{p} \left( \E \|Y\|_{2p}^{2p} \right)    \]
 In the last step we used unitary invariance of the joint $\{Y_{i}\}$ distribution, i.e. that $\sum_{i} c_{i} Y_{i}$ has the same distribution as $\|c\|_{2} Y_{1}$.
 Finally we can bound $\|\cdot\|_{op}$ by the trace method. Assume wlog (by homogeneity) that $\|\alpha\|_{2} = 1$:
-\[ \E_{\vec Y, \vec Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} \|_{op}^{2p} \leq \E_{\vec Y, \vec Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} \|_{2p}^{2p} \]
+\[ \E_{Y, Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} \|_{op}^{2p} \leq \E_{Y, Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} \|_{2p}^{2p} \]
 \[ \leq ( \E \|Y\|_{2p}^{2p} )^{2} \leq ( m \E \|Y\|_{op}^{2p} )^{2} \leq m^{2} \left(\E \|Y\|_{op} + O(\sqrt{\frac{2p}{\sigma^{2}}})  \right)^{4p} \]
 Here we've used that $\|Y\|_{op}$ is subGaussian with parameter 
 \[ \sigma^{2} = \sup_{\xi} \frac{ \E \langle Y, \xi \rangle^{2} }{\|\xi\|_{1}^{2}} = \E Y_{11}^{2} \sup_{\xi} \frac{ \|\xi\|_{F}^{2} }{\|\xi\|_{1}^{2} } = 1     \]
@@ -1332,7 +1335,7 @@ The norm $\|\cdot\|_{0}$ on its restriction to $\Sym_{d_{b}}^{0} \to \Sym_{d_{a}
 If $f$ is $\lambda$-strongly convex at $I$ and $\forall a: d_{a} \|(\nabla f)_{a}\|_{op} \leq \eps \ll 1/k$, then for $Z$ such that $\forall a: \|Z_{a}\|_{op} \leq \delta_{a} \ll 1/k$, the function $f$ at $e^{Z}$ is $\lambda - O(k \sum_{a} \delta_{a})$ strongly convex.
 \end{lemma}
 
-\begin{lemma}\label{lem:perturbation} \CF{what I think this lemma should say} Let $f = f_{\vec X}$. There is a constant $c > 0$ such that if $f$ is $\lambda$-strongly convex at $I$ and that $\|(\nabla f)_{a}\|_{op} \leq \eps \leq c k ^{-1}$ for all $ a \in [k]$, then the function $f$ is 
+\begin{lemma}\label{lem:perturbation} \CF{what I think this lemma should say} Let $f = f_{\samp}$. There is a constant $c > 0$ such that if $f$ is $\lambda$-strongly convex at $I$ and that $\|(\nabla f)_{a}\|_{op} \leq \eps \leq c k ^{-1}$ for all $ a \in [k]$, then the function $f$ is 
 $$ \lambda - O(k \sum \|Z_a\|_{op})$$
 -strongly convex at $Z \in \PD$ provided $\|Z_a\|_{op} \leq c k^{-1}$ for all $a \in [k]$. \CF{just define operator norm on $\PD$?}
 
