@@ -127,11 +127,12 @@ It remains an open question to show tight bounds for convergence of the MLE in s
 \CF{temporary}
 \begin{itemize}
 \item Number of samples $n$, dimensions $d_1\leq \dots \leq d_k$. $D$ for product of these. \CF{can we just assume $d_i$'s sorted like I have here? I want to avoid writing min everywhere.}
-\item $X$ for the tensor random variable, $X_1, \dots, X_n$ for the samples, $\vec X = (X_1, \dots, X_n)$ for the random tuple of samples.
-$\rho = \vec X \vec X^T/\|\vec X\|_F^2$. Lower case $x$ for samples.
+%\item $X$ for the tensor random variable, $X_1, \dots, X_n$ for each , $\vec X = (X_1, \dots, X_n)$ for the random tuple of samples. $\rho = \vec X \vec X^T/\|\vec X\|_F^2$. Lower case $x$ for samples.
+
+\item $X$ for the random tuple $(X_1, \dots, X_n)$, $x$ for the tuple of samples $(x_1, \dots, x_n)$ when no longer random. Think of $X$ as $D \times n$ matrix, $\rho = XX^T,xx^T$ etc.
 %\item $\braket{\cdot,\cdot}_{\vec d}$ denote modified Hilbert-Schmidt inner products\MW{sadly the corresponding norms look like $\ell_p$ norms},
-$\langle \cdot, \cdot \rangle$ is the $\ell_2$ inner product of vectors
-\item $f_{\vec X}$ for the function in \cref{dfn:function}, mostly drop $\vec X$.
+\item $f_{\vec X}$ for the function in \cref{dfn:function}, mostly drop $\vec X$. $\langle \cdot, \cdot \rangle$ is the $\ell_2$ inner product of vectors
+
 \item $\Sym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite, $\Sym_d^0$ for traceless symmetric, $\PD_d^1$ for $\det=1$ positive definite? 
 \item $\Theta$ for big tensor product pd concentration matrix, $\Theta_a$ for individual pd's.
 \item I'm going to call $\SL = \oplus \SL_{d_i}, \PD = \oplus \PD_{d_i}^1, \Sym = \oplus \Sym_{d_i}^0$. Explain somewhere how $\Sym$ is the tangent space of $\PD$. \MW{Suppressing the $^1$ and $^0$ is a bit confusing I think. Maybe $\operatorname{SPD}$ for $\PD$ with $\det=1$? I still feel that $\Sym$ looks somewhat horrible (with or without subscript, but I am not sure what would be better).}
@@ -221,7 +222,7 @@ One may think of \cref{eq:tilde ell} as proportional, up to an additive constant
 Both log-likelihoods are geodesically concave, as will be defined precisely in the next section, but only the latter function has geodesically Lipschitz gradients, i.e., is geodesically smooth~\cite{burgisser2019towards}.
 This suggests it is more amenable to geodesically convex optimization, our main tool in this work.
 
-The tensor normal model for dimensions~$\vec d=(d_1,\dots,d_k)$ consists of the normal distributions~$\cN(0,\Sigma)$, where $D = \prod_{a=1}^k d_a$ and the covariance matrix is a Kronecker product $\Sigma = \bigotimes_{a=1}^k \Sigma_a$ of positive definite $d_a\times d_a$-matrices $\Sigma_a$.
+The tensor normal model for dimensions~$\vec d=(d_1,\dots,d_k)$ \CF{make unbold?} consists of the normal distributions~$\cN(0,\Sigma)$, where $D = \prod_{a=1}^k d_a$ and the covariance matrix is a Kronecker product $\Sigma = \bigotimes_{a=1}^k \Sigma_a$ of positive definite $d_a\times d_a$-matrices $\Sigma_a$.
 Let $\Theta_a = \Sigma_a^{-1}$, so that the precision matrix is given by $\Theta = \bigotimes_{a=1}^k \Theta_a$.
 Then the same argument as above, restricted to precision matrices of this form, shows that to compute the MLE we may maximize the function
 \begin{align*}
@@ -756,8 +757,9 @@ The lemma follows by noting $\|Z\|_{1} = \|Z_{+}\|_{1} + \|Z_{-}\|_{1}$ and $\|\
 
 This gives a bound on the diagonal blocks of the Hessian as well as the rank-one term $\bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr)$ in all other blocks.
 
+\CF{make consistent with def 4, hessian}
 \begin{corollary} \label{diagRobustness}
-For input $\{X_{i}\}$ such that $d_{a}\|\rho_{X}^{(a)}\|_{op} \leq 1+\frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a})_{a}$ with $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$ giving $\{X'_{i} := e^{\delta} X_{i} \}$:
+For input $\vec X \in \CF{where?}$ such that $d_{a}\|\rho_{X}^{(a)}\|_{op} \leq 1+\frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a})_{a}$ with $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$ giving $\{X'_{i} := e^{\delta} X_{i} \}$:
 \[ \frac{1}{d_{a}} \|\nabla^{2}_{aa} f(e^{2\delta}) - \nabla^{2}_{aa} f(I)\|_{op} \leq 40 \|\delta\|_{op} \|\rho_{X}^{(a)}\|_{op}      \]
 \end{corollary}
 %\CF{technically $f(e^{\delta})$ corresponds to $e^{\delta/2} \vec X$}
@@ -784,23 +786,24 @@ from which the statement follows by the initial condition $\|d_{a} \rho_{X}^{(a)
 \begin{definition}
 For operator $M : \mat(d_{b}) \to \mat(d_{a})$, we let $\|M\|_{0}$ denote the $F \to F$ norm of its restriction to the traceless subspaces $\Sym^0_{d_b} \to \Sym^0_{d_a}$
 \end{definition}
-
+\CF{I think we should change $X$ to $\vec X$ at many places in here. Alternately we can just start using $X$ to mean the entire tuple, but that conficts with it as a random variable, so idk} 
 \begin{definition}
 For input $\rho_{X}$ and fixed $a,b$, define
 \[ \langle Y, H_{X}^{ab} Z \rangle := \langle (Y_{a})(Z_{b}), \rho_{X} \rangle = \langle Y \otimes Z , \rho_{X}^{(ab)} \rangle     \]
 \end{definition}
-We use a lemma from \cite{klr}.
-\begin{lemma}[\cite{klr}] \label{inftyto2}
+We use a lemma from \cite{KLR19}.
+\begin{lemma}[\cite{KLR19}] \label{inftyto2}
 $\|H_{X}^{ab}\|_{F \to F}^{2} \leq \|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op}$
 \end{lemma}
 %\begin{proof}This was already in KLR and we have two new proofs: one by convexity, and one by Riesz-Thorin. \AR{The proofs are in some other file, we can add it if we like}\end{proof}
-
 \begin{lemma} \label{btoabRobustness}
-For input $\{X_{i}\}$ and perturbation $\|\delta\|_{op} \leq \frac{1}{20}$ giving $\{X'_{i} := (e^{\delta})_{c} X_{i} \}$ for $c \in \{a,b\}$:
+\CF{add quantifiers}
+For $\vec X \in \CF{somewhere}$ and perturbation $\delta \in \Sym$ with $\|\delta\|_{op} \leq \frac{1}{20}$, if $X' = (e^{\delta})_c X$ for $c \in \{a,b\}$ we have 
+%$\{X'_{i} := (e^{\delta})_{c} X_{i} \}$ for $c \in \{a,b\}$:
 \[ \|H_{X'}^{ab} - H_{X}^{ab}\|_{0} \leq 4.5 \|\delta\|_{op} \|H_{X}^{ab}\|_{F \to F}    \]
 \end{lemma}
 \begin{proof}
-We will drop the superscript $(ab)$ since it doesn't change. By taking adjoints, we can assume wlog that $c = b$. Let $R : \mat(d_{b}) \to \mat(d_{b})$ be defined as $R(Z) := (1+\eta)^{2} e^{\delta} Z e^{\delta}$ for $\eta$ defined by our normalization $\|(e^{\delta})_{b} X\|_{2}^{-1} =: (1+\eta) \|X\|_{2}^{-1}$. The subspace $\Sym_{d_{b}}^{0}$ is not invariant under $R$, but we show $R \approx I$. Let $\delta' := (1+\eta) e^{\delta} - I$. 
+We will drop the superscript $(ab)$ since it doesn't change. By taking adjoints, we can assume w.l.o.g. that $c = b$. Let $R : \mat(d_{b}) \to \mat(d_{b})$ be defined as $R(Z) := (1+\eta)^{2} e^{\delta} Z e^{\delta}$ for $\eta$ defined by our normalization $\|(e^{\delta})_{b} X\|_{2}^{-1} =: (1+\eta) \|X\|_{2}^{-1}$. The subspace $\Sym_{d_{b}}^{0}$ is not invariant under $R$, but we show $R \approx I$. Let $\delta' := (1+\eta) e^{\delta} - I$. 
 \[ \|R(Z) - Z\|_{F} \leq 2 \|\delta' Z\|_{F} + \|\delta' Z \delta'\|_{F} \leq (2 \|\delta'\|_{op} + \|\delta'\|_{op}^{2}) \|Z\|_{F}    \]
 So using the definition of $\|\cdot\|_{0}$:
 \[ \sup_{Y \in \Sym_{d_{a}}^{0},Z \in \Sym_{d_{b}}^{0}} \frac{\langle Y, (H_{X'} - H_{X}) Z \rangle}{\|Y\|_{F} \|Z\|_{F}} = \frac{ \langle Y, H_{X} (R(Z) - Z) \rangle }{\|Y\|_{F} \|Z\|_{F}} \]
@@ -824,7 +827,7 @@ These last four terms we can bound by Cauchy Schwarz:
 \[ \leq (2\|Y_{+}\|_{F}^{2} + 2\|Y_{-}\|_{F}^{2})^{1/2} (2\|Z_{+}\|_{F}^{2} + 2\|Z_{-}\|_{F}^{2})^{1/2} = 2 \|Y\|_{F} \|Z\|_{F}     \]
 Again using the definition of $\|\cdot\|_{0}$; and $\|\delta\|_{op} \leq .05$ to give the same calculation from \ref{btoaaRobustness} on $\|\delta'\| \leq 9.5 \|\delta\|_{op}$; we get the lemma. 
 \end{proof}
-
+\CF{akshay make consistent with def 4}
 \begin{corollary} \label{offdiagRobustness}
 For input $\{X_{i}\}$ such that $\|d_{a} \rho_{X}^{(a)}\|_{op}, \|d_{b} \rho_{X}^{(b)}\|_{op} \leq 1+\frac{1}{20}$; perturbation $\delta := \sum_{a} (\delta_{a})_{a}$ with $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$ giving $\{X'_{i} := e^{\delta} X_{i} \}$:
 \[ \frac{1}{\sqrt{d_{a} d_{b}}} \|\nabla^{2}_{ab} f(e^{2 \delta}) - \nabla^{2}_{ab} f(I)\|_{op} \leq 100 \|\delta\|_{op} \sqrt{\|\rho_{X}^{(a)}\|_{op} \|\rho_{X}^{(b)}\|_{op}}     \]
@@ -847,11 +850,12 @@ We used $\ref{inftyto2}$ for the first term and balanced marginals for the secon
 \end{proof}
 
 \CF{Akshay: $\sum_{a} \|\delta_{a}\|_{op} = \|\delta\|_{op}.$}
+\CF{say stronger condition}
 \begin{lemma} \label{convexRobustness}
-There is a constant $c>0$ such that the following holds. If $f_{X}$ is $\alpha$-strongly convex at $I$; $\forall a: \|d_{a} \rho_{X}^{(a)}\| \leq (1+c)$, or the stronger condition $\|\sqrt{d_{a}} \nabla_{a} f_{X}\|_{op} \leq c$; and $\sum_{a} \|\delta_{a}\|_{op} \leq c$: then $f$ at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$ is $\geq (\alpha - k C \|\delta\|_{op})$-strongly convex for some universal constant $C$. 
+There is a constant $c>0$ such that the following holds. If $f_{X}$ is $\alpha$-strongly convex at $I$; $\forall a: \|d_{a} \rho_{X}^{(a)}\|_{op} \leq (1+c)$, or the stronger condition $\|\sqrt{d_{a}} \nabla_{a} f_{X}\|_{op} \leq c$; and $\sum_{a} \|\delta_{a}\|_{op} \leq c$: then $f$ at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$ is $\geq (\alpha - k C \|\delta\|_{op})$-strongly convex for some universal constant $C$. 
 \end{lemma}
 \begin{proof}
-We follow the same structure as the proof of convexity, letting $\{X'_{i} := e^{\delta} X\}$. Then by $\ref{diagRobustness}$ we have a bound on the diagonal blocks, and by $\ref{offdiagRobustness}$ we have a bound on the off-diagonal blocks. Finally we use the same Schur-complement inequality from $\ref{thm:tensor-convexity}$ for block matrices:
+We follow the same structure as the proof of convexity, letting $\{X'_{i} := e^{\delta} X\}$. Then by $\ref{diagRobustness}$ we have a bound on the diagonal blocks, and by $\ref{offdiagRobustness}$ we have a bound on the off-diagonal blocks. Finally we use the same Schur-complement inequality from \cref{thm:tensor-convexity} for block matrices:
 \[ \|\nabla^2 f_{X'} - \nabla^{2} f_{X}\|_{op} \leq C \|\delta\|_{op} \|\{I_{ab}\}_{a,b \in [k]}\|_{op} \leq k C \|\delta\|_{op}  \]
 Note that this also gives a spectral upper bound for $\nabla^{2} f_{X'}$. 
 \end{proof}
@@ -859,10 +863,12 @@ Note that this also gives a spectral upper bound for $\nabla^{2} f_{X'}$.
 \subsection{Proof of \cref{thm:tensor-frobenius}}
 We are now ready to prove the main result of this section according to the plan outlined in \cref{subsec:outline}.
 \TODO{restate it here?}
+
+\CF{fix all the $d$-norm stuff in this theorem}
 \begin{proof}[Proof of \cref{thm:tensor-frobenius}]By \cref{it:reduce} in \cref{subsec:outline}, it is enough to prove the theorem assuming $\Theta = I$.
 We seek to apply \cref{lem:convex-ball}, so we need $\lambda \kappa > \|\nabla f\|_{\vec d}$, where $\lambda$ is the strong convexity we can maintain in a $\kappa$-ball. Set $\delta = \eps/\max \sqrt{k d_a}$; by our first assumption on $\eps$, we have $N_a \geq C d_a/\delta^2$ for all $a \in [k]$, we may apply \cref{prop:gradient-bound}. Thus, with failure probability $O\left( \sum_a \exp ( - N_a \delta^2)\right)$ we have $\|(\nabla f)_{a}\|_{op} \leq \frac{\delta}{d_{a}}$ for all $a \in [k]$ and so
 \[  \|\nabla f\|_{\vec d}^{2} = \sum_{a} d_{a} \|(\nabla f)_{a}\|_{F}^{2} \leq  k \delta^{2}.  \]
-We next bound $\kappa$. By \cref{thm:tensor-convexity}, with failure probability $\CF{1/poly(D)}$ we have that $f$ is $1-o_{d}(1)$ strongly convex in norm $\|\cdot\|_{\vec d}$ at $I$, and further by \cref{lem:perturbation} $f$ is $1/2$ strongly convex at any point $e^{Z}$ with $\forall a: \|Z_{a}\|_{op} \leq  c/k$ for $c$ a small enough constant. Because $\|Z_a\|_{op} \leq \|Z_a\|_F \leq \sqrt{d_a} \|Z\|_{\vec d},$ we may take $\kappa = c/\max_a \sqrt{d_a}$ and $\lambda = 1/2$.
+We next bound $\kappa$. By \cref{thm:tensor-convexity}, with failure probability $\CF{1/poly(D)}$ we have that $f$ is $1-o_{d}(1)$ strongly convex in norm $\|\cdot\|_{\vec d}$ at $I$, and further by \cref{convexRobustness} $f$ is $1/2$ strongly convex at any point $e^{Z}$ with $\forall a: \|Z_{a}\|_{op} \leq  c/k$ for $c$ a small enough constant. \CF{check that $\|\sqrt{d_{a}} \nabla_{a} f_{X}\|_{op} \leq c$} Because $\|Z_a\|_{op} \leq \|Z_a\|_F \leq \sqrt{d_a} \|Z\|_{\vec d},$ we may take $\kappa = c/\max_a \sqrt{d_a}$ and $\lambda = 1/2$.
 
 By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\max_a \sqrt{d_a} $ there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$. The inequality follows from our second assumption on $\eps$. Because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) = O( \|\log \widehat{\Theta}\|_{\vec d} \sqrt{d_a})  \leq C \delta \sqrt{k d_a}.$ Applying $\eps = \delta \sqrt{k \max d_a}$ completes the proof.
 \end{proof}
