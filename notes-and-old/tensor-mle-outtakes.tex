@@ -18,6 +18,9 @@
 \newtheorem{example}{Example}
 \floatstyle{boxed}\newfloat{Algorithm}{ht}{alg}
 
+
+\newcommand\samp{x}
+\newcommand\rv{X}
 \DeclareMathOperator{\Lie}{Lie}
 \DeclareMathOperator{\Lin}{L}
 \DeclareMathOperator{\ope}{op}
@@ -84,7 +87,7 @@
 \crefname{Algorithm}{Algorithm}{Algorithms}
 
 
-\title{Logarithmic sample complexity for dense matrix normal models and bla bla}
+\title{Old tensor mle stuff}
 \author{Cole Franks, Rafael Oliveira, Akshay Ramachandran, Michael Walter}
 \date{February 2020}
 
@@ -187,6 +190,180 @@ Now we can again use the high-probability bounds derived above: \TODO{actually c
 The same sequence of inequalities can be reversed to show a lower bound. So in fact we can show the above bounds on blocks shows $1+O(\eps + k \lambda)$-condition number bound on the Hessian in norm $\|\cdot\|_{d}$. 
 \end{proof}
 
+
+\section{Old gradient bounds}
+
+\TODO{lower bound Hessian for operators and tensors for all different formats; we hope to get strong convexity with $\prod d_i /(d_1^2 + \dots + d_k^2)$ samples. I am concerned that a KLR19-style operator norm type theorem is needed to get $\tilde{O}$ of this, but we will do what we can with the Frobenius bounds for now; I'd expect to need at least $\max_i \sqrt{d_i}$ too many samples.}\\
+\TODO{It would also be nice to have that tight example for the $\log$ in KLR19...}
+
+We recall the moment map and Hessian calculations
+\[ \partial_{t=0} f(e^{tX_{a}}) = \langle \nabla_{a}, X \rangle = \langle Q^{a} - sI_{a}, X \rangle   \]
+\[ \partial_{t=0}^{2} f(e^{tX_{a}}) = \langle X, (\nabla^{2})_{aa} X \rangle = \langle Q^{a}, X^{2} \rangle  \]
+\[ \partial_{s=0} \partial_{t=0} f(e^{tX_{a}} \otimes e^{sY_{b}}) = \langle Y, (\nabla^{2})_{ab} X \rangle = \langle Q^{ab}, X \otimes Y \rangle   \]
+
+\section{Operator Scaling}
+In this section we have $n$ samples of $X \sim \cN(0,\frac{1}{n} (\frac{1}{d_{1}} I_{1}) \otimes (\frac{1}{d_{2}} I_{2}))$. We will denote $D := d_{1} d_{2}$. In order to use the KLR analysis, we will show that the one-body marginals have low error in $\|\cdot\|_{op}$ and the whole operator is a sufficient expander at the start.
+
+\subsection{Bernstein Proof of $\|\mu\|_{op}$}
+This is proven using matrix concentration
+
+\begin{theorem} [Bernstein]
+Consider independent $\{X_{k}\}$ such that $\E X_{k} = 0$ and $\lambda_{max}(X_{k}) \leq R$ almost surely. Further let the variance be $\sigma^{2} := \|\sum_{k} \E X_{k}^{2} \|_{op}$.
+\begin{eqnarray*} \Pr [ \lambda_{max} \left( \sum_{k} X_{k}  \right) \geq t ] & \leq & d \exp\left( - \frac{\Omega(t^{2})}{\sigma^{2} + t R} \right)
+\\ & \leq & \begin{cases}
+d \exp ( - \Omega(t^{2}/\sigma^{2}) ) & \text{if $t \leq \sigma^{2}/R$ }
+\\ d \exp ( - \Omega(t/R) )           & \text{if $t \geq \sigma^{2}/R$}
+\end{cases}
+\end{eqnarray*}
+\end{theorem}
+
+In our setting, $Q^{a}$ is comprised of $N := \frac{TD}{d_{a}}$ copies of a rank one $g g^{*}$ where each Gaussian is $g \sim \mathcal{N}(0, N^{-1} \frac{1}{d_{a}} I_{a} ) = \mathcal{N}(0, \frac{1}{TD} I_{a}) $. We will drop subscripts for $d_{a}, I_{a}$ etc when they can be understood from context. Therefore we define $X := g g^{*} - \frac{1}{TD} I_{a}$ and note the following parameters:
+\[ \lambda_{max}(X) = \|g\|_{2}^{2} - \frac{1}{TD} \hspace{10mm} \lambda_{min}(X) = - \frac{1}{TD}   \]
+While $\|g\|_{2}$ is unbounded, we can threshold our distribution with a small loss in probability. Since we will be using $\chi^{2}$ distributions much from now on, we will do a quick exercise to prove our threshold bounds:
+
+\begin{definition}
+$\chi(\mu,d)$ denotes the $\chi^{2}$ distribution with mean $\mu$ and $d$ degrees of freedom. Explicitly $X \sim \chi(\mu,d) \implies X = \frac{\mu}{d} \sum_{i=1}^{d} g_{i}^{2}$
+where $g \sim \mathcal{N}(0,1)$.
+\end{definition}
+
+\begin{lemma}
+For $X \sim \chi(\mu,d)$ we have the following (explicit and approximate) formula for the MGF, $\forall \theta < \left(O(\frac{\mu}{d}) \right)^{-1}$:
+\begin{eqnarray*} \log \E \exp(\theta X) & = & - \frac{d}{2} \log \left(1 - 2 \theta \frac{\mu}{d} \right)
+\\ & \leq & \theta \mu + \theta^{2} \frac{O(\mu^{2})}{2 d}
+\end{eqnarray*}
+\end{lemma}
+
+\begin{theorem} [Sub-exp variables]
+The above MGF bound gives tail decay:
+\[ \forall \theta < b^{-1}: \log \E \exp(\theta (X - \E X)) \leq \theta^{2} \frac{\sigma^{2}}{2} \]
+\[ \implies  \Pr[X - \mu \geq t] \leq \begin{cases}
+\exp( - \Omega(t^{2}/\sigma^{2}) ) & t \leq \sigma^{2}/b
+\\ \exp( - \Omega(t/b) ) & t \geq \sigma^{2}/b
+\end{cases}   \]
+\end{theorem}
+
+With these bounds in mind, note our variables $\|g\|_{2}^{2} \sim \chi(\frac{d_{a}}{TD},d_{a})$ so we have $\sigma^{2} = \frac{d}{(TD)^{2}}, b = \frac{1}{TD} \implies \sigma^{2}/b = \frac{d}{TD}$
+\[ \Pr[ \exists k: \lambda_{max}(X_{k}) \geq M \sqrt{\log N}\frac{d}{TD} ] \leq \exp( - \Omega(M^{2}) )  \]
+If we're happy with $1/poly$ failure probability we will take $M^{2} \sim \log D$, so in our matrix bound $R_{max} \leq \frac{d \log D}{TD}$
+
+\[ \E X^{2} = \E (g g^{*})^{2} - \frac{1}{(TD)^{2}} I = \E \|g\|_{2}^{4} \hat{g} \hat{g}^{*} - \frac{1}{(TD)^{2}} \]
+\[ = \frac{1}{(TD)^{2}} ( (3d + d(d-1)) \frac{1}{d} I - I ) = \frac{d+1}{(TD)^{2}} I   \]
+Here $\hat{g} := g / \|g\|_{2}$ and the calculation is done by independence of $\|g\|_{2}, \hat{g}$. So we also have the variance parameter
+\[ \sigma^{2} = N \|\E X^{2}\|_{op} = \frac{TD}{d} \frac{d+1}{(TD)^{2}} \sim \frac{1}{TD}  \]
+
+\begin{corollary}
+We have the following operator norm concentration
+\[ \Pr[ \|Q^{a} - sI_{a}\|_{op} \geq t ] \leq d \exp \left( - \frac{\Omega(t^{2} TD)}{1 + t d_{a} \log D }  \right)  \]
+Since we require $\|\cdot\|_{op}$ error $\ll \frac{1}{d_{a} \log D}$, if we are happy with $1/poly$ failure probability we require $TD \gg \max_{a} d_{a}^{2} \log^{3} D$.
+\end{corollary}
+
+\begin{remark} Note I'm using $\min_{a} d_{a} < \max_{a} d_{a} < D$ in a couple places so the $\log$ term may be slightly sharpened. But the exponent is tight as we require $TD > \max_{a} d_{a}^{2}$ samples for existence/ uniqueness of the solution.
+\end{remark}
+
+
+\subsection{Gaussian proof of $\|\mu\|_{op}$}
+The above method of first thresholding the Gaussians then using Bernstein-style concentration on a bounded random matrix feels a bit square-peg round-hole - y. Turns out there are better results specifically for the case of Gaussian matrices. Recall again that in our setting $Q^{a}$ is the sum of $N := \frac{nD}{d_{a}}$ copies of $X X^{*}$ where $X \sim \mathcal{N}(0,\frac{1}{nD} I_{a})$. Note first the following fact which allows us to use these specialized inequalities
+
+\begin{fact}
+$\sum_{i=1}^{N} X_{i} X_{i}^{*} \equiv G G^{*} $ where $G := \{X_{1}, ..., X_{N}\}$.
+This means if we denote $\{\lambda_{1}, ..., \lambda_{d}\}$ the spectrum of $\sum_{i=1}^{N} X_{i} X_{i}^{*}$, this is the same as $\{s_{1}^{2}, ..., s_{d}^{2}\}$ where $s_{j} := s_{j}(G)$ the $j$-th singular value. By Taylor expansion of $\sqrt{1+x}$ we have:
+\[ \lambda_{1},\lambda_{d}(GG^{*}) \in \frac{1}{d_{a}} \left( 1 \pm \frac{1}{\log d_{a}} \right) \iff s_{1},s_{d}(G) \in  \frac{1}{\sqrt{d_{a}}} \left( 1 \pm \frac{1}{\log d_{a}} \right)  \]
+\end{fact}
+
+% https://arxiv.org/pdf/1011.3027.pdf
+
+\begin{corollary} [Corollary 5.35]%\label{cor:vershynin}
+Let $G_{d,N} \in \R^{d \times N}$ for $d < N$ have independent standard Gaussian entries. Then for $t \geq 0$, the following occurs with $\leq 2 \exp(-t^{2}/2)$ failure probability:
+\[ \sqrt{N} - \sqrt{d} - t \leq s_{d}(G) \leq s_{1}(G) \leq \sqrt{N} + \sqrt{d} + t  \]
+\end{corollary}
+
+\begin{corollary}
+If $nD \gtrsim d_{a}^{2} \log^{2} d_{a}$ then $\|Q^{a} - \frac{1}{d_{a}} I_{a} \|_{op} \ll \frac{1}{d_{a} \log d_{a}}$ with failure probability $\leq \exp( - \Omega(d_{a}))$
+\end{corollary}
+\begin{proof}
+We have the following with $\leq 2 \exp(-t^{2}/2)$ failure probability:
+\[ s_{1},s_{d}\left( \frac{1}{\sqrt{nD}} G_{d,N} \right) \in \frac{1}{\sqrt{nD}} \left( \sqrt{\frac{nD}{d_{a}}} \pm (\sqrt{d_{a}} + t) \right) = \frac{1}{\sqrt{d_{a}}}\left( 1 \pm \frac{d_{a} + t \sqrt{d_{a}}}{\sqrt{nD}}  \right)  \]
+Choosing $t \sim \sqrt{d_{a}}$ and $nD \gtrsim d_{a}^{2} \log^{2} d_{a}$ gives the required bound.
+\end{proof}
+
+
+\section{Old robustness}
+
+\begin{lemma}\label{lem:perturbation-old}
+If $f$ is $\lambda$-strongly convex at $I$ and $\forall a: d_{a} \|(\nabla f)_{a}\|_{op} \leq \eps \ll 1/k$, then for $Z$ such that $\forall a: \|Z_{a}\|_{op} \leq \delta_{a} \ll 1/k$, the function $f$ at $e^{Z}$ is $\lambda - O(k \sum_{a} \delta_{a})$ strongly convex.
+\end{lemma}
+
+\begin{lemma}\label{lem:perturbation} \CF{what I think this lemma should say} Let $f = f_{\samp}$. There is a constant $c > 0$ such that if $f$ is $\lambda$-strongly convex at $I$ and that $\|(\nabla f)_{a}\|_{op} \leq \eps \leq c k ^{-1}$ for all $ a \in [k]$, then the function $f$ is 
+$$ \lambda - O(k \sum \|Z_a\|_{op})$$
+-strongly convex at $Z \in \PD$ provided $\|Z_a\|_{op} \leq c k^{-1}$ for all $a \in [k]$. \CF{just define operator norm on $\PD$?}
+
+\end{lemma}
+
+
+
+
+The bulk of the work goes towards an intermediate lemma showing that each block $\nabla^2_{ab} f$ of the Hessian changes fairly little on the operator norm ball.
+
+
+\begin{lemma}\label{lem:block-perturbation-old}
+For perturbation $v \to \otimes_{a} e^{\delta_{a}} \cdot v =: w$ where $\forall a: \|\delta_{a}\|_{op} \ll 1$, and let $\{\sigma_{1}^{ab}, \sigma_{2}^{ab}\}$ be the matrix norm $\|\cdot\|_{F} \to \|\cdot\|_{F}$ and matrix norm on subspace $\perp$ to $(I,I)$ for each bipartite part respectively:
+\[ \forall a,b: \sigma_{2}^{ab}(w w^{*}) - \sigma_{2}^{ab}(v v^{*}) \leq O \left( \sum_{a} \|\delta_{a}\|_{op}  \right) \sigma_{1}^{ab}(v v^{*})   \]
+The same is true for the diagonal blocks.
+\end{lemma}
+
+\CF{I think we are safe to just say $\|\nabla^2_{ab}f\|_{op}:=\|\nabla^2_{ab}f\|_{F\to F}$.}
+
+\begin{lemma}\label{lem:block-perturbation}\CF{prev lemma in new notation; not married to the $\Pi$'s.} Let $\Pi$ denote the projection to the traceless matrices. There is a constant $c>0$ such that if $\|Z_a\|_{op} \leq c $ for all $a \in [k]$ we have
+$$\|\nabla^2_{ab} f(Z) \circ \Pi\|_{op} - \|\nabla^2_{ab}f(I)  \circ \Pi \|_{op}  = O\left( \sum_{a \in [k]} \|Z_a\|_{op} \|\nabla^2_{ab}f\|_{op}\right)$$
+for all $a,b \in [k]$.
+
+\end{lemma}
+\begin{proof}\CF{needs to be updated to new notation. At this point in the paper, there's no $M$.}
+To lower bound the diagonal block, we just need a spectral lower bound on $\{\rho^{a}\}$, since $\langle vec(X), \nabla_{aa}^{2} (vec(X)) \rangle := \langle \rho^{a}, X^{2} \rangle$.
+\[ \| e^{\delta_{a}} \rho^{a} e^{\delta_{a}} - Q_{a}\|_{op} \leq O(\|\delta_{a}\|_{op}) \|Q_{a}\|_{op}   \]
+Now we address a perturbation on $b \neq a$. For a spectral lower bound, we choose test $Z \succeq 0$ and let $\delta := e^{2\delta_{b}} - I$:
+\[ \langle e^{\delta_{b}} \rho e^{\delta_{b}} - \rho, I_{\overline{a}} \otimes Z_{a} \rangle
+= \langle \rho, \delta \otimes Z \rangle = \langle Z, V^{*} \delta V \rangle   \]
+Here $V \in \R^{d_{b} \times d_{a}}$ is the matricized version of $\rho$. But now since $Z \succeq 0$, the argument is clear
+\[ \leq \langle Z, V^{*} |\delta| V \rangle \leq \|\delta\|_{op} \langle Z, V^{*} I V \rangle = \|\delta\|_{op} \langle \rho, I_{\overline{a}} \otimes Z \rangle \leq \|\delta\|_{op} \|\rho^{a}\|_{op} \|Z\|_{1}    \]
+
+The argument for the off-diagonal blocks is similar. We first argue the change is small under perturbations just on those parts. 
+\[ \langle vec(Y), M_{v}^{ab}(vec(Z)) \rangle := \langle v v^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle \]
+\[ \langle vec(Y), M_{w}^{ab}(vec(Z)) \rangle := \langle w w^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle\]
+
+\[ \implies M_{w} = (e^{\delta_{b}} \otimes e^{\delta_{b}}) M_{v} (e^{\delta_{a}} \otimes e^{\delta_{a}})   \]
+\[ \implies \|M_{w} - M_{v}\|_{op} \leq O(\|\delta_{a}\|_{op} + \|\delta_{b}\|_{op}) \|M_{v}\|_{op}   \]
+where in the last step we used $\delta \ll 1$.
+\CF{comment things that we wouldn't want to accidentally leave in, as I have done in the next sentence}
+The more difficult part of the argument to see \AR{at least for me} is the change caused be some other part $c \neq a,b$. First we define $\delta := e^{2 \delta_{c}} - I$, and test vectors $Z,Y$:
+\[ \langle w w^{*} - v v^{*}, I_{\overline{ab}} \otimes Z \otimes Y \rangle = \langle v v^{*}, \delta \otimes Z \otimes Y \rangle  = \langle Z \otimes Y, V^{*} \delta V \rangle \]
+Here $V \in \R^{d_{c} \times d_{a}d_{b}}$ is the matricized version of $v$, i.e. the $k$-th element of $ij$-th column is $(V_{ij})_{k} := v_{ijk}$. Now in order to use our operator norm bounds, we need to deal with cancelations, so we split into positive and negative parts $Z := Z_{+} - Z_{-}, Y := Y_{+} - Y_{-}$:
+\[ |\langle Z \otimes Y, V^{*} \delta V \rangle| \leq |\langle Z_{\pm} \otimes Y_{\pm}, V^{*} \delta V \rangle |  \]
+Now we analyze each of these terms:
+\[ \leq |\langle Z_{\pm} \otimes Y_{\pm}, V^{*} |\delta| V \rangle| \leq \|\delta\|_{op} |\langle Z_{\pm} \otimes Y_{\pm}, V^{*} V \rangle| = \|\delta\|_{op} |\langle v v^{*}, I_{\overline{ab}} \otimes Z_{\pm} \otimes Y_{\pm} \rangle|   \]
+Each of these terms we can bound by $\sigma^{ab}_{1} \|Z\|_{F} \|Y\|_{F}$. So by iterating this argument over all $c$, we get the desired bound.
+\end{proof}
+
+\begin{proof}[Proof of \cref{lem:perturbation}]
+\[ \langle X, \nabla_{aa}^{2} X \rangle = \langle \rho^{a}, X^{2} \rangle \leq \|\rho^{a}\|_{op} \|X^{2}\|_{1} = \|\rho^{a}\|_{op} \|X\|_{F}^{2} \]
+\AR{I am probably wrong on dimension factors here, but it's the right idea}
+By the condition on the gradient \TODO{what condition? cref it}, we have that
+\[ \forall a,b: \|\nabla_{ab}^{2}\|_{op}^{2} \leq \|\nabla_{aa}^{2}\|_{op} \|\nabla_{bb}^{2}\|_{op} = \|\rho^{a}\|_{op} \|\rho^{b}\|_{op} \leq \frac{1+\eps}{d_{a} d_{b}}   \]
+We apply the perturbation lemma to each part sucessively, and if $\delta$ are small enough we can assume this bound holds in weaker form $1+\epsilon \leq 2$ for all iterations. The above lemma shows for each part and any test vectors
+\[ \langle w w^{*} - v v^{*}, I_{\overline{ab}} \otimes \frac{Z}{\|Z\|_{F}} \otimes \frac{Y}{\|Y\|_{F}} \rangle \leq \frac{O( \sum_{a} \delta_{a} )}{\sqrt{d_{a} d_{b}}} =: \frac{\delta}{\sqrt{d_{a} d_{b}}}   \]
+Here the suppressed constants are $\leq 7$. Therefore the difference between Hessians can be bounded
+\[ |\langle Y, \nabla^{2} f(e^{Z}) - \nabla^{2} f(I), Y \rangle|  \leq \delta \left( \sum_{a} \frac{\|Y_{a}\|_{F}^{2}}{d_{a}} + \sum_{a \neq b} \frac{\|Y_{a}\|_{F} \|Y_{b}\|_{F}}{\sqrt{d_{a} d_{b}}} \right) \leq k \delta \|Y\|^{2}   \]
+\end{proof}
+
+
+After one more simple lemma, we will be ready to prove our second strong convexity result, \cref{lem:perturbation}.
+\begin{lemma} [Lemma 3.6 in \TODO{cite KLR}; \CF{where is this used?}]
+\AR{The amount we lose in robustness is related to the worst quadratic form in the whole space (not $\perp I$) since we have to break up into $\pm$ parts. }
+\[ \|\nabla_{ab}^{2}\|_{F \to F}^{2} \leq \|\nabla_{aa}^{2}\|_{F \to F} \|\nabla_{bb}^{2}\|_{F \to F}   \]
+\end{lemma}
+\begin{proof}
+\AR{New simple proof:} By convexity we know $\begin{pmatrix} \nabla_{aa}^{2} & \nabla_{ab}^{2} \\ \nabla_{ba}^{2} & \nabla_{bb}^{2}  \end{pmatrix} \succeq 0$. The result follows from e.g. Schur complements. 
+\end{proof}
 
 
 
