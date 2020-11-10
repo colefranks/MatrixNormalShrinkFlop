@@ -877,9 +877,9 @@ Recall the definition of a quadratic form of the Hessian:
 \[ = \sum_{a} \langle Z_{a}, (\nabla^{2}_{aa} F) Z_{a} \rangle + \sum_{a \neq b} \langle Z_{a}, (\nabla^{2}_{ab} F) Z_{b} \rangle - \left( \sum_{a} \sqrt{d_{a}} \langle \rho^{(a)}, Z_{a} \rangle  \right)^{2}       \]
 Let $\{\samp'_{i} := e^{\delta} \samp\}$. Then by $\ref{diagRobustness}$ we have a bound on the diagonal blocks; by $\ref{offdiagRobustness}$ we have a bound on the off-diagonal blocks; and by $\ref{rankoneRobustness}$ we have a bound on the rank-one term. 
 \[ \langle Z, (\nabla^2 f_{\samp'} - \nabla^{2} f_{\samp}) Z \rangle \leq \|\delta\|_{op} \left( 11 \sum_{a} \|Z_{a}\|_{F}^{2} + 21 \sum_{a \neq b} \|Z_{a}\|_{F} \|Z_{b}\|_{F} + 26 k \|Z\|^{2} \right)   \]
-\[ \leq (21 k + 26 k) \|\delta\|_{op} \|Z\|^{2}    \]
+\[ \leq (11 + 21(k-1) + 26 k) \|\delta\|_{op} \|Z\|^{2}    \]
 Note that this also gives a spectral upper bound for $\nabla^{2} f_{\samp'}$. 
-\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s?}
+\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s? Also the constant is $50 k$ now, yay for better constants!}
 \end{proof}
 
 \CF{for the readers' sake some justification is needed for why perturbing $\samp$ this is the same as considering the Hessian of our function at another point in $\PD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
