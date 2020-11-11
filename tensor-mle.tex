@@ -801,6 +801,7 @@ Recall again from the discussion after $\ref{convexRobustness}$ that $\langle Z,
 \[    \left\langle \rho_{\samp'}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2} -  \left\langle \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2}    \]
 \[ = \left\langle \rho_{\samp'} + \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle \left\langle \rho_{\samp'} - \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle  \]
 \[ = \left( \sum_{a} \sqrt{d_{a}} \langle \rho_{\samp'}^{(a)} + \rho_{\samp}^{(a)}, Z_{a} \rangle \right) \left( \sum_{a} \sqrt{d_{a}} \langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, Z_{a} \rangle \right)     \]
+\AR{Here I could use that $Z \perp I$ to get a constant factor improvement; need an assumption on $\nabla$; but it improves the overall constant by factor $\approx 2$}
 \[ \leq \left( (2+10\|\delta\|_{op})\sum_{a} \sqrt{d_{a}} \|\rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{1}   \right) 
 \left( 10\|\delta\|_{op} \sum_{a} \sqrt{d_{a}} \| \rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{1}   \right)    \]
 \[ \leq 25 \|\delta\|_{op} \left( \sum_{a} \|d_{a} \rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{F} \right)^{2} \leq 25 \|\delta\|_{op} \left( \sum_{a} \|d_{a} \rho_{\samp}^{(a)}\|_{op}^{2} \right) \|Z\|^{2}      \]
@@ -878,6 +879,7 @@ Recall the definition of a quadratic form of the Hessian:
 Let $\{\samp'_{i} := e^{\delta} \samp\}$. Then by $\ref{diagRobustness}$ we have a bound on the diagonal blocks; by $\ref{offdiagRobustness}$ we have a bound on the off-diagonal blocks; and by $\ref{rankoneRobustness}$ we have a bound on the rank-one term. 
 \[ \langle Z, (\nabla^2 f_{\samp'} - \nabla^{2} f_{\samp}) Z \rangle \leq \|\delta\|_{op} \left( 11 \sum_{a} \|Z_{a}\|_{F}^{2} + 21 \sum_{a \neq b} \|Z_{a}\|_{F} \|Z_{b}\|_{F} + 26 k \|Z\|^{2} \right)   \]
 \[ \leq (11 + 21(k-1) + 26 k) \|\delta\|_{op} \|Z\|^{2}    \]
+\AR{I can make this proof look more like the convexity one, with block matrices, if you all want}
 Note that this also gives a spectral upper bound for $\nabla^{2} f_{\samp'}$. 
 \AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s? Also the constant is $50 k$ now, yay for better constants!}
 \end{proof}
