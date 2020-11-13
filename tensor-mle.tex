@@ -670,7 +670,7 @@ where $Y_1,\dots,Y_N,Y$ are independent $n\times m$ standard Gaussian random mat
 \begin{corollary}
 For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kraus operator is of the form $\frac{1}{\sqrt{nD}} Y$, and our off-diagonal operator is
 \[ \sum_{k=1}^{nD/d_{a}d_{b}} \frac{1}{nD} Y_{k} \otimes Y_{k}   \]
-By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is of the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}}$, so for constant expansion it suffices that $nD \gg \max_{a} d_{a}^{2}$
+By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is of the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}}$, so for constant expansion it suffices that $nD \gg \max_{a} d_{a}^{2}$ \CF{what's the probabilities}
 \end{corollary}
 
 \CF{The old proof had the following sentence: 
@@ -805,7 +805,7 @@ Recall again from the discussion after $\ref{convexRobustness}$ that $\langle Z,
 \[ \leq \left( (2+10\|\delta\|_{op})\sum_{a} \sqrt{d_{a}} \|\rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{1}   \right) 
 \left( 10\|\delta\|_{op} \sum_{a} \sqrt{d_{a}} \| \rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{1}   \right)    \]
 \[ \leq 25 \|\delta\|_{op} \left( \sum_{a} \|d_{a} \rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{F} \right)^{2} \leq 25 \|\delta\|_{op} \left( \sum_{a} \|d_{a} \rho_{\samp}^{(a)}\|_{op}^{2} \right) \|Z\|^{2}      \]
-\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s?}
+\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s?} \CF{the norm is just the standard norm, there shouldn't be $d_a$'s}
 The final step follows from the initial conditions on $\|d_{a} \rho_{a}\|_{op}, \|d_{b} \rho_{b}\|_{op}$. 
 \end{proof}
 
@@ -824,7 +824,7 @@ By taking adjoints, we can assume w.l.o.g. that $c = b$. Let $R : \mat(d_{b}) \t
 \[ |\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle| = |\langle \rho_{\samp}^{(ab)}, Y \otimes (R(Z) - Z) \rangle|  \]
 The subspace $\Sym_{d_{b}}^{0}$ is not invariant under $R$, but we show $R \approx I$. Let $\delta' := (1+\eta) e^{\delta} - I$. 
 \[ \|R(Z) - Z\|_{F} \leq 2 \|\delta' Z\|_{F} + \|\delta' Z \delta'\|_{F} \leq (2 \|\delta'\|_{op} + \|\delta'\|_{op}^{2}) \|Z\|_{F}    \]
-So we complete the proof by definition of $\sup$ on LHS vs RHS, and $\|\delta\|_{op} \leq \frac{1}{20}$ by the same calculation as in \ref{atoaaRobustness}. 
+So we complete the proof by definition of \CF{write out words} $\sup$ on LHS vs RHS, and $\|\delta\|_{op} \leq \frac{1}{20}$ by the same calculation as in \ref{atoaaRobustness}. 
 \end{proof}
 
 \begin{lemma} \label{ctoabRobustness}
@@ -833,7 +833,7 @@ For input $\samp \in \R^{nD}$ and perturbation $\|\delta\|_{op} \leq \frac{1}{20
 %\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 19 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}    \]
 \end{lemma}
 \begin{proof}
-Let $c_{0}$ be the $\sup$ on the LHS and $c$ be the $\sup$ on the RHS. Define $\eta$ for normalization $\|(e^{\delta})_{c} \samp\|_{2}^{-1} =: (1+\eta) \|\samp\|_{2}^{-2}$, and let $\delta' := (1+\eta) e^{2 \delta} - I_{c}$. We will use a similar decomposition to lemma \ref{btoaaRobustness}, so first assume $Y,Z \succeq 0, \|Y\|_{F} = \|Z\|_{F} = 1$:
+Let $c_{0}$ be the \CF{write out} $\sup$ on the LHS and $c$ be the $\sup$ on the RHS. Define $\eta$ for normalization $\|(e^{\delta})_{c} \samp\|_{2}^{-1} =: (1+\eta) \|\samp\|_{2}^{-2}$, and let $\delta' := (1+\eta) e^{2 \delta} - I_{c}$. We will use a similar decomposition to lemma \ref{btoaaRobustness}, so first assume $Y,Z \succeq 0, \|Y\|_{F} = \|Z\|_{F} = 1$:
 %\[ \frac{1}{\sqrt{d_{a} d_{b}} } \langle Y, (\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}) Z \rangle = \langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes \delta' \rangle   \]
 \[ |\langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes \delta' \rangle| \leq \langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes |\delta'| \rangle \leq \|\delta'\|_{op} \langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle   \]
 Here we again used that $\rho_{\samp}^{(abc)} \succeq 0$. We cannot bound this by $c_{0}$ as $Y \succeq 0$, but the RHS $c$ is sufficient.  
@@ -881,7 +881,7 @@ Let $\{\samp'_{i} := e^{\delta} \samp\}$. Then by $\ref{diagRobustness}$ we have
 \[ \leq (11 + 21(k-1) + 26 k) \|\delta\|_{op} \|Z\|^{2}    \]
 \AR{I can make this proof look more like the convexity one, with block matrices, if you all want}
 Note that this also gives a spectral upper bound for $\nabla^{2} f_{\samp'}$. 
-\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s? Also the constant is $50 k$ now, yay for better constants!}
+\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s? Also the constant is $50 k$ now, yay for better constants!}\CF{yay!}
 \end{proof}
 
 \CF{for the readers' sake some justification is needed for why perturbing $\samp$ this is the same as considering the Hessian of our function at another point in $\PD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
@@ -898,11 +898,17 @@ We are now ready to prove the main result of this section according to the plan 
 
 \CF{fix all the $d$-norm stuff in this theorem}
 \begin{proof}[Proof of \cref{thm:tensor-frobenius}]By \cref{it:reduce} in \cref{subsec:outline}, it is enough to prove the theorem assuming $\Theta = I$.
-We seek to apply \cref{lem:convex-ball}, so we need $\lambda \kappa > \|\nabla f\|_{\vec d}$, where $\lambda$ is the strong convexity we can maintain in a $\kappa$-ball. Set $\delta = \eps/\max \sqrt{k d_a}$; by our first assumption on $\eps$, we have $N_a \geq C d_a/\delta^2$ for all $a \in [k]$, we may apply \cref{prop:gradient-bound}. Thus, with failure probability $O\left( \sum_a \exp ( - N_a \delta^2)\right)$ we have $\|(\nabla f)_{a}\|_{op} \leq \frac{\delta}{d_{a}}$ for all $a \in [k]$ and so
-\[  \|\nabla f\|_{\vec d}^{2} = \sum_{a} d_{a} \|(\nabla f)_{a}\|_{F}^{2} \leq  k \delta^{2}.  \]
-We next bound $\kappa$. By \cref{thm:tensor-convexity}, with failure probability $\CF{1/poly(D)}$ we have that $f$ is $1-o_{d}(1)$ strongly convex in norm $\|\cdot\|_{\vec d}$ at $I$, and further by \cref{convexRobustness} $f$ is $1/2$ strongly convex at any point $e^{Z}$ with $\forall a: \|Z_{a}\|_{op} \leq  c/k$ for $c$ a small enough constant. \CF{check that $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$} Because $\|Z_a\|_{op} \leq \|Z_a\|_F \leq \sqrt{d_a} \|Z\|_{\vec d},$ we may take $\kappa = c/\max_a \sqrt{d_a}$ and $\lambda = 1/2$.
+We seek to apply \cref{lem:convex-ball}, so we need $\lambda \kappa > \|\nabla f\|$, where $\lambda$ is the strong convexity we can maintain in a $\kappa$-ball. Set $\delta = \eps/\max \sqrt{k d_a}$. \CF{don't do the sqrt?}
 
-By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\max_a \sqrt{d_a} $ there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$. The inequality follows from our second assumption on $\eps$. Because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) = O( \|\log \widehat{\Theta}\|_{\vec d} \sqrt{d_a})  \leq C \delta \sqrt{k d_a}.$ Applying $\eps = \delta \sqrt{k \max d_a}$ completes the proof.
+ By our first assumption on $\eps$, we have $N_a \geq C d_a/\delta^2$ for all $a \in [k]$, we so we may apply \cref{prop:gradient-bound}. Thus, with failure probability $O\left( \sum_a \exp ( - N_a \delta^2)\right)$ we have $\|(\nabla f)_{a}\|_{op} \leq \frac{\delta}{\sqrt{d_{a}}}$ for all $a \in [k]$ and so
+\[  \|\nabla f\|^{2} = \sum_{a} \|(\nabla f)_{a}\|_{F}^{2} \leq \sum_{a} d_a \|(\nabla f)_{a}\|_{op}^{2} \leq  k \delta^{2}.  \]
+We next bound $\kappa$. By \cref{thm:tensor-convexity}, with failure probability $\CF{1/poly(D)}$ we have that $f$ is $1-o_{d}(1)$ strongly convex at $I$, and further by \cref{convexRobustness} \CF{check that $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$}  there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $e^{Z}$ such that $ \|Z_{a}\|_{op} \leq  c/k$ for all $a \in [k]$. 
+Because $\|Z_a\|_{op}  \leq \|Z\|,$ we may take $\kappa = c/\max_a \sqrt{d_a}$ \CF{continue here...something is wrong} and $\lambda = 1/2$.
+
+
+
+
+By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\max_a \sqrt{d_a} $ there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$; this inequality holds by our definition of $\delta$ and our second assumption on $\eps$. Because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) = O( \|\log \widehat{\Theta}\|_{\vec d} \sqrt{d_a})  \leq C \delta \sqrt{k d_a}.$ Applying $\eps = \delta \sqrt{k \max d_a}$ completes the proof.
 \end{proof}
 
 
