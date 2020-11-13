@@ -668,9 +668,9 @@ where $Y_1,\dots,Y_N,Y$ are independent $n\times m$ standard Gaussian random mat
 \TODO{Fix for new inner product and dimension issue}
 \CF{Separate lemma for probability of the off diagonal terms; precise version of the below incluing assumptions/probabilities.}
 \begin{corollary}
-For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kraus operator is of the form $\frac{1}{\sqrt{nD}} Y$, and our off-diagonal operator is
+For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kraus operator is of the form $\frac{1}{\sqrt{nD}} Y$, and our off-diagonal operator $\frac{\nabla^{2}_{ab} F}{\sqrt{d_{a} d_{b}}}$ is
 \[ \sum_{k=1}^{nD/d_{a}d_{b}} \frac{1}{nD} Y_{k} \otimes Y_{k}   \]
-By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is of the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}}$, so for constant expansion it suffices that $nD \gg \max_{a} d_{a}^{2}$
+By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is $O \left( \frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}} \right)$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}))$. So for constant expansion it suffices that $nD \gg \max_{a} d_{a}^{2}$
 \end{corollary}
 
 \CF{The old proof had the following sentence: 
