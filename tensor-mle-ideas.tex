@@ -93,6 +93,13 @@
 \maketitle
 \tableofcontents
 
+\section{Numerics ideas}
+
+What's going on in the kglasso stuff? They are generating an erdos renyi and making sure that the least eigenvalue is $1$, then trying to approximate each. I wonder how it'd do without scaling the eigenvalues into oblivion?
+
+What's easiest? Convert to matlab or nah?
+
+
 
 \section{Tensor Scaling}
 We will maintain similar notation. We have $n$ samples of $X \sim \mathcal{N}(0,\frac{1}{n} \otimes_{a} \frac{1}{d_{a}} I_{a})$ with $D := \prod_{a} d_{a}$. We don't have a KLR style analysis at the moment, but strong convexity is enough by the FM analysis, and this can be proven by just controlling each bipartite piece. So the operator scaling analysis does give us very good bounds for $\|\mu\|_{op}$ and expansion with $nD \gg \max_{a} d_{a}^{2} \log^{c}(D)$. These bounds are not enough though, so in this section we will follow the FM analysis to give the requirements, then show the required strong convexity, and show how to maintain this under perturbation.

@@ -1,0 +1,15 @@
+\begin{IEEEproof}
+	Recall that the basic optimization problem (\ref{opt_prob}) is
+	\begin{equation*}
+		\min_{\bX \in S_{++}^p, \bY \in S_{++}^f} J_\lambda(\bX,\bY)
+	\end{equation*}
+	Let $J^*:=\inf_{\mathbf{X} \in S_{++}^p, \mathbf{Y} \in S_{++}^f}{J_\lambda(\mathbf{X},\mathbf{Y})}$ be the optimal primal value. Note that $J_\lambda^* > -\infty$ when $\hat{\bS}_n \in S_{++}^{pf}$. Consider Algorithm \ref{alg: algKGL}. Assuming $\bX^{(0)}$ and $\hat{\bS}_n$ are p.d., Lemma \ref{dual_lemma} implies that all the iterates are p.d. and
+	\begin{equation} \label{monotonicity}
+		J_\lambda(\bX^{(k)},\bY^{(k)}) \leq	J_\lambda(\bX^{(k-1)},\bY^{(k)}) \leq J_\lambda(\bX^{(k-1)},\bY^{(k-1)})
+	\end{equation}
+	By induction on the number of iterations, we conclude that the iterates yield a nonincreasing sequence of objective functions. Since $\lambda_X |\bX|_1, \lambda_Y |\bY|_1 \geq 0$, we see that the maximum likelihood objective function provides a lower bound to the optimal primal value
+	\begin{equation} \label{LB_ML}
+		J_\lambda(\bX^{(k)},\bY^{(k)}) \geq J_\lambda^* \geq J_\lambda(\bX_{ML},\bY_{ML}) > -\infty
+	\end{equation}
+	Thus, the sequence $\{J_\lambda^{(k)}:k\geq 0\}$ forms a nonincreasing sequence bounded below (since for $n>pf$, the log-likelihood function is bounded above by the log-likelihood evaluated at the sample mean and sample covariance matrix). The monotone convergence theorem for sequences \cite{IntroRealAnalysis} implies that $\{J_\lambda^{(k)}\}$ converges monotonically to $J_\lambda^{(\infty)}=\inf_k{J_\lambda^{(k)}}$. By the alternating minimization, we conclude that the sequence of iterates $\{(\mathbf{X}^{(k)},\mathbf{Y}^{(k)})\}_k$ converges since the minimizer at each Glasso step is unique.
+\end{IEEEproof}

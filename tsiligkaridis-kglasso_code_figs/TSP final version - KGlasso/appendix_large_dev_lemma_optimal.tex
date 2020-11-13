@@ -1,0 +1,130 @@
+\begin{lemma} \label{lemma: large_dev_optimal}
+	Let $\bX$ be a $p\times p$ data-independent matrix. Define the linear operator $\bT$ as $\bT(\bX) = \hat{\bB}(\bX^{-1})$, where $\hat{\bB}(\cdot)$ is defined in (\ref{B_update}). Assume $\max_{k}[\bB_0]_{k,k}, \nn \bX\nn_2, \nn \bA_0\nn_2$ are uniformly bounded constants as $p,f,n\to\infty$. Define $\bB_*:=\frac{\tr(\bX \bA_0)}{p} \bB_0$. Let $c,\tau>0$ and $M:=\max(p,f,n)$. Define $\psi(u)=\sum_{m=0}^\infty \frac{(2m+2)!!}{m!} u^m$ \footnote{The double factorial notation is defined as 
+
+\[
+m!! = \left\{ 
+  \begin{array}{l l}
+    m\cdot (m-2) \cdot \cdots \cdot 3 \cdot 1 & \quad \text{if $m>0$ is odd}\\
+    m\cdot (m-2) \cdot \cdots \cdot 4 \cdot 2 & \quad \text{if $m>0$ is even}\\
+    1 & \quad \text{if $m=-1$ or $m=0$}\\
+  \end{array} \right.
+\]  
+	. }. Let $\frac{6 (2+\tau)^2 \max(2,c) }{\sqrt{\psi(\frac{1}{2+\tau})}}<\frac{np}{\log(M)}$ \footnote{If $p=f=n^{c'}$ for some $c'>0$, this condition will hold for $n$ large enough.}. Then, with probability $1-\frac{2}{n^c}$,
+	\begin{equation*}
+		|\bT(\bX)-\bB_*|_\infty \leq \overline{k} \cdot \sqrt{6 \psi(\frac{1}{2+\tau}) \max(2,c)} \sqrt{\frac{\log M}{np}}
+	\end{equation*}
+	where $\overline{k}=\max_{k}[\bB_0]_{k,k} \cdot \nn \bX\nn_2 \nn \bA_0\nn_2$.
+\end{lemma}
+
+\begin{remark}
+	Choosing $c\leq 2$ in Lemma \ref{lemma: large_dev_optimal}, the best relative constant is obtained by taking $\tau$ to infinity, which yields $\sqrt{6 \psi(\frac{1}{2+\tau}) \max(2,c)} \approx 4.899$.
+\end{remark}
+\begin{remark}
+	For the case of symmetric matrices $\bX\in S^p$, the constant $\overline{k}$ can be improved to $\max_{k}[\bB_0]_{k,k} \cdot \nn \bX \bA_0\nn_2$.
+\end{remark}
+
+
+\begin{IEEEproof}
+	This proof is based on a large-deviation theory argument. Fix $(k,l) \in \{1,\dots,f\}^2$. Note that $\E[\bT(\bX)]=\bB_*$. First we bound the upper tail probability on the difference $\bT(\bX)-\bB_*$ and then we turn to the lower tail probability. Bounding the upper tail by using Markov's inequality, we have
+\begin{align}
+	\Pr & \left([\bT(\bX)]_{k,l}-[\bB_*]_{k,l}>\epsilon \right) \nonumber \\
+		&= \Pr \left(\frac{1}{p}\sum_{i,j=1}^p{\bX_{i,j}[\hat{\bS}_n(j,i)]_{k,l}}-\frac{\tr(\bX\bA_0)}{p} [\bB_0]_{k,l}>\epsilon \right) \nonumber \\
+		%&= \Pr \Big(\sum_{m=1}^n \sum_{i,j=1}^p \bX_{i,j} \Big([\bz_m]_{(i-1)f+k}[\bz_m]_{(j-1)f+l} \nonumber \\
+		%&\qquad - [\bA_0]_{i,j}[\bB_0]_{k,l} \Big) > np \epsilon \Big)  \nonumber \\
+		&= \Pr \Big( \exp\{t \sum_{m=1}^n \sum_{i,j=1}^p \bX_{i,j} \Big([\bz_m]_{(i-1)f+k}[\bz_m]_{(j-1)f+l} \nonumber \\
+		&\qquad - [\bA_0]_{i,j}[\bB_0]_{k,l} \Big)\} > \exp\{t np \epsilon\} \Big)  \nonumber \\
+		%&\leq e^{-tnp\epsilon} \E \Big[\prod_{m=1}^n \exp\Big\{ t \sum_{i,j=1}^p \bX_{i,j} \Big( [\bz_m]_{(i-1)f+k}[\bz_m]_{(j-1)f+l} \nonumber \\
+		%&\quad -[\bA_0]_{i,j}[\bB_0]_{k,l} \Big) \Big\} \Big] \nonumber \\
+		&\leq e^{-tnp\epsilon} \Big( \E\Big[ \exp\Big\{ t \tilde{Y}^{(k,l)} \Big\} \Big] \Big)^n \label{eq2}
+\end{align}
+where we used the i.i.d. property of the data in (\ref{eq2}) and $\tilde{Y}^{(k,l)}:= \sum_{i,j=1}^p \bX_{i,j}([\bz]_{(i-1)f+k}[\bz]_{(j-1)f+l}-[\bA_0]_{i,j}[\bB_0]_{k,l})$. Define $p^2\times 1$ random vector $\bz^{(k,l)}$ as $[\bz^{(k,l)}]_{(i-1)p+j}:=[\bz]_{(i-1)f+k}[\bz]_{(j-1)f+l} -[\bA_0]_{i,j}[\bB_0]_{k,l}$ for $1\leq i,j\leq p$. Clearly, this random vector is zero mean. The expectation term inside the parentheses in (\ref{eq2}) is the MGF of the random variable $\tilde{Y}^{(k,l)}=\vec(\bX)^T\bz^{(k,l)}$. For notational simplicity, let $\tilde{\phi}_{Y}(t)=\E[e^{tY}]$ denote the MGF of a random vector $Y$. 
+%As a result, $\E[e^{t \tilde{Y}^{(k,l)}}]=\tilde{\phi}_{\tilde{Y}^{(k,l)}}(t)$.
+
+Performing a second order Taylor expansion on $\tilde{\phi}_{\tilde{Y}^{(k,l)}}$ about the origin, we obtain:
+\begin{equation*}
+	\tilde{\phi}_{\tilde{Y}^{(k,l)}}(t) = \tilde{\phi}_{\tilde{Y}^{(k,l)}}(0) + \frac{d\tilde{\phi}_{\tilde{Y}^{(k,l)}}(0)}{dt} t + \frac{1}{2} \frac{d^2 \tilde{\phi}_{\tilde{Y}^{(k,l)}}(\delta t)}{dt^2} t^2
+\end{equation*}
+for some $\delta \in[0,1]$. Trivially, $ \tilde{\phi}_{\tilde{Y}^{(k,l)}}(0)=1$ and $\frac{d\tilde{\phi}_{\tilde{Y}^{(k,l)}}(0)}{dt}=\E[\vec(\bX)^T \bz^{(k,l)}]=0$. Using the linearity of the expectation operator, we have:
+\begin{align*}
+	\frac{d^2 \tilde{\phi}_{\tilde{Y}^{(k,l)}}(\delta t)}{dt^2} &= \E[(\tilde{Y}^{(k,l)})^2 e^{t \delta \tilde{Y}^{(k,l)}}] \\
+			&= \sum_{m=0}^\infty \frac{(\delta t)^m}{m!} \E[(\vec(\bX)^T \bz^{(k,l)})^{m+2}]
+\end{align*}
+
+Using the elementary inequality $1+y \leq e^{y}$ for $y>-1$, and after some algebra, we have:
+\begin{equation} \label{eq_temp}
+	n\ln(\tilde{\phi}_{\tilde{Y}^{(k,l)}}(t)) \leq \frac{n}{2} t^2 \sum_{m=0}^\infty{T_m(t)}
+\end{equation}
+where $T_m(t):=\frac{(t\delta)^m}{m!} \E[(\vec(\bX)^T \bz^{(k,l)})^{m+2}]$. Note that
+\begin{align}
+	t^2 &T_m(t) \leq \frac{t^{m+2}}{m!} \E\Big[\Big(\sum_{i,j=1}^p \bX_{i,j} ([\bz]_{(i-1)f+k}[\bz]_{(j-1)f+l} \nonumber \\
+		&\quad -[\bA_0]_{i,j}[\bB_0]_{k,l})\Big)^{m+2}\Big] \nonumber \\
+		&=\frac{t^{m+2}}{m!} \sum_{i_1,j_1=1}^p \cdots \sum_{i_{m+2},j_{m+2}=1}^p \bX_{i_1,j_1} \cdots \bX_{i_{m+2},j_{m+2}} \nonumber \\
+		& \times \E\Big[ \prod_{\alpha=1}^{m+2} \Big( [\bz]_{(i_\alpha-1)f+k}[\bz]_{(j_\alpha-1)f+l} -[\bA_0]_{i_\alpha,j_\alpha}[\bB_0]_{k,l} \Big) \Big] \nonumber \\
+		%&\leq \frac{t^{m+2}}{m!} \sum_{i_1,j_1=1}^p \cdots \sum_{i_{m+2},j_{m+2}=1}^p [\bX]_{i_1,j_1} \cdots [\bX]_{i_{m+2},j_{m+2}} \nonumber \\
+		%	& \times \sum \prod [\bA_0]_{i,j} \nonumber \\
+		&\leq \frac{t^{m+2}}{m!} (2m+2)!! \left( \max_k [\bB_0]_{k,k} \nn\bX\nn_2 \nn\bA_0\nn_2 \right)^{m+2}) \label{eq3} \\
+		&= \frac{(2m+2)!!}{m!} (t \overline{k})^{m+2} p
+		%&\leq \frac{(t \overline{k}_{B_0})^{m+2}}{m!} (2m+2)!! \tr((\bX \bA_0)^{m+2}) \label{eq4} \\
+		%&\leq \frac{(t \overline{k}_{B_0})^{m+2}}{m!} (2m+2)!! \tr((\bI_p + \bDelta \bA_0)^{m+2}) \label{eq4}
+\end{align}
+where (\ref{eq3}) follows from Isserlis' formula \cite{TsiligkaridisTSP}. Also, we defined $\overline{k}=\max_k [\bB_0]_{k,k} \nn \bX\nn_2 \nn\bA_0\nn_2$. Summing the result over $m$, and letting $u:=t \overline{k}>0$, $a_m(u):= \frac{(2m+2)!!}{m!} u^m$, $\psi(u)=\sum_{m=0}^\infty a_m(u)$,  we obtain:
+\begin{equation} \label{sum_bound}
+	t^2 \sum_{m=0}^\infty{T_m(t)} \leq p u^2 \psi(u) \Big|_{u=t \overline{k}}
+\end{equation}
+%norm. This further implies (by Assumption 1) $\max_i |\lambda_i(\tilde{\bDelta})| \leq C_\bDelta$ due to
+%\begin{equation*}
+%	\nn \tilde{\bDelta} \nn_2^2 = \max_i |\lambda_i(\tilde{\bDelta}^T\tilde{\bDelta})| \geq \left( \max_i |\lambda_i(\tilde{\bDelta})| \right)^2
+%\end{equation*}
+%%\begin{align*}
+%%	\nn \tilde{\bDelta} \nn_2^2 &= \max_i \lambda_i(\tilde{\bDelta}^T\tilde{\bDelta}) = \max_i |\lambda_i(\tilde{\bDelta}^T\tilde{\bDelta})| \\
+%%		&\geq \left( \max_i |\lambda_i(\tilde{\bDelta})| \right)^2
+%%\end{align*}
+%%\footnote{This inequality is tight in the sense that it is achieved with equality when $\bA_0$ is diagonal.}
+%This in turn yields for $l \geq 0$:
+%\begin{align*}
+%	p C_\bDelta^l &\geq p (\max_i|\lambda_i(\tilde{\bDelta})|)^l \geq \sum_{i=1}^p |\lambda_i(\tilde{\bDelta})|^l \\
+%		&= \sum_{i=1}^p |\lambda_i(\tilde{\bDelta}^l)| \geq \sum_{i=1}^p \lambda_i(\tilde{\bDelta}^l) = \tr(\tilde{\bDelta}^l)
+%\end{align*}
+%The binomial series then yields:
+%\begin{align*}
+%	\tr( & (\bI_p + \bDelta \bA_0)^{m+2}) = \sum_{l=0}^{m+2} {m+2 \choose l} \tr(\tilde{\bDelta}^l) \\
+%		&\leq p \sum_{l=0}^{m+2} {m+2 \choose l} C_\bDelta^l = p (1+C_\bDelta)^{m+2}
+%\end{align*}
+By the ratio test \cite{IntroRealAnalysis}, the infinite series $\sum_{m=0}^\infty a_m(u)$ converges if $u<1/2$. Using (\ref{sum_bound}) in (\ref{eq_temp}), and the result in (\ref{eq2}), we obtain the exponential bound:
+\begin{equation*}
+	\Pr ([\bT(\bX)]_{k,l}-[\bB_*]_{k,l}>\epsilon) \leq \exp\Big\{-tnp\epsilon + \frac{np(t \overline{k})^2}{2}  \psi(t \overline{k})\Big\}
+\end{equation*}
+Let $t<\frac{1}{(2+\tau) \overline{k}}$ and $\epsilon<\frac{1}{2+\tau} \psi(\frac{1}{2+\tau}) \overline{k}<\infty$. By the monotonicity of $\psi(\cdot)$, we have:
+\begin{equation}
+	\Pr([\bT(\bX)]_{k,l}-[\bB_*]_{k,l}>\epsilon) \leq \exp \Big\{-tnp\epsilon + \frac{np t^2 \overline{k}^2}{2}  \psi(\frac{1}{2+\tau}) \Big\} \label{exp_bound}
+\end{equation}
+Optimizing (\ref{exp_bound}) over $t$, we obtain $t^*=\frac{\epsilon}{\overline{k}^2 \psi(\frac{1}{2+\tau})}$. Clearly, $t^*<\frac{1}{(2+\tau) \overline{k}}$. Plugging this into (\ref{exp_bound}) and letting $C:=\frac{1}{2 \overline{k}^2 \psi(\frac{1}{2+\tau})}$ \footnote{Since $\psi(\frac{1}{2+\tau})$ is finite, $C>0$ is finite.}, we obtain for all $\epsilon < \frac{1}{2+\tau} \psi(\frac{1}{2+\tau}) \overline{k}$:
+\begin{equation} \label{upper_tail_2}
+	\Pr([\bT(\bX)]_{k,l}-[\bB_*]_{k,l}>\epsilon) \leq e^{-np\epsilon^2 C}
+\end{equation}
+
+% Next, we bound the lower tail:
+%	\begin{align*}
+%		\Pr &([\bT(\bX)]_{k,l}-\E[[\bT(\bX)]_{k,l}]<-\epsilon) \\
+%			&= \Pr \Big(\sum_{m=1}^n \sum_{i,j=1}^p -\bX_{i,j}([\bz_m]_{(j-1)f+k}[\bz_m]_{(i-1)f+l} \\
+%			&\quad -[\bA_0]_{i,j}[\bB_0]_{k,l}) > np\epsilon \Big) \\
+%			&\leq e^{-tnp\epsilon} \left( \tilde{\phi}_{\tilde{Y}^{(k,l)}}(-t) \right)^n
+%	\end{align*}
+%	where $\tilde{\phi}_{\tilde{Y}^{(k,l)}}$ is the MGF of $\tilde{Y}^{(k,l)}$. Performing a second order Taylor expansion as before, we have:
+%	\begin{align*}
+%		\tilde{\phi}_{\tilde{Y}^{(k,l)}}(-t) &= \tilde{\phi}_{\tilde{Y}^{(k,l)}}(0) - \frac{d\tilde{\phi}_{\tilde{Y}^{(k,l)}}(0)}{dt} t + \frac{1}{2} \frac{d^2 \tilde{\phi}_{\tilde{Y}^{(k,l)}}(\delta t)}{dt^2} t^2 \\
+%		&= 1 + \frac{t^2}{2} \sum_{m=0}^\infty T_m'(t)
+%	\end{align*}
+%	where $T_m'(t):= \frac{(-t\delta)^m}{m!} \E[(<\vec(\bX),\bz^{(k,l)}>)^{m+2}] = (-1)^m T_m(t) \leq T_m(t)$ and $\delta\in[0,1]$. Proceeding similarly as above, it can be shown that for all $\epsilon<1/3 \psi(\frac{1}{3}) \overline{k}$:
+
+%	Proceeding similarly for the lower tail, for all $\epsilon<\frac{1}{3}\psi(\frac{1}{3})\overline{k}$,
+%	\begin{equation} \label{lower_tail_2}
+%			\Pr([\bT(\bX)]_{k,l}-\E[[\bT(\bX)]_{k,l}]<-\epsilon) \leq e^{-np\epsilon^2 C}
+%	\end{equation}
+%	where $C$ was defined as before.
+	From (\ref{upper_tail_2}) and a similar lower tail bound, we conclude that for all $\epsilon<\frac{1}{2+\tau} \psi(\frac{1}{2+\tau}) \overline{k}$:
+	\begin{equation*} 
+			\Pr(|[\bT(\bX)]_{k,l}-\E[[\bT(\bX)]_{k,l}]|>\epsilon) \leq 2 e^{-np\epsilon^2 C}
+	\end{equation*}
+	The union bound over $(k,l)\in \{1,\dots,f\}^2$ completes the proof. This bound can be re-expressed as in the statement of Lemma \ref{lemma: large_dev_optimal} (see \cite{TsiligkaridisTSP} for more details).
+\end{IEEEproof}
