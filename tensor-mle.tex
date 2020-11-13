@@ -580,9 +580,9 @@ This definition is consistent with \cref{def:single marginal} in the sense that 
 Let $\rho = \sum_{i=1}^n \samp_i \samp_i^T / \norm{\samp}_2^2$.
 Then the Riemannian Hessian $\nabla^2 f_{\samp}$ at the identity is given by \CF{fix $Y_a$ here}
 \begin{align*}
- \frac{1}{d_a} \langle Y_a,  \left( \nabla^2_{aa} f_{\samp} \right) Y_a \rangle
+ \frac{1}{d_a} \langle Y,  \left( \nabla^2_{aa} f_{\samp} \right) Y \rangle
 &= \left( \tr \rho^{(a)} Y^2 - \bigl(\tr Y \rho^{(a)}\bigr)^2 \right) \\
-  \frac1{\sqrt{d_a d_b}} \langle Y_a,  \left( \nabla^2_{ab} f_{\samp} \right) Z_b \rangle
+  \frac1{\sqrt{d_a d_b}} \langle Y,  \left( \nabla^2_{ab} f_{\samp} \right) Z \rangle
 &= \tr \rho^{(ab)} \left( Y \ot Z \right) - \bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr) 
 \end{align*}
 for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d_b\times d_b$ matrices~$Z$.
@@ -591,14 +591,14 @@ for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d
   Let $F_{\samp}(\Theta) = \tr \rho \, \Theta$ as in the proof of \cref{lem:gradient}.
   Then,
   \begin{align*}
-   \langle Y_a,  \left( \nabla^2_{aa} F_{\samp} \right) Y_a \rangle
+   \langle Y,  \left( \nabla^2_{aa} F_{\samp} \right) Y \rangle
   &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{(s+t)\sqrt{d_a}  Y_a} \\
   &= \partial_{s=0} \partial_{t=0} \tr \rho^{(a)} e^{(s+t)  \sqrt{d_a}Y}
   = d_a \tr \rho^{(a)} Y^2,
   \end{align*}
   while for $a\neq b$ we have
   \begin{align*}
-    \langle Y_a,  \left( \nabla^2_{ab} F_{\samp} \right) Z_b \rangle
+    \langle Y,  \left( \nabla^2_{ab} F_{\samp} \right) Z \rangle
   &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s \sqrt{d_a}Y_a + t \sqrt{d_b} Z_b} \\
   &= \partial_{s=0} \partial_{t=0} \tr \rho^{(ab)} \left( e^{s \sqrt{d_a}  Y} \ot e^{t \sqrt{d_b} Z} \right)\\
   &= \sqrt{d_a d_b} \tr \rho^{(ab)} \left( Y \ot Z \right).
@@ -716,13 +716,27 @@ The last thing we need is a lower bound on $\nabla^2_{aa} f.$ This operator is a
 We now show our second strong convexity result, namely that if our function is strongly convex at the origin then it is also strongly convex in an operator norm ball about the origin. We'll use an easy fact relating the exponential map and the operator norm.
 
 \begin{fact} For all symmetric $d\times d$ matrices $\delta $ such that $ \|\delta\|_{op} \leq \frac{1}{2}$, we have 
-$$ \|e^{\delta} - I\|_{op} \leq \leq \|\delta\|_{op} + \|\delta\|_{op}^{2} \leq 2 \|\delta\|_{op}.$$ 
+$$ \|e^{\delta} - I\|_{op} \leq \|\delta\|_{op} + \|\delta\|_{op}^{2} \leq 2 \|\delta\|_{op}.$$ 
 \end{fact}
 
-We will follow the structure presented in the last proof by letting our input at the identity be represented by $x$ \CF{input at identity? use of "input" is in general imprecise} and showing each block of the Hessian only changes a small amount under perturbation $x' := e^{\delta} x$ for $\delta \in \Sym$. In particular we will give bounds on each block under each component-wise perturbation $x' := (e^{\delta})_{b} x$. Recall (c.f. \cref{lem:hessian}) that the $a^{th}$ diagonal block of the Hessian depends only on $\rho^a_{\samp}$. This motivates the next two lemmas quantifying the change of $\rho^{a}
+We will follow the structure presented in the last proof by letting our input at the identity be represented by $x$ \CF{input at identity? use of "input" is in general imprecise} and showing each block of the Hessian only changes a small amount under perturbation $x' := e^{\delta} x$ for $\delta \in \Sym$. In particular we will give bounds on each block under each component-wise perturbation $x' := (e^{\delta_{b}})_{b} x$. Recall (c.f. \cref{lem:hessian}) that the $a^{th}$ diagonal block of the Hessian depends only on $\rho^a_{\samp}$. This motivates the next two lemmas quantifying the change of $\rho^{a}
 _{\samp}$ under perturbations. 
 
-\CF{for the readers' sake some justification is needed for why perturbing $\samp$ this is the same as considering the Hessian of our function at another point in $\PD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
+\CF{Akshay: $\sum_{a} \|\delta_{a}\|_{op} = \|\delta\|_{op}.$}
+\CF{say stronger condition}
+\begin{lemma} \label{convexRobustness}
+There is a constant $c>0$ such that the following holds. If $f_{\samp}$ is $\alpha$-strongly convex at $I$; $\forall a: \|d_{a} \rho_{\samp}^{(a)}\|_{op} \leq (1+c)$, or the stronger condition $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$; and $\sum_{a} \|\delta_{a}\|_{op} \leq c$: then $f$ at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$ is $\geq (\alpha - k C \|\delta\|_{op})$-strongly convex for some universal constant $C$. 
+\end{lemma}
+
+Recall the definition of a quadratic form of the Hessian:
+\[ \langle Z, (\nabla^{2} f) Z \rangle = \langle Z, (\nabla^{2} F) Z \rangle + \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle     \]
+The second term is rank one, so the quadratic form is:
+\[ \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle = \left( \sum_{a} \sqrt{d_{a}} \langle \rho^{(a)}, Z_{a} \rangle   \right)^{2}       \]
+For the first term, we follow the same proof structure as $\ref{thm:tensor-convexity}$, and analyze diagonal and off-diagonal blocks separately:
+\[ \langle Z_{a}, \nabla^{2}_{aa} F Z_{a} \rangle = \langle d_{a} \rho^{(a)}, Z_{a}^{2} \rangle       \]
+\[ \langle Z_{a}, \nabla^{2}_{ba} Z_{b} \rangle = \langle \sqrt{d_{a} d_{b}} \rho^{(ab)}, Z_{a} \otimes Z_{b} \rangle   \]
+Theorem $\ref{thm:tensor-convexity}$ gives good bounds on the Hessian of $\samp$; so in order to bound the Hessian at perturbation $\samp' := \prod_{a} (e^{\delta_{a}})_{a} \samp$, it is enough to bound the difference. By the above discussion then we will bound the difference of each of the terms (diagonal $\nabla^{2}_{aa} F$, off-diagonal $\nabla^{2}_{ba} F$, and rank one $(\nabla^{2} f - \nabla^{2} F)$) under each component-wise perturbation. Note all three terms involve only $\{\rho^{(a)}\}, \{\rho^{(ab)}\}$, so we prove perturbations on marginals in the following lemmas.  
+
 \begin{lemma} \label{atoaaRobustness}
 For input $\samp$ and perturbation $\|\delta\|_{op} \leq \frac{1}{20}$ giving $\samp' := (e^{\delta})_{a} \samp$:
 \[ \|\rho_{\samp'}^{a} - \rho_{\samp}^{a}\|_{op} \leq 4.5 \|\delta\|_{op} \|\rho_{\samp}^{a}\|_{op}     \]
@@ -759,109 +773,124 @@ The lemma follows by noting $\|Z\|_{1} = \|Z_{+}\|_{1} + \|Z_{-}\|_{1}$ and $\|\
 \[ \|\delta'\|_{op} = \|(1+\eta) e^{2 \delta} - I\|_{op} \leq |\eta|(1 + 2 \|\delta\|_{op}) + 2\|\delta\|_{op} \leq O(\|\delta\|_{op})   \qedhere  \]
 \end{proof}
 
-This gives a bound on the diagonal blocks of the Hessian as well as the rank-one term $\bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr)$ in all other blocks.
+This is already enough to prove a bound on the diagonal terms $\{\nabla^{2}_{aa} F\}$ and rank one term $(\nabla^{2} f - \nabla^{2} F)$. 
 
-\CF{make consistent with def 4, hessian}
 \begin{corollary} \label{diagRobustness}
-For input $\samp \in \CF{where?}$ such that $d_{a}\|\rho_{\samp}^{(a)}\|_{op} \leq 1+\frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a})_{a}$ with $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$ giving $\samp' := e^{\delta} \samp$:
-\[ \frac{1}{d_{a}} \|\nabla^{2}_{aa} f(e^{2\delta}) - \nabla^{2}_{aa} f(I)\|_{op} \leq 40 \|\delta\|_{op} \|\rho_{\samp}^{(a)}\|_{op}      \]
+For input $\samp \in \R^{nD}$ such that $d_{a}\|\rho_{\samp}^{(a)}\|_{op} \leq 1+\frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a})_{a}$ with $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$ giving $\samp' := e^{\delta} \samp$:
+\[ \|\nabla^{2}_{aa} F(e^{2\delta}) - \nabla^{2}_{aa} F(I)\|_{op} \leq 11 \|\delta\|_{op}     \]
 \end{corollary}
 %\CF{technically $f(e^{\delta})$ corresponds to $e^{\delta/2} \samp$}
 \begin{proof}
-Recall from \cref{lem:hessian} that $\frac{1}{d_{a}}\langle Y, \nabla^{2}_{aa} f_{\samp} Y \rangle = \langle \rho_{\samp}^{(a)}, Y^{2} \rangle - \langle \rho_{\samp}^{(a)}, Y \rangle^{2}$. We treat the perturbation as the composition of $k$ perturbations; 
+Recall from the discussion after \ref{convexRobustness} that $\langle Y, \nabla^{2}_{aa} F_{\samp} Y \rangle = \langle d_{a} \rho_{\samp}^{(a)}, Y^{2} \rangle$. We treat the perturbation as the composition of $k$ perturbations; 
 \[ \samp_{(0)}:=\samp \to \samp_{(1)}:= (e^{\delta_{1}})_1 \samp_{(0)} \to ... \to \samp_{(k)}:=(e^{\delta_{k}})_{k} \samp_{(k-1)} = \samp'  \]
-We bound the first term $\langle \rho^{(a)}, Y^{2} \rangle$. We use $\ref{atoaaRobustness}$ to handle $e^{\delta_{a}}$ and $\ref{btoaaRobustness}$ for the rest:
+We can use $\ref{atoaaRobustness}$ to handle $e^{\delta_{a}}$ and $\ref{btoaaRobustness}$ for the rest:
 \begin{align*}
  |\langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, Y^{2} \rangle| 
  &\leq \sum_{j=1}^{k} |\langle \rho_{\samp_{(j)}}^{(a)} - \rho_{\samp_{(j-1)}}^{(a)}, Y^{2} \rangle| 
 \underset{\ref{atoaaRobustness},\;\ref{btoaaRobustness}}{\leq} \sum_{j=1}^{k}  9.5 \|\delta_{j}\|_{op} \|\rho_{\samp_{(j-1)}}^{(a)}\|_{op} \|Y^{2}\|_{1} \\
 & \leq \left( \prod_{j=1}^k (1+9.5 \|\delta_{j}\|_{op}) - 1 \right) \|\rho_{\samp}^{(a)}\|_{op} \|Y\|_{F}^{2} \leq 10 \|\delta\|_{op} \|\rho_{\samp}^{(a)}\|_{op} \|Y\|_{F}^{2}.   \end{align*}
-The term in parenthesis is shown by induction, and in the last step we used $\|\delta\|_{op} \leq \frac{1}{20}$. We next bound the rank-one term $\langle \rho_{\samp}^{(a)}, Y \rangle^{2}$:
-\[ |\langle \rho_{\samp'}^{(a)}, Y \rangle^{2} - \langle \rho_{\samp}^{(a)}, Y \rangle^{2}| = |\langle \rho_{\samp'}^{(a)}, Y \rangle - \langle \rho_{\samp}^{(a)}, Y \rangle| |\langle \rho_{\samp'}^{(a)}, Y \rangle + \langle \rho_{\samp}^{(a)}, Y \rangle|    \]
-\[ \leq 10 \|\delta\|_{op} (2+ 10 \|\delta\|_{op}) (\|\rho_{\samp}^{(a)}\|_{op} \|Y\|_{1})^{2} \leq 25 \|\delta\|_{op} d_{a} \|\rho_{\samp}^{(a)}\|_{op}^{2} \|Y\|_{F}^{2}       \]
-
-In toto this gives the corollary:
-
-\[ \frac{1}{d_{a}}\|\nabla^{2}_{aa} f(e^{2\delta}) - \nabla^{2}_{aa} f(I)\|_{op} \leq \|\delta\|_{op}(C' \|\rho_{\samp}^{(a)}\|_{op} + C'' \|\rho_{\samp}^{(a)}\|_{op}^{2})    \]
-from which the statement follows by the initial condition $\|d_{a} \rho_{\samp}^{(a)}\|_{op} \leq (1+c)$.
+The term in parenthesis is shown by induction, and in the inequality we used $\|\delta\|_{op} \leq \frac{1}{20}$. The final step follows by our initial condition on $\|d_{a} \rho_{\samp}^{(a)}\|_{op}$. 
 \end{proof}
 
+\begin{corollary} \label{rankoneRobustness}
+For input $x \in \R^{nD}$ such that $\forall a: d_{a} \|\rho_{\samp}^{(a)}\|_{op} \leq 1 + \frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a})_{a}$ with $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$ giving $\samp' := e^{\delta} \samp$:
+\[ \|(\nabla^{2} f_{\samp'} - \nabla^{2} F_{\samp'}) - (\nabla^{2} f_{\samp} - \nabla^{2} F_{\samp})\|_{op} \leq 26 k \|\delta\|_{op}     \]
+\end{corollary}
+\begin{proof}
+Recall again from the discussion after $\ref{convexRobustness}$ that $\langle Z, (\nabla^{2} F - \nabla^{2} f) Z \rangle = \left\langle \rho, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2}$. We use the same iterative strategy as $\ref{diagRobustness}$:
+\[    \left\langle \rho_{\samp'}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2} -  \left\langle \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2}    \]
+\[ = \left\langle \rho_{\samp'} + \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle \left\langle \rho_{\samp'} - \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle  \]
+\[ = \left( \sum_{a} \sqrt{d_{a}} \langle \rho_{\samp'}^{(a)} + \rho_{\samp}^{(a)}, Z_{a} \rangle \right) \left( \sum_{a} \sqrt{d_{a}} \langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, Z_{a} \rangle \right)     \]
+\AR{Here I could use that $Z \perp I$ to get a constant factor improvement; need an assumption on $\nabla$; but it improves the overall constant by factor $\approx 2$}
+\[ \leq \left( (2+10\|\delta\|_{op})\sum_{a} \sqrt{d_{a}} \|\rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{1}   \right) 
+\left( 10\|\delta\|_{op} \sum_{a} \sqrt{d_{a}} \| \rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{1}   \right)    \]
+\[ \leq 25 \|\delta\|_{op} \left( \sum_{a} \|d_{a} \rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{F} \right)^{2} \leq 25 \|\delta\|_{op} \left( \sum_{a} \|d_{a} \rho_{\samp}^{(a)}\|_{op}^{2} \right) \|Z\|^{2}      \]
+\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s?}
+The final step follows from the initial conditions on $\|d_{a} \rho_{a}\|_{op}, \|d_{b} \rho_{b}\|_{op}$. 
+\end{proof}
+
+The off-diagonal blocks $\{\nabla^{2}_{ba} F\}$ are only slightly more difficult as we need the following on bipartite marginals:
+
+\begin{lemma} \label{btoabRobustness}
+\CF{add quantifiers}
+For $\samp \in \R^{nD}$ and perturbation $\delta \in \Sym$ with $\|\delta\|_{op} \leq \frac{1}{20}$, if $\samp' = (e^{\delta})_c \samp$ for $c \in \{a,b\}$ we have 
+%$\{\samp'_{i} := (e^{\delta})_{c} \samp_{i} \}$ for $c \in \{a,b\}$:
+\[ \sup_{Y \in \Sym_{d_{a}}^{0}, Z \in \Sym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq 4.5 \|\delta\|_{op} \sup_{Y \in \Sym_{d_{a}}, Z \in \Sym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}}        \]
+%\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 4.5 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}    \]
+\end{lemma}
+\begin{proof}
+%Recall from the discussion after $\ref{convexRobustness}$ that $\langle Y, (\nabla^{2}_{ab} F) Z \rangle = \sqrt{d_{a} d_{b}} \langle \rho^{(ab)}, Y \otimes Z \rangle$. 
+By taking adjoints, we can assume w.l.o.g. that $c = b$. Let $R : \mat(d_{b}) \to \mat(d_{b})$ be defined as $R(Z) := (1+\eta)^{2} e^{\delta} Z e^{\delta}$ for $\eta$ defined by our normalization $\|(e^{\delta})_{b} \samp\|_{2}^{-1} =: (1+\eta) \|\samp\|_{2}^{-1}$.
+\[ |\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle| = |\langle \rho_{\samp}^{(ab)}, Y \otimes (R(Z) - Z) \rangle|  \]
+The subspace $\Sym_{d_{b}}^{0}$ is not invariant under $R$, but we show $R \approx I$. Let $\delta' := (1+\eta) e^{\delta} - I$. 
+\[ \|R(Z) - Z\|_{F} \leq 2 \|\delta' Z\|_{F} + \|\delta' Z \delta'\|_{F} \leq (2 \|\delta'\|_{op} + \|\delta'\|_{op}^{2}) \|Z\|_{F}    \]
+So we complete the proof by definition of $\sup$ on LHS vs RHS, and $\|\delta\|_{op} \leq \frac{1}{20}$ by the same calculation as in \ref{atoaaRobustness}. 
+\end{proof}
+
+\begin{lemma} \label{ctoabRobustness}
+For input $\samp \in \R^{nD}$ and perturbation $\|\delta\|_{op} \leq \frac{1}{20}$ giving $\samp' := (e^{\delta})_{c} \samp$ for $c \not\in \{a,b\}$:
+\[ \sup_{Y \in \Sym_{d_{a}}^{0}, Z \in \Sym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq 19 \|\delta\|_{op} \sup_{Y \in \Sym_{d_{a}}, Z \in \Sym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}}        \]
+%\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 19 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}    \]
+\end{lemma}
+\begin{proof}
+Let $c_{0}$ be the $\sup$ on the LHS and $c$ be the $\sup$ on the RHS. Define $\eta$ for normalization $\|(e^{\delta})_{c} \samp\|_{2}^{-1} =: (1+\eta) \|\samp\|_{2}^{-2}$, and let $\delta' := (1+\eta) e^{2 \delta} - I_{c}$. We will use a similar decomposition to lemma \ref{btoaaRobustness}, so first assume $Y,Z \succeq 0, \|Y\|_{F} = \|Z\|_{F} = 1$:
+%\[ \frac{1}{\sqrt{d_{a} d_{b}} } \langle Y, (\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}) Z \rangle = \langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes \delta' \rangle   \]
+\[ |\langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes \delta' \rangle| \leq \langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes |\delta'| \rangle \leq \|\delta'\|_{op} \langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle   \]
+Here we again used that $\rho_{\samp}^{(abc)} \succeq 0$. We cannot bound this by $c_{0}$ as $Y \succeq 0$, but the RHS $c$ is sufficient.  
+To finish the lemma we decompose $Y = Y_{+} - Y_{-}, Z = Z_{+} - Z_{-}$ and bound
+\[ |\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle| \leq c \|\delta'\|_{op} \sum_{s,t \in \{+,-\}} \|Y_{s}\|_{F} \|Z_{t}\|_{F}   \]
+The summation we can bound by Cauchy Schwarz:
+\[ \leq (2\|Y_{+}\|_{F}^{2} + 2\|Y_{-}\|_{F}^{2})^{1/2} (2\|Z_{+}\|_{F}^{2} + 2\|Z_{-}\|_{F}^{2})^{1/2} = 2 \|Y\|_{F} \|Z\|_{F}     \]
+Using the definition of $c,c_{0}$, as well as the same calculation from \ref{btoaaRobustness} $\|\delta\|_{op} \leq .05 \implies \|\delta'\| \leq 9.5 \|\delta\|_{op}$; we get the lemma. 
+\end{proof}
+
+We need the following to translate to statements on the Hessian:
 
 \begin{definition}
 For operator $M : \mat(d_{b}) \to \mat(d_{a})$, we let $\|M\|_{0}$ denote the $F \to F$ norm of its restriction to the traceless subspaces $\Sym^0_{d_b} \to \Sym^0_{d_a}$
 \end{definition}
-\begin{definition}
-For input $\rho_{\samp}$ and fixed $a,b$, define
-\[ \langle Y, H_{\samp}^{ab} Z \rangle := \langle (Y_{a})(Z_{b}), \rho_{\samp} \rangle = \langle Y \otimes Z , \rho_{\samp}^{(ab)} \rangle     \]
-\end{definition}
-We use a lemma from \cite{KLR19}.
+
 \begin{lemma}[\cite{KLR19}] \label{inftyto2}
-$\|H_{\samp}^{ab}\|_{F \to F}^{2} \leq \|\rho_{\samp}^{(a)}\|_{op} \|\rho_{\samp}^{(b)}\|_{op}$
+$\|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}^{2} \leq \|d_{a} \rho_{\samp}^{(a)}\|_{op} \|d_{b} \rho_{\samp}^{(b)}\|_{op}$
 \end{lemma}
 %\begin{proof}This was already in KLR and we have two new proofs: one by convexity, and one by Riesz-Thorin. \AR{The proofs are in some other file, we can add it if we like}\end{proof}
-\begin{lemma} \label{btoabRobustness}
-\CF{add quantifiers}
-For $\samp \in \CF{somewhere}$ and perturbation $\delta \in \Sym$ with $\|\delta\|_{op} \leq \frac{1}{20}$, if $\samp' = (e^{\delta})_c \samp$ for $c \in \{a,b\}$ we have 
-%$\{\samp'_{i} := (e^{\delta})_{c} \samp_{i} \}$ for $c \in \{a,b\}$:
-\[ \|H_{\samp'}^{ab} - H_{\samp}^{ab}\|_{0} \leq 4.5 \|\delta\|_{op} \|H_{\samp}^{ab}\|_{F \to F}    \]
-\end{lemma}
-\begin{proof}
-We will drop the superscript $(ab)$ since it doesn't change. By taking adjoints, we can assume w.l.o.g. that $c = b$. Let $R : \mat(d_{b}) \to \mat(d_{b})$ be defined as $R(Z) := (1+\eta)^{2} e^{\delta} Z e^{\delta}$ for $\eta$ defined by our normalization $\|(e^{\delta})_{b} \samp\|_{2}^{-1} =: (1+\eta) \|\samp\|_{2}^{-1}$. The subspace $\Sym_{d_{b}}^{0}$ is not invariant under $R$, but we show $R \approx I$. Let $\delta' := (1+\eta) e^{\delta} - I$. 
-\[ \|R(Z) - Z\|_{F} \leq 2 \|\delta' Z\|_{F} + \|\delta' Z \delta'\|_{F} \leq (2 \|\delta'\|_{op} + \|\delta'\|_{op}^{2}) \|Z\|_{F}    \]
-So using the definition of $\|\cdot\|_{0}$:
-\[ \sup_{Y \in \Sym_{d_{a}}^{0},Z \in \Sym_{d_{b}}^{0}} \frac{\langle Y, (H_{\samp'} - H_{\samp}) Z \rangle}{\|Y\|_{F} \|Z\|_{F}} = \frac{ \langle Y, H_{\samp} (R(Z) - Z) \rangle }{\|Y\|_{F} \|Z\|_{F}} \]
-To complete the proof, we use $\|\delta\|_{op} \leq \frac{1}{20}$ and the same calculation as in \ref{atoaaRobustness}.
-\end{proof}
 
-\begin{lemma} \label{ctoabRobustness}
-For input $\{\samp_{i}\}$ and perturbation $\|\delta\|_{op} \leq \frac{1}{20}$ giving $\samp' := (e^{\delta})_{c} \samp$ for $c \not\in \{a,b\}$:
-\[ \|H_{\samp'}^{ab} - H_{\samp}^{ab}\|_{0} \leq 19 \|\delta\|_{op} \|H_{\samp}^{ab}\|_{F \to F}    \]
-\end{lemma}
-\begin{proof}
-Let $\delta' := (1+\eta) e^{2 \delta} - I_{c}$ for $\eta$ defined by normalization $\|(e^{\delta})_{c} \samp\|_{2}^{-1} =: (1+\eta) \|\samp\|_{2}^{-2}$
-\[ \langle Y, (H_{\samp'} - H_{\samp}) Z \rangle = \langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes \delta' \rangle   \]
-We will use a similar decomposition to lemma \ref{btoaaRobustness}, so first assume $Y,Z \succeq 0, \|Y\|_{F} = \|Z\|_{F} = 1$:
-\[ |\langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes \delta' \rangle| \leq \langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes |\delta'| \rangle \leq \|\delta'\|_{op} \langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle   \]
-Here we again used that $\rho_{\samp}^{(abc)} \succeq 0$. This last term cannot be bounded by $\|H_{\samp}\|_{0}$ as $Y \succeq 0$; but $\|H_{\samp}\|_{F \to F}$ is good enough for our purposes. 
-
-To finish the lemma we decompose $Y = Y_{+} - Y_{-}, Z = Z_{+} - Z_{-}$ and bound
-\[ |\langle Y, (H_{\samp'} - H_{\samp}) Z \rangle| \leq \|\delta'\|_{op} \|H_{\samp}\|_{F \to F} \sum_{s,t \in \{+,-\}} \|Y_{s}\|_{F} \|Z_{t}\|_{F}   \]
-These last four terms we can bound by Cauchy Schwarz:
-\[ \leq (2\|Y_{+}\|_{F}^{2} + 2\|Y_{-}\|_{F}^{2})^{1/2} (2\|Z_{+}\|_{F}^{2} + 2\|Z_{-}\|_{F}^{2})^{1/2} = 2 \|Y\|_{F} \|Z\|_{F}     \]
-Again using the definition of $\|\cdot\|_{0}$; and $\|\delta\|_{op} \leq .05$ to give the same calculation from \ref{btoaaRobustness} on $\|\delta'\| \leq 9.5 \|\delta\|_{op}$; we get the lemma. 
-\end{proof}
 \CF{akshay make consistent with def 4}
 \begin{corollary} \label{offdiagRobustness}
 For input $\samp$ such that $\|d_{a} \rho_{\samp}^{(a)}\|_{op}, \|d_{b} \rho_{\samp}^{(b)}\|_{op} \leq 1+\frac{1}{20}$; perturbation $\delta := \sum_{a} (\delta_{a})_{a}$ with $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$ giving $\samp' := e^{\delta} \samp$:
-\[ \frac{1}{\sqrt{d_{a} d_{b}}} \|\nabla^{2}_{ab} f(e^{2 \delta}) - \nabla^{2}_{ab} f(I)\|_{op} \leq 100 \|\delta\|_{op} \sqrt{\|\rho_{\samp}^{(a)}\|_{op} \|\rho_{\samp}^{(b)}\|_{op}}     \]
+%\[ \frac{1}{\sqrt{d_{a} d_{b}}} \|\nabla^{2}_{ab} f(e^{2 \delta}) - \nabla^{2}_{ab} f(I)\|_{op} \leq 100 \|\delta\|_{op} \sqrt{\|\rho_{\samp}^{(a)}\|_{op} \|\rho_{\samp}^{(b)}\|_{op}}     \]
+\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 21 \|\delta\|_{op}  \]
 \end{corollary}
 \begin{proof}
-Recall $\frac{1}{\sqrt{d_{a} d_{b}}} \langle Y, \nabla^{2}_{aa} f_{\samp} Z \rangle = \langle \rho_{\samp}^{(ab)}, Y^{2} \rangle - \langle \rho_{\samp}^{(a)}, Y \rangle^{2}$. Using the same iterative strategy as $\ref{diagRobustness}$ we can show: 
-\[ |\langle Y, (\rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}) Z \rangle| \leq 20 \|\delta\|_{op} \|H_{\samp}\|_{F \to F} \|Y\|_{F} \|Z\|_{F}    \]
-We used $\ref{btoabRobustness}$ for $\{a,b\}$ and $\ref{ctoabRobustness}$ for the rest. 
-
-We can similarly bound the off-diagonal ``rank-one" terms:
-\[ |\langle \rho_{\samp'}^{(a)}, Y \rangle \langle \rho_{\samp'}^{(b)}, Z \rangle - \langle \rho_{\samp}^{(a)}, Y \rangle \langle \rho_{\samp}^{(b)}, Z \rangle|    \]
-\[ \leq |\langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, Y \rangle \langle \rho_{\samp'}^{(b)}, Z \rangle| + |\langle \rho_{\samp}^{(a)}, Y \rangle \langle \rho_{\samp'}^{(b)} - \rho_{\samp}^{(b)}, Z \rangle|   \]
-\[ 40 \|\delta\|_{op} (1+20\|\delta\|_{op}) \|\rho_{\samp}^{(a)}\|_{op} \|\rho_{\samp}^{(b)}\|_{op} \|Y\|_{1} \|Z\|_{1}    \]
-\[ \leq 80 \|\delta\|_{op} (\sqrt{d_{a} d_{b}} \|\rho_{\samp}^{(a)}\|_{op} \|\rho_{\samp}^{(b)}\|_{op}) \|Y\|_{F} \|Z\|_{F}    \]
-
-In toto this gives the lemma:
-\[ \frac{1}{\sqrt{d_{a} d_{b}}} \|\nabla^{2}_{ab} f(e^{2 \delta}) - \nabla^{2}_{ab} f(I)\|_{op} \leq \|\delta\|_{op}((20 \|H_{\samp}\|_{F \to F}) + 80 (\sqrt{d_{a} d_{b}} \|\rho_{\samp}^{(a)}\|_{op} \|\rho_{\samp}^{(b)}\|_{op})) \]
-\[ \leq 100 \|\delta\|_{op} \sqrt{\|\rho_{\samp}^{(a)}\|_{op} \|\rho_{\samp}^{(b)}\|_{op}}     \]
-We used $\ref{inftyto2}$ for the first term and balanced marginals for the second. 
+This is just a translation of $\ref{btoabRobustness},\ref{ctoabRobustness}$:
+\[ \sup_{Y \in \Sym_{d_{a}}^{0}, Z \in \Sym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} = \frac{\|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0}}{\sqrt{d_{a} d_{b}} } \]
+\[ \sup_{Y \in \Sym_{d_{a}}, Z \in \Sym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} = \frac{\|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}}{\sqrt{d_{a} d_{b}} }       \]
+Using the same iterative strategy as $\ref{diagRobustness}$ we can show: 
+\[ |\langle Y, (\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}) Z \rangle| \leq 20 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F} \|Y\|_{F} \|Z\|_{F}    \]
+We used $\ref{btoabRobustness}$ for $\{a,b\}$ and $\ref{ctoabRobustness}$ for the rest. The final step follows from $\ref{inftyto2}$ and the initial conditions on $\|d_{a} \rho_{a}\|_{op}, \|d_{b} \rho_{b}\|_{op}$. 
 \end{proof}
 
-\CF{Akshay: $\sum_{a} \|\delta_{a}\|_{op} = \|\delta\|_{op}.$}
-\CF{say stronger condition}
-\begin{lemma} \label{convexRobustness}
-There is a constant $c>0$ such that the following holds. If $f_{\samp}$ is $\alpha$-strongly convex at $I$; $\forall a: \|d_{a} \rho_{\samp}^{(a)}\|_{op} \leq (1+c)$, or the stronger condition $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$; and $\sum_{a} \|\delta_{a}\|_{op} \leq c$: then $f$ at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$ is $\geq (\alpha - k C \|\delta\|_{op})$-strongly convex for some universal constant $C$. 
-\end{lemma}
-\begin{proof}
-We follow the same structure as the proof of convexity, letting $\{\samp'_{i} := e^{\delta} \samp\}$. Then by $\ref{diagRobustness}$ we have a bound on the diagonal blocks, and by $\ref{offdiagRobustness}$ we have a bound on the off-diagonal blocks. Finally we use the same Schur-complement inequality from \cref{thm:tensor-convexity} for block matrices:
-\[ \|\nabla^2 f_{\samp'} - \nabla^{2} f_{\samp}\|_{op} \leq C \|\delta\|_{op} \|\{I_{ab}\}_{a,b \in [k]}\|_{op} \leq k C \|\delta\|_{op}  \]
+Now it is a simple matter of putting the three terms together. 
+
+\begin{proof} [of Lemma \ref{convexRobustness}]
+Recall the definition of a quadratic form of the Hessian:
+\[ \langle Z, (\nabla^{2} f) Z \rangle = \langle Z, (\nabla^{2} F) Z \rangle + \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle     \]
+\[ = \sum_{a} \langle Z_{a}, (\nabla^{2}_{aa} F) Z_{a} \rangle + \sum_{a \neq b} \langle Z_{a}, (\nabla^{2}_{ab} F) Z_{b} \rangle - \left( \sum_{a} \sqrt{d_{a}} \langle \rho^{(a)}, Z_{a} \rangle  \right)^{2}       \]
+Let $\{\samp'_{i} := e^{\delta} \samp\}$. Then by $\ref{diagRobustness}$ we have a bound on the diagonal blocks; by $\ref{offdiagRobustness}$ we have a bound on the off-diagonal blocks; and by $\ref{rankoneRobustness}$ we have a bound on the rank-one term. 
+\[ \langle Z, (\nabla^2 f_{\samp'} - \nabla^{2} f_{\samp}) Z \rangle \leq \|\delta\|_{op} \left( 11 \sum_{a} \|Z_{a}\|_{F}^{2} + 21 \sum_{a \neq b} \|Z_{a}\|_{F} \|Z_{b}\|_{F} + 26 k \|Z\|^{2} \right)   \]
+\[ \leq (11 + 21(k-1) + 26 k) \|\delta\|_{op} \|Z\|^{2}    \]
+\AR{I can make this proof look more like the convexity one, with block matrices, if you all want}
 Note that this also gives a spectral upper bound for $\nabla^{2} f_{\samp'}$. 
+\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s? Also the constant is $50 k$ now, yay for better constants!}
 \end{proof}
+
+\CF{for the readers' sake some justification is needed for why perturbing $\samp$ this is the same as considering the Hessian of our function at another point in $\PD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
+
+
+\CF{make consistent with def 4, hessian}
+
+
+
 
 \subsection{Proof of \cref{thm:tensor-frobenius}}
 We are now ready to prove the main result of this section according to the plan outlined in \cref{subsec:outline}.
