@@ -874,7 +874,7 @@ We used $\ref{btoabRobustness}$ for $\{a,b\}$ and $\ref{ctoabRobustness}$ for th
 
 Now it is a simple matter of putting the three terms together. 
 
-\begin{proof} [of Lemma \ref{convexRobustness}]
+\begin{proof} [Proof of Lemma \ref{convexRobustness}]
 Recall the definition of a quadratic form of the Hessian:
 \[ \langle Z, (\nabla^{2} f) Z \rangle = \langle Z, (\nabla^{2} F) Z \rangle + \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle     \]
 \[ = \sum_{a} \langle Z_{a}, (\nabla^{2}_{aa} F) Z_{a} \rangle + \sum_{a \neq b} \langle Z_{a}, (\nabla^{2}_{ab} F) Z_{b} \rangle - \left( \sum_{a} \sqrt{d_{a}} \langle \rho^{(a)}, Z_{a} \rangle  \right)^{2}       \]
@@ -898,20 +898,17 @@ Note that this also gives a spectral upper bound for $\nabla^{2} f_{\samp'}$.
 We are now ready to prove the main result of this section according to the plan outlined in \cref{subsec:outline}.
 \TODO{restate it here?}
 
-\CF{fix all the $d$-norm stuff in this theorem}
 \begin{proof}[Proof of \cref{thm:tensor-frobenius}]By \cref{it:reduce} in \cref{subsec:outline}, it is enough to prove the theorem assuming $\Theta = I$.
-We seek to apply \cref{lem:convex-ball}, so we need $\lambda \kappa > \|\nabla f\|$, where $\lambda$ is the strong convexity we can maintain in a $\kappa$-ball. Set $\delta = \eps/\max \sqrt{k d_a}$. \CF{don't do the sqrt?}
+We seek to apply \cref{lem:convex-ball}, so we need $\lambda \kappa > \|\nabla f\|$, where $\lambda$ is the strong convexity we can maintain in a $\kappa$-ball. Set $\delta = \eps/\sqrt{k d_1}$. 
 
  By our first assumption on $\eps$, we have $N_a \geq C d_a/\delta^2$ for all $a \in [k]$, we so we may apply \cref{prop:gradient-bound}. Thus, with failure probability $O\left( \sum_a \exp ( - N_a \delta^2)\right)$ we have $\|(\nabla f)_{a}\|_{op} \leq \frac{\delta}{\sqrt{d_{a}}}$ for all $a \in [k]$ and so
 \[  \|\nabla f\|^{2} = \sum_{a} \|(\nabla f)_{a}\|_{F}^{2} \leq \sum_{a} d_a \|(\nabla f)_{a}\|_{op}^{2} \leq  k \delta^{2}.  \]
-We next bound $\kappa$. By \cref{thm:tensor-convexity}, with failure probability $\CF{1/poly(D)}$ we have that $f$ is $1-o_{d}(1)$ strongly convex at $I$, and further by \cref{convexRobustness} \CF{check that $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$}  there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $e^{Z}$ such that $ \|Z_{a}\|_{op} \leq  c/k$ for all $a \in [k]$. 
-Because $\|Z_a\|_{op}  \leq \|Z\|,$ we may take $\kappa = c/\max_a \sqrt{d_a}$ \CF{continue here...something is wrong} and $\lambda = 1/2$.
+We next bound the radius $\kappa$ of the ball on which our function is geodesically convex. By \cref{thm:tensor-convexity}, with failure probability $\CF{1/poly(D)}$ we have that $f$ is $1-o_{d}(1)$ strongly convex at $I$. Because $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq \delta \leq c$, by \cref{convexRobustness} there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $\Theta$ such that $\sum_a \|\log \Theta_a\|_{op} \leq  c$ for all $a \in [k]$. Now note that 
+$$ \sum_a \log \Theta_{op} \leq \sqrt{d_1} d(I, \Theta).$$ Thus if we set $\kappa = c/\max_a \sqrt{d_a}$ we will have that $f$ is $1/2$-strongly convex on the $\kappa$ ball. By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\sqrt{d_1} $ there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$; this inequality holds by our definition of $\delta$ and our second assumption on $\eps$. 
+
+By our choice of $\kappa$ and because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) \leq \sqrt{d_a} d(I, \widehat{\Theta}) \leq 2\delta \sqrt{ k d_a}.$ Applying $\eps = \delta \sqrt{k d_1}$ completes the proof.\end{proof}
 
 
-
-
-By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\max_a \sqrt{d_a} $ there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$; this inequality holds by our definition of $\delta$ and our second assumption on $\eps$. Because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) = O( \|\log \widehat{\Theta}\|_{\vec d} \sqrt{d_a})  \leq C \delta \sqrt{k d_a}.$ Applying $\eps = \delta \sqrt{k \max d_a}$ completes the proof.
-\end{proof}
 
 
 
