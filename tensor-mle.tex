@@ -667,10 +667,11 @@ where $Y_1,\dots,Y_N,Y$ are independent $n\times m$ standard Gaussian random mat
 
 \TODO{Fix for new inner product and dimension issue}
 \CF{Separate lemma for probability of the off diagonal terms; precise version of the below incluing assumptions/probabilities.}
-\begin{corollary}
-For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kraus operator is of the form $\frac{1}{\sqrt{nD}} Y$, and our off-diagonal operator is
+\begin{corollary} \label{offdiagPisier}
+For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kraus operator is of the form $\frac{1}{\sqrt{nD}} Y$, and our off-diagonal operator $\frac{\nabla^{2}_{ab} F}{\sqrt{d_{a} d_{b}}}$ is
 \[ \sum_{k=1}^{nD/d_{a}d_{b}} \frac{1}{nD} Y_{k} \otimes Y_{k}   \]
-By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is of the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}}$, so for constant expansion it suffices that $nD \gg \max_{a} d_{a}^{2}$ \CF{what's the probabilities}
+
+By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is $O \left( \frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}} \right)$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}))$. So for constant expansion ($\|\nabla^{2}_{ab} F\|_{op} \leq O(1)$, it suffices that $nD \gg \max_{a} d_{a}^{2}$
 \end{corollary}
 
 \CF{The old proof had the following sentence: 
@@ -691,6 +692,7 @@ Pisier's actual result is slightly different; \cref{thm:hess-pisier} is essentia
 We use the inequality for block matrices 
 $$\begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix} \succeq - \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}$$ for any $A,B \succeq 0$ such that $\|A^{-1/2} K B^{-1/2}\|_{op} \leq 1,$ which may be proved by computing Schur complements. We will sequentially apply this inequality to the block matrix $\nabla^2 f$ until we are left with a diagonal matrix. 
 
+\AR{Can rephrase explicitly in terms of $\nabla^{2} F$ and rank-one term. Then \ref{prop:gradient-bound} gives $1-\eps$ lower bound on each diagonal block of $\nabla^{2} F$, \ref{offdiagPisier} gives $\lambda$ bound on each offdiagonal block of $\nabla^{2} F$, and \ref{prop:gradient-bound} once again gives $k \eps^{2}$ bound on whole rank-one term.  }
 To implement this, we proceed to bound the operator norm of $\nabla^2_{ab} f: \Sym^0_{d_b} \to \Sym^0_{d_a}$ for $a \neq b$. The gradient is the sum of two terms; the first of which is dominated in the Loewner ordering by the map $Z \mapsto \sqrt{d_a d_b} \tr_2 \rho^{(a,b)} (I \ot Z)$. By \cref{eq:expansion-thing} (\CF{which needs to actually be proved}), with probability $\CF{good}$, the map $Z \to \tr_2 \rho^{(a,b)} (I \ot Z)$ has operator norm at most $\lambda/\sqrt{d_a d_b}$ restricted to traceless $Z$. The second term defines the quadratic form 
 $$Y,Z \mapsto \sqrt{d_a d_b} (\tr Y \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr).$$ As $\|\rho^{(a)} - I_{d_a}/{d_a}\|_{op} \leq \eps/d_a, \|\rho^{(b)} - I_{d_b}/d_b\|_{op} \leq \eps/d_b$, we have
 $$ |(\tr Y \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr)| \leq \left( \frac{\eps \|Y\|_{1}}{d_{a}} \right) \left( \frac{\eps \|Z\|_{1}}{d_{b}} \right) \leq \eps^2 \frac{\|Z\|_F\|Y\|_F}{\sqrt{d_a d_b}} $$
