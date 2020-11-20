@@ -668,6 +668,7 @@ Pisier's actual result is slightly different; \cref{thm:hess-pisier} is essentia
 
 \begin{corollary}\label{cor:off-diag-hess} For traceless symmetric matrices $Y \in \Sym^0_{d_a}$, $Z \in \Sym^0_{d_a}$, we have 
 %$O \left( \frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}} \right)$  
+
 $$ \langle Y,  \left( \nabla^2_{ab} f_{\samp} \right) Z \rangle
 = O (\lambda)
 $$
@@ -675,13 +676,13 @@ $$
 with probability $1 - \exp( - \Omega \left( (d_{a} + d_{b}) \log \frac{ \lambda \sqrt{n D} }{d_{a} + d_{b}}  \right) ) \geq 1 - \exp( - \Omega(d_{a} + d_{b}) )$ for $\lambda^{2} n D \gg \max_{a} d_{a}^{2}$. 
 \AR{In particular we get $\|\nabla^{2}_{ab} f\|_{op} \approx \frac{d_{a} + d_{b}}{\sqrt{n D}}$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}))$; as well as $\|\nabla^{2}_{ab} f\|_{op} \approx \frac{d_{a} + d_{b}}{\sqrt{D}}$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}) \log n)$ }
 \end{corollary}
-\CF{akshay defines a notation for restricting operators to the traceless symmetrics. Maybe we should adopt it here also}
+\CF{akshay defines a notation $\|T\|_0$ for restricting operators to the traceless symmetrics. Maybe we should adopt it here also}
 \begin{proof}
 We proceed to bound the operator norm of $\nabla^2_{ab} f: \Sym^0_{d_b} \to \Sym^0_{d_a}$ for $a \neq b$. Recall from \cref{lem:hessian} that the gradient is defined by
 \begin{align}\frac1{\sqrt{d_a d_b}} \langle Y,  \left( \nabla^2_{ab} f_{\rv} \right) Z \rangle
 = \tr \rho^{(ab)} \left( Y \ot Z \right) - \bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr).\label{eq:grad-off-diag}\end{align}
 As a linear map, define the first term to be $T:Z \mapsto \sqrt{d_a d_b} \tr_b \rho^{(a,b)} (I \ot Z)$. The state $\rho^{(a,b)} = \tr_{\overline{\{a,b\}}} \rho$ is given by $\rho^{{a,b}} =  X X^\dagger/\|X\|^2$ where $X$ is viewed as an $n D/{d_a d_b} \times d_a d_b$ matrix. Equivalently, $\rho^{(a,b)}$ is distributed as 
-$$\frac{1}{\sum_{i} \|Y_i\|^2} Y_i Y_i^T$$ where $Y_i$ are $n D/{d_a d_b}$ i.i.d standard Gaussians on $\R^{d_a} \ot \R^{d_b}$. By \cref{lem:hess-pisier}, the operator norm of $T$ restricted to $\Sym^0_{d_b}$ is $O((d_a + d_b) \sqrt{ n D/d_ad_b} / \sum_{i \in \|Y_i\|^2} )$ \TODO{propagate from \cref{cor:off-diag-hess}} 
+$$\frac{1}{\sum_{i} \|Y_i\|^2} Y_i Y_i^T$$ where $Y_i$ are $n D/{d_a d_b}$ i.i.d standard Gaussians on $\R^{d_a} \ot \R^{d_b}$. By \cref{cor:hess-pisier}, the operator norm of $T$ restricted to $\Sym^0_{d_b}$ is $O((d_a + d_b) \sqrt{ n D/d_ad_b} / \sum_{i \in \|Y_i\|^2} )$ \TODO{propagate from \cref{cor:off-diag-hess}} 
 with probability $\exp(-\Omega(d_{a} + d_{b}))$ \TODO{propagate from \cref{cor:off-diag-hess}} . The denominator is a sum of $nD$ many i.i.d $\chi$-square random variables, and so is $\Theta(nD)$ with failure probability $e^{ -\Omega(nD)} \ll \exp(-\Omega(d_{a} + d_{b}))$ \cite{W19}, so finally we have that the operator norm of $T$ restricted to $\Sym^0_{d_b}$ is $O \left( \frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}} \right)$ \TODO{propagate from \cref{cor:off-diag-hess}} .
 
 %By \cref{eq:expansion-thing} (\CF{which needs to actually be proved}), with probability $\CF{good}$, the map $Z \to \tr_2 \rho^{(a,b)} (I \ot Z)$ has operator norm at most $\lambda/\sqrt{d_a d_b}$ restricted to traceless $Z$. 
