@@ -672,7 +672,7 @@ $$ \langle Y,  \left( \nabla^2_{ab} f_{\samp} \right) Z \rangle
 = O (\lambda) \left( t^{2} \frac{d_{a}+d_{b}}{\sqrt{nD}} \right) \TODO{O(\lambda)}
 $$
 \TODO{Akshay, please make the rhs $O(\lambda)$ and then adjust the failure probability accordingly}
-with probability $1 - \exp( - \Omega \left( (d_{a} + d_{b}) \log \frac{ \lambda \sqrt{n D} }{d_{a} + d_{b}}  \right) ) \geq 1 - \exp( - \lambda \Omega(d_{a} + d_{b}) )$ for $n D \gg \max_{a} d_{a}^{2}$. 
+with probability $1 - \exp( - \Omega \left( (d_{a} + d_{b}) \log \frac{ \lambda \sqrt{n D} }{d_{a} + d_{b}}  \right) ) \geq 1 - \exp( - \Omega(d_{a} + d_{b}) )$ for $\lambda^{2} n D \gg \max_{a} d_{a}^{2}$. 
 \AR{In particular we get $\|\nabla^{2}_{ab} f\|_{op} \approx \frac{d_{a} + d_{b}}{\sqrt{n D}}$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}))$; as well as $\|\nabla^{2}_{ab} f\|_{op} \approx \frac{d_{a} + d_{b}}{\sqrt{D}}$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}) \log n)$ }
 \end{corollary}
 \CF{akshay defines a notation for restricting operators to the traceless symmetrics. Maybe we should adopt it here also}
