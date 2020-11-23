@@ -794,7 +794,7 @@ Recall from the discussion after \ref{convexRobustness} that $\langle Y, \nabla^
 We can use $\ref{atoaaRobustness}$ to handle $e^{\delta_{a}}$ and $\ref{btoaaRobustness}$ for the rest:
 \begin{align*}
  |\langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, Y^{2} \rangle| 
- &\leq \sum_{j=1}^{k} |\langle \rho_{\samp_{(j)}}^{(a)} - \rho_{\samp_{(j-1)}}^{(a)}, Y^{2} \rangle| 
+ &\leq \sum_{j=1}^{k} |\langle \rho_{\samp_{(j)}}^{(a)} - \rho_{\samp_{(j-1)}}^{(a)}, Y^{2} \rangle| \\
 \underset{\ref{atoaaRobustness},\;\ref{btoaaRobustness}}{\leq} \sum_{j=1}^{k}  9.5 \|\delta_{j}\|_{op} \|\rho_{\samp_{(j-1)}}^{(a)}\|_{op} \|Y^{2}\|_{1} \\
 & \leq \left( \prod_{j=1}^k (1+9.5 \|\delta_{j}\|_{op}) - 1 \right) \|\rho_{\samp}^{(a)}\|_{op} \|Y\|_{F}^{2} \leq 10 \|\delta\|_{op} \|\rho_{\samp}^{(a)}\|_{op} \|Y\|_{F}^{2}.   \end{align*}
 The term in parenthesis is shown by induction, and in the inequality we used $\|\delta\|_{op} \leq \frac{1}{20}$. The final step follows by our initial condition on $\|d_{a} \rho_{\samp}^{(a)}\|_{op}$. 
@@ -820,7 +820,6 @@ The final step follows from the initial conditions on $\|d_{a} \rho_{a}\|_{op}, 
 The off-diagonal blocks $\{\nabla^{2}_{ba} F\}$ are only slightly more difficult as we need the following on bipartite marginals:
 
 \begin{lemma} \label{btoabRobustness}
-\CF{add quantifiers}
 For $\samp \in \R^{nD}$ and perturbation $\delta \in \Sym$ with $\|\delta\|_{op} \leq \frac{1}{20}$, if $\samp' = (e^{\delta})_c \samp$ for $c \in \{a,b\}$ we have 
 %$\{\samp'_{i} := (e^{\delta})_{c} \samp_{i} \}$ for $c \in \{a,b\}$:
 \[ \sup_{Y \in \Sym_{d_{a}}^{0}, Z \in \Sym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq 4.5 \|\delta\|_{op} \sup_{Y \in \Sym_{d_{a}}, Z \in \Sym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}}        \]
