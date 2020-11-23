@@ -660,40 +660,83 @@ $$T: Z \mapsto \tr_2 \rho \left(I \ot Z\right),$$
 $$ T(Z) = \sum_{i = 1}^N x_i Z x_i^\dagger = \left(\sum_{i = 1}^N x_i \ot x_i\right) Z.$$ 
 Here $x_i$ are viewed as $d_1 \times d_2$ matrices and $x_i^\dagger$ is the matrix transpose. In our proof of strong convexity, we will show that for $\rho = \rho^{(a,b)}$ this quantum channel has a spectral gap, or rather that $T$ has a small operator norm on the traceless symmetric matrices. 
 
+\CF{define quantum expanders using akshay's $\|\|_0$ norm?}
+
 Quantum channels with this spectral gap condition are called \emph{quantum expanders}, and play an important role in quantum information theory and quantum computation. Analogously to random graphs, it is known that random quantum channels, namely those obtained by choosing $x_i$ from various distributions, yield good quantum expanders. Pisier studied the case when $x_i$ are chosen from a standard Gaussian, which applies in our setting. He showed the following result. 
 
 %We show that, restricted to the traceless matrices, this quadratic form is small. More precisely, we bound the operator norm of the map $T: Z \mapsto \tr_2 \rho^{(ab)} \left(I \ot Z\right)$ restricted to the traceless symmetric matrices. Such maps are called \emph{quantum channels}, and we will revisit their properties later \CF{where? or earlier?}. The operator norm condition we desire for $T_{\rho}$ is equivalent to $T_{\rho}$ being a good \emph{quantum expander} - this led Pisier to bound the operator norm of $T_{\rho}$ for random $\rho$. \CF{one-sentence motivation of quantum expanders?}
 
-\begin{theorem}\label{thm:hess-pisier} Let $X = (X_1, \dots, X_N)$ be a tuple of standard Gaussians on $(\R^{d_1}\ot \R^{d_2})^n$. Then $\forall t \geq 1$ with failure probability at most $\exp(-\Omega(d_{a} + d_{b}) \log t)$ \TODO{adjust like in the next corollary}, the random quantum channel 
+\begin{theorem}\label{thm:hess-pisier} Let $X = (X_1, \dots, X_N)$ be a tuple of standard Gaussians on $(\R^{d_1}\ot \R^{d_2})^n$. Then $\forall t \geq 1$ with failure probability at most $t^{-\Omega(d_{a} + d_{b})}$, the random quantum channel 
 $$T: X \mapsto \frac{1}{nD}\sum_{i = 1}^N X_i Z X_i^\dagger$$
 has operator norm 
-$O \left( t^{2} \frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}} \right)$\TODO{do similar thing to the next corollary} restricted to the traceless symmetric matrices. \end{theorem}
+$O \left( t^{2} \frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}} \right)$ restricted to the traceless symmetric matrices. \end{theorem}
 Pisier's actual result is slightly different; \cref{thm:hess-pisier} is essentially Theorem~16.6 in~\cite{pisier2012grothendieck}, together with a standard symmetrization trick (e.g., Proof of Lemma~4.1 in~\cite{P14}). We present the details in an appendix \CF{cref it}. We now apply it to bound the off diagonal terms in the Hessian.
 
-\begin{corollary}\label{cor:off-diag-hess} For traceless symmetric matrices $Y \in \Sym^0_{d_a}$, $Z \in \Sym^0_{d_a}$, we have 
+%\begin{corollary}\label{cor:off-diag-hess} For traceless symmetric matrices $Y \in \Sym^0_{d_a}$, $Z \in \Sym^0_{d_a}$, we have 
 %$O \left( \frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}} \right)$  
 
-$$ \langle Y,  \left( \nabla^2_{ab} f_{\samp} \right) Z \rangle
-= O (\lambda)
+%$$ \langle Y,  \left( \nabla^2_{ab} f_{\samp} \right) Z \rangle
+%= O (\lambda)
+%$$
+%\TODO{Akshay, please make the rhs $O(\lambda)$ and then adjust the failure probability accordingly}
+%with probability $1 - \exp( - \Omega \left( (d_{a} + d_{b}) \log \frac{ \lambda \sqrt{n D} }{d_{a} + d_{b}}  \right) ) \geq 1 - \exp( - \Omega(d_{a} + d_{b}) )$ for $\lambda^{2} n D \gg \max_{a} d_{a}^{2}$. 
+%\AR{In particular we get $\|\nabla^{2}_{ab} f\|_{op} \approx \frac{d_{a} + d_{b}}{\sqrt{n D}}$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}))$; as well as $\|\nabla^{2}_{ab} f\|_{op} \approx \frac{d_{a} + d_{b}}{\sqrt{D}}$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}) \log n)$ }
+%\end{corollary}
+
+
+\begin{corollary}[\CF{Yet again reworking this.}] \label{cor:off-diag-hess} For traceless symmetric matrices $Y \in \Sym^0_{d_a}$, $Z \in \Sym^0_{d_b}$, we have 
+%$O \left( \frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}} \right)$  
+
+$$ \langle Y,  \left( \nabla^2_{ab} f_{\rv} \right) Z \rangle
+= O \left(t \|Y\|_F\|Z\|_F\right)
 $$
-\TODO{Akshay, please make the rhs $O(\lambda)$ and then adjust the failure probability accordingly}
-with probability $1 - \exp( - \Omega \left( (d_{a} + d_{b}) \log \frac{ \lambda \sqrt{n D} }{d_{a} + d_{b}}  \right) ) \geq 1 - \exp( - \Omega(d_{a} + d_{b}) )$ for $\lambda^{2} n D \gg \max_{a} d_{a}^{2}$. 
-\AR{In particular we get $\|\nabla^{2}_{ab} f\|_{op} \approx \frac{d_{a} + d_{b}}{\sqrt{n D}}$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}))$; as well as $\|\nabla^{2}_{ab} f\|_{op} \approx \frac{d_{a} + d_{b}}{\sqrt{D}}$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}) \log n)$ }
+%\TODO{Akshay, please make the rhs $O(\lambda)$ and then adjust the failure probability accordingly}
+with probability %$1 - t^{\Omega (d_{a} + d_{b})} n^{- (d_a + d_b) \log \frac{\sqrt{D} }{d_{a} + d_{b}}}$.
+$1 - \left(\frac{t \sqrt{nD}}{d_a + d_b}\right)^{ - \Omega(d_a + d_b)}$.
+
+In particular, there are absolute constants $C, 0 < c < \CF{1/50}$ such that if $n \geq C d_1^2/D$ we have $\|\nabla^2_{ab} f_{\rv}\|_0 \leq c/k$ with probability $1 - k^2 n^{- \Omega(d_1 \log (\sqrt{D}/ d_1))}$ for all $a,b \in [k]$.
+
+
 \end{corollary}
-\CF{akshay defines a notation $\|T\|_0$ for restricting operators to the traceless symmetrics. Maybe we should adopt it here also}
+
+
+
+
+
+\CF{get rid of big O's in bounds, not probabilities - actually set $c$'s here?}
+\begin{corollary} \label{cor:off-diag-hess} For traceless symmetric matrices $Y \in \Sym^0_{d_a}$, $Z \in \Sym^0_{d_b}$, we have 
+%$O \left( \frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}} \right)$  
+
+$$ \langle Y,  \left( \nabla^2_{ab} f_{\rv} \right) Z \rangle
+= O \left( t^{2} \frac{d_{a}+d_{b}}{\sqrt{nD}} \|Y\|_F\|Z\|_F\right)
+$$
+%\TODO{Akshay, please make the rhs $O(\lambda)$ and then adjust the failure probability accordingly}
+with probability $1 - t^{-\Omega(d_{a} + d_{b})}$ for $t \geq \CF{}$. In particular, there are absolute constants $C, 0 < c < \CF{1/50}$ such that if $n \geq C d_1^2/D$ we have $\|\nabla^2_{ab} f_{\rv}\|_0 \leq c/k$ with probability $1 - n^{- \Omega(d_1 \log (\sqrt{D}/ d_1))}$.
+
+
+%\geq 1 - \exp( - \Omega(d_{a} + d_{b}) )$ for $\lambda^{2} n D \gg \max_{a} d_{a}^{2}$. 
+
+%\AR{In particular we get $\|\nabla^{2}_{ab} f\|_{op} \approx \frac{d_{a} + d_{b}}{\sqrt{n D}}$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}))$; as well as $\|\nabla^{2}_{ab} f\|_{op} \approx \frac{d_{a} + d_{b}}{\sqrt{D}}$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}) \log n)$ }
+\end{corollary}
+
+
+
+
+
+%\CF{akshay defines a notation $\|T\|_0$ for restricting operators to the traceless symmetrics. Maybe we should adopt it here also}
 \begin{proof}
 We proceed to bound the operator norm of $\nabla^2_{ab} f: \Sym^0_{d_b} \to \Sym^0_{d_a}$ for $a \neq b$. Recall from \cref{lem:hessian} that the gradient is defined by
 \begin{align}\frac1{\sqrt{d_a d_b}} \langle Y,  \left( \nabla^2_{ab} f_{\rv} \right) Z \rangle
 = \tr \rho^{(ab)} \left( Y \ot Z \right) - \bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr).\label{eq:grad-off-diag}\end{align}
 As a linear map, define the first term to be $T:Z \mapsto \sqrt{d_a d_b} \tr_b \rho^{(a,b)} (I \ot Z)$. The state $\rho^{(a,b)} = \tr_{\overline{\{a,b\}}} \rho$ is given by $\rho^{{a,b}} =  X X^\dagger/\|X\|^2$ where $X$ is viewed as an $n D/{d_a d_b} \times d_a d_b$ matrix. Equivalently, $\rho^{(a,b)}$ is distributed as 
-$$\frac{1}{\sum_{i} \|Y_i\|^2} Y_i Y_i^T$$ where $Y_i$ are $n D/{d_a d_b}$ i.i.d standard Gaussians on $\R^{d_a} \ot \R^{d_b}$. By \cref{cor:hess-pisier}, the operator norm of $T$ restricted to $\Sym^0_{d_b}$ is $O((d_a + d_b) \sqrt{ n D/d_ad_b} / \sum_{i \in \|Y_i\|^2} )$ \TODO{propagate from \cref{cor:off-diag-hess}} 
-with probability $\exp(-\Omega(d_{a} + d_{b}))$ \TODO{propagate from \cref{cor:off-diag-hess}} . The denominator is a sum of $nD$ many i.i.d $\chi$-square random variables, and so is $\Theta(nD)$ with failure probability $e^{ -\Omega(nD)} \ll \exp(-\Omega(d_{a} + d_{b}))$ \cite{W19}, so finally we have that the operator norm of $T$ restricted to $\Sym^0_{d_b}$ is $O \left( \frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}} \right)$ \TODO{propagate from \cref{cor:off-diag-hess}} .
-
+$$\frac{1}{\sum_{i} \|Y_i\|^2} Y_i Y_i^T$$ where $Y_i$ are $n D/{d_a d_b}$ i.i.d standard Gaussians on $\R^{d_a} \ot \R^{d_b}$. By \cref{thm:hess-pisier}, the operator norm of $T$ restricted to $\Sym^0_{d_b}$ is $O(t^2(d_a + d_b) \sqrt{ n D} / \sum_{i \in \|Y_i\|^2} )$ 
+with probability $t^{-\Omega(d_{a} + d_{b})}$. The denominator is a sum of $nD$ many i.i.d $\chi$-square random variables, and so is $\Omega(nD)$ with failure probability $e^{ -\Omega(nD)} \ll t^{-\Omega(d_{a} + d_{b})}$ \cite{W19} \CF{puts constraint on $t$}, so finally we have that the operator norm of $T$ restricted to $\Sym^0_{d_b}$ is $O \left( \frac{d_{a}+d_{b}}{\sqrt{ nD}} t^2\right)$.
 %By \cref{eq:expansion-thing} (\CF{which needs to actually be proved}), with probability $\CF{good}$, the map $Z \to \tr_2 \rho^{(a,b)} (I \ot Z)$ has operator norm at most $\lambda/\sqrt{d_a d_b}$ restricted to traceless $Z$. 
 The second term of \cref{eq:grad-off-diag} defines the quadratic form 
 $$Y,Z \mapsto \sqrt{d_a d_b} (\tr Y \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr).$$ 
-As we have already shown in \cref{prop:gradient-bound}, we already have $\norm{\nabla_a f_{\rv}}_{\op} = \|\sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}\|_{op} \leq \eps/\sqrt{d_a}$ with failure probability at most $\sum_{a=1}^k e^{-N_a \eps^2/2C} \ll $ \TODO{propagate from \cref{cor:off-diag-hess}} , and likewise for $b$. Thus we have$$ |(\tr Y \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr)| \leq \left( \frac{\eps \|Y\|_{1}}{d_{a}} \right) \left( \frac{\eps \|Z\|_{1}}{d_{b}} \right) \leq \eps^2 \frac{\|Z\|_F\|Y\|_F}{\sqrt{d_a d_b}} $$
-Taken together, $\|\nabla^2_{ab} f\|_{op} \leq (\lambda + \eps^2)$ as a map $\Sym^0_{d_b} \to \Sym^0_{d_a}$.
+As we have already shown in \cref{prop:gradient-bound}, we have $\norm{\nabla_a f_{\rv}}_{\op} = \|\sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}\|_{op} \leq \eps/\sqrt{d_a}$ with failure probability at most $e^{-D \eps^2/2Cd_a}$ , and likewise for $b$. Set $\eps^2 =  \frac{d_{a}+d_{b}}{\sqrt{ nD}} t^2$. Thus we have$$\sqrt{d_a d_b} |(\tr Y  \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr)| \leq \left( \frac{\eps \|Y\|_{1}}{\sqrt{d_{a}}} \right) \left( \frac{\eps \|Z\|_{1}}{\sqrt{d_{b}}} \right) \leq \eps^2 \|Z\|_F\|Y\|_F $$
+with failure probability at most $2 e^{ - \sqrt{D}d_2 t^2/C\sqrt{n} d_1 } \ll t^{-\Omega(d_{a} + d_{b})}.$ The bounds for the first and second term complete the proof.
+%Taken together, $\|\nabla^2_{ab} f\|_{op} \leq (\lambda + \eps^2)$ as a map $\Sym^0_{d_b} \to \Sym^0_{d_a}$.
 \end{proof}
 We now have the bounds we need to prove \cref{thm:tensor-convexity}.
 
