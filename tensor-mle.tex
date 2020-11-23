@@ -107,6 +107,10 @@
 \item When not random, use lower case $x$.
 \item Comment that the geodesic distance is some variation on the Fischer-Rao distance.
 \end{enumerate}
+Polishing:
+\begin{enumerate}
+\item Akshay's note on simplifying the proof of \cref{thm:tensor-convexity}: \AR{Can rephrase explicitly in terms of $\nabla^{2} F$ and rank-one term. Then \ref{prop:gradient-bound} gives $1-\eps$ lower bound on each diagonal block of $\nabla^{2} F$, \ref{offdiagPisier} gives $\lambda$ bound on each offdiagonal block of $\nabla^{2} F$, and \ref{prop:gradient-bound} once again gives $k \eps^{2}$ bound on whole rank-one term.  }
+\end{enumerate}
 
 }
 
@@ -697,7 +701,6 @@ We now have the bounds we need to prove \cref{thm:tensor-convexity}.
 We use the inequality for block matrices 
 $$\begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix} \succeq - \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}$$ for any $A,B \succeq 0$ such that $\|A^{-1/2} K B^{-1/2}\|_{op} \leq 1,$ which may be proved by computing Schur complements. We will sequentially apply this inequality to the block matrix $\nabla^2 f$ until we are left with a diagonal matrix. 
 
-%\AR{Can rephrase explicitly in terms of $\nabla^{2} F$ and rank-one term. Then \ref{prop:gradient-bound} gives $1-\eps$ lower bound on each diagonal block of $\nabla^{2} F$, \ref{offdiagPisier} gives $\lambda$ bound on each offdiagonal block of $\nabla^{2} F$, and \ref{prop:gradient-bound} once again gives $k \eps^{2}$ bound on whole rank-one term.  }
 %To implement this,  
 %\CF{cite the new corollary}
 We first apply the inequality from \cref{cor:off-diag-hess} to the upper-left two by two block, or $a = 1$ and $b = 2$. By our bound on $\|\nabla^2_{ab} f\|_{op}$, we may take 
