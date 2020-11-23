@@ -1142,10 +1142,73 @@ If $\norm{\nabla_a}_F < \eps/k$, output $\left( \bigotimes_{a =1}^k \Theta_a \ri
 \end{Algorithm}
 
 \TODO{General descent-lemma + strong convexity folklore}
+
+Before we analyze the convergence of the flip-flop algorithms for the tensor and matrix normal models, we discuss the straightforward generalizations of convergence of general descent methods whenever the objective function is strongly geodesically convex.
+
+The next lemma shows that any descent method which manages to decrease the value of the function with respect to the gradient...
+The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
+
+\begin{lemma}\label{lem:descent-sublevel-set}
+	Let $f : \PD \rightarrow \R$ be $\lambda$-strongly geodesically convex in a sublevel set containing $x_0$, $\norm{\nabla f(x_0)}_F^2 \leq 1$ and $\alpha > 0$ be a constant.
+	If $\{x_k\}$ is a descent sequence which satisfies 
+	$$ f(x_{k+1}) \leq f(x_k) - \alpha \cdot \norm{\nabla f(x_k)}^2_F $$
+	then in $T$ iterations we must have an element $x_t$ with $t\leq T$ such that
+	$$ \norm{\nabla f(x_t)}^2_F \leq 2^{-T \alpha \lambda}.   $$
+\end{lemma}
+
+\begin{proof}
+	Let $f^*$ be the minimum value of the function $f$ and let $S$ be the sublevel set of $f$ containing $x_0$ over which $f$ is $\lambda$-strongly geodesically convex. Since $\{x_k\}$ is a descent sequence, we know that each $x_k \in S$.
+	
+	Since $f$ is $\lambda$-strongly geodesically convex in $S$, we have 
+	$$ f^* \geq f(x) - \frac{1}{2\lambda} \cdot \norm{\nabla f(x)}_F^2 $$
+	for any $x \in S$.
+	
+	If $\norm{\nabla f(x_k)}_F^2 \leq \varepsilon$, then we will show that in $\ell \leq 1/\alpha \lambda$ steps we must have an element $x_{k+\ell}$ such that $\norm{\nabla f(x_{k + \ell})}_F^2 \leq \varepsilon/2$. This is enough to conclude the proof of the lemma, as with this claim we see that we half the squared norm of the gradient at every sequence of $1/\alpha \lambda$ steps.
+	
+	To see this, assume that $\norm{\nabla f(x_{k+\ell})}_F^2 \geq \varepsilon/2$ for $0 \leq \ell \leq m$. Then, from our descent property we have
+	$$ f(x_{k+1}) \leq f(x_k) - \alpha \cdot \norm{\nabla f(x_k)}^2_F \leq f(x_k) - \alpha \cdot \varepsilon/2$$
+	and in particular $f(x_{k + m}) \leq f(x_k) - m \cdot \alpha \cdot \varepsilon/2$. 
+	
+	On the other hand, our assumption that $\norm{\nabla f(x_k)}_F^2 \leq \varepsilon$, together with strong geodesic convexity of $f$ and minimality of $f^*$ imply 
+	$$ f(x_{k}) - \frac{\varepsilon}{2\lambda} \leq f(x_{k}) - \frac{1}{2\lambda} \cdot \norm{\nabla f(x_k)}_F^2 \leq f^* \leq f(x_{k+m}) $$ 
+	and therefore we have
+	$$ f(x_{k}) - \frac{\varepsilon}{2\lambda} \leq f(x_{k + m}) \leq f(x_k) - m \cdot \alpha \cdot \varepsilon/2 $$
+	which implies $m \leq \frac{1}{\alpha \lambda}$. This concludes our proof.
+\end{proof}
+
 \subsection{Tensor flip-flop convergence}
+
+
 \TODO{Proof of \cref{thm:tensor-flipflop}; vanilla strong convexity in a sublevel set stuff.}
+
+\begin{lemma}[Initial Conditions]
+	With probability \RMO{put bound here} we have that the following conditions hold:
+	\begin{enumerate}
+		\item $\norm{\nabla f_x(I)}_F^2 \leq \dfrac{\lambda^2}{4 k}$
+		\item $f_x$ is $\lambda$-strongly geodesically convex at a ball of radius $\lambda/k$ around $I$, that is: $B_{\lambda/k}(I) := \{ Z \in \Sym \ \mid \ \norm{Z}_F^2 \leq \lambda/k \}$.
+	\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+	
+\end{proof}
+
+\begin{lemma}[Descent Lemma]
+
+\end{lemma}
+
+\RMO{Initial Conditions + descent lemma imply convergence of flip-flop via \cref{lem:descent-sublevel-set}}
+
+\begin{theorem}[Restatement of \cref{thm:tensor-flipflop}]
+
+\end{theorem}
+
 \subsection{Matrix flip-flop convergence}
+
+
 \TODO{Proof of \cref{thm:matrix-flipflop}}
+
+
 \CF{prove that flip-flop works as soon as estimation in operator norm works. This goes by using KLR to show strong convexity holds in a ball about the optimizer}.
 
 
