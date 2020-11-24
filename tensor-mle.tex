@@ -110,6 +110,8 @@
 Polishing:
 \begin{enumerate}
 \item Akshay's note on simplifying the proof of \cref{thm:tensor-convexity}: \AR{Can rephrase explicitly in terms of $\nabla^{2} F$ and rank-one term. Then \ref{prop:gradient-bound} gives $1-\eps$ lower bound on each diagonal block of $\nabla^{2} F$, \ref{offdiagPisier} gives $\lambda$ bound on each offdiagonal block of $\nabla^{2} F$, and \ref{prop:gradient-bound} once again gives $k \eps^{2}$ bound on whole rank-one term.  }
+\item \AR{Can improve the strong convexity stuff by a factor of two by using the projection to traceless on both sides of the inner product}
+\item \CF{for the readers' sake some justification is needed for why perturbing $\samp$ this is the same as considering the Hessian of our function at another point in $\PD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
 \end{enumerate}
 
 }
@@ -529,19 +531,26 @@ Applying the union bound over $[k]$ completes the proof of the proposition.
 %-----------------------------------------------------------------------------
 \subsection{Strong convexity}
 %-----------------------------------------------------------------------------
-\CF{will move this to the appropriate place; rafael you can cite this for section 4 and just eventually put in the right probability bound.}
+%\CF{will move this to the appropriate place; rafael you can cite this for section 4 and just eventually put in the right probability bound.}
 
 
 
 
-We now prove our main strong convexity result, \cref{thm:ball-convexity}, in order to carry out step~\ref{it:convexity} of the plan from \cref{subsec:outline}.
+We now prove our main strong convexity result, \cref{thm:ball-convexity}, in order to carry out step~\ref{it:convexity} of the plan from \cref{subsec:outline}. The theorem states that, with high probability, $f_X$ is strongly convex for $Z$ sufficiently close to the identity.
 
-\begin{theorem}\label{thm:ball-convexity}
-There is $c> 0$ such that the following holds: with probability at least $1 - k^{2} n^{c 2 (d_1 + d_2)}$\TODO{make sure this is right. Rafael, if you use this value, make a note by it to make sure we check again.}, the function $f_{\rv}$ is $c$-strongly convex at all points $Z\in \PD$ with $\sum_{i = 1}^n \|\log Z_a\|_{op} < c/k.$ 
+%\begin{theorem}\label{thm:ball-convexity}There is $c> 0$ such that the following holds: with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, the function $f_{\rv}$ is $1/2$-strongly convex at all points $Z\in \PD$ with $\sum_{i = 1}^n \|\log Z_a\|_{op} < c/k.$\end{theorem}
+
+
+\begin{theorem}\label{thm:ball-convexity} There are constants $C,c>0$ such that the following holds. For $n \geq C k^2 d_1^2/D$, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, $f$ is $1/2$ strongly convex at any point $Z \in \PD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$. 
 \end{theorem}
 
-Just like in the Euclidean case, the Hessian is convenient to characterize strong convexity, and we begin by defining it formally in the Riemannian context.
-We next show strong convexity \emph{at} the origin, and finally show strong convexity \emph{near} the origin.
+%$O\left( \sum_a e^{ - \Omega(nD/d_a)}\right)\leq k e^{- \Omega(nD/d_1)}$
+
+Just like in the Euclidean case, the Hessian is convenient to characterize strong convexity, and we begin by defining it formally in the Riemannian context. \cref{thm:ball-convexity} follows straightforwardly from a bound on the convexity \emph{at} the origin,  \cref{thm:tensor-convexity} , and a bound on how the Hessian changes away from the origin, \cref{convexRobustness}. We assemble these results to prove \cref{thm:ball-convexity} at the end of this subsection. %\CF{Shall I actually prove theorem 9? yeah, I think so.}
+
+
+
+%We next show strong convexity \emph{at} the origin, and finally show strong convexity \emph{near} the origin.
 
 \begin{definition}[Riemannian Hessian]
 For $\Theta \in \PD$, the \emph{Riemannian Hessian}~$\nabla^2 f(\Theta)$ is the unique linear operator on $\Sym$ such that
@@ -646,13 +655,21 @@ for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d
 
 We now state our strong convexity result at the identity:
 
-\begin{theorem}\label{thm:tensor-convexity}
+\begin{theorem}\label{thm:tensor-convexity-old}
 Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples is $N \geq k^2 \max_{a=1}^k d_a^2 / D$. Then, with probability at least $1 - 1/{\color{red}\poly(D)}$ \TODO{propagate from \cref{cor:off-diag-hess}} , 
 $$ (1 - (k - 1) \lambda - k \eps^2 - \eps) I \preceq 
  \nabla^2 f_{\rv} \preceq (1 + (k - 1) \lambda + k \eps^2 + \eps) I.$$
 $$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq (k - 1) \lambda + k \eps^2 + \eps $$
  In particular, $f_{\rv}$ is $\Omega(1)$ strongly convex with probability \TODO{propagate from \cref{cor:off-diag-hess}} . 
 \end{theorem}
+
+\begin{theorem}[\CF{new theorem}]\label{thm:tensor-convexity} There is an absolute constant $C$ such that the following holds. Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples $n$ is at least $C k^2 d_1^2/D$. Then, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$ we have
+%$$ I/2 \preceq  \nabla^2 f_{\rv} \preceq 2I.$$
+$$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq 1/4,$$
+in which case $f_{\rv}$ is $3/4$-strongly convex at the identity.
+\end{theorem}
+
+
 
 The most interesting part of the Hessian is the quadratic form $Y,Z \mapsto \tr \rho^{(ab)} \left( Y \ot Z \right) = \langle Y, \tr_b \rho^{(ab)} \left(I \ot Z\right) \rangle$ appearing in the off-diagonal blocks. For a general state $\rho \in \PD(d_1, d_2)$, the linear map $T:\mat(d_2) \to \mat(d_1)$ corresponding to the bilinear form above, or
 $$T: Z \mapsto \tr_2 \rho \left(I \ot Z\right),$$
@@ -692,10 +709,10 @@ $$ \langle Y,  \left( \nabla^2_{ab} f_{\rv} \right) Z \rangle
 $$
 %\TODO{Akshay, please make the rhs $O(\lambda)$ and then adjust the failure probability accordingly}
 with probability %$1 - t^{\Omega (d_{a} + d_{b})} n^{- (d_a + d_b) \log \frac{\sqrt{D} }{d_{a} + d_{b}}}$.
-$1 - \left(\frac {s \sqrt{nD}}{d_b}\right)^{ - \Omega(d_a)} - e^{- \Omega(nD)}$.
+$1 - \left(\frac {s \sqrt{nD}}{2d_b}\right)^{ - \Omega(d_a)} - e^{- \Omega(nD)}$.
 % for $s \geq d_b /\sqrt{n D}.$
 
-In particular, for any small enough absolute constant $c>0$ there is $C$ such that for $n \geq C d_1^2/D$ we have $\|\nabla^2_{ab} f_{\rv}\|_0 \leq c/k$ with probability $1 - k^2 \left(\frac {\sqrt{nD}}{2d_1}\right)^{ - \Omega(d_1)}$ for all $a,b \in [k]$. 
+In particular, for any constant $c>0$ there is $C>0$ such that for $n \geq C k^2 d_1^2/D$ we have $\|\nabla^2_{ab} f_{\rv}\|_0 \leq c/k$ with probability $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$ for all $a,b \in [k]$. 
 
 
 \end{corollary}
@@ -834,11 +851,11 @@ Recall again from the discussion after $\ref{convexRobustness}$ that $\langle Z,
 \[    \left\langle \rho_{\samp'}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2} -  \left\langle \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2}    \]
 \[ = \left\langle \rho_{\samp'} + \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle \left\langle \rho_{\samp'} - \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle  \]
 \[ = \left( \sum_{a} \sqrt{d_{a}} \langle \rho_{\samp'}^{(a)} + \rho_{\samp}^{(a)}, Z_{a} \rangle \right) \left( \sum_{a} \sqrt{d_{a}} \langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, Z_{a} \rangle \right)     \]
-\AR{Here I could use that $Z \perp I$ to get a constant factor improvement; need an assumption on $\nabla$; but it improves the overall constant by factor $\approx 2$}
+%\AR{Here I could use that $Z \perp I$ to get a constant factor improvement; need an assumption on $\nabla$; but it improves the overall constant by factor $\approx 2$}
 \[ \leq \left( (2+10\|\delta\|_{op})\sum_{a} \sqrt{d_{a}} \|\rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{1}   \right) 
 \left( 10\|\delta\|_{op} \sum_{a} \sqrt{d_{a}} \| \rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{1}   \right)    \]
 \[ \leq 25 \|\delta\|_{op} \left( \sum_{a} \|d_{a} \rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{F} \right)^{2} \leq 25 \|\delta\|_{op} \left( \sum_{a} \|d_{a} \rho_{\samp}^{(a)}\|_{op}^{2} \right) \|Z\|^{2}      \]
-\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s?} \CF{the norm is just the standard norm, there shouldn't be $d_a$'s}
+%\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s?} \CF{the norm is just the standard norm, there shouldn't be $d_a$'s}
 The final step follows from the initial conditions on $\|d_{a} \rho_{a}\|_{op}, \|d_{b} \rho_{b}\|_{op}$. 
 \end{proof}
 
@@ -914,10 +931,18 @@ Note that this also gives a spectral upper bound for $\nabla^{2} f_{\samp'}$.
 %\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s? Also the constant is $50 k$ now, yay for better constants!}\CF{yay!}
 \end{proof}
 
-\CF{for the readers' sake some justification is needed for why perturbing $\samp$ this is the same as considering the Hessian of our function at another point in $\PD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
+Finally we may prove \cref{thm:ball-convexity}.
+\begin{proof}[Proof of \cref{thm:ball-convexity}]
+By \cref{thm:tensor-convexity}, with failure probability $k^2 ({\sqrt{nD}}/{kd_1})^{ - \Omega(d_1)}$ we have that $f$ is $3/4$-strongly convex at $I$. By our bound on $n$,  \cref{prop:gradient-bound} applies and so $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$ with failure probability $\sum_a e^{ - \Omega(nD/d_a)})$. By our assumption on $n$ this is at most $k^2 ({\sqrt{nD}}/{kd_1})^{ - \Omega(d_1)}$. Conditioned on both bounds, by \cref{convexRobustness} there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $Z$ such that $\sum_a \|\log Z_a\|_{op} \leq  c$ for all $a \in [k]$. \end{proof}
 
 
-\CF{make consistent with def 4, hessian}
+%$O\left( \sum_a e^{ - \Omega(nD/d_a)}\right)\leq k e^{- \Omega(nD/d_1)}$
+
+
+
+
+
+%\CF{make consistent with def 4, hessian}
 
 
 
@@ -931,7 +956,13 @@ We seek to apply \cref{lem:convex-ball}, so we need $\lambda \kappa > \|\nabla f
 
  By our first assumption on $\eps$, we have $N_a \geq C d_a/\delta^2$ for all $a \in [k]$, we so we may apply \cref{prop:gradient-bound}. Thus, with failure probability $O\left( \sum_a \exp ( - N_a \delta^2)\right)$ we have $\|(\nabla f)_{a}\|_{op} \leq \frac{\delta}{\sqrt{d_{a}}}$ for all $a \in [k]$ and so
 \[  \|\nabla f\|^{2} = \sum_{a} \|(\nabla f)_{a}\|_{F}^{2} \leq \sum_{a} d_a \|(\nabla f)_{a}\|_{op}^{2} \leq  k \delta^{2}.  \]
-We next bound the radius $\kappa$ of the ball on which our function is geodesically convex. By \cref{thm:tensor-convexity}, with failure probability $\CF{1/poly(D)}$ we have that $f$ is $1-o_{d}(1)$ strongly convex at $I$. Because $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq \delta \leq c$, by \cref{convexRobustness} there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $\Theta$ such that $\sum_a \|\log \Theta_a\|_{op} \leq  c$ for all $a \in [k]$. Now note that 
+We next bound the radius $\kappa$ of the ball on which our function is geodesically convex. 
+By \cref{thm:ball-convexity}, there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $\Theta$ such that $\sum_a \|\log \Theta_a\|_{op} \leq  c$ for all $a \in [k]$. 
+%\CF{new cite theorem 9}
+
+%By \cref{thm:tensor-convexity}, with failure probability $\CF{1/poly(D)}$ we have that $f$ is $1-o_{d}(1)$ strongly convex at $I$. Because $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq \delta \leq c$, by \cref{convexRobustness} there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $\Theta$ such that $\sum_a \|\log \Theta_a\|_{op} \leq  c$ for all $a \in [k]$. \CF{end old}
+
+Now note that 
 $$ \sum_a \log \Theta_{op} \leq \sqrt{d_1} d(I, \Theta).$$ Thus if we set $\kappa = c/\max_a \sqrt{d_a}$ we will have that $f$ is $1/2$-strongly convex on the $\kappa$ ball. By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\sqrt{d_1} $ there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$; this inequality holds by our definition of $\delta$ and our second assumption on $\eps$. 
 
 By our choice of $\kappa$ and because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) \leq \sqrt{d_a} d(I, \widehat{\Theta}) \leq 2\delta \sqrt{ k d_a}.$ Applying $\eps = \delta \sqrt{k d_1}$ completes the proof.\end{proof}
@@ -1297,7 +1328,8 @@ For $p = 2^{m}$, we have the following (Holder's type) inequality
 
 % Appendix - \url{https://arxiv.org/abs/1209.2059}
 % Theorem 16.6 - \url{https://arxiv.org/pdf/1101.4195.pdf}
-\CF{at some point include a sentence about the setting of $\alpha_i$, maybe in the main body}\CF{choose different letter for $n$}
+\CF{at some point include a sentence about the setting of $\alpha_i$, maybe in the main body}
+%\CF{choose different letter for $n$}
 \begin{theorem}
 Let $\Pi: \mat(m) \to \mat(m)$ denote the projection onto the traceless matrices, and $Y$ a tuple of i.i.d. standard Gaussians in $\mat(n,m)$. There are constants $c,C > 0$ such that for all $m \leq n$ we have 
 \[ \left\| \left(\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i}\right) \circ \Pi \right\|_{op} \leq C t^{2} \|\alpha\|_{2} \left( \E \|Y\|_{op} \right)^{2} \]
