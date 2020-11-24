@@ -666,10 +666,10 @@ Quantum channels with this spectral gap condition are called \emph{quantum expan
 
 %We show that, restricted to the traceless matrices, this quadratic form is small. More precisely, we bound the operator norm of the map $T: Z \mapsto \tr_2 \rho^{(ab)} \left(I \ot Z\right)$ restricted to the traceless symmetric matrices. Such maps are called \emph{quantum channels}, and we will revisit their properties later \CF{where? or earlier?}. The operator norm condition we desire for $T_{\rho}$ is equivalent to $T_{\rho}$ being a good \emph{quantum expander} - this led Pisier to bound the operator norm of $T_{\rho}$ for random $\rho$. \CF{one-sentence motivation of quantum expanders?}
 
-\begin{theorem}\label{thm:hess-pisier} Let $X = (X_1, \dots, X_N)$ be a tuple of standard Gaussians on $(\R^{d_1}\ot \R^{d_2})^n$. Then $\forall t \geq 1$ with failure probability at most $t^{-\Omega(d_{a} + d_{b})}$, the random quantum channel 
+\begin{theorem}\label{thm:hess-pisier} Let $X = (X_1, \dots, X_N)$ be a tuple of standard Gaussians on $(\R^{d_1}\ot \R^{d_2})^n$. Then $\forall t \geq 1$ with failure probability at most $t^{-\Omega(d_{1} + d_{2})}$, the random quantum channel 
 $$T: X \mapsto \frac{1}{nD}\sum_{i = 1}^N X_i Z X_i^\dagger$$
 has operator norm 
-$O \left( t^{2} \frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}} \right)$ restricted to the traceless symmetric matrices. \end{theorem}
+$O \left( t^{2} \frac{d_{1}+d_{2}}{\sqrt{d_{1} d_{2} nD}} \right)$ restricted to the traceless symmetric matrices. \end{theorem}
 Pisier's actual result is slightly different; \cref{thm:hess-pisier} is essentially Theorem~16.6 in~\cite{pisier2012grothendieck}, together with a standard symmetrization trick (e.g., Proof of Lemma~4.1 in~\cite{P14}). We present the details in an appendix \CF{cref it}. We now apply it to bound the off diagonal terms in the Hessian.
 
 %\begin{corollary}\label{cor:off-diag-hess} For traceless symmetric matrices $Y \in \Sym^0_{d_a}$, $Z \in \Sym^0_{d_a}$, we have 
@@ -684,40 +684,22 @@ Pisier's actual result is slightly different; \cref{thm:hess-pisier} is essentia
 %\end{corollary}
 
 
-\begin{corollary}[\CF{Yet again reworking this.}] \label{cor:off-diag-hess} For traceless symmetric matrices $Y \in \Sym^0_{d_a}$, $Z \in \Sym^0_{d_b}$, we have 
+\begin{corollary}\label{cor:off-diag-hess} Let $a,b \in [k]$ with $a < b$. For traceless symmetric matrices $Y \in \Sym^0_{d_a}$, $Z \in \Sym^0_{d_b}$, we have 
 %$O \left( \frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}} \right)$  
 
 $$ \langle Y,  \left( \nabla^2_{ab} f_{\rv} \right) Z \rangle
-= O \left(t \|Y\|_F\|Z\|_F\right)
+= O \left(s \|Y\|_F\|Z\|_F\right)
 $$
 %\TODO{Akshay, please make the rhs $O(\lambda)$ and then adjust the failure probability accordingly}
 with probability %$1 - t^{\Omega (d_{a} + d_{b})} n^{- (d_a + d_b) \log \frac{\sqrt{D} }{d_{a} + d_{b}}}$.
-$1 - \left(\frac{t \sqrt{nD}}{d_a + d_b}\right)^{ - \Omega(d_a + d_b)}$.
+$1 - \left(\frac {s \sqrt{nD}}{d_b}\right)^{ - \Omega(d_a)} - e^{- \Omega(nD)}$.
+% for $s \geq d_b /\sqrt{n D}.$
 
-In particular, there are absolute constants $C, 0 < c < \CF{1/50}$ such that if $n \geq C d_1^2/D$ we have $\|\nabla^2_{ab} f_{\rv}\|_0 \leq c/k$ with probability $1 - k^2 n^{- \Omega(d_1 \log (\sqrt{D}/ d_1))}$ for all $a,b \in [k]$.
+In particular, for any small enough absolute constant $c>0$ there is $C$ such that for $n \geq C d_1^2/D$ we have $\|\nabla^2_{ab} f_{\rv}\|_0 \leq c/k$ with probability $1 - k^2 \left(\frac {\sqrt{nD}}{2d_1}\right)^{ - \Omega(d_1)}$ for all $a,b \in [k]$. 
 
 
 \end{corollary}
 
-
-
-
-
-\CF{get rid of big O's in bounds, not probabilities - actually set $c$'s here?}
-\begin{corollary} \label{cor:off-diag-hess} For traceless symmetric matrices $Y \in \Sym^0_{d_a}$, $Z \in \Sym^0_{d_b}$, we have 
-%$O \left( \frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}} \right)$  
-
-$$ \langle Y,  \left( \nabla^2_{ab} f_{\rv} \right) Z \rangle
-= O \left( t^{2} \frac{d_{a}+d_{b}}{\sqrt{nD}} \|Y\|_F\|Z\|_F\right)
-$$
-%\TODO{Akshay, please make the rhs $O(\lambda)$ and then adjust the failure probability accordingly}
-with probability $1 - t^{-\Omega(d_{a} + d_{b})}$ for $t \geq \CF{}$. In particular, there are absolute constants $C, 0 < c < \CF{1/50}$ such that if $n \geq C d_1^2/D$ we have $\|\nabla^2_{ab} f_{\rv}\|_0 \leq c/k$ with probability $1 - n^{- \Omega(d_1 \log (\sqrt{D}/ d_1))}$.
-
-
-%\geq 1 - \exp( - \Omega(d_{a} + d_{b}) )$ for $\lambda^{2} n D \gg \max_{a} d_{a}^{2}$. 
-
-%\AR{In particular we get $\|\nabla^{2}_{ab} f\|_{op} \approx \frac{d_{a} + d_{b}}{\sqrt{n D}}$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}))$; as well as $\|\nabla^{2}_{ab} f\|_{op} \approx \frac{d_{a} + d_{b}}{\sqrt{D}}$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}) \log n)$ }
-\end{corollary}
 
 
 
@@ -729,13 +711,13 @@ We proceed to bound the operator norm of $\nabla^2_{ab} f: \Sym^0_{d_b} \to \Sym
 \begin{align}\frac1{\sqrt{d_a d_b}} \langle Y,  \left( \nabla^2_{ab} f_{\rv} \right) Z \rangle
 = \tr \rho^{(ab)} \left( Y \ot Z \right) - \bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr).\label{eq:grad-off-diag}\end{align}
 As a linear map, define the first term to be $T:Z \mapsto \sqrt{d_a d_b} \tr_b \rho^{(a,b)} (I \ot Z)$. The state $\rho^{(a,b)} = \tr_{\overline{\{a,b\}}} \rho$ is given by $\rho^{{a,b}} =  X X^\dagger/\|X\|^2$ where $X$ is viewed as an $n D/{d_a d_b} \times d_a d_b$ matrix. Equivalently, $\rho^{(a,b)}$ is distributed as 
-$$\frac{1}{\sum_{i} \|Y_i\|^2} Y_i Y_i^T$$ where $Y_i$ are $n D/{d_a d_b}$ i.i.d standard Gaussians on $\R^{d_a} \ot \R^{d_b}$. By \cref{thm:hess-pisier}, the operator norm of $T$ restricted to $\Sym^0_{d_b}$ is $O(t^2(d_a + d_b) \sqrt{ n D} / \sum_{i \in \|Y_i\|^2} )$ 
-with probability $t^{-\Omega(d_{a} + d_{b})}$. The denominator is a sum of $nD$ many i.i.d $\chi$-square random variables, and so is $\Omega(nD)$ with failure probability $e^{ -\Omega(nD)} \ll t^{-\Omega(d_{a} + d_{b})}$ \cite{W19} \CF{puts constraint on $t$}, so finally we have that the operator norm of $T$ restricted to $\Sym^0_{d_b}$ is $O \left( \frac{d_{a}+d_{b}}{\sqrt{ nD}} t^2\right)$.
+$$\frac{1}{\sum_{i} \|Y_i\|^2} Y_i Y_i^T$$ where $Y_i$ are $n D/{d_a d_b}$ i.i.d standard Gaussians on $\R^{d_a} \ot \R^{d_b}$. By \cref{thm:hess-pisier} with $2t^2 = \frac {s \sqrt{nD}}{d_a + d_b}$, the operator norm of $T$ restricted to $\Sym^0_{d_b}$ is $O(s n D /2 \sum_i \|Y_i\|^2 )$ 
+with probability $(s \sqrt{nD}/(d_a + d_b))^{ - \Omega(d_a + d_b)} \leq (s \sqrt{nD} /d_b)^{ - \Omega(d_a)}$. The denominator is a sum of $nD$ many i.i.d $\chi$-square random variables, and so is $\Omega(nD)$ with failure probability $e^{ -\Omega(nD)} $ \cite{W19}, so finally we have that the operator norm of $T$ restricted to $\Sym^0_{d_b}$ is $O \left( s/2\right)$.
 %By \cref{eq:expansion-thing} (\CF{which needs to actually be proved}), with probability $\CF{good}$, the map $Z \to \tr_2 \rho^{(a,b)} (I \ot Z)$ has operator norm at most $\lambda/\sqrt{d_a d_b}$ restricted to traceless $Z$. 
 The second term of \cref{eq:grad-off-diag} defines the quadratic form 
 $$Y,Z \mapsto \sqrt{d_a d_b} (\tr Y \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr).$$ 
-As we have already shown in \cref{prop:gradient-bound}, we have $\norm{\nabla_a f_{\rv}}_{\op} = \|\sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}\|_{op} \leq \eps/\sqrt{d_a}$ with failure probability at most $e^{-D \eps^2/2Cd_a}$ , and likewise for $b$. Set $\eps^2 =  \frac{d_{a}+d_{b}}{\sqrt{ nD}} t^2$. Thus we have$$\sqrt{d_a d_b} |(\tr Y  \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr)| \leq \left( \frac{\eps \|Y\|_{1}}{\sqrt{d_{a}}} \right) \left( \frac{\eps \|Z\|_{1}}{\sqrt{d_{b}}} \right) \leq \eps^2 \|Z\|_F\|Y\|_F $$
-with failure probability at most $2 e^{ - \sqrt{D}d_2 t^2/C\sqrt{n} d_1 } \ll t^{-\Omega(d_{a} + d_{b})}.$ The bounds for the first and second term complete the proof.
+As we have already shown in \cref{prop:gradient-bound}, we have $\norm{\nabla_a f_{\rv}}_{\op} = \|\sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}\|_{op} \leq \eps/\sqrt{d_a}$ with failure probability at most $e^{-D n \eps^2/2Cd_a}$ , and likewise for $b$. We have$$\sqrt{d_a d_b} |(\tr Y  \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr)| \leq \left( \frac{\eps \|Y\|_{1}}{\sqrt{d_{a}}} \right) \left( \frac{\eps \|Z\|_{1}}{\sqrt{d_{b}}} \right) \leq \eps^2 \|Z\|_F\|Y\|_F.$$
+Setting $\eps^2 =  s/2$, the above holds with failure probability at most $2e^{- Dn s /4Cd_b}  \leq (s \sqrt{nD} /d_b)^{ - \Omega(d_a)}.$ Taken together, the bounds for the first and second terms of \cref{eq:grad-off-diag} complete the proof. %$2 e^{ - \sqrt{D}d_2 t^2/C\sqrt{n} d_1 } \ll t^{-\Omega(d_{a} + d_{b})}.$ 
 %Taken together, $\|\nabla^2_{ab} f\|_{op} \leq (\lambda + \eps^2)$ as a map $\Sym^0_{d_b} \to \Sym^0_{d_a}$.
 \end{proof}
 We now have the bounds we need to prove \cref{thm:tensor-convexity}.
@@ -837,9 +819,9 @@ Recall from the discussion after \ref{convexRobustness} that $\langle Y, \nabla^
 We can use $\ref{atoaaRobustness}$ to handle $e^{\delta_{a}}$ and $\ref{btoaaRobustness}$ for the rest:
 \begin{align*}
  |\langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, Y^{2} \rangle| 
- &\leq \sum_{j=1}^{k} |\langle \rho_{\samp_{(j)}}^{(a)} - \rho_{\samp_{(j-1)}}^{(a)}, Y^{2} \rangle| \\
-\underset{\ref{atoaaRobustness},\;\ref{btoaaRobustness}}{\leq} \sum_{j=1}^{k}  9.5 \|\delta_{j}\|_{op} \|\rho_{\samp_{(j-1)}}^{(a)}\|_{op} \|Y^{2}\|_{1} \\
-& \leq \left( \prod_{j=1}^k (1+9.5 \|\delta_{j}\|_{op}) - 1 \right) \|\rho_{\samp}^{(a)}\|_{op} \|Y\|_{F}^{2} \leq 10 \|\delta\|_{op} \|\rho_{\samp}^{(a)}\|_{op} \|Y\|_{F}^{2}.   \end{align*}
+ &\leq \sum_{j=1}^{k} |\langle \rho_{\samp_{(j)}}^{(a)} - \rho_{\samp_{(j-1)}}^{(a)}, Y^{2} \rangle| \underset{\ref{atoaaRobustness},\;\ref{btoaaRobustness}}{\leq} \sum_{j=1}^{k}  9.5 \|\delta_{j}\|_{op} \|\rho_{\samp_{(j-1)}}^{(a)}\|_{op} \|Y^{2}\|_{1} \\
+& \leq \left( \prod_{j=1}^k (1+9.5 \|\delta_{j}\|_{op}) - 1 \right) \|\rho_{\samp}^{(a)}\|_{op} \|Y\|_{F}^{2} \\
+&\leq 10 \|\delta\|_{op} \|\rho_{\samp}^{(a)}\|_{op} \|Y\|_{F}^{2}.   \end{align*}
 The term in parenthesis is shown by induction, and in the inequality we used $\|\delta\|_{op} \leq \frac{1}{20}$. The final step follows by our initial condition on $\|d_{a} \rho_{\samp}^{(a)}\|_{op}$. 
 \end{proof}
 
@@ -905,7 +887,6 @@ $\|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}^{2} \leq \|d_{a} \rho_{\samp}^{(a)}\|_{
 \end{lemma}
 %\begin{proof}This was already in KLR and we have two new proofs: one by convexity, and one by Riesz-Thorin. \AR{The proofs are in some other file, we can add it if we like}\end{proof}
 
-\CF{akshay make consistent with def 4}
 \begin{corollary} \label{offdiagRobustness}
 For input $\samp$ such that $\|d_{a} \rho_{\samp}^{(a)}\|_{op}, \|d_{b} \rho_{\samp}^{(b)}\|_{op} \leq 1+\frac{1}{20}$; perturbation $\delta := \sum_{a} (\delta_{a})_{a}$ with $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$ giving $\samp' := e^{\delta} \samp$:
 %\[ \frac{1}{\sqrt{d_{a} d_{b}}} \|\nabla^{2}_{ab} f(e^{2 \delta}) - \nabla^{2}_{ab} f(I)\|_{op} \leq 100 \|\delta\|_{op} \sqrt{\|\rho_{\samp}^{(a)}\|_{op} \|\rho_{\samp}^{(b)}\|_{op}}     \]
@@ -929,9 +910,8 @@ Recall the definition of a quadratic form of the Hessian:
 Let $\{\samp'_{i} := e^{\delta} \samp\}$. Then by $\ref{diagRobustness}$ we have a bound on the diagonal blocks; by $\ref{offdiagRobustness}$ we have a bound on the off-diagonal blocks; and by $\ref{rankoneRobustness}$ we have a bound on the rank-one term. 
 \[ \langle Z, (\nabla^2 f_{\samp'} - \nabla^{2} f_{\samp}) Z \rangle \leq \|\delta\|_{op} \left( 11 \sum_{a} \|Z_{a}\|_{F}^{2} + 21 \sum_{a \neq b} \|Z_{a}\|_{F} \|Z_{b}\|_{F} + 26 k \|Z\|^{2} \right)   \]
 \[ \leq (11 + 21(k-1) + 26 k) \|\delta\|_{op} \|Z\|^{2}    \]
-\AR{I can make this proof look more like the convexity one, with block matrices, if you all want}
 Note that this also gives a spectral upper bound for $\nabla^{2} f_{\samp'}$. 
-\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s? Also the constant is $50 k$ now, yay for better constants!}\CF{yay!}
+%\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s? Also the constant is $50 k$ now, yay for better constants!}\CF{yay!}
 \end{proof}
 
 \CF{for the readers' sake some justification is needed for why perturbing $\samp$ this is the same as considering the Hessian of our function at another point in $\PD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
