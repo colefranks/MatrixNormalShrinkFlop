@@ -13,3 +13,4 @@
 *.pdf
 code/
 .DS_Store
+.Rproj.user
