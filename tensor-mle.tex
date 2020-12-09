@@ -373,6 +373,9 @@ Let $f\colon \PD\to \R$ be geodesically convex everywhere, and $\lambda$-strongl
 Further assume the Riemannian gradient satisfies $\norm{\nabla f(I)} \leq \eps < \lambda \kappa / 2$.
 Then $f$ has a unique minimizer, which is contained in the ball of radius~$\eps/\lambda$ about~$I$.
 \end{lemma}
+
+\RMO{We also need to add here that the sublevel set of $f(I)$ is contained in $B_{\kappa}(I)$, which we prove in the middle of the lemma anyways. Is that okay?}
+
 \begin{proof}
 We first show that $f$ has a minimum.
 Consider $g(t) := f(\exp_I(tZ))$, where $Z\in \Sym$ is an arbitrary vector of unit norm~$\norm Z = 1$.
@@ -564,6 +567,8 @@ We now prove our main strong convexity result, \cref{thm:ball-convexity}, in ord
 
 \begin{theorem}\label{thm:ball-convexity} There are constants $C,c>0$ such that the following holds. For $n \geq C k^2 d_1^2/D$, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, $f$ is $1/2$ strongly convex at any point $Z \in \PD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$. 
 \end{theorem}
+
+\RMO{In terms of our usual ball the above result will be $B_{k \cdot c}(I)$, right? And if this calculation is correct, can we put the observation that this ball is good? Just to make the statements of our lemmas more uniform.}
 
 %$O\left( \sum_a e^{ - \Omega(nD/d_a)}\right)\leq k e^{- \Omega(nD/d_1)}$
 
@@ -1194,7 +1199,7 @@ The third item holds with probability $1 - e^{-\Omega(n (r_1d_2 + r_2 d_1))}$ by
 To prove \cref{thm:operator-cheeger}, we apply \cref{lem:op-cheeger} using \cref{prop:gradient-bound} to bound the balancedness of $\Phi$ and \cref{lem:union} to bound $\ch(\Phi)$. Indeed, $\|\nabla_a f\|_{op} \leq \eps_0$ for $a \in \{1,2\}$ if and only if $\Phi$ is $\eps_0$-balanced, so by \cref{prop:gradient-bound} the operator $\Phi$ is $\eps_0$-balanced with probability $1 -  e^{-\Omega(n d_1 \eps_0^2)} - e^{-\Omega(n d_2 \eps_0^2)} \geq 1 - 2e^{-\Omega(n d_1 \eps_0^2)}$ provided $n \geq C\eps_0^{-2} d_2/d_1 $. Setting $\eps_0 = \eps \sqrt{\frac{d_2 }{n d_1}}$ proves the balancedness claim. For the expansion, \cref{lem:union} shows $\ch(\Phi) = \Omega(1)$ with failure probability $O(e^{- \Omega(n d_1)}) = O(e^{- \Omega(d_2 \eps^2)})$. By \cref{lem:op-cheeger}, $\Phi$ is a $1 - c$-quantum expander.
 \end{proof}
 
-
+\newpage
 \section{Convergence of flip-flop algorithms}
 
 In this section we prove that the flip-flop algorithms for the matrix and tensor normal models converge quickly to the MLE estimator with high probability. We begin by stating the flip-flop algorithm and then... 
@@ -1260,22 +1265,37 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 \TODO{Proof of \cref{thm:tensor-flipflop}; vanilla strong convexity in a sublevel set stuff.}
 
 \begin{lemma}[Initial Conditions]
-	With probability \RMO{put bound here} we have that the following conditions hold:
+	There exist absolute constants $\Gamma, \gamma > 0$ such that the following holds.
+	When the number of samples $n \geq \Gamma \cdot k^2 \cdot d_1^2/D$, with probability at least $1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}$ we have that the following conditions hold:
 	\begin{enumerate}
-		\item $\norm{\nabla f_x(I)}_F^2 \leq \dfrac{\lambda^2}{4 k}$
-		\item $f_x$ is $\lambda$-strongly geodesically convex at a ball of radius $\lambda/k$ around $I$, that is: $B_{\lambda/k}(I) := \{ Z \in \Sym \ \mid \ \norm{Z}_F^2 \leq \lambda/k \}$.
+		\item $\norm{\nabla f_x(I)}_F \leq \dfrac{\gamma \cdot k}{8}$ % \dfrac{\lambda^2}{4 k}$
+		%\item $f_x$ is $\lambda$-strongly geodesically convex at a ball of radius $\lambda/k$ around $I$, that is: $B_{\lambda/k}(I) := \{ Z \in \Sym \ \mid \ \norm{Z}_F \leq \lambda/k \}$.
+		\item $f_x$ is $\frac{1}{2}$-strongly geodesically convex at a ball of radius $\gamma \cdot k/2$ around $I$, that is: $B_{\gamma \cdot k/2}(I) := \{ Z \in \Sym \ \mid \ \norm{Z}_F \leq \gamma \cdot k/2 \}$.
 	\end{enumerate}
 \end{lemma}
 
 \begin{proof}
+	The lemma follows from the observation that \cref{prop:gradient-bound} implies condition 1, and \cref{thm:ball-convexity} implies condition 2. So all we need to do is to check the parameters.
+
+	By \cref{thm:ball-convexity}, if we set $\gamma = c$ and if the number of samples $n \geq C k^2 d_1^2/D$, where $c, C > 0$ are the constants from \cref{thm:ball-convexity}, then with probability at most 
+	$$k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)}$$
+	the second condition fails to hold.
 	
+	By \cref{prop:gradient-bound} with parameter $\varepsilon = \frac{\gamma \sqrt{k}}{8}$, if the number of samples satisfies $n \geq \dfrac{2^{14} \cdot d_1^2}{\gamma^2 \cdot k \cdot D}$ then with probability at most 
+	$$2 k \cdot \exp\left(- \frac{n k D \gamma^2}{2^{15} d_1}\right) = 2k \cdot e^{- \Omega(nkD/d_1)}$$
+	the first condition will fail to hold.
+	
+	Letting $\Gamma = \max\{2^{14}/\gamma^2, C \}$, having $n \geq \Gamma k^2 d_1^2/D$ samples gives a sample upper bound that holds for both situations above.
+	Thus, by the union bound, with probability at most 
+	$$ k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} + 2k \cdot e^{- \Omega(nkD/d_1)} $$
+	one of the conditions 1 or 2 will fail to hold. This concludes our proof.
 \end{proof}
 
 \begin{lemma}[Descent Lemma]
 
 \end{lemma}
 
-\RMO{Initial Conditions + descent lemma imply convergence of flip-flop via \cref{lem:descent-sublevel-set}}
+\RMO{Initial Conditions + descent lemma imply convergence of flip-flop via \cref{lem:descent-sublevel-set} and \cref{lem:convex-ball}}
 
 \begin{theorem}[Restatement of \cref{thm:tensor-flipflop}]
 
