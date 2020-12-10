@@ -138,32 +138,61 @@ In the current literature on matrix normal and tensor models, typically the esti
 }
 
 \subsection{Our contribution}
-\CF{here I want an informal discussion of our contribution. Maybe the prev paragraph also should go here.}
 
-%Characterizing the existence of the MLE and the convergence of the flip-flop algorithm are not inherently helpful in understanding rates. \CF{continue here}
+We take a geodesically convex optimization approach to provide bounds to estimate the precision matrices without any assumptions on their structure. For the matrix normal model our rates are tight in every regime up to logarithmic factors, and for the tensor normal model our rates our tight if there are enough samples.
 
-Nonetheless, to our knowledge tight nonasymptotic bounds on convergence of the MLE, or any other estimator, in the dense case \CF{actually, tsiligkaridis do this in frobenius norm for matrix models but they are not tight for every value of $d_1, d_2$.}. Moreover, it has not been proven that the flip-flop algorithm converges \emph{quickly} to the MLE, or even that there is a polynomial time algorithm to compute the MLE. We make significant progress on both of these open questions. As an informal summary, we show the following:
+In the current literature on matrix normal and tensor models, typically the estimators are assessed using Frobenius or spectral norm between the estimated parameter and the truth. Neither of these metrics bound statistical dissimilarity measures of interest such as the total variation or Kullback-Leibler divergence between the true distribution and that corresponding to the estimated parameter, or the Fisher-Rao distance. To this end, we consider the following dissimilarity measures:
+\begin{definition}[Mahalanobis distance]
+For $\Theta_1, \Theta_2$ positive-definite $d\times d$ matrices, define
+% \begin{align}d_{F}(\Sigma_1; \Sigma_2) = \| I - \Sigma_2^{1/2} \Sigma_1^{-1} \Sigma_2^{1/2}\|_F\\
+% d_{op}(\Sigma_1; \Sigma_2) = \| I - \Sigma_2^{1/2} \Sigma_1^{-1} \Sigma_2^{1/2}\|_{op}
+% \end{align}
+% and
+\begin{align}d_{F}(\Theta_1; \Theta_2) = \| I - \Theta_2^{-1/2} \Theta_1 \Theta_2^{-1/2}\|_F\\
+d_{op}(\Theta_1; \Theta_2) = \| I - \Theta_2^{-1/2} \Theta_1 \Theta_2^{-1/2}\|_{op}
+\end{align}
+\end{definition}
+If $\Theta_1, \Theta_2$ are the precision matrices of centered Gaussians, $d_F$ is sometimes called the Mahalanobis distance between them. The Mahalanobis distance is a natural dissimilarity measure on Gaussians because when any of the Mahalanobis, total variation, square of the KL-divergence, or Fisher-Rao distances is at most a small constant then they are on the same order \CF{check, cite} \cite{barsov1987}. Considering $d_{op}$ yields even stronger results. Our theoretical contribution is as follows:
 \begin{enumerate}
-\item The MLE for the matrix normal model is close to the covariance in spectral norm for a number of samples that is \CF{check}
-$$O(\max \{d_1/d_2, d_2/d_1\} \log \max \{d_1/d_2, d_2/d_1\}),$$ which is tight up to logarithmic factors.
-\item The MLE for the tensor normal model converges is close to the covariance in Frobenius norm for a number of samples that is $O(\max_{i \in [k]} D/d_i^3)$. This result is tight.
-\item Under the same sample requirements as above, the flip-flop algorithm converges exponentially quickly to the MLE with high probability. As a corollary, there is an algorithm to compute the  MLE with polynomial expected runtime.
+\item For the matrix normal model, if $n \geq C (\max\{d_i^2\}/d_1 d_2) \log^2 d_1$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has MSE $O( \max d_i^2/ n \prod d_i )$ for in $d_{op}$; as a corollary the MSE in $d_F$ is $O( \max d_i^3/ n \prod d_i )$.
+\item For the tensor normal model, if $n \geq C \max\{d_i^3\}/ \prod d_i$, then the MLE for the precision matrices $\Theta_1, \dots, \Theta_k$ has MSE $O(\max d_i^3/ n \prod d_i)$ in $d_F$.
+\item Under the same sample requirements as above in each case, the flip-flop algorithm converges exponentially quickly to the MLE with high probability. As a corollary, there is an algorithm to compute the MLE with expected runtime polynomial in the input size and $\log(1/\eps)$. 
 \end{enumerate}
-It remains an open question to show tight bounds for convergence of the MLE in spectral norm for the tensor normal model.
+\CF{can we say better for each individual matrix? Another thought is that if one of the matrices is too big, we can still try to get the other ones by marginalizing the bad one out)}
+
+\CF{mention $d_TV$ again}
+
+The first result is tight up to logarithmic factors, and the second result is tight. Without the restriction on $n$ in the first result, no estimator can converge in operator norm as the parameters grow, so we consider the restriction mild. Likewise for the second result no estimator can converge in Frobenius norm without the restriction on $n$. 
+%The first result is tight up to logarithmic factors, and the second is tight provided the number of samples is large enough for it to apply. Without the restriction on $n$ in our second result, no estimator can converge in Frobenius norm, so we consider it mild. 
+
+%Clearly one requires $n \geq C d_i^2/\prod d_i$ for any estimator to converge to the $i^th$ marginal even in spectral norm; the restriction in our section result asks that $n$ is a $d_i$ factor larger than this. 
+
+For interesting cases of the tensor normal model such as $d\times d \times d$ tensors we just require that $n$ is at least a large constant. For the matrix normal model, our first result removes the added constraint $n \geq C \max\{d_1,d_2\}$ in \CF{tsilig}. For the tensor normal model with $k \geq 3$ we leave obtaining the analogous MSE bounds for $d_{op}$ as an open problem. 
+
+\CF{I think I'd like to do a better job at gradually defining notation so its clear that these are the right numbers.}
+
+To handle the undersampled case, we also introduce a regularized estimator that is much simpler to compute than the penalized regularizers introduced in \CF{tsilig, sun, zhou}, and empirically has comparable and sometimes better performance. \CF{expand up on this; put it in the bulleted list also?}
+
+
+
+
+
+%These distances are invariant under changes of basis on $\R^d$, which is desirable as 
+
+%Our bounds on $d_{op}$ will strengthen those on $d_F$.
+
+%In some regimes we are able to obtain stronger results by considering $d_{op}$. 
+%if the Mahalanobis distance is at most a small constant then it is on the order of the total variation distance $\widehat{\Sigma}$ \cite{barsov1987estimates} and the Fisher-Rao distance.
+
+% We consider the second quantity $d_{op}$ because we are often able to show that $d_{op}$ is much smaller than our estimates. 
+
+
 
 
 
 %\CF{The more recent stuff; philipp, visu, etc.}\\
 
 \CF{then some discussion of methods, numerics}
-
-%By simply setting $\Sigma_2 = I_{d_2}$, it is easy to see that one cannot obtain better MSE rates than $d_1^2/d_2 n$ for estimating $\Sigma_1$ in Frobenius norm. 
-
-%=============================================================================
-\section{The tensor and matrix normal model}
-%=============================================================================
-\TODO{In this section, \dots}
-
 
 \subsection{Notation}
 \CF{temporary, or perhaps move to section.}
@@ -186,6 +215,16 @@ It remains an open question to show tight bounds for convergence of the MLE in s
 \item $I$ for an identity matrix, $I_a$ for the $d_a \times d_a$ identity matrix
 \item $\norm{\cdot}_p$ for the $\ell_p$ norm of vectors and the Schatten-$p$ norm of operators
 \end{itemize}
+
+
+%By simply setting $\Sigma_2 = I_{d_2}$, it is easy to see that one cannot obtain better MSE rates than $d_1^2/d_2 n$ for estimating $\Sigma_1$ in Frobenius norm. 
+
+%=============================================================================
+\section{The tensor and matrix normal models}
+%=============================================================================
+\TODO{In this section, \dots}
+
+
 
 \subsection{Results}
 
