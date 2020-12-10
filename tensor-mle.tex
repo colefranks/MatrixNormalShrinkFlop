@@ -123,36 +123,24 @@ Covariance matrix estimation is an important task in statistics, machine learnin
 
 To remedy this issue, matrix-variate data is commonly assumed to follow the \emph{matrix normal distribution} \CF{cite dutilleul 99, werner 08}. That is, the matrix follows a multivariate Gaussian distribution and the covariance between any two entries in the matrix is a product of an inter-row factor and an inter-column factor. In spatio-temporal statistics this is referred to as a separable covariance structure. Formally, if a matrix normal random variable $X$ takes values in the $d_1\times d_2$ matrices, then its covariance matrix $\Sigma$ is a $d_1d_2\times d_1 d_2$ matrix that is the Kronecker product $\Sigma_1 \ot \Sigma_2$ of two positive-semidefinite matrices $\Sigma_1$ and $\Sigma_2$ of dimension $d_1\times d_1$ and $d_2\times d_2$, respectively. This naturally extends to the tensor normal model, the multivariate Gaussians on $k$-dimensional arrays with covariance matrix equal to the Kronecker product of $k$ many positive semidefinite matrices $\Sigma_1, \dots, \Sigma_k$. In this paper we consider the estimation of $\Sigma_1, \dots, \Sigma_k$ from $n$ samples of a matrix or tensor normal random variable $X$. 
 
-Much research has been devoted to estimating the covariance matrix for the matrix and tensor normal models, but gaps in rigorous understanding remain. Dutilleul \CF{cite} and later Werner et. al \CF{cite} proposed an iterative algorithm, known as the flip-flop algorithm, to compute the maximum likelihood estimator (MLE). In the same work Werner et. al. also showed that the MLE is consistent and asymptotically normal, and showed the same for the estimator obtained by terminating the flip-flop after three steps. Here we will be interested in non-asymptotic rates; standard estimation of the covariance matrix $\Sigma$ by the sample covariance matrix yields a mean-squared Frobenius norm error of $(d_1 d_2)^2/n$ assuming $n \geq C d_1 d_2$. The matrix normal model, however, has $\Theta(d_1^2 + d_2^2)$ parameters so it should be possible to do much better. Assuming that the covariance factors have constant condition number and that $n$ is at least $\tilde{\Omega}(\max\{d_1,d_2\})$, in \CF{tsilig} it was shown that the three-step flip-flop estimator has mean-squared Frobenius error of $O((d_1^2 + d_2^2)/n)$ for the full matrix $\Sigma$; they did not state a bound for the individual factors $\Sigma_1,\Sigma_2$. The same authors showed tighter rates which hold even for $n\ll d_i$ were shown for a penalized estimator under the additional assumption that the precision matrices $\Sigma_i^{-1}$ are sparse. In the extremely undersampled regime, Zhou demonstrated a single-step penalized estimator that converges even for a single matrix $(n=1)$ when the precision matrices have constant condition number, are highly sparse, and have bounded $\ell_1$ norm off the diagonal. Simply setting $\Sigma_2 = I_{d_2}$ or $\Sigma_1 = I_{d_1}$, in which case the matrix normal model reduces to standard covariance estimation with $d_1n$ (resp. $d_2 n$) samples, shows the necessity of additional assumptions like sparsity or well-conditionedness if $n < \max\{d_1/d_2, d_2/d_1\}$. Allen and Tibshirani also considered penalized estimators for the purpose of missing data imputation \CF{cite allen}. The literature on the tensor normal model is less complete. The flip-flop estimator has been proposed to compute the MLE \CF{cite dutilleul}, but to our knowledge there has been no nonasymptotic discussion of rates \CF{actually there's this sun tensor graphical models paper}. In both the matrix and tensor case, no estimator for the Kronecker factors has been proven to have tight rates without additional assumptions on the factors' structure.
-
-\CF{I had a thought about this yesterday and now I forgot what it is. I hope it comes back.}
-\CF{maybe here's where I want to emphasize that NO estimator gets tight rates for the individual factors; the way I've written it now its not clear.}
-
-Despite advances in understanding other estimators, even characterizing the existence of the MLE has remained elusive until recently. It was recently noted that the matrix normal and tensor MLEs are equivalent to algebraic problems about a group action called the \emph{left-right action} \CF{cite philipp} and the \emph{tensor action}, respectively. In the computer science literature the same problems are called \emph{tensor} and \emph{operator scaling}, respectively. It was independently pointed out in \CF{cite tyler M} that the Tyler's M estimator for elliptical distributions (which arises as the matrix normal problem under the additional promise that $\Sigma_2$ is diagonal) is a special case of operator scaling. Using the connection to the left-right action, the existence of the matrix normal MLE in terms of $d_1,d_2,n$ was recently characterized in full \CF{cite visu}. In the context of operator scaling, Gurvits showed much earlier that the flip-flop algorithm converges to the MLE whenever it exists \CF{cite gurv}, and later it was shown that the number of steps to obtain precision $\eps$ is polynomial in the input size and $1/\eps$ \CF{cite ggow}. Even more recently, existence of the MLE for the tensor normal model was fully characterized \CF{cite michael, visu}. In the context of tensor scaling, it was shown earlier that the flip-flop algorithm converges to the tensor MLE whenever it exists \CF{cite tensor scaling}. 
-
-Characterizing the existence of the MLE and the convergence of the flip-flop algorithm are not inherently helpful in understanding rates. \CF{continue here}
+Much research has been devoted to estimating the covariance matrix for the matrix and tensor normal models, but gaps in rigorous understanding remain. Dutilleul \CF{cite} and later Werner et. al \CF{cite} proposed an iterative algorithm, known as the flip-flop algorithm, to compute the maximum likelihood estimator (MLE). In the same work Werner et. al. also showed that the MLE is consistent and asymptotically normal, and showed the same for the estimator obtained by terminating the flip-flop after three steps. Here we will be interested in non-asymptotic rates; standard estimation of the covariance matrix $\Sigma$ by the sample covariance matrix yields a mean-squared Frobenius norm error of $(d_1 d_2)^2/n$ assuming $n \geq C d_1 d_2$. The matrix normal model, however, has $\Theta(d_1^2 + d_2^2)$ parameters so it should be possible to do much better. Assuming that the covariance factors have constant condition number and that $n$ is at least $\tilde{\Omega}(\max\{d_1,d_2\})$, in \CF{tsilig} it was shown that the three-step flip-flop estimator has mean-squared Frobenius error of $O((d_1^2 + d_2^2)/n)$ for the full matrix $\Sigma$; they did not state a bound for the individual factors $\Sigma_1,\Sigma_2$. The same authors showed tighter rates which hold even for $n\ll d_i$ were shown for a penalized estimator under the additional assumption that the precision matrices $\Sigma_i^{-1}$ are sparse. In the extremely undersampled regime, Zhou demonstrated a single-step penalized estimator that converges even for a single matrix $(n=1)$ when the precision matrices have constant condition number, are highly sparse, and have bounded $\ell_1$ norm off the diagonal. Simply setting $\Sigma_2 = I_{d_2}$ or $\Sigma_1 = I_{d_1}$, in which case the matrix normal model reduces to standard covariance estimation with $d_1n$ (resp. $d_2 n$) samples, shows the necessity of additional assumptions like sparsity or well-conditionedness if $n < \max\{d_1/d_2, d_2/d_1\}$. Allen and Tibshirani also considered penalized estimators for the purpose of missing data imputation \CF{cite allen}. For the tensor normal model, a natural generalization of the flip-flop algorithm has been proposed to compute the MLE \CF{cite dutilleul} but is not known to converge. Assuming bounded constant condition number of the true covariances and knowledge of initializers within constant Frobenius distance of the true precision matrices, the authors of \CF{sun} propose an estimator with tight rates. In both the matrix and tensor case, no estimator for the Kronecker factors has been proven to have tight rates without additional assumptions on the factors' structure.
 
 
+\CF{The sparse folks should not feel bad because it's considered that estimating sparse GGMs without condition number bounds or irrepresentability conditions is NP hard.}
 
 
-%\CF{The more recent stuff; philipp, visu, etc.}\\
-\CF{then our contribution}\\
-\CF{then some discussion of methods}
+%Despite advances in understanding other estimators, 
 
-%By simply setting $\Sigma_2 = I_{d_2}$, it is easy to see that one cannot obtain better MSE rates than $d_1^2/d_2 n$ for estimating $\Sigma_1$ in Frobenius norm. 
+Even characterizing the existence of the MLE for the matrix and tensor normal model has remained elusive until recently. It was recently noted that the matrix normal and tensor MLEs are equivalent to algebraic problems about a group action called the \emph{left-right action} \CF{cite philipp} and the \emph{tensor action}, respectively. In the computer science literature these two problems are called \emph{tensor} and \emph{operator scaling}, respectively. It was independently pointed out in \CF{cite tyler M} that the Tyler's M estimator for elliptical distributions (which arises as the matrix normal problem under the additional promise that $\Sigma_2$ is diagonal) is a special case of operator scaling. Using the connection to the left-right action, the existence of the matrix normal MLE in terms of $d_1,d_2,n$ was recently characterized in full \CF{cite visu} and was extended to the tensor tensor normal model in \CF{cite michael, visu}. In the context of operator scaling, Gurvits showed much earlier that the flip-flop algorithm converges to the matrix normal MLE whenever it exists \CF{cite gurv}, and later it was shown that the number of flip-flop steps to obtain precision $\eps$ for the tensor and matrix normal model is polynomial in the input size and $1/\eps$ \CF{cite ggow, cite burgisser}. 
+%In the context of tensor scaling, it was shown earlier that the flip-flop algorithm converges to the tensor MLE whenever it exists \CF{cite tensor scaling}. 
 
+In the current literature on matrix normal and tensor models, typically the estimators are assessed using Frobenius or spectral norm between the estimated parameter and the truth. However, neither of these metrics bound statistical distances of interest such as the total variation or Kullback-Leibler divergence between the true distribution and that corresponding to the estimated parameter, or the Fischer-Rao distance. These quantities are affinely invariant, meaning that for any invertible matrix $g$ we have $d(\Sigma, \Sigma') = d(g \Sigma g^T, g \Sigma' g^T)$. \CF{not exactly sure how to write this, but I want it to say that we get the right rates with no assumptions and we use more appropriate metrics. Amusingly, to get from these metrics TO the less useful metrics or vice versa, one needs the condition number assumptions. Also, it appears that the reason that the better metrics aren't being used is that the estimators didn't have the equivariance property.
+}
 
+\subsection{Our contribution}
+\CF{here I want an informal discussion of our contribution. Maybe the prev paragraph also should go here.}
 
-
-
-
-\section{Introduction}
-\CF{background, history; remark that we automatically know flip-flop works but our strong convexity will give efficient algorithms in this setting, as opposed to just converging algorithms. }
-The covariance matrix $\Sigma$ of a Gaussian random variable $\rv$ on $\R^D$ is a fundamental object in statistics, and its estimation is a central task in data analysis. If the number of samples is comparable to the dimension, the sample covariance matrix approximates $\Sigma$ well in spectral norm. However, one can still often obtain useful estimates of $\Sigma$ with far fewer samples under structural assumptions such as sparsity, rank constraints, or bandedness. Here we consider the family of distributions, known as the \emph{tensor normal model}, with covariance matrices that are Kronecker products of some matrices of known dimensions $d_1, \dots, d_k$ with $d_1d_2\dots d_k = D$.
-
-Perhaps the best-known case is the case $k = 2$, called the \emph{matrix normal model} or  \emph{matrix normal variate model} \CF{cite drton, etc}. This model applies when each sample can be viewed as a matrix and the covariance between entries can be modeled as a product of a inter-row factor and a inter-column factor, such as data indexed by both space and time in magnetoencephalography \CF{cite}. \CF{figure out some uses for the tensor normal models}.
-
-Much research has been devoted to estimating the covariance in matrix and tensor normal models. It is known that the MLE exists uniquely under mild assumptions \CF{cite}, and there is an iterative algorithm (known as the \emph{flip-flop} algorithm) that converges quickly to the MLE in practice \CF{dutilleul}. Through recent connections noted in \CF{cite philipp et al} it follows that the flip-flop algorithm converges whenever the MLE exists. Estimators with good performance have been shown to exist under the assumption that the true covariance matrix is highly sparse \CF{cite zhou, tsiligkaridis}.
+%Characterizing the existence of the MLE and the convergence of the flip-flop algorithm are not inherently helpful in understanding rates. \CF{continue here}
 
 Nonetheless, to our knowledge tight nonasymptotic bounds on convergence of the MLE, or any other estimator, in the dense case \CF{actually, tsiligkaridis do this in frobenius norm for matrix models but they are not tight for every value of $d_1, d_2$.}. Moreover, it has not been proven that the flip-flop algorithm converges \emph{quickly} to the MLE, or even that there is a polynomial time algorithm to compute the MLE. We make significant progress on both of these open questions. As an informal summary, we show the following:
 \begin{enumerate}
@@ -163,9 +151,22 @@ $$O(\max \{d_1/d_2, d_2/d_1\} \log \max \{d_1/d_2, d_2/d_1\}),$$ which is tight 
 \end{enumerate}
 It remains an open question to show tight bounds for convergence of the MLE in spectral norm for the tensor normal model.
 
-\subsection{Technical contributions}
+
+
+%\CF{The more recent stuff; philipp, visu, etc.}\\
+
+\CF{then some discussion of methods, numerics}
+
+%By simply setting $\Sigma_2 = I_{d_2}$, it is easy to see that one cannot obtain better MSE rates than $d_1^2/d_2 n$ for estimating $\Sigma_1$ in Frobenius norm. 
+
+%=============================================================================
+\section{The tensor and matrix normal model}
+%=============================================================================
+\TODO{In this section, \dots}
+
+
 \subsection{Notation}
-\CF{temporary}
+\CF{temporary, or perhaps move to section.}
 \begin{itemize}
 \item Number of samples $n$, dimensions $d_1\leq \dots \leq d_k$. $D$ for product of these. \CF{can we just assume $d_i$'s sorted like I have here? I want to avoid writing min everywhere.}
 %\item $X$ for the tensor random variable, $\samp_1, \dots, \samp_n$ for each , $\samp = (\samp_1, \dots, \samp_n)$ for the random tuple of samples. $\rho = \samp \samp^T/\|\samp\|_F^2$. Lower case $x$ for samples.
@@ -235,14 +236,15 @@ for $i \in \{1,2\}$ in $O(\TODO{\log(1/\eps)})$ iterations with probability at l
 
 One may wonder why in the above theorems we consider the distances for the individual tensor factors and not the covariance matrix itself, but tight bounds for the covariance matrix itself follow from the above bounds (apart from the logarithmic factor in the matrix normal case and a constant factor in general).
 
-%=============================================================================
-\section{The tensor normal model}
-%=============================================================================
-\TODO{In this section, \dots}
+
 
 %-----------------------------------------------------------------------------
 \subsection{Maximum-likelihood estimation}
 %-----------------------------------------------------------------------------
+
+\CF{perhaps move some of this before the results and some to next section}
+
+
 We start by giving a precise definition of maximum-likelihood estimation in the tensor normal model.
 Recall that for a centered normal distribution~$\cN(0,\Sigma)$ with $D\times D$ covariance matrix~$\Sigma$, the log-likelihood function for given samples $\samp_1,\dots,\samp_n\in\R^D$ is (up to an additive constant)
 \begin{align*}
@@ -286,9 +288,10 @@ As explained above, $\widehat{\Theta}_{\samp} = \widehat{\Theta}_{\samp,1} \ot \
 We will often identify $\Theta$ with the tuple $(\Theta_1,\dots,\Theta_k)$, and similarly for $\widehat{\Theta}_{\samp}$.
 When $\samp$ is clear from context we will drop it.
 
+\section{Geodesic convexity and sample complexity}\label{subsec:outline}
 
 %-----------------------------------------------------------------------------
-\subsection{Sample complexity from geodesic convexity}\label{subsec:outline}
+%\subsection{Sample complexity from geodesic convexity}\label{subsec:outline}
 %-----------------------------------------------------------------------------
 \TODO{
 \begin{itemize}
@@ -379,12 +382,12 @@ We often abbreviate $\nabla f = \nabla f(I)$ and write $\nabla f = (\nabla_1 f, 
 Now say that $B_\kappa(\Theta) = \{ \exp_{\Theta}(Z) : \norm Z \leq \kappa \}$ is the ball of radius $\kappa>0$ about~$\Theta$.
 
 \begin{lemma}\label{lem:convex-ball}
-Let $f\colon \PD\to \R$ be geodesically convex everywhere, and $\lambda$-strongly geodesically convex in a ball of radius~$\kappa>0$ about~$I$.
+Let $f\colon \PD\to \R$ be geodesically convex everywhere, and $\lambda$-strongly geodesically convex in a geodesic ball $B_\kappa$ of radius~$\kappa>0$ about~$I$.
 Further assume the Riemannian gradient satisfies $\norm{\nabla f(I)} \leq \eps < \lambda \kappa / 2$.
-Then $f$ has a unique minimizer, which is contained in the ball of radius~$\eps/\lambda$ about~$I$.
+Then the sublevel set $\{Z:f(Z) \leq f(I)\}$ is contained in the ball $B_{\eps/\lambda} \subset B_\kappa$, and $f$ has a unique minimizer which is contained in $B_{\eps/\lambda}$.
 \end{lemma}
 
-\RMO{We also need to add here that the sublevel set of $f(I)$ is contained in $B_{\kappa}(I)$, which we prove in the middle of the lemma anyways. Is that okay?}
+%\RMO{We also need to add here that the sublevel set of $f(I)$ is contained in $B_{\kappa}(I)$, which we prove in the middle of the lemma anyways. Is that okay?}
 
 \begin{proof}
 We first show that $f$ has a minimum.
