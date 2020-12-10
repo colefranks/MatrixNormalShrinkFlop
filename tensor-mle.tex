@@ -762,7 +762,7 @@ Quantum channels with this spectral gap condition are called \emph{quantum expan
 %We show that, restricted to the traceless matrices, this quadratic form is small. More precisely, we bound the operator norm of the map $T: Z \mapsto \tr_2 \rho^{(ab)} \left(I \ot Z\right)$ restricted to the traceless symmetric matrices. Such maps are called \emph{quantum channels}, and we will revisit their properties later \CF{where? or earlier?}. The operator norm condition we desire for $T_{\rho}$ is equivalent to $T_{\rho}$ being a good \emph{quantum expander} - this led Pisier to bound the operator norm of $T_{\rho}$ for random $\rho$. \CF{one-sentence motivation of quantum expanders?}
 
 \begin{theorem}\label{thm:hess-pisier} Let $X = (X_1, \dots, X_N)$ be a tuple of standard Gaussians on $(\R^{d_1}\ot \R^{d_2})^n$. Then $\forall t \geq 1$ with failure probability at most $t^{-\Omega(d_{1} + d_{2})}$, the random quantum channel 
-$$T: X \mapsto \frac{1}{nD}\sum_{i = 1}^N X_i Z X_i^\dagger$$
+$$T: Z \mapsto \frac{1}{nD}\sum_{i = 1}^N X_i Z X_i^\dagger$$
 has operator norm 
 $O \left( t^{2} \frac{d_{1}+d_{2}}{\sqrt{d_{1} d_{2} nD}} \right)$ restricted to the traceless symmetric matrices. \end{theorem}
 Pisier's actual result is slightly different; \cref{thm:hess-pisier} is essentially Theorem~16.6 in~\cite{pisier2012grothendieck}, together with a standard symmetrization trick (e.g., Proof of Lemma~4.1 in~\cite{P14}). We present the details in an appendix \CF{cref it}. We now apply it to bound the off diagonal terms in the Hessian.
@@ -848,13 +848,14 @@ We now show our second strong convexity result, namely that if our function is s
 $$ \|e^{\delta} - I\|_{op} \leq \|\delta\|_{op} + \|\delta\|_{op}^{2} \leq 2 \|\delta\|_{op}.$$ 
 \end{fact}
 
-We will follow the structure presented in the last proof by letting our input at the identity be represented by $x$ \CF{input at identity? use of "input" is in general imprecise} and showing each block of the Hessian only changes a small amount under perturbation $x' := e^{\delta} x$ for $\delta \in \Sym$. In particular we will give bounds on each block under each component-wise perturbation $x' := (e^{\delta_{b}})_{b} x$. Recall (c.f. \cref{lem:hessian}) that the $a^{th}$ diagonal block of the Hessian depends only on $\rho^a_{\samp}$. This motivates the next two lemmas quantifying the change of $\rho^{a}
+We will follow the structure presented in the last proof %by letting our input at the identity be represented by $x$ \CF{input at identity? use of "input" is in general imprecise} 
+by showing each block of the Hessian only changes a small amount under perturbation $x' := e^{\delta} x$ for $\delta \in \Sym$. In particular we will give bounds on each block under each component-wise perturbation $x' := (e^{\delta_{b}})_{b} x$. Recall (c.f. \cref{lem:hessian}) that the $a^{th}$ diagonal block of the Hessian depends only on $\rho^a_{\samp}$. This motivates the next two lemmas quantifying the change of $\rho^{a}
 _{\samp}$ under perturbations. 
 
-\CF{Akshay: $\sum_{a} \|\delta_{a}\|_{op} = \|\delta\|_{op}.$}
-\CF{say stronger condition}
+%\CF{Akshay: $\sum_{a} \|\delta_{a}\|_{op} = \|\delta\|_{op}.$}
+%\CF{say stronger condition}
 \begin{lemma} \label{convexRobustness}
-There is a constant $c>0$ such that the following holds. If $f_{\samp}$ is $\alpha$-strongly convex at $I$; $\forall a: \|d_{a} \rho_{\samp}^{(a)}\|_{op} \leq (1+c)$, or the stronger condition $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$; and $\sum_{a} \|\delta_{a}\|_{op} \leq c$: then $f$ at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$ is $\geq (\alpha - k C \|\delta\|_{op})$-strongly convex for some universal constant $C$. 
+There is a constant $c>0$ such that the following holds. If $f_{\samp}$ is $\alpha$-strongly convex at $I$; $\forall a: \|d_{a} \rho_{\samp}^{(a)} - Tr[\rho_{\samp}^{(a)}] I_{a}\|_{op} = \|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$; and $\sum_{a} \|\delta_{a}\|_{op} \leq c$: then $f$ at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$ is $\geq (\alpha - k C \|\delta\|_{op})$-strongly convex for some universal constant $C$. 
 \end{lemma}
 
 Recall the definition of a quadratic form of the Hessian:
@@ -921,20 +922,23 @@ The term in parenthesis is shown by induction, and in the inequality we used $\|
 \end{proof}
 
 \begin{corollary} \label{rankoneRobustness}
-For input $x \in \R^{nD}$ such that $\forall a: d_{a} \|\rho_{\samp}^{(a)}\|_{op} \leq 1 + \frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a})_{a}$ with $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$ giving $\samp' := e^{\delta} \samp$:
+For input $x \in \R^{nD}$ such that $\forall a: \|d_{a} \rho_{\samp}^{(a)} - Tr[\rho_{\samp}^{(a)}] I_{a}\|_{op} \leq \frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a})_{a}$ with $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$ giving $\samp' := e^{\delta} \samp$:
 \[ \|(\nabla^{2} f_{\samp'} - \nabla^{2} F_{\samp'}) - (\nabla^{2} f_{\samp} - \nabla^{2} F_{\samp})\|_{op} \leq 26 k \|\delta\|_{op}     \]
 \end{corollary}
 \begin{proof}
 Recall again from the discussion after $\ref{convexRobustness}$ that $\langle Z, (\nabla^{2} F - \nabla^{2} f) Z \rangle = \left\langle \rho, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2}$. We use the same iterative strategy as $\ref{diagRobustness}$:
 \[    \left\langle \rho_{\samp'}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2} -  \left\langle \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2}    \]
 \[ = \left\langle \rho_{\samp'} + \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle \left\langle \rho_{\samp'} - \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle  \]
-\[ = \left( \sum_{a} \sqrt{d_{a}} \langle \rho_{\samp'}^{(a)} + \rho_{\samp}^{(a)}, Z_{a} \rangle \right) \left( \sum_{a} \sqrt{d_{a}} \langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, Z_{a} \rangle \right)     \]
+\[ = \left( \sum_{a} \langle (d_{a} \rho_{\samp'}^{(a)} - Tr[\rho_{\samp'}^{(a)}] I_{a}) + (d_{a} \rho_{\samp}^{(a)} - Tr[\rho_{\samp}^{(a)}] I_{a}) , d_{a}^{-1/2} Z_{a} \rangle \right) \left( \sum_{a} \sqrt{d_{a}} \langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, Z_{a} \rangle \right)     \]
 %\AR{Here I could use that $Z \perp I$ to get a constant factor improvement; need an assumption on $\nabla$; but it improves the overall constant by factor $\approx 2$}
-\[ \leq \left( (2+10\|\delta\|_{op})\sum_{a} \sqrt{d_{a}} \|\rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{1}   \right) 
+\[ \leq \left( \sum_{a} (2 + 10 \|\delta\|_{op}) \|d_{a} \rho_{\samp}^{(a)} - Tr[\rho_{\samp}^{(a)}] I_{a} \|_{op} \|d_{a}^{-1/2} Z_{a}\|_{1}   \right) 
 \left( 10\|\delta\|_{op} \sum_{a} \sqrt{d_{a}} \| \rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{1}   \right)    \]
-\[ \leq 25 \|\delta\|_{op} \left( \sum_{a} \|d_{a} \rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{F} \right)^{2} \leq 25 \|\delta\|_{op} \left( \sum_{a} \|d_{a} \rho_{\samp}^{(a)}\|_{op}^{2} \right) \|Z\|^{2}      \]
+\[ \leq \left( \sum_{a} \frac{2 + 10 \|\delta\|_{op}}{20} \|Z_{a}\|_{F}  \right) 
+\left( 10\|\delta\|_{op} \sum_{a} (1 + \frac{1}{20}) \|Z_{a}\|_{F} \right) 
+\leq 1.5 k \|\delta\|_{op} \|Z\|^{2}      \]
 %\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s?} \CF{the norm is just the standard norm, there shouldn't be $d_a$'s}
-The final step follows from the initial conditions on $\|d_{a} \rho_{a}\|_{op}, \|d_{b} \rho_{b}\|_{op}$. 
+% The final step follows from the initial conditions on $\|d_{a} \rho_{a}\|_{op}, \|d_{b} \rho_{b}\|_{op}$. 
+In the third line we used that $Z$ is tracless; in the last line we used our initial conditions on $\rho$; the last step was by Cauchy-Schwarz. 
 \end{proof}
 
 The off-diagonal blocks $\{\nabla^{2}_{ba} F\}$ are only slightly more difficult as we need the following on bipartite marginals:
@@ -943,6 +947,7 @@ The off-diagonal blocks $\{\nabla^{2}_{ba} F\}$ are only slightly more difficult
 For $\samp \in \R^{nD}$ and perturbation $\delta \in \Sym$ with $\|\delta\|_{op} \leq \frac{1}{20}$, if $\samp' = (e^{\delta})_c \samp$ for $c \in \{a,b\}$ we have 
 %$\{\samp'_{i} := (e^{\delta})_{c} \samp_{i} \}$ for $c \in \{a,b\}$:
 \[ \sup_{Y \in \Sym_{d_{a}}^{0}, Z \in \Sym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq 4.5 \|\delta\|_{op} \sup_{Y \in \Sym_{d_{a}}, Z \in \Sym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}}        \]
+Note that in the LHS, $Y,Z$ are traceless, whereas on the RHS they are general symmetric matrices. 
 %\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 4.5 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}    \]
 \end{lemma}
 \begin{proof}
@@ -951,7 +956,7 @@ By taking adjoints, we can assume w.l.o.g. that $c = b$. Let $R : \mat(d_{b}) \t
 \[ |\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle| = |\langle \rho_{\samp}^{(ab)}, Y \otimes (R(Z) - Z) \rangle|  \]
 The subspace $\Sym_{d_{b}}^{0}$ is not invariant under $R$, but we show $R \approx I$. Let $\delta' := (1+\eta) e^{\delta} - I$. 
 \[ \|R(Z) - Z\|_{F} \leq 2 \|\delta' Z\|_{F} + \|\delta' Z \delta'\|_{F} \leq (2 \|\delta'\|_{op} + \|\delta'\|_{op}^{2}) \|Z\|_{F}    \]
-So we complete the proof by definition of \CF{write out words} $\sup$ on LHS vs RHS, and $\|\delta\|_{op} \leq \frac{1}{20}$ by the same calculation as in \ref{atoaaRobustness}. 
+So we complete the proof using the fact that $Y,Z$ are traceless on the LHS of the inequality, and $\|\delta\|_{op} \leq \frac{1}{20}$ by the same calculation as in \ref{atoaaRobustness}. 
 \end{proof}
 
 \begin{lemma} \label{ctoabRobustness}
@@ -960,15 +965,15 @@ For input $\samp \in \R^{nD}$ and perturbation $\|\delta\|_{op} \leq \frac{1}{20
 %\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 19 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}    \]
 \end{lemma}
 \begin{proof}
-Let $c_{0}$ be the \CF{write out} $\sup$ on the LHS and $c$ be the $\sup$ on the RHS. Define $\eta$ for normalization $\|(e^{\delta})_{c} \samp\|_{2}^{-1} =: (1+\eta) \|\samp\|_{2}^{-2}$, and let $\delta' := (1+\eta) e^{2 \delta} - I_{c}$. We will use a similar decomposition to lemma \ref{btoaaRobustness}, so first assume $Y,Z \succeq 0, \|Y\|_{F} = \|Z\|_{F} = 1$:
+Define $\eta$ for normalization $\|(e^{\delta})_{c} \samp\|_{2}^{-1} =: (1+\eta) \|\samp\|_{2}^{-2}$, and let $\delta' := (1+\eta) e^{2 \delta} - I_{c}$. We will use a similar decomposition to lemma \ref{btoaaRobustness}, so first assume $Y,Z \succeq 0, \|Y\|_{F} = \|Z\|_{F} = 1$:
 %\[ \frac{1}{\sqrt{d_{a} d_{b}} } \langle Y, (\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}) Z \rangle = \langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes \delta' \rangle   \]
 \[ |\langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes \delta' \rangle| \leq \langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes |\delta'| \rangle \leq \|\delta'\|_{op} \langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle   \]
-Here we again used that $\rho_{\samp}^{(abc)} \succeq 0$. We cannot bound this by $c_{0}$ as $Y \succeq 0$, but the RHS $c$ is sufficient.  
+Here we again used that $\rho_{\samp}^{(abc)} \succeq 0$. %We cannot bound this by $c_{0}$ as $Y \succeq 0$, but the RHS $c$ is sufficient.  
 To finish the lemma we decompose $Y = Y_{+} - Y_{-}, Z = Z_{+} - Z_{-}$ and bound
-\[ |\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle| \leq c \|\delta'\|_{op} \sum_{s,t \in \{+,-\}} \|Y_{s}\|_{F} \|Z_{t}\|_{F}   \]
+\[ |\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle| \leq \left( \sup_{Y \in \Sym_{d_{a}}, Z \in \Sym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \right) \|\delta'\|_{op} \sum_{s,t \in \{+,-\}} \|Y_{s}\|_{F} \|Z_{t}\|_{F}   \]
 The summation we can bound by Cauchy Schwarz:
 \[ \leq (2\|Y_{+}\|_{F}^{2} + 2\|Y_{-}\|_{F}^{2})^{1/2} (2\|Z_{+}\|_{F}^{2} + 2\|Z_{-}\|_{F}^{2})^{1/2} = 2 \|Y\|_{F} \|Z\|_{F}     \]
-Using the definition of $c,c_{0}$, as well as the same calculation from \ref{btoaaRobustness} $\|\delta\|_{op} \leq .05 \implies \|\delta'\| \leq 9.5 \|\delta\|_{op}$; we get the lemma. 
+Using the the fact that the LHS is the $\sup$ over traceless matrices, as well as the same calculation from \ref{btoaaRobustness} using the condition $\|\delta\|_{op} \leq .05 \implies \|\delta'\| \leq 9.5 \|\delta\|_{op}$; we get the lemma. 
 \end{proof}
 
 We need the following to translate to statements on the Hessian:
@@ -1003,8 +1008,8 @@ Recall the definition of a quadratic form of the Hessian:
 \[ \langle Z, (\nabla^{2} f) Z \rangle = \langle Z, (\nabla^{2} F) Z \rangle + \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle     \]
 \[ = \sum_{a} \langle Z_{a}, (\nabla^{2}_{aa} F) Z_{a} \rangle + \sum_{a \neq b} \langle Z_{a}, (\nabla^{2}_{ab} F) Z_{b} \rangle - \left( \sum_{a} \sqrt{d_{a}} \langle \rho^{(a)}, Z_{a} \rangle  \right)^{2}       \]
 Let $\{\samp'_{i} := e^{\delta} \samp\}$. Then by $\ref{diagRobustness}$ we have a bound on the diagonal blocks; by $\ref{offdiagRobustness}$ we have a bound on the off-diagonal blocks; and by $\ref{rankoneRobustness}$ we have a bound on the rank-one term. 
-\[ \langle Z, (\nabla^2 f_{\samp'} - \nabla^{2} f_{\samp}) Z \rangle \leq \|\delta\|_{op} \left( 11 \sum_{a} \|Z_{a}\|_{F}^{2} + 21 \sum_{a \neq b} \|Z_{a}\|_{F} \|Z_{b}\|_{F} + 26 k \|Z\|^{2} \right)   \]
-\[ \leq (11 + 21(k-1) + 26 k) \|\delta\|_{op} \|Z\|^{2}    \]
+\[ \langle Z, (\nabla^2 f_{\samp'} - \nabla^{2} f_{\samp}) Z \rangle \leq \|\delta\|_{op} \left( 11 \sum_{a} \|Z_{a}\|_{F}^{2} + 21 \sum_{a \neq b} \|Z_{a}\|_{F} \|Z_{b}\|_{F} + 1.5 k \|Z\|^{2} \right)   \]
+\[ \leq (11 + 21(k-1) + 1.5 k) \|\delta\|_{op} \|Z\|^{2}    \]
 Note that this also gives a spectral upper bound for $\nabla^{2} f_{\samp'}$. 
 %\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s? Also the constant is $50 k$ now, yay for better constants!}\CF{yay!}
 \end{proof}
@@ -1390,45 +1395,43 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 
 
 \section{Pisier's proof of expansion}\label{sec:pisier}
-\CF{this section should be modified to be more free standing, i.e. not refer to things "above"}
-We have shown above that the diagonal blocks $\nabla^{2}_{aa} f \approx I$ \CF{ I got rid of the $1/{d_a}$ factor to reflect \cref{lem:hessian}, and changed $I_{a}$ to $I$ because it's an $I$ on matrices not $\CC^{d_a}$, we should figure out how to denote it properly at some point}. Therefore to show strong convexity we would like to bound the off-diagonal blocks \CF{pick better letters for following expression}
-\[ \forall X \perp I_{a},Y \perp I_{b}:  \langle \nabla^{2}_{ab} f, X \otimes Y \rangle \leq \lambda \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}}   \]
-\CF{based on new convention (see \cref{dfn:g-convexity,lem:hessian}) we may want to omit the denominator $\sqrt{d_{a} d_{b}}$ now.} \AR{I think it makes sense to implement our new notational convention in the corollary we use, but this proof is more clear if it's about standard Gaussian imo} Pisier's method of proof uses the trace method along with Gaussian concentration in Banach spaces.
+We restate the theorem in language closer to Pisier's original:
 
-\begin{theorem}
+% Appendix - \url{https://arxiv.org/abs/1209.2059}
+% Theorem 16.6 - \url{https://arxiv.org/pdf/1101.4195.pdf}
+%\CF{at some point include a sentence about the setting of $\alpha_i$, maybe in the main body}
+%\CF{choose different letter for $n$}
+\begin{theorem} \label{thm:Pisier-expansion}
+Let $\Pi: \mat(m) \to \mat(m)$ denote the projection onto the traceless matrices, and $Y$ a tuple of i.i.d. standard Gaussians in $\mat(n,m)$. There are constants $c,C > 0$ such that for all $m \leq n$ we have 
+\[ \left\| \left(\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i}\right) \circ \Pi \right\|_{op} \leq C t^{2} \|\alpha\|_{2} \left( \E \|Y\|_{op} \right)^{2} \]
+with probability at least $ 1- t^{-c(m+n)}$. 
+\end{theorem}
+
+The relation to our desired expansion result follows from the following: 
+\[ Y \otimes Y vec(Z \in \mat(m)) = vec( Y_{i}^{*} Z Y_{i})      \]
+Theorem \ref{thm:hess-pisier} then follows as a corollary by choosing $\alpha \propto \vec{1}$ and standard results from Gaussian concentration. The proof of \ref{thm:Pisier-expansion} proceeds by a symmetrization trick, followed by the trace method. We will first state the necessary concentration results and then give the proof. Our setting required the result on rectangular matrices with strong error bounds, but we claim no originality.  
+
+\begin{theorem} \cite{P86}
 We denote a random Gaussian matrix $Y \in \R^{m \times n}$ (for $m < n$) with $Y_{ij} \sim \mathcal{N}(0,1)$, we have the following bound
 \[ \E \|Y\|_{op} \leq \sqrt{m} + \sqrt{n} \]
 \end{theorem}
 
-%
-\AR{cite Theorem 1.5 in https://link.springer.com/chapter/10.1007/BFb0076302}
-\begin{theorem} [Pisier]
+
+\begin{theorem} \cite{P86}
 Let $Y$ be a standard Gaussian in a separable Banach space with norm $\|\cdot\|$. Then $\|Y\|$ is subGaussian with parameter $\sigma^{2} := \sup \{ \E \langle Y, \xi \rangle^{2} \mid \|\xi\|_{*} \leq 1 \}; $ that is
 \[ \Pr [ | \|Y\| - \E \|Y\| | \geq t ] \leq \exp \left( - \frac{\Omega(t^{2})}{\sigma^{2}} \right).   \]
-\end{theorem}
-
-\begin{corollary}\CF{If $Y$ is a blah blah blah then}
+Another equivalent definition of sub-Gaussianity is
 \[ \forall p \geq 2: (\E \|Y\|^{p})^{\frac{1}{p}} \leq \E \|Y\| + O \left( \sqrt{\frac{p}{\sigma^{2}}} \right)   \]
-\end{corollary}
+\end{theorem}
 
 \begin{theorem}[Non-commutative H\"older inequality]\label{thm:holder}
 For $p = 2^{m}$, we have the following (Holder's type) inequality
 \[ |\tr[\prod_{i=1}^{p} A_{i}]| \leq \prod_{i=1}^{p} \|A_{i}\|_{p}   \]
 \end{theorem}
-\begin{proof}
-\AR{Tao notes} Done by induction. Note if $A$ are Hermitian, there is a simple tensor trick which allows us to prove the above for all $p \in \mathbb{N}$.
-\end{proof}
 
-% Appendix - \url{https://arxiv.org/abs/1209.2059}
-% Theorem 16.6 - \url{https://arxiv.org/pdf/1101.4195.pdf}
-\CF{at some point include a sentence about the setting of $\alpha_i$, maybe in the main body}
-%\CF{choose different letter for $n$}
-\begin{theorem}
-Let $\Pi: \mat(m) \to \mat(m)$ denote the projection onto the traceless matrices, and $Y$ a tuple of i.i.d. standard Gaussians in $\mat(n,m)$. There are constants $c,C > 0$ such that for all $m \leq n$ we have 
-\[ \left\| \left(\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i}\right) \circ \Pi \right\|_{op} \leq C t^{2} \|\alpha\|_{2} \left( \E \|Y\|_{op} \right)^{2} \]
-with probability at least $ 1- t^{-c(m+n)}$. 
-\end{theorem}
-\begin{proof}
+
+
+\begin{proof} [Proof of \ref{thm:Pisier-expansion}]
 We first begin by a standard symmetrization trick to linearize: if $Y$ is a standard Gaussian on $\mat(n,m)$, then by a straightforward calculation $\E (Y \otimes Y)\circ \Pi = 0$.
 
 %\[ \E (Y \otimes Y)\circ \Pi = vec(I_{n}) vec(I_{m})^{*} (I - \Pi) = 0  \]
@@ -1478,12 +1481,17 @@ Now we choose $C\sqrt{p} \leq \E \|Y\|_{op} = \sqrt{m} + \sqrt{n}$, i.e. $p = \l
 The statement follows by $m \leq n$. 
 \end{proof}
 
+%\CF{this section should be modified to be more free standing, i.e. not refer to things "above"}
+%We have shown above that the diagonal blocks $\nabla^{2}_{aa} f \approx I$ \CF{ I got rid of the $1/{d_a}$ factor to reflect \cref{lem:hessian}, and changed $I_{a}$ to $I$ because it's an $I$ on matrices not $\CC^{d_a}$, we should figure out how to denote it properly at some point}. Therefore to show strong convexity we would like to bound the off-diagonal blocks \CF{pick better letters for following expression}
+%\[ \forall X \perp I_{a},Y \perp I_{b}:  \langle \nabla^{2}_{ab} f, X \otimes Y \rangle \leq \lambda \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}}   \]
+%\CF{based on new convention (see \cref{dfn:g-convexity,lem:hessian}) we may want to omit the denominator $\sqrt{d_{a} d_{b}}$ now.} \AR{I think it makes sense to implement our new notational convention in the corollary we use, but this proof is more clear if it's about standard Gaussian imo} Pisier's method of proof uses the trace method along with Gaussian concentration in Banach spaces.
 
-\begin{corollary}
-For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our $n$ samples give Kraus operators of the form $\frac{1}{\sqrt{nD}} Y$, and our off-diagonal operator is
-\[ \sum_{i=1}^{nD/d_{a}d_{b}} \frac{1}{nD} Y_{i} \otimes Y_{i}   \]
-The norm $\|\cdot\|_{0}$ on its restriction to $\Sym_{d_{b}}^{0} \to \Sym_{d_{a}}^{0}$ is less than the quantity in the theorem, which is on the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}}$ whp, so for constant expansion it suffices that $nD \gg \max_{a} d_{a}^{2}$
-\end{corollary}
+
+%\begin{corollary}
+%For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our $n$ samples give Kraus operators of the form $\frac{1}{\sqrt{nD}} Y$, and our off-diagonal operator is
+%\[ \sum_{i=1}^{nD/d_{a}d_{b}} \frac{1}{nD} Y_{i} \otimes Y_{i}   \]
+%The norm $\|\cdot\|_{0}$ on its restriction to $\Sym_{d_{b}}^{0} \to \Sym_{d_{a}}^{0}$ is less than the quantity in the theorem, which is on the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}}$ whp, so for constant expansion it suffices that $nD \gg \max_{a} d_{a}^{2}$
+%\end{corollary}
 
 
 \section{Old stuff from strong convexity section}
