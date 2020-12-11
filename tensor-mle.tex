@@ -1271,7 +1271,7 @@ In this section we prove that the flip-flop algorithms for the matrix and tensor
 \item\label{it:flip-flop step 1} Set $\Theta_a = I_a$ for each $a \in [k]$.
 \item\label{it:flip-flop step 2} For $t=1,\dots,T = \poly(D, b) \cdot \log(1/\eps)$, repeat the following:
 \begin{itemize}
-\item Compute each component of the gradient $\nabla_a := \nabla_a f_{\samp}(\Theta_1, \ldots, \Theta_k)$ of $\nabla f_{\samp}(\Theta_1, \ldots, \Theta_k)$ and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest. 
+\item Compute each component of the gradient $\nabla f_{\samp}(\Theta_1, \ldots, \Theta_k)$, denoting $\nabla_a := \nabla_a f_{\samp}(\Theta_1, \ldots, \Theta_k)$, and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest. 
 \item
 If $\norm{\nabla_a}_F < \eps/k$, output $\left( \bigotimes_{a =1}^k \Theta_a \right)^{-1}$ and return.
 % S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
@@ -1349,8 +1349,43 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 \end{proof}
 
 \begin{lemma}[Descent Lemma]
-
+	If $\Theta, \Upsilon$ are successive scalings from the flip-flop algorithm and $\norm{\nabla f_x(\Theta)}_F \leq 1$, then we have:
+	$$ f_x(\Upsilon) \leq f_x(\Theta) - \dfrac{1}{6k} \cdot \norm{\nabla f_x(\Theta)}_F^2 $$
 \end{lemma}
+
+\RMO{are we going to assume that $d_1 \geq d_2 \geq \cdots \geq d_k$?}
+
+\begin{proof}
+	Let 
+	$$\rho := \dfrac{\left( \bigotimes_{j=1}^k \Theta_j \right) \cdot \sum_{i=1}^n x_i x_i^\dagger}{\exp(f_x(\Theta))}.$$
+	Additionally, let $a \in [k]$ be such that $\nabla_a := \nabla_a f_x(\Theta)$ is largest. As $\Upsilon$ is the successive scaling, we have that $\Upsilon_b = \Theta_b$ when $b \neq a$ and 
+	$$ \Upsilon_a = \det(\rho^{(a)})^{1/d_a} \cdot (\rho^{(a)})^{-1} \cdot \Theta_a = \det(d_a \cdot \rho^{(a)})^{1/d_a} \cdot (d_a \cdot \rho^{(a)})^{-1} \cdot \Theta_a. $$
+	In particular, the above means that we can write $\bigotimes_{j=1}^k \Upsilon_j$ in the following way:
+	$$ \bigotimes_{j=1}^k \Upsilon_j = \det(d_a \cdot \rho^{(a)})^{1/d_a} \cdot E_{(a)} \cdot \bigotimes_{j=1}^k \Theta_j $$
+	where $E_{(a)} = I_1 \otimes \cdots \otimes I_{a-1} \otimes (d_a \cdot \rho^{(a)})^{-1} \otimes I_{a+1} \otimes \cdots \otimes I_k$.
+	Hence, we have:
+	\begin{align*}
+		f_x(\Upsilon) &= \log \sum_{i=1}^n \langle x_i , \bigotimes_{j=1}^k \Upsilon_j x_i \rangle \\
+		&= \log\left(\tr\left[ \bigotimes_{j=1}^k \Upsilon_j \cdot  \sum_{i=1}^n x_i x_i^\dagger  \right]\right) \\ 
+		&= \log\left(\tr\left[ \det(d_a \cdot \rho^{(a)})^{1/d_a} \cdot E_{(a)} \cdot \bigotimes_{j=1}^k \Theta_j \cdot  \sum_{i=1}^n x_i x_i^\dagger  \right]\right) \\
+		&= \log\left(\det(d_a \cdot \rho^{(a)})^{1/d_a} \right) +  \log\left(\tr\left[ \cdot E_{(a)} \cdot \bigotimes_{j=1}^k \Theta_j \cdot  \sum_{i=1}^n x_i x_i^\dagger  \right]\right) \\
+		&= \log\left(\det(d_a \cdot \rho^{(a)})^{1/d_a} \right) +  \log\left(\tr\left[ E_{(a)} \cdot \rho \right] \cdot \exp(f_x(\Theta)) \right) \\
+		&= f_x(\Theta) + \frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)})  +  \log\left(\tr\left[ E_{(a)} \cdot \rho \right] \right) \\
+		&= f_x(\Theta) + \frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)})  +  \log\left(\tr\left[ (d_a \rho^{(a)})^{-1} \cdot \rho^{(a)} \right] \right) \\
+		&= f_x(\Theta) + \frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)})
+	\end{align*}
+	Lemma 5.1 from~\cite{GGOW19} states that for any $d$-dimensional PSD matrix $Z$ of trace $d$, the following inequality holds:
+	$$ \log\det(Z) \leq \max\left\{- \dfrac{\norm{Z - I_d}_F^2}{6}, - \dfrac{1}{6} \right\}. $$
+	Since $\tr \rho^{(a)} = 1$, if $\norm{d_a \rho^{(a)} - I_a}_F \leq 1$ we obtain that:
+	\begin{align*}
+		\frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)}) &\leq - \dfrac{\norm{d_a \rho^{(a)} - I_a}_F^2}{6 d_a} \\
+		&= - \dfrac{\norm{\sqrt{d_a} \rho^{(a)} - \frac{1}{\sqrt{d_a}} I_a}_F^2}{6} = - \dfrac{\norm{\nabla_a}_F^2}{6} \leq - \dfrac{1}{6k} \cdot \norm{\nabla f_x(\Theta)}_F^2
+	\end{align*}
+	If $\norm{d_a \rho^{(a)} - I_a}_F > 1$, we have
+	\begin{align*}
+		\frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)}) &\leq - \dfrac{1}{6 d_a}  \leq - \dfrac{1}{6d_a} \cdot \norm{\nabla f_x(\Theta)}_F^2
+	\end{align*}
+\end{proof}
 
 \RMO{Initial Conditions + descent lemma imply convergence of flip-flop via \cref{lem:descent-sublevel-set} and \cref{lem:convex-ball}}
 
