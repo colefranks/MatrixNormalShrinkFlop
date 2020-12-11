@@ -59,6 +59,7 @@
 \newcommand\PD{\operatorname{PD}}
 \newcommand\Herm{\operatorname{Herm}}
 \newcommand\Sym{\mathcal{S}}
+\newcommand\SPD{\mathcal{P}}
 
 \newcommand\samp{x}
 
@@ -111,7 +112,7 @@ Polishing:
 \begin{enumerate}
 \item Akshay's note on simplifying the proof of \cref{thm:tensor-convexity}: \AR{Can rephrase explicitly in terms of $\nabla^{2} F$ and rank-one term. Then \ref{prop:gradient-bound} gives $1-\eps$ lower bound on each diagonal block of $\nabla^{2} F$, \ref{offdiagPisier} gives $\lambda$ bound on each offdiagonal block of $\nabla^{2} F$, and \ref{prop:gradient-bound} once again gives $k \eps^{2}$ bound on whole rank-one term.  }
 \item \AR{Can improve the strong convexity stuff by a factor of two by using the projection to traceless on both sides of the inner product}
-\item \CF{for the readers' sake some justification is needed for why perturbing $\samp$ this is the same as considering the Hessian of our function at another point in $\PD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
+\item \CF{for the readers' sake some justification is needed for why perturbing $\samp$ this is the same as considering the Hessian of our function at another point in $\SPD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
 \end{enumerate}
 
 }
@@ -195,7 +196,6 @@ To handle the undersampled case, we also introduce a regularized estimator that 
 \CF{then some discussion of methods, numerics}
 
 \subsection{Notation}
-\CF{temporary, or perhaps move to section.}
 \begin{itemize}
 \item Number of samples $n$, dimensions $d_1\leq \dots \leq d_k$. $D$ for product of these. \CF{can we just assume $d_i$'s sorted like I have here? I want to avoid writing min everywhere.}
 %\item $X$ for the tensor random variable, $\samp_1, \dots, \samp_n$ for each , $\samp = (\samp_1, \dots, \samp_n)$ for the random tuple of samples. $\rho = \samp \samp^T/\|\samp\|_F^2$. Lower case $x$ for samples.
@@ -206,7 +206,8 @@ To handle the undersampled case, we also introduce a regularized estimator that 
 
 \item $\Sym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite, $\Sym_d^0$ for traceless symmetric, $\PD_d^1$ for $\det=1$ positive definite? 
 \item $\Theta$ for big tensor product pd concentration matrix, $\Theta_a$ for individual pd's.
-\item I'm going to call $\SL = \oplus \SL_{d_i}, \mathcal{P}= \PD^1 = \oplus \PD_{d_i}^1, \Sym = \oplus \Sym_{d_i}^0$. Explain somewhere how $\Sym$ is the tangent space of $\PD$. \MW{Suppressing the $^1$ and $^0$ is a bit confusing I think. Maybe $\operatorname{SPD}$ for $\PD$ with $\det=1$? I still feel that $\Sym$ looks somewhat horrible (with or without subscript, but I am not sure what would be better).}
+\item I'm going to call $\SL = \oplus \SL_{d_i}, \SPD = \oplus \PD_{d_i}^1, \Sym = \oplus \Sym_{d_i}^0$. Explain somewhere how $\Sym$ is the tangent space of $\SPD$. 
+%\MW{Suppressing the $^1$ and $^0$ is a bit confusing I think. Maybe $\operatorname{SPD}$ for $\SPD$ with $\det=1$? I still feel that $\Sym$ looks somewhat horrible (with or without subscript, but I am not sure what would be better).}
 %\item $G = \prod_{a=1}^k \SL_{d_a}$, $P = \prod_{a=1}^k \PD_{d_a}^1$, and $S = \bigoplus_{a=1}^k \Sym_{d_a}^0$.
 
 \item $\nabla, \nabla^2$ for Riemannian Hessians and gradients, $\nabla_a f$, $\nabla^2_{ab} f$ for components. $\nabla f$ means at the identity. $\|\nabla^2_{ab}f\|_{op}:=\|\nabla^2_{ab}f\|_{F\to F}$.
@@ -216,13 +217,13 @@ To handle the undersampled case, we also introduce a regularized estimator that 
 \item $\norm{\cdot}_p$ for the $\ell_p$ norm of vectors and the Schatten-$p$ norm of operators
 \end{itemize}
 
-Before defining our notion of convexity, we introduce some notation.
+
 Let~$\SL_d$ denote the group of matrices with unit determinant.
 Recall that $\PD_d^1$ denotes the positive definite matrices with unit determinant.
 Let $\Sym_d^0$ denote the vector space of $d\times d$ traceless symmetric matrices.
 Then, $A^T e^Z A \in \PD_d^1$ for any $A \in \SL_d$ and $Z\in\Sym_d^0$.
 % Any matrix in $\PD_d^1$ can be written as the matrix exponential of a matrix in $\Sym_d^0$.
-Finally, let $\SL = \oplus \SL_{d_i}, \PD = \oplus \PD_{d_i}^1, \Sym = \oplus \Sym_{d_i}^0$. We denote by $AB=(A_1B_1,\dots,A_kB_k)$ and $e^Z=(e^{Z_1},\dots,e^{Z_k})$ the componentwise product and matrix exponential, respectively, of matrix tuples $A, B \in \SL$ and $Z\in\Sym$.
+Finally, let $\SL = \oplus \SL_{d_i}, \SPD = \oplus \PD_{d_i}^1, \Sym = \oplus \Sym_{d_i}^0$. We denote by $AB=(A_1B_1,\dots,A_kB_k)$ and $e^Z=(e^{Z_1},\dots,e^{Z_k})$ the componentwise product and matrix exponential, respectively, of matrix tuples $A, B \in \SL$ and $Z\in\Sym$.
 
 %By simply setting $\Sigma_2 = I_{d_2}$, it is easy to see that one cannot obtain better MSE rates than $d_1^2/d_2 n$ for estimating $\Sigma_1$ in Frobenius norm. 
 
@@ -233,17 +234,15 @@ Finally, let $\SL = \oplus \SL_{d_i}, \PD = \oplus \PD_{d_i}^1, \Sym = \oplus \S
 \CF{describe model carefully, move some of 2.1 here and flip-flop here}
 
 We consider the tensor normal model, in which samples are drawn according to a normal distribution $\cN(0, \Sigma)$, where the covariance matrix $\Sigma = \bigotimes_{a = 1}^{k} \Sigma_a$ is the Kronecker product of positive definite $d_a\times d_a$ matrices $\Sigma_a$ for $a\in [k]$.
-Let $\Theta$ denote the precision matrix $\Sigma^{-1}$, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$ where $\Theta_a = \Sigma_a^{-1}$.
+Let $\Theta$ denote the precision matrix $\Sigma^{-1}$, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$ where $\Theta_a = \Sigma_a^{-1}$. Thus the log-likelihood for given samples $\samp_1,\dots,\samp_n\in\R^D$ is (up to an additive constant) 
 
-
-We start by giving a precise definition of maximum-likelihood estimation in the tensor normal model.
-Recall that for a centered normal distribution~$\cN(0,\Sigma)$ with $D\times D$ covariance matrix~$\Sigma$, the log-likelihood function for given samples $\samp_1,\dots,\samp_n\in\R^D$ is (up to an additive constant)
 \begin{align*}
-  \ell_{\samp}(\Theta)
+  \ell_{\samp}(\Theta_1, \dots, \Theta_k)
 % = \frac n2 \log \det(\Theta/2\pi) - \sum_{i=1}^n \frac12 \braket{\samp_i, \Theta \samp_i} ~
-  = \frac n2 \log \det \Theta - \frac12 \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i},
+  = \frac {n D} 2 \sum_{a = 1}^k \frac{1}{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i},
 \end{align*}
-where $\Theta$ denotes the precision matrix $\Sigma^{-1}$. \CF{move some flip-flop here}
+
+\CF{move some flip-flop here}
 
 
 \subsection{Results}
@@ -298,17 +297,17 @@ Following \cite{FM20}, and in spirit also \CF{cite weisel}, we use geodesic conv
 
 
 \begin{definition}[Geodesic convexity]\label{dfn:g-convexity}
- Let $\Theta \in \PD$. The \emph{exponential map} $\exp_\Theta:\Sym \to \PD$ at $\Theta$ is defined by 
+ Let $\Theta \in \SPD$. The \emph{exponential map} $\exp_\Theta:\Sym \to \SPD$ at $\Theta$ is defined by 
 $$ \exp_\Theta(Z) = \Theta^{1/2} e^{\sqrt{\vec d}Z} \Theta^{1/2},$$
 where $\sqrt{\vec d} Z$ denotes the componentwise product $(\sqrt{d_1} Z_1, \dots, \sqrt{d_k}Z_k)$.
-The \emph{geodesics} through $\Theta$ are the curves $t\mapsto \exp_\Theta(tZ)$ for $t \in \R$. These curves are in fact geodesics, or ``straight lines,'' through $\Theta$ for a natural Riemannian metric on~$\PD$~\cite{bhatia2009positive}. \CF{fisher-rao}
+The \emph{geodesics} through $\Theta$ are the curves $t\mapsto \exp_\Theta(tZ)$ for $t \in \R$. These curves are in fact geodesics, or ``straight lines,'' through $\Theta$ for a natural Riemannian metric on~$\SPD$~\cite{bhatia2009positive}. \CF{fisher-rao}
 % The length of the curve given by restricting $\gamma$ to $[0,1]$, or $\gamma|_{[0,1]}$, is defined to be $\|Z\|_F$. 
 
 
-A function $f\colon \PD \to \R$ is said to be \emph{geodesically convex} if the function 
-$$\R \to \R, \quad t \mapsto f (\exp_\Theta( tZ))$$ is convex for every $\Theta \in \PD, Z \in \Sym$, i.e. the function $f \circ \gamma$ is convex for every geodesic $\gamma$. Equivalently, assuming $f$ is twice differentiable, $\partial^2_t f(\exp_\Theta(tZ)) \geq 0.$ 
+A function $f\colon \SPD \to \R$ is said to be \emph{geodesically convex} if the function 
+$$\R \to \R, \quad t \mapsto f (\exp_\Theta( tZ))$$ is convex for every $\Theta \in \SPD, Z \in \Sym$, i.e. the function $f \circ \gamma$ is convex for every geodesic $\gamma$. Equivalently, assuming $f$ is twice differentiable, $\partial^2_t f(\exp_\Theta(tZ)) \geq 0.$ 
 
-Further, say $f$ is \emph{$\lambda$-strongly geodesically convex} at a point $\Theta \in \PD$ if, for some (equivalently, for any) $A \in \SL$ with $\Theta = A^T A$ and for any $Z \in \Sym$, we have
+Further, say $f$ is \emph{$\lambda$-strongly geodesically convex} at a point $\Theta \in \SPD$ if, for some (equivalently, for any) $A \in \SL$ with $\Theta = A^T A$ and for any $Z \in \Sym$, we have
 \begin{align*}
   \partial^2_{t=0} f(\exp_\Theta(tZ)) \geq \lambda \norm{Z}^2.
 \end{align*}
@@ -324,7 +323,7 @@ The function $f_{\samp}$ defined in \cref{dfn:function} is geodesically convex~\
 %\MW{Write $\norm Z_F^2 = \sum_i \norm{Z_i}_F^2$???}
 %One might wonder why we define $\exp_\Theta$ using the componentwise multiplication by $\sqrt{\vec d}$. In fact, this is equal to the exponential map for the Riemannian metric $\braket{X, Y}_{\vec d} = \sum_{a=1}^k \frac1{d_a} \tr(X_a Y_a)$. Oddly enough, defining the gradient and Hessian according to this metric, rather than the usual Hilbert-Schmidt inner product, improves the ratio between the norm of the gradient of $f_{\samp}$ and its strong geodesic convexity parameter - a ratio which controls the quality of our statistical estimate. 
 %RMO: Is this oddity simply because of the structure of the g-convex function that we are studying, the fact that it is a function over $\otimes \Theta_i$ and therefore we will get these $d_i$'s naturally? (todo for myself: do these calculations and see)
-We also note that $f$ has a certain useful transformation property or ``equivariance." For all $\Theta \in \PD$, $A \in \SL$, and $\samp=(\samp_1,\dots,\samp_n)$, we have that
+We also note that $f$ has a certain useful transformation property or ``equivariance." For all $\Theta \in \SPD$, $A \in \SL$, and $\samp=(\samp_1,\dots,\samp_n)$, we have that
 \begin{align}\label{eq:equivariance}
   f_{A^{-1} \samp}(A^T \Theta A) = f_{\samp}(\Theta),
 \end{align}
@@ -357,7 +356,7 @@ It is well-known that various optimization algorithms applied to $f_{\samp}$ sat
 To make this discussion more concrete, we now define the gradient formally and state the lemma that we will use to relate the gradient and strong convexity to the distance to the optimizer as in the plan above.
 
 \begin{definition}[Riemannian gradient]
-For $\Theta \in \PD$, the \emph{Riemannian gradient}~$\nabla f(\Theta)$ is the unique element in $\Sym$ such that
+For $\Theta \in \SPD$, the \emph{Riemannian gradient}~$\nabla f(\Theta)$ is the unique element in $\Sym$ such that
 \begin{align*}
   \braket{\nabla f(\Theta), Z} = \partial_{t=0} f(\exp_{\Theta}(Zt))
 \end{align*}
@@ -369,7 +368,7 @@ We often abbreviate $\nabla f = \nabla f(I)$ and write $\nabla f = (\nabla_1 f, 
 \CF{highlight or put in notation}Now say that $B_\kappa(\Theta) = \{ \exp_{\Theta}(Z) : \norm Z \leq \kappa \}$ is the ball of radius $\kappa>0$ about~$\Theta$.
 
 \begin{lemma}\label{lem:convex-ball}
-Let $f\colon \PD\to \R$ be geodesically convex everywhere, and $\lambda$-strongly geodesically convex in a geodesic ball $B_\kappa$ of radius~$\kappa>0$ about~$I$.
+Let $f\colon \SPD\to \R$ be geodesically convex everywhere, and $\lambda$-strongly geodesically convex in a geodesic ball $B_\kappa$ of radius~$\kappa>0$ about~$I$.
 Further assume the Riemannian gradient satisfies $\norm{\nabla f(I)} \leq \eps < \lambda \kappa / 2$.
 Then the sublevel set $\{Z:f(Z) \leq f(I)\}$ is contained in the ball $B_{\eps/\lambda} \subset B_\kappa$, and $f$ has a unique minimizer which is contained in $B_{\eps/\lambda}$.
 \end{lemma}
@@ -433,9 +432,17 @@ Since $Z$ was arbitrary, this shows that $f(\Theta') > f(\Theta)$ for any $\Thet
 \subsection{Our potential function}
 %-----------------------------------------------------------------------------
 
-\CF{perhaps move some of this before the results and some to next section}
 
-It is more convenient to maximize a different function than the log-likelihood $\ell_{\samp}$. We may instead maximize the scale-invariant function
+
+It is more convenient to maximize a different function than the log-likelihood $\ell_{\samp}$. Recall that for a centered normal distribution~$\cN(0,\Sigma)$ with $D\times D$ covariance matrix~$\Sigma$, the log-likelihood function for given samples $\samp_1,\dots,\samp_n\in\R^D$ is (up to an additive constant)
+\begin{align*}
+  \ell_{\samp}(\Theta)
+% = \frac n2 \log \det(\Theta/2\pi) - \sum_{i=1}^n \frac12 \braket{\samp_i, \Theta \samp_i} ~
+  = \frac n2 \log \det \Theta - \frac12 \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i},
+\end{align*}
+where $\Theta$ denotes the precision matrix $\Sigma^{-1}$. \CF{skip this, go straight to the scale-invariant for tensors?}
+
+We may instead maximize the scale-invariant function
 \begin{align}\label{eq:tilde ell}
   \tilde\ell_{\samp}(\Theta) = \frac1D\log\det \Theta - \log \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i}.
 \end{align}
@@ -458,7 +465,7 @@ Since this function is also invariant under rescaling the~$\Theta_a$, we may res
 Thus we are led to minimizing the following function:
 
 \begin{definition}[Objective function]\label{dfn:function}
-Given $n$ samples $\rv = (\samp_1, \dots, \samp_n)$ in $\R^D$, define the function $f_{\samp}\colon\prod_{a=1}^k \PD_{d_a}^1 \to \R$ by
+Given $n$ samples $\rv = (\samp_1, \dots, \samp_n)$ in $\R^D$, define the function $f_{\samp}\colon \SPD \to \R$ by
 \begin{align}\label{eq:projective-likelihood}
   f_{\samp}(\Theta_1,\dots,\Theta_k) = \log \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i}.
 \end{align}
@@ -466,7 +473,7 @@ Let $(\widehat{\Theta}_{\samp,1}, \dots, \widehat{\Theta}_{\samp,k})$ denote the
 \end{definition}
 
 \noindent
-As explained above, $\widehat{\Theta}_{\samp} = \widehat{\Theta}_{\samp,1} \ot \cdots \ot \widehat{\Theta}_{\samp,k}$ is directly related to the maximum likelihood estimator for the tensor normal model (namely, by an known overall multiplicative factor).
+As explained above, $\widehat{\Theta}_{\samp} = \widehat{\Theta}_{\samp,1} \ot \cdots \ot \widehat{\Theta}_{\samp,k}$ is directly related to the maximum likelihood estimator for the tensor normal model (namely, by an known \CF{careful; is not automatically known}) overall multiplicative factor).
 We will often identify $\Theta$ with the tuple $(\Theta_1,\dots,\Theta_k)$, and similarly for $\widehat{\Theta}_{\samp}$.
 When $\samp$ is clear from context we will drop it.
 
@@ -485,7 +492,7 @@ For $\rho \in \PD_D$ and $a\in[k]$, let $\rho^{(a)} \in \PD_{d_a}$ denote the \e
 for all $d_a \times d_a$ matrices $Z$, where $Z_a = (I_1 \ot \cdots \ot I_{a-1} \ot Z \ot I_{a+1} \ot \cdots \ot I_k)$.
 Here and in the following we write $I_a$ for the $d_a\times d_a$ identity matrix. \CF{can I suggest $Z_{(a)}$ instead to avoid the confusion with components below?}
 \end{definition}
-\CF{the above definition conflicts a bit with just referring to $Z_a$ as the $a^{th}$ component, which I have done elsewhere. How to resolve?}
+
 \MW{Explain how to compute in terms of $\samp$. Ref above \cref{cor:vershynin}.}
 
 \begin{lemma}[Riemannian gradient]\label{lem:gradient}
@@ -607,10 +614,9 @@ We now prove our main strong convexity result, \cref{thm:ball-convexity}, in ord
 %\begin{theorem}\label{thm:ball-convexity}There is $c> 0$ such that the following holds: with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, the function $f_{\rv}$ is $1/2$-strongly convex at all points $Z\in \PD$ with $\sum_{i = 1}^n \|\log Z_a\|_{op} < c/k.$\end{theorem}
 
 
-\begin{theorem}\label{thm:ball-convexity} There are constants $C,c>0$ such that the following holds. For $n \geq C k^2 d_1^2/D$, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, $f$ is $1/2$ strongly convex at any point $Z \in \PD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$. \CF{define the ell-infty ball}
+\begin{theorem}\label{thm:ball-convexity} There are constants $C,c>0$ such that the following holds. For $n \geq C k^2 d_1^2/D$, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, $f$ is $1/2$ strongly convex at any point $Z \in \SPD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$. \CF{define the ell-infty ball}
 \end{theorem}
 
-\RMO{In terms of our usual ball the above result will be $B_{k \cdot c}(I)$, right? And if this calculation is correct, can we put the observation that this ball is good? Just to make the statements of our lemmas more uniform.}
 
 %$O\left( \sum_a e^{ - \Omega(nD/d_a)}\right)\leq k e^{- \Omega(nD/d_1)}$
 
@@ -621,7 +627,7 @@ Just like in the Euclidean case, the Hessian is convenient to characterize stron
 %We next show strong convexity \emph{at} the origin, and finally show strong convexity \emph{near} the origin.
 
 \begin{definition}[Riemannian Hessian]
-For $\Theta \in \PD$, the \emph{Riemannian Hessian}~$\nabla^2 f(\Theta)$ is the unique linear operator on $\Sym$ such that
+For $\Theta \in \SPD$, the \emph{Riemannian Hessian}~$\nabla^2 f(\Theta)$ is the unique linear operator on $\Sym$ such that
 \begin{align*}
   \braket{Y, \nabla^2 f(\Theta) Z} = \partial_{s=0} \partial_{t=0} f(\exp_{\Theta}(sY + tZ))
 \end{align*}
@@ -1279,7 +1285,7 @@ The next lemma shows that any descent method which manages to decrease the value
 The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 
 \begin{lemma}\label{lem:descent-sublevel-set}
-	Let $f : \PD \rightarrow \R$ be $\lambda$-strongly geodesically convex in a sublevel set containing $x_0$, $\norm{\nabla f(x_0)}_F^2 \leq 1$ and $\alpha > 0$ be a constant.
+	Let $f : \SPD \rightarrow \R$ be $\lambda$-strongly geodesically convex in a sublevel set containing $x_0$, $\norm{\nabla f(x_0)}_F^2 \leq 1$ and $\alpha > 0$ be a constant.
 	If $\{x_k\}$ is a descent sequence which satisfies 
 	$$ f(x_{k+1}) \leq f(x_k) - \alpha \cdot \norm{\nabla f(x_k)}^2_F $$
 	then in $T$ iterations we must have an element $x_t$ with $t\leq T$ such that
@@ -1343,7 +1349,7 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 	$$ f_x(\Upsilon) \leq f_x(\Theta) - \dfrac{1}{6k} \cdot \norm{\nabla f_x(\Theta)}_F^2 $$
 \end{lemma}
 
-\RMO{are we going to assume that $d_1 \geq d_2 \geq \cdots \geq d_k$?}
+\RMO{are we going to assume that $d_1 \geq d_2 \geq \cdots \geq d_k$?}\CF{Yes, starting at the notation section.}
 
 \begin{proof}
 	Let 
@@ -1517,48 +1523,6 @@ The statement follows by $m \leq n$.
 %\[ \sum_{i=1}^{nD/d_{a}d_{b}} \frac{1}{nD} Y_{i} \otimes Y_{i}   \]
 %The norm $\|\cdot\|_{0}$ on its restriction to $\Sym_{d_{b}}^{0} \to \Sym_{d_{a}}^{0}$ is less than the quantity in the theorem, which is on the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}}$ whp, so for constant expansion it suffices that $nD \gg \max_{a} d_{a}^{2}$
 %\end{corollary}
-
-
-\section{Old stuff from strong convexity section}
-
-
-To prove this, we need the following result on quantum expansion (cf.\ \cref{sec:matrix-normal}).
-The result is essentially Theorem~16.6 in~\cite{pisier2012grothendieck}, together with a standard symmetrization trick (e.g., Proof of Lemma~4.1 in~\cite{P14}).
-
-\MW{Michael continue here.} 
-
-\begin{theorem}[Pisier]
-There is an absolute constant~$C>0$ such that, for all $N,n,m\in\N$ and any scalar sequence $a_i \in \R^N$ the following holds with probability at least $1-1/{\color{red}\poly(???)}$:
-\begin{align*}
-  \norm{ \sum_{i=1}^N \alpha_i (Y_i \ot Y_i) (I - P_m) }_{\op}
-\leq C \norm{\alpha}_2 \left( \E \norm{Y}_{\op} \right)^2,
-\end{align*}
-where $Y_1,\dots,Y_N,Y$ are independent $n\times m$ standard Gaussian random matrices and $P_m$ denotes the orthogonal projection onto multiples of $\sum_{i=1}^m e_i \ot e_i$.
-\MW{Is this a precise version of the Pisier result that we need? I think he proves something like this for complex tensors and square $Y_i$ (i.e., $n=m$). Should add a proof to an Appendix.}
-\end{theorem}
-
-\TODO{Fix for new inner product and dimension issue}
-\CF{Separate lemma for probability of the off diagonal terms; precise version of the below incluing assumptions/probabilities.}
-\begin{corollary} \label{offdiagPisier}
-For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our Kraus operator is of the form $\frac{1}{\sqrt{nD}} Y$, and our off-diagonal operator $\frac{\nabla^{2}_{ab} F}{\sqrt{d_{a} d_{b}}}$ is
-\[ \sum_{k=1}^{nD/d_{a}d_{b}} \frac{1}{nD} Y_{k} \otimes Y_{k}   \]
-
-By the above theorem, the operator norm on the subspace $\perp$ to $(I_{a},I_{b})$ is $O \left( \frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}} \right)$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}))$. So for constant expansion ($\|\nabla^{2}_{ab} F\|_{op} \leq O(1)$, it suffices that $nD \gg \max_{a} d_{a}^{2}$
-\end{corollary}
-
-\CF{The old proof had the following sentence: 
-Now we can again use the high-probability bounds derived above: \TODO{actually cref them}
-\begin{align}\nabla^{2}_{aa} f \in \frac{1 \pm \eps}{d_{a}}; \hspace{5mm} \forall a \neq b: \|\nabla^{2}_{ab}\|_{op} \leq \frac{\lambda}{\sqrt{d_{a} d_{b}}}. \label{eq:expansion-thing}  \end{align}
-This needs to be elaborated.
-}
-
-\CF{motivation for, and statement of, Pisier theorem that is comprehensible from the point of view of our Hessian formulae.}
-
-
-%If $\langle \cdot , \cdot \rangle_P$ is the metric at a point $P$, then the new metric $\langle \cdot, \cdot \rangle_{R,P}$ will be given by
-%$$ \langle X, Y \rangle_{R,P} = \langle R^{1/2} X R^{1/2}, R^{1/2} Y R^{1/2} \rangle_{P}.$$
-
-%At the identity the metric takes the form $\langle X, Y \rangle_R = \tr \sqrt{R} X  \sqrt{R} Y $. In particular the length of the geodesic $t\mapsto \sqrt{P}e^{Xt}\sqrt{P}$ for $t \in [0,1]$ is $\langle X, X \rangle_R$.
 
 \bibliographystyle{alpha}
 \bibliography{refs}
