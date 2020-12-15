@@ -56,9 +56,10 @@
 \newcommand\HH{\mathcal{H}}
 \newcommand\GG{\mathcal{G}}
 \newcommand\SL{\operatorname{SL}}
-\newcommand\PD{\operatorname{PD}}
+\newcommand\PD{\operatorname{P}}
 \newcommand\Herm{\operatorname{Herm}}
 \newcommand\Sym{\mathcal{S}}
+\newcommand\smallSym{S}
 \newcommand\SPD{\mathcal{P}}
 
 \newcommand\samp{x}
@@ -135,8 +136,7 @@ Much research has been devoted to estimating the covariance matrix for the matri
 Even characterizing the existence of the MLE for the matrix and tensor normal model has remained elusive until recently. It was recently noted that the matrix normal and tensor MLEs are equivalent to algebraic problems about a group action called the \emph{left-right action} \CF{cite philipp} and the \emph{tensor action}, respectively. In the computer science literature these two problems are called \emph{tensor} and \emph{operator scaling}, respectively. It was independently pointed out in \CF{cite tyler M} that the Tyler's M estimator for elliptical distributions (which arises as the matrix normal problem under the additional promise that $\Sigma_2$ is diagonal) is a special case of operator scaling. Using the connection to the left-right action, the existence of the matrix normal MLE in terms of $d_1,d_2,n$ was recently characterized in full \CF{cite visu} and was extended to the tensor tensor normal model in \CF{cite michael, visu}. In the context of operator scaling, Gurvits showed much earlier that the flip-flop algorithm converges to the matrix normal MLE whenever it exists \CF{cite gurv}, and later it was shown that the number of flip-flop steps to obtain precision $\eps$ for the tensor and matrix normal model is polynomial in the input size and $1/\eps$ \CF{cite ggow, cite burgisser}. 
 %In the context of tensor scaling, it was shown earlier that the flip-flop algorithm converges to the tensor MLE whenever it exists \CF{cite tensor scaling}. 
 
-In the current literature on matrix normal and tensor models, typically the estimators are assessed using Frobenius or spectral norm between the estimated parameter and the truth. However, neither of these metrics bound statistical distances of interest such as the total variation or Kullback-Leibler divergence between the true distribution and that corresponding to the estimated parameter, or the Fischer-Rao distance. These quantities are affinely invariant, meaning that for any invertible matrix $g$ we have $d(\Sigma, \Sigma') = d(g \Sigma g^T, g \Sigma' g^T)$. \CF{not exactly sure how to write this, but I want it to say that we get the right rates with no assumptions and we use more appropriate metrics. Amusingly, to get from these metrics TO the less useful metrics or vice versa, one needs the condition number assumptions. Also, it appears that the reason that the better metrics aren't being used is that the estimators didn't have the equivariance property.
-}
+%In the current literature on matrix normal and tensor models, typically the estimators are assessed using Frobenius or spectral norm between the estimated parameter and the truth. However, neither of these metrics bound statistical distances of interest such as the total variation or Kullback-Leibler divergence between the true distribution and that corresponding to the estimated parameter, or the Fischer-Rao distance. These quantities are affinely invariant, meaning that for any invertible matrix $g$ we have $d(\Sigma, \Sigma') = d(g \Sigma g^T, g \Sigma' g^T)$. \CF{not exactly sure how to write this, but I want it to say that we get the right rates with no assumptions and we use more appropriate metrics. Amusingly, to get from these metrics TO the less useful metrics or vice versa, one needs the condition number assumptions. Also, it appears that the reason that the better metrics aren't being used is that the estimators didn't have the equivariance property.}
 
 \subsection{Our contribution}
 
@@ -172,7 +172,7 @@ For interesting cases of the tensor normal model such as $d\times d \times d$ te
 
 \CF{I think I'd like to do a better job at gradually defining notation so its clear that these are the right numbers.}
 
-To handle the undersampled case, we also introduce a regularized estimator that is much simpler to compute than the penalized regularizers introduced in \CF{tsilig, sun, zhou}, and empirically has comparable and sometimes better performance. \CF{expand up on this; put it in the bulleted list also?}
+To handle the undersampled case, we also introduce a regularized estimator that is much simpler to compute than the penalized regularizers introduced in \CF{tsilig, sun, zhou}, and empirically has comparable and sometimes better performance to existing regularizers. Our regularizer has a Bayesian interpretation as coming from a Wishart prior for the covariance, and is closer in spirit to the shrinkage estimators considered by \CF{cite Weisel, etc}. \CF{expand up on this; put it in the bulleted list also?}
 
 
 
@@ -196,53 +196,80 @@ To handle the undersampled case, we also introduce a regularized estimator that 
 \CF{then some discussion of methods, numerics}
 
 \subsection{Notation}
+\CF{some aspects of this seem awfully specific to the tensor normal model and maybe could wait until after we define it, or simply merge the two, i.e. "Notation and model"}
+The letter $n$ will denote a number of samples, and $d_1\leq \dots \leq d_k$ will denote sorted dimensions, and we set $D:=\prod_{i = 1}^k d_i$. Let $\PD_d$ denote the positive definite $d\times d$ matrices with unit determinant, and $\PD_d^1$ the subset of $\PD$ with unit determinant. Let $\smallSym_d$ denote the vector space of $d\times d$ symmetric matrices, and $\smallSym^0_d$ the subspace of traceless matrices in $\smallSym_d$, i.e. the tangent space of $\PD_d^1$. Let~$\SL_d$ denote the group of $d\times d$ matrices with unit determinant.
+%Then, $A^T e^Z A \in \PD_d^1$ for any $A \in \SL_d$ and $Z\in\Sym_d^0$.
+% Any matrix in $\PD_d^1$ can be written as the matrix exponential of a matrix in $\Sym_d^0$.
+Let 
+$$\SL = \bigoplus_{a=1}^k \SL_{d_a}, \SPD = \bigoplus_{a = 1}^k \PD_{d_a}^1, \Sym = \bigoplus_{a = 1}^k \smallSym_{d_a}^0.$$ For a $k$-tuple of $A = (A_1, \dots, A_k)$ of matrices, $\|A\|_F^2:=\sum_{i = 1}^k \|A_i\|_F^2$. 
+ We denote by $AB=(A_1B_1,\dots,A_kB_k)$ and $e^Z=(e^{Z_1},\dots,e^{Z_k})$ the componentwise product and matrix exponential, respectively, of matrix tuples $A, B \in \SL$ and $Z\in\Sym$. $I$ will denote an identity matrix, and $I_{a}$ a $d_a\times d_a$ identity matrix. $\langle \cdot, \cdot \rangle$ denotes the standard inner product. $C, c$ denote large (resp. small) absolute constants that change line to line.
+
+
+\CF{further notation to be introduced; delete as is done}
 \begin{itemize}
-\item Number of samples $n$, dimensions $d_1\leq \dots \leq d_k$. $D$ for product of these. \CF{can we just assume $d_i$'s sorted like I have here? I want to avoid writing min everywhere.}
+%\item Number of samples $n$, dimensions $d_1\leq \dots \leq d_k$. $D$ for product of these. 
 %\item $X$ for the tensor random variable, $\samp_1, \dots, \samp_n$ for each , $\samp = (\samp_1, \dots, \samp_n)$ for the random tuple of samples. $\rho = \samp \samp^T/\|\samp\|_F^2$. Lower case $x$ for samples.
 
 \item $\rv$ for the random tuple $(\rv_1, \dots, \rv_n)$, $x$ for the tuple of samples $(x_1, \dots, x_n)$ when no longer random. Think of $\rv$ as $D \times n$ matrix, $\rho = \rv\rv^T,xx^T$ etc. When $x_i$ is a matrix, which unfortunately does happen sometimes, we'll use $x_i^\dagger$ for the matrix transpose (open to suggestions on this one).
 %\item $\braket{\cdot,\cdot}_{\vec d}$ denote modified Hilbert-Schmidt inner products\MW{sadly the corresponding norms look like $\ell_p$ norms},
 \item $f_{\rv}$ for the function in \cref{dfn:function}, mostly drop $\rv$. $\langle \cdot, \cdot \rangle$ is the $\ell_2$ inner product of vectors
 
-\item $\Sym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite, $\Sym_d^0$ for traceless symmetric, $\PD_d^1$ for $\det=1$ positive definite? 
+%\item $\smallSym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite, $\smallSym_d^0$ for traceless symmetric, $\PD_d^1$ for $\det=1$ positive definite? 
 \item $\Theta$ for big tensor product pd concentration matrix, $\Theta_a$ for individual pd's.
-\item I'm going to call $\SL = \oplus \SL_{d_i}, \SPD = \oplus \PD_{d_i}^1, \Sym = \oplus \Sym_{d_i}^0$. Explain somewhere how $\Sym$ is the tangent space of $\SPD$. 
+%\item I'm going to call $\SL = \oplus \SL_{d_i}, \SPD = \oplus \PD_{d_i}^1, \Sym = \oplus \smallSym_{d_i}^0$. Explain somewhere how $\Sym$ is the tangent space of $\SPD$. 
 %\MW{Suppressing the $^1$ and $^0$ is a bit confusing I think. Maybe $\operatorname{SPD}$ for $\SPD$ with $\det=1$? I still feel that $\Sym$ looks somewhat horrible (with or without subscript, but I am not sure what would be better).}
 %\item $G = \prod_{a=1}^k \SL_{d_a}$, $P = \prod_{a=1}^k \PD_{d_a}^1$, and $S = \bigoplus_{a=1}^k \Sym_{d_a}^0$.
 
 \item $\nabla, \nabla^2$ for Riemannian Hessians and gradients, $\nabla_a f$, $\nabla^2_{ab} f$ for components. $\nabla f$ means at the identity. $\|\nabla^2_{ab}f\|_{op}:=\|\nabla^2_{ab}f\|_{F\to F}$.
-\item $C, c$ large (resp. small) constants that change line to line.
+%\item $C, c$ large (resp. small) constants that change line to line.
 \item $\rho^{(a)}$, $\rho^{(ab)}$ for marginals.
-\item $I$ for an identity matrix, $I_a$ for the $d_a \times d_a$ identity matrix
+%\item $I$ for an identity matrix, $I_a$ for the $d_a \times d_a$ identity matrix
 \item $\norm{\cdot}_p$ for the $\ell_p$ norm of vectors and the Schatten-$p$ norm of operators
 \end{itemize}
 
 
-Let~$\SL_d$ denote the group of matrices with unit determinant.
-Recall that $\PD_d^1$ denotes the positive definite matrices with unit determinant.
-Let $\Sym_d^0$ denote the vector space of $d\times d$ traceless symmetric matrices.
-Then, $A^T e^Z A \in \PD_d^1$ for any $A \in \SL_d$ and $Z\in\Sym_d^0$.
-% Any matrix in $\PD_d^1$ can be written as the matrix exponential of a matrix in $\Sym_d^0$.
-Finally, let $\SL = \oplus \SL_{d_i}, \SPD = \oplus \PD_{d_i}^1, \Sym = \oplus \Sym_{d_i}^0$. We denote by $AB=(A_1B_1,\dots,A_kB_k)$ and $e^Z=(e^{Z_1},\dots,e^{Z_k})$ the componentwise product and matrix exponential, respectively, of matrix tuples $A, B \in \SL$ and $Z\in\Sym$.
+
 
 %By simply setting $\Sigma_2 = I_{d_2}$, it is easy to see that one cannot obtain better MSE rates than $d_1^2/d_2 n$ for estimating $\Sigma_1$ in Frobenius norm. 
 
 %=============================================================================
 \section{The tensor and matrix normal models}
 %=============================================================================
-\TODO{In this section, \dots}
-\CF{describe model carefully, move some of 2.1 here and flip-flop here}
 
-We consider the tensor normal model, in which samples are drawn according to a normal distribution $\cN(0, \Sigma)$, where the covariance matrix $\Sigma = \bigotimes_{a = 1}^{k} \Sigma_a$ is the Kronecker product of positive definite $d_a\times d_a$ matrices $\Sigma_a$ for $a\in [k]$.
-Let $\Theta$ denote the precision matrix $\Sigma^{-1}$, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$ where $\Theta_a = \Sigma_a^{-1}$. Thus the log-likelihood for given samples $\samp_1,\dots,\samp_n\in\R^D$ is (up to an additive constant) 
 
+We consider the tensor normal model, in which $X_1, \dots, X_n \in \R^D$ are drawn i.i.d. from the random variable $X$ distributed according to the normal distribution $\cN(0, \Sigma)$, where the covariance matrix $\Sigma = \bigotimes_{a = 1}^{k} \Sigma_a \in \PD_D$ is the Kronecker product of positive definite $d_a\times d_a$ matrices $\Sigma_a$ for $a\in [k]$. Our goal is to estimate the $k$ Kronecker factors $\Sigma_1, \dots, \Sigma_k$ given access to the random tuple $X_1, \dots, X_n$. \CF{maybe the following discussion belongs in the intro}. 
+
+One may think of the random variable $X$ as taking values in the set of $d_1 \times \dots \times d_k$ arrays of real numbers. There are $k$ natural ways to ``flatten" $X$ to a matrix: for example, we may think of it as a $d_1 \times d_2d_3...d_k$ matrix whose column indexed by $(i_2,\dots, i_k)$ is the vector in $\R^{d_1}$ with $i_1^{th}$ entry equal to $X_{i_1, \dots, i_k}$. In an analogous way we may flatten it to a $d_2 \times d_1d_3...d_k$ matrix, and so on. In the tensor normal model, the $d_2d_3\dots d_k$ many columns are each distributed as a Gaussian random vector with covariance proportional to $\Sigma_1$. Similarly the columns of the $d_2 \times d_1d_3...d_k$ flattening has columns proportional to $\Sigma_2$, and so on. As such, the columns of the $a^{th}$ flattening can be used to estimate $\Sigma_a$ up to a scalar. However, doing so na\"ively (e.g. using the sample covariance matrix of the columns) can result in an estimator with very high variance. This is because the columns of the flattenings are not independent. They may be so highly correlated that they effectively constitute only one random sample rather than $d_2\dots d_k$ many. The MLE decorrelates the columns to obtain rates like those one would obtain if the columns were independent.
+
+
+
+The MLE is easier to state in terms of the precision matrices, the inverses of the covariance matrices. Let $\Theta$ denote the precision matrix $\Sigma^{-1}$, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$ where $\Theta_a = \Sigma_a^{-1}$. Given a tuple $\samp$ of samples  $\samp_1,\dots,\samp_n\in\R^D$, up to an additive constant the log likelihood is $
+  \ell_{\samp}(\Theta)
+% = \frac n2 \log \det(\Theta/2\pi) - \sum_{i=1}^n \frac12 \braket{\samp_i, \Theta \samp_i} ~
+  = \frac n2 \log \det \Theta - \frac12 \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i}$, which we can write 
 \begin{align*}
   \ell_{\samp}(\Theta_1, \dots, \Theta_k)
 % = \frac n2 \log \det(\Theta/2\pi) - \sum_{i=1}^n \frac12 \braket{\samp_i, \Theta \samp_i} ~
   = \frac {n D} 2 \sum_{a = 1}^k \frac{1}{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i},
 \end{align*}
+One notes that $\Theta_a$ are not identifiable; we assume $\Theta_a$ have the same determinant in order to ensure identifiability. The maximum likelihood estimator (MLE) for $\Theta_a$ is given by 
+$$\widehat{\Theta}_1, \dots, \widehat{\Theta}_k := \underset{|\Theta_1| = |\Theta_2|= \dots = | \Theta_d|}{ \arg\max} \ell_x(\Theta_1, \dots, \Theta_k).$$
 
-\CF{move some flip-flop here}
+
+
+The flip-flop algorithm has been put forth in \CF{cite dutilleul} to compute the MLE. For simplicity we describe it for the matrix normal model $(k = 2)$, so that $\samp_1, \dots, \samp_n$ can be viewed as $d_1\times d_2$ matrices. Initialize $\overline{\Theta}_a = I_a$, and choose a tolerance $\eps > 0$. 
+\begin{enumerate}
+%\item Normalize $\samp \leftarrow \samp/\|\samp\|$. 
+\item Set $\overline{\Theta}_1 \leftarrow (\frac{1}{n d_2} \sum_{i = 1}^n \samp_i \overline{\Theta}_2 \samp_i^T)^{-1}.$ 
+\item Set $\Upsilon = \frac{1}{n d_1} \sum_{i = 1}^n \samp_i^T \overline{\Theta}_1 \samp_i$.  If $d_F( \Upsilon; \overline{\Theta}_2) > \eps,$ set $\overline{\Theta}_2 \leftarrow \Upsilon^{-1}$ and return to Step 1; else output $\widehat{\Theta}_1, \widehat{\Theta}_2$.
+\end{enumerate}
+
+%View the sample $\samp \in \R^{n D}$ as a $d_1\times \dots \times d_k \times n$ array. 
+
+%\begin{enumerate}\item \item Normalize $\samp \leftarrow \samp/\|\samp\|$.  \item Compute the $k$ different flattenings $M_1,\dots, M_k$ of $\samp$ described above; set $M_1 \leftarrow M_1 \sqrt{\Theta_2 \ot \dots \ot \Theta_k}$ (and analogously for $M_1, \dots, \end{enumerate}
+
+%however it is identifiable if we assume  $\Theta_a$ have the same determinant. 
+
 
 
 \subsection{Results}
@@ -641,7 +668,7 @@ As a block matrix,
   \nabla_{k1}^2 f & \dots & \nabla_{kk}^2 f \\
   \end{bmatrix},
 \end{align*}
-where $\nabla_{ab}^2f$ is an operator from $\Sym_{d_b}^0$ to $\Sym_{d_a}^0$.
+where $\nabla_{ab}^2f$ is an operator from $\smallSym_{d_b}^0$ to $\smallSym_{d_a}^0$.
 \end{definition}
 
 We note that the Riemannian Hessian is symmetric with respect to the inner product~$\braket{\cdot,\cdot}$ on $\Sym$.
@@ -775,7 +802,7 @@ Pisier's actual result is slightly different; \cref{thm:hess-pisier} is essentia
 %\end{corollary}
 
 
-\begin{corollary}\label{cor:off-diag-hess} Let $a,b \in [k]$ with $a < b$. For traceless symmetric matrices $Y \in \Sym^0_{d_a}$, $Z \in \Sym^0_{d_b}$, we have 
+\begin{corollary}\label{cor:off-diag-hess} Let $a,b \in [k]$ with $a < b$. For traceless symmetric matrices $Y \in \smallSym^0_{d_a}$, $Z \in \smallSym^0_{d_b}$, we have 
 %$O \left( \frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}} \right)$  
 
 $$ \langle Y,  \left( \nabla^2_{ab} f_{\rv} \right) Z \rangle
@@ -798,12 +825,12 @@ In particular, for any constant $c>0$ there is $C>0$ such that for $n \geq C k^2
 
 %\CF{akshay defines a notation $\|T\|_0$ for restricting operators to the traceless symmetrics. Maybe we should adopt it here also}
 \begin{proof}
-We proceed to bound the operator norm of $\nabla^2_{ab} f: \Sym^0_{d_b} \to \Sym^0_{d_a}$ for $a \neq b$. Recall from \cref{lem:hessian} that the gradient is defined by
+We proceed to bound the operator norm of $\nabla^2_{ab} f: \smallSym^0_{d_b} \to \smallSym^0_{d_a}$ for $a \neq b$. Recall from \cref{lem:hessian} that the gradient is defined by
 \begin{align}\frac1{\sqrt{d_a d_b}} \langle Y,  \left( \nabla^2_{ab} f_{\rv} \right) Z \rangle
 = \tr \rho^{(ab)} \left( Y \ot Z \right) - \bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr).\label{eq:grad-off-diag}\end{align}
 As a linear map, define the first term to be $T:Z \mapsto \sqrt{d_a d_b} \tr_b \rho^{(a,b)} (I \ot Z)$. The state $\rho^{(a,b)} = \tr_{\overline{\{a,b\}}} \rho$ is given by $\rho^{{a,b}} =  X X^\dagger/\|X\|^2$ where $X$ is viewed as an $n D/{d_a d_b} \times d_a d_b$ matrix. Equivalently, $\rho^{(a,b)}$ is distributed as 
-$$\frac{1}{\sum_{i} \|Y_i\|^2} Y_i Y_i^T$$ where $Y_i$ are $n D/{d_a d_b}$ i.i.d standard Gaussians on $\R^{d_a} \ot \R^{d_b}$. By \cref{thm:hess-pisier} with $2t^2 = \frac {s \sqrt{nD}}{d_a + d_b}$, the operator norm of $T$ restricted to $\Sym^0_{d_b}$ is $O(s n D /2 \sum_i \|Y_i\|^2 )$ 
-with probability $(s \sqrt{nD}/(d_a + d_b))^{ - \Omega(d_a + d_b)} \leq (s \sqrt{nD} /d_b)^{ - \Omega(d_a)}$. The denominator is a sum of $nD$ many i.i.d $\chi$-square random variables, and so is $\Omega(nD)$ with failure probability $e^{ -\Omega(nD)} $ \cite{W19}, so finally we have that the operator norm of $T$ restricted to $\Sym^0_{d_b}$ is $O \left( s/2\right)$.
+$$\frac{1}{\sum_{i} \|Y_i\|^2} Y_i Y_i^T$$ where $Y_i$ are $n D/{d_a d_b}$ i.i.d standard Gaussians on $\R^{d_a} \ot \R^{d_b}$. By \cref{thm:hess-pisier} with $2t^2 = \frac {s \sqrt{nD}}{d_a + d_b}$, the operator norm of $T$ restricted to $\smallSym^0_{d_b}$ is $O(s n D /2 \sum_i \|Y_i\|^2 )$ 
+with probability $(s \sqrt{nD}/(d_a + d_b))^{ - \Omega(d_a + d_b)} \leq (s \sqrt{nD} /d_b)^{ - \Omega(d_a)}$. The denominator is a sum of $nD$ many i.i.d $\chi$-square random variables, and so is $\Omega(nD)$ with failure probability $e^{ -\Omega(nD)} $ \cite{W19}, so finally we have that the operator norm of $T$ restricted to $\smallSym^0_{d_b}$ is $O \left( s/2\right)$.
 %By \cref{eq:expansion-thing} (\CF{which needs to actually be proved}), with probability $\CF{good}$, the map $Z \to \tr_2 \rho^{(a,b)} (I \ot Z)$ has operator norm at most $\lambda/\sqrt{d_a d_b}$ restricted to traceless $Z$. 
 The second term of \cref{eq:grad-off-diag} defines the quadratic form 
 $$Y,Z \mapsto \sqrt{d_a d_b} (\tr Y \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr).$$ 
@@ -830,7 +857,7 @@ We first apply the inequality from \cref{cor:off-diag-hess} to the upper-left tw
   \end{bmatrix}.\end{align*}
  Applying this for all $a < b$ we find that 
  $$\nabla^2 f  \succeq \bigoplus_{a \in [k]} \nabla^2_{aa} f - (k - 1) (\lambda + \eps^2) I_{d_a}.$$ 
-The last thing we need is a lower bound on $\nabla^2_{aa} f.$ This operator is again a sum of two terms, the latter of which we have already analyzed. The former defines the quadratic form $Y \mapsto d_a \tr \rho^{(a)} Y^2$ on $\Sym^0_{d_a}$, and using the bound $\|\rho^{(a)} - I_{d_a}/{d_a}\|_{op} \leq \eps/d_a$ one checks that $\tr \rho^{(a)} Y^2 \in \frac{1 \pm \eps }{d_a} \tr Y^2 = \frac{1 \pm \eps }{d_a} \|Y\|_{F}^2. $ Combining this bound with the bound on the second term, we have $\nabla^2_{aa} f \succeq (1 -  \eps  - \eps^2 ) I_{d_a}$. Plugging this into the direct sum, we have $\nabla^2 f \succeq (1  - \eps - \eps^2  - (k - 1) (\lambda + \eps^2)) I$. Reversing the inequalities in all the steps also yields $\nabla^2 f \preceq (1  + \eps + \eps^2  + (k - 1) (\lambda + \eps^2))$.
+The last thing we need is a lower bound on $\nabla^2_{aa} f.$ This operator is again a sum of two terms, the latter of which we have already analyzed. The former defines the quadratic form $Y \mapsto d_a \tr \rho^{(a)} Y^2$ on $\smallSym^0_{d_a}$, and using the bound $\|\rho^{(a)} - I_{d_a}/{d_a}\|_{op} \leq \eps/d_a$ one checks that $\tr \rho^{(a)} Y^2 \in \frac{1 \pm \eps }{d_a} \tr Y^2 = \frac{1 \pm \eps }{d_a} \|Y\|_{F}^2. $ Combining this bound with the bound on the second term, we have $\nabla^2_{aa} f \succeq (1 -  \eps  - \eps^2 ) I_{d_a}$. Plugging this into the direct sum, we have $\nabla^2 f \succeq (1  - \eps - \eps^2  - (k - 1) (\lambda + \eps^2)) I$. Reversing the inequalities in all the steps also yields $\nabla^2 f \preceq (1  + \eps + \eps^2  + (k - 1) (\lambda + \eps^2))$.
 \end{proof}
 
 
@@ -918,7 +945,7 @@ The term in parenthesis is shown by induction, and in the inequality we used $\|
 \end{proof}
 
 \begin{corollary} \label{rankoneRobustness}
-For input $x \in \R^{nD}$ such that \AR{I think its clearer to use $\forall$, but I can change it if you don't like} $\forall a \in [k]: \|d_{a} \rho_{\samp}^{(a)} - Tr[\rho_{\samp}] I_{a}\|_{op} \leq \frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a} \in \mat(d_{a}))_{a}$ such that $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
+For input $x \in \R^{nD}$ such that for all $a \in [k]$ such that $\|d_{a} \rho_{\samp}^{(a)} - Tr[\rho_{\samp}] I_{a}\|_{op} \leq \frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a} \in \mat(d_{a}))_{a}$ such that $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
 \[ \|(\nabla^{2} f_{\samp'} - \nabla^{2} F_{\samp'}) - (\nabla^{2} f_{\samp} - \nabla^{2} F_{\samp})\|_{op} \leq 1.5 k \|\delta\|_{op}     \]
 \end{corollary}
 \begin{proof}
@@ -941,7 +968,7 @@ The off-diagonal blocks $\{\nabla^{2}_{ba} F\}$ are only slightly more difficult
 
 \begin{lemma} \label{btoabRobustness}
 For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{c})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := (e^{\delta})_{c} \samp$, then for $c \in \{a,b\}$ we have
-\[ \sup_{Y \in \Sym_{d_{a}}^{0}, Z \in \Sym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq 4.5 \|\delta\|_{op} \sup_{Y \in \Sym_{d_{a}}, Z \in \Sym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}}        \]
+\[ \sup_{Y \in \smallSym_{d_{a}}^{0}, Z \in \smallSym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq 4.5 \|\delta\|_{op} \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}}        \]
 Note that in the LHS, $Y,Z$ are traceless, whereas on the RHS they are general symmetric matrices. 
 %\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 4.5 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}    \]
 \end{lemma}
@@ -949,14 +976,14 @@ Note that in the LHS, $Y,Z$ are traceless, whereas on the RHS they are general s
 %Recall from the discussion after $\ref{convexRobustness}$ that $\langle Y, (\nabla^{2}_{ab} F) Z \rangle = \sqrt{d_{a} d_{b}} \langle \rho^{(ab)}, Y \otimes Z \rangle$. 
 By taking adjoints, we can assume w.l.o.g. that $c = b$. Let $R : \mat(d_{b}) \to \mat(d_{b})$ be defined as $R(Z) := (1+\eta)^{2} e^{\delta} Z e^{\delta}$ for $\eta$ defined by our normalization $\|(e^{\delta})_{b} \samp\|_{2}^{-1} =: (1+\eta) \|\samp\|_{2}^{-1}$.
 \[ |\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle| = |\langle \rho_{\samp}^{(ab)}, Y \otimes (R(Z) - Z) \rangle|  \]
-The subspace $\Sym_{d_{b}}^{0}$ is not invariant under $R$, but we show $R \approx I$. Let $\delta' := (1+\eta) e^{\delta} - I$. 
+The subspace $\smallSym_{d_{b}}^{0}$ is not invariant under $R$, but we show $R \approx I$. Let $\delta' := (1+\eta) e^{\delta} - I$. 
 \[ \|R(Z) - Z\|_{F} \leq 2 \|\delta' Z\|_{F} + \|\delta' Z \delta'\|_{F} \leq (2 \|\delta'\|_{op} + \|\delta'\|_{op}^{2}) \|Z\|_{F}    \]
 So we complete the proof using the fact that $Y,Z$ are traceless on the LHS of the inequality, and $\|\delta\|_{op} \leq \frac{1}{20}$ by the same calculation as in \ref{atoaaRobustness}. 
 \end{proof}
 
 \begin{lemma} \label{ctoabRobustness}
 For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{c})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := (e^{\delta})_{c} \samp$, then for $c \not\in \{a,b\}$ we have
-\[ \sup_{Y \in \Sym_{d_{a}}^{0}, Z \in \Sym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq 19 \|\delta\|_{op} \sup_{Y \in \Sym_{d_{a}}, Z \in \Sym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}}        \]
+\[ \sup_{Y \in \smallSym_{d_{a}}^{0}, Z \in \smallSym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq 19 \|\delta\|_{op} \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}}        \]
 %\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 19 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}    \]
 \end{lemma}
 \begin{proof}
@@ -965,7 +992,7 @@ Define $\eta$ for normalization $\|(e^{\delta})_{c} \samp\|_{2}^{-1} =: (1+\eta)
 \[ |\langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes \delta' \rangle| \leq \langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes |\delta'| \rangle \leq \|\delta'\|_{op} \langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle   \]
 Here we again used that $\rho_{\samp}^{(abc)} \succeq 0$. %We cannot bound this by $c_{0}$ as $Y \succeq 0$, but the RHS $c$ is sufficient.  
 To finish the lemma we decompose $Y = Y_{+} - Y_{-}, Z = Z_{+} - Z_{-}$ and bound
-\[ |\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle| \leq \left( \sup_{Y \in \Sym_{d_{a}}, Z \in \Sym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \right) \|\delta'\|_{op} \sum_{s,t \in \{+,-\}} \|Y_{s}\|_{F} \|Z_{t}\|_{F}   \]
+\[ |\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle| \leq \left( \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \right) \|\delta'\|_{op} \sum_{s,t \in \{+,-\}} \|Y_{s}\|_{F} \|Z_{t}\|_{F}   \]
 The summation we can bound by Cauchy Schwarz:
 \[ \leq (2\|Y_{+}\|_{F}^{2} + 2\|Y_{-}\|_{F}^{2})^{1/2} (2\|Z_{+}\|_{F}^{2} + 2\|Z_{-}\|_{F}^{2})^{1/2} = 2 \|Y\|_{F} \|Z\|_{F}     \]
 Using the the fact that the LHS is the $\sup$ over traceless matrices, as well as the same calculation from \ref{btoaaRobustness} using the condition $\|\delta\|_{op} \leq .05 \implies \|\delta'\| \leq 9.5 \|\delta\|_{op}$; we get the lemma. 
@@ -974,7 +1001,7 @@ Using the the fact that the LHS is the $\sup$ over traceless matrices, as well a
 We need the following to translate to statements on the Hessian:
 
 \begin{definition}
-For operator $M : \mat(d_{b}) \to \mat(d_{a})$, we let $\|M\|_{0}$ denote the $F \to F$ norm of its restriction to the traceless subspaces $\Sym^0_{d_b} \to \Sym^0_{d_a}$
+For operator $M : \mat(d_{b}) \to \mat(d_{a})$, we let $\|M\|_{0}$ denote the $F \to F$ norm of its restriction to the traceless subspaces $\smallSym^0_{d_b} \to \smallSym^0_{d_a}$
 \end{definition}
 
 \begin{lemma}[\cite{KLR19}] \label{inftyto2}
@@ -989,8 +1016,8 @@ For input $\samp \in \R^{nD}$ such that $\|d_{a} \rho_{\samp}^{(a)}\|_{op}, \|d_
 \end{corollary}
 \begin{proof}
 This is just a translation of $\ref{btoabRobustness},\ref{ctoabRobustness}$:
-\[ \sup_{Y \in \Sym_{d_{a}}^{0}, Z \in \Sym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} = \frac{\|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0}}{\sqrt{d_{a} d_{b}} } \]
-\[ \sup_{Y \in \Sym_{d_{a}}, Z \in \Sym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} = \frac{\|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}}{\sqrt{d_{a} d_{b}} }       \]
+\[ \sup_{Y \in \smallSym_{d_{a}}^{0}, Z \in \smallSym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} = \frac{\|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0}}{\sqrt{d_{a} d_{b}} } \]
+\[ \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} = \frac{\|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}}{\sqrt{d_{a} d_{b}} }       \]
 Using the same iterative strategy as $\ref{diagRobustness}$ we can show: 
 \[ |\langle Y, (\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}) Z \rangle| \leq 20 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F} \|Y\|_{F} \|Z\|_{F}    \]
 We used $\ref{btoabRobustness}$ for $\{a,b\}$ and $\ref{ctoabRobustness}$ for the rest. The final step follows from $\ref{inftyto2}$ and the initial conditions on $\|d_{a} \rho_{a}\|_{op}, \|d_{b} \rho_{b}\|_{op}$. 
@@ -1254,7 +1281,7 @@ To prove \cref{thm:operator-cheeger}, we apply \cref{lem:op-cheeger} using \cref
 \newpage
 \section{Convergence of flip-flop algorithms}
 
-In this section we prove that the flip-flop algorithms for the matrix and tensor normal models converge quickly to the MLE estimator with high probability. We begin by stating the flip-flop algorithm and then... 
+In this section we prove that the flip-flop algorithms for the matrix and tensor normal models converge quickly to the MLE estimator with high probability. We begin by stating the flip-flop algorithm and then... \CF{we are using $\Theta_a$ for the true inverse covariances. Would it be possible to use something like $\overline{\Theta}_a$ for the flip-flop scalings? Eventually you'll want a lemma showing that the final $\overline{\Theta}_a$ is close to $\widehat{\Theta}_a$ - this should also follow by strong convexity.}
 
 \begin{Algorithm}
 \textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
@@ -1321,7 +1348,7 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 	When the number of samples $n \geq \Gamma \cdot k^2 \cdot d_1^2/D$, with probability at least $1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}$ we have that the following conditions hold:
 	\begin{enumerate}
 		\item $\norm{\nabla f_x(I)}_F \leq \dfrac{\gamma \cdot k}{8}$ % \dfrac{\lambda^2}{4 k}$
-		%\item $f_x$ is $\lambda$-strongly geodesically convex at a ball of radius $\lambda/k$ around $I$, that is: $B_{\lambda/k}(I) := \{ Z \in \Sym \ \mid \ \norm{Z}_F \leq \lambda/k \}$.
+		%\item $f_x$ is $\lambda$-strongly geodesically convex at a ball of radius $\lambda/k$ around $I$, that is: $B_{\lambda/k}(I) := \{ Z \in \smallSym \ \mid \ \norm{Z}_F \leq \lambda/k \}$.
 		\item $f_x$ is $\frac{1}{2}$-strongly geodesically convex at a ball of radius $\gamma \cdot k/2$ around $I$, that is: $B_{\gamma \cdot k/2}(I) := \{ Z \in \Sym \ \mid \ \norm{Z}_F \leq \gamma \cdot k/2 \}$.
 	\end{enumerate}
 \end{lemma}
@@ -1348,7 +1375,7 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 	$$ f_x(\Upsilon) \leq f_x(\Theta) - \dfrac{1}{6k} \cdot \norm{\nabla f_x(\Theta)}_F^2 $$
 \end{lemma}
 
-\RMO{are we going to assume that $d_1 \geq d_2 \geq \cdots \geq d_k$?}\CF{Yes, starting at the notation section.}
+\RMO{are we going to assume that $d_1 \geq d_2 \geq \cdots \geq d_k$?}\CF{No actually its $d_1\leq \dots \leq d_k$.}
 
 \begin{proof}
 	Let 
