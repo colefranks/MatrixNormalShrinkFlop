@@ -106,11 +106,11 @@
 \tableofcontents
 \TODO{
 \begin{enumerate}
-\item Use $n$ instead of $T$ for number of samples.
+%\item Use $n$ instead of $T$ for number of samples.
 \item Replace the failure probability $1/poly(D)$ by an actual expression.
 \item Fix the dimension issue in \cref{thm:tensor-convexity}.
 \item Small annoying thing - we assume determinant 1. This can be handled easily, but needs to be done.
-\item When not random, use lower case $x$.
+%\item When not random, use lower case $x$.
 \item Comment that the geodesic distance is some variation on the Fischer-Rao distance.
 \end{enumerate}
 Polishing:
@@ -118,6 +118,7 @@ Polishing:
 \item Akshay's note on simplifying the proof of \cref{thm:tensor-convexity}: \AR{Can rephrase explicitly in terms of $\nabla^{2} F$ and rank-one term. Then \ref{prop:gradient-bound} gives $1-\eps$ lower bound on each diagonal block of $\nabla^{2} F$, \ref{offdiagPisier} gives $\lambda$ bound on each offdiagonal block of $\nabla^{2} F$, and \ref{prop:gradient-bound} once again gives $k \eps^{2}$ bound on whole rank-one term.  }
 \item \AR{Can improve the strong convexity stuff by a factor of two by using the projection to traceless on both sides of the inner product}
 \item \CF{for the readers' sake some justification is needed for why perturbing $\samp$ this is the same as considering the Hessian of our function at another point in $\SPD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
+\item Define $B^\infty_c$ to be all $\Theta$ such that $\sum \|\log \Theta_a\|_{op} \leq c$. May be able to avoid this since everything is internal to proofs.
 \end{enumerate}
 
 }
@@ -281,14 +282,13 @@ The flip-flop algorithm has been put forth in \CF{cite dutilleul} to compute the
 
 
 
-We may now state precisely our result for the tensor normal models. 
-
-\begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius} Suppose $\eps \leq c$ and the number of samples satisfies $n \geq C k \max d_{a}^3/D\eps^2$. The MLE $(\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) $ for $(\Theta_1, \dots \Theta_k)$ from $n$ independent samples of the tensor normal model satisfies
-$$ d_{F}(\widehat{\Theta}_a, \Theta_a) \leq \eps $$
-for $a \in [k]$ with probability $1 - \CF{1/poly(D)}$.
+We may now state precisely our result for the tensor normal models. \CF{We should think a bit about the best parametrization of these bounds. I think they only match the fantasy bounds for the largest marginal.}
+\begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius} Suppose $\eps \leq c/\sqrt{d_k}$ and the number of samples satisfies $n \geq C k d_k^3/D\eps^2$. The MLE $(\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) $ for $(\Theta_1, \dots \Theta_k)$ from $n$ independent samples of the tensor normal model satisfies
+$$ d_{F}(\widehat{\Theta}_a, \Theta_a) = O\left( \sqrt{\frac{d_a d_k} {n D/d_k}}\eps\right) $$
+for $a \in [k]$ with probability at least 
+$$1 - k^2 \left(\sqrt{nD} / kd_1 \right)^{ - \Omega(d_1)} - O(k e^{ - \eps^2 d_k / k}).$$
 \end{theorem}
-
-\CF{explain tightness; the distance bounds are tight but when they kick in is not necessarily tight. Truly tight bounds would follow from operator norm analysis.} In the case of matrix normal models $(k=2)$, we obtain the following stronger result.
+ In the case of matrix normal models $(k=2)$, we obtain the following stronger result.
 
 \begin{theorem}[Matrix normal model spectral error]\label{thm:matrix-normal} Suppose $d_1 \leq d_2$,
 $$n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \log^2(d_1) \eps^{-2}\}$$ for $C$ a large enough constant and $\eps < c$ for a small enough constant $c$. The MLE $(\widehat{\Theta}_1,\widehat{\Theta}_2) $ for $(\Theta_1, \Theta_2)$ from $n$ independent samples of the matrix normal model satisfies
@@ -401,7 +401,8 @@ We often abbreviate $\nabla f = \nabla f(I)$ and write $\nabla f = (\nabla_1 f, 
 \begin{lemma}\label{lem:convex-ball}
 Let $f\colon \SPD\to \R$ be geodesically convex everywhere, and $\lambda$-strongly geodesically convex in a geodesic ball $B_\kappa$ of radius~$\kappa>0$ about~$I$.
 Further assume the Riemannian gradient satisfies $\norm{\nabla f(I)} \leq \eps < \lambda \kappa / 2$.
-Then the sublevel set $\{Z:f(Z) \leq f(I)\}$ is contained in the ball $B_{\eps/\lambda} \subset B_\kappa$, and $f$ has a unique minimizer which is contained in $B_{\eps/\lambda}$.
+Then the sublevel set $\{\Theta:f(\Theta) \leq f(I)\}$ is contained in the ball $B_{\eps/\lambda} \subset B_\kappa$, and $f$ has a unique minimizer $\Theta^*$ which is contained in $B_{\eps/\lambda}$, and 
+$$ f(\Theta^*) \geq f(I) - \eps^2/2 \lambda.$$
 \end{lemma}
 
 %\RMO{We also need to add here that the sublevel set of $f(I)$ is contained in $B_{\kappa}(I)$, which we prove in the middle of the lemma anyways. Is that okay?}
@@ -417,11 +418,11 @@ Then, using the assumption on the gradient,
 \geq -\norm{\nabla f(I)} \, \norm Z
 \geq -\eps.
 \end{align}
-Since $f$ is $\lambda$-strongly geodesically convex on $B_\kappa(I)$, we have $g''(t) \geq \lambda$ for all $\abs t\leq\kappa$.
-For $t=\kappa$, it follows in particular that
+Since $f$ is $\lambda$-strongly geodesically convex on $B_\kappa(I)$, we have $g''(t) \geq \lambda$ for all $\abs t\leq\kappa$. It follows that 
+for all $0 \leq t \leq \kappa$ we have $g(t) \geq g(0) - \eps t + \lambda t^2/2$; plugging in $t = \kappa$ yields 
 \begin{align*}
   g(\kappa)
-\geq g(0) + g'(0) \kappa + \lambda \frac{\kappa^2}2
+%\geq g(0) + g'(0) \kappa + \lambda \frac{\kappa^2}2
 \geq g(0) - \eps \kappa + \lambda \frac{\kappa^2}2
 = g(0) + \left( \frac{\lambda\kappa}2 - \eps \right) \kappa
 > g(0)
@@ -435,7 +436,7 @@ hence
   f(I) = g(0) < g(t) = f(\exp_{I}(tZ)).
 \end{align*}
 It follows that the sublevel set of~$f(I)$ is contained in the ball of radius~$\kappa$, which is a compact set.
-In particular, $f$ has a minimum in this ball.
+In particular, $f$ has a minimizer $\Theta^*$ in this ball. Moreover, the quantity $ g(0) - \eps t + \lambda t^2/2$ takes a minimum at $t = \eps/ \lambda$, and so $g(t) \geq g(0) - \eps^2/2\lambda$ for all $t \leq \kappa$. By definition of $g$, this tells us that $f(\Theta^*)$ is at least $f(I) - \eps^2/2\lambda$.
 
 Next, we prove that any minimizer of $f$ is necessarily contained in the (smaller) ball of radius~$\eps/\lambda$.
 To see this, take an arbitrary minimizer and write it in the form $\exp_I(TZ)$, where $Z\in \Sym$ is a unit vector and $T>0$.
@@ -451,11 +452,11 @@ Thus we have proved that any minimizer of $f$ is contained in the ball of radius
 %\CF{just track down some ref, or proceed as in commented text.} 
 %To see that the minimimizer $\Theta$ is unique, we observe that geodesic strong convexity implies strong star convexity of the function $f \circ \exp_{\Theta}$, which has a unique global minimizer at $0$ if and only if $\Theta$ is the unique minimizer of $f$. It is easy to see that function that is strongly star convex in a neighborhood of the origin is uniquely minimized at the origin.
 
-We still need to show that the minimizer is unique; that this follows from strong convexity is convex optimization ``folklore,'' but we include a proof nonetheless. Indeed, suppose that $\Theta$ is a minimizer and let $Z\in \Sym$ be arbitrary.
-Consider $h(t) := f(\exp_{\Theta}(tZ))$.
-Then the function $h(t)$ is convex, has a minimum at $t=0$, and satisfies $h''(0) > 0$, since $f$ is $\lambda$-strongly geodesically convex at $\Theta$ by what we showed above.
+We still need to show that the minimizer is unique; that this follows from strong convexity is convex optimization ``folklore,'' but we include a proof nonetheless. Indeed, suppose that $\Theta^*$ is a minimizer and let $Z\in \Sym$ be arbitrary.
+Consider $h(t) := f(\exp_{\Theta^*}(tZ))$.
+Then the function $h(t)$ is convex, has a minimum at $t=0$, and satisfies $h''(0) > 0$, since $f$ is $\lambda$-strongly geodesically convex at $\Theta^*$ by what we showed above.
 It follows that $h(t) > h(0)$ for any $t\neq0$.
-Since $Z$ was arbitrary, this shows that $f(\Theta') > f(\Theta)$ for any $\Theta'\neq\Theta$.
+Since $Z$ was arbitrary, this shows that $f(\Theta') > f(\Theta^*)$ for any $\Theta'\neq\Theta^*$.
 \end{proof}
 
 
@@ -564,7 +565,7 @@ Having calculated the gradient, we are ready to state our bound:
 %\MW{Please check updated proof. Can we assume $\eps<1$ and simply take~$C=16$?}
 \MW{Make pretty by manipulating $C$}
 \begin{prop}\label{prop:gradient-bound}
-Let $\rv = (\samp_1,\dots,\samp_n)$ be independent standard Gaussian random variables in $\R^D$, where $D=d_1\cdots{}d_k$.
+Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where $D=d_1\cdots{}d_k$.
 Let $\eps>0$ and $C = 16^2\max\{\eps^2,1\}$.
 Suppose that, for all $a \in [k]$,
 \begin{align*}
@@ -620,6 +621,12 @@ Applying the union bound over $[k]$ completes the proof of the proposition.
   % $$\lambda_1(\rho^{\{a\}}), \lambda_2(\rho^{\{a\}}) \in  \cN(1 \pm c \cdot \eps)/ Nd(1 \pm c \cdot \eps) \in \frac{1}{d}(1 \pm \eps)$$
 % with probability $1 - 2 e^{- c N \eps^2}- 2 e^{- c Nd \eps^2} = 1 - 4 e^{- N\eps^2},$ provided $c$ is small enough.
 \end{proof}
+
+It will also be convenient to have bounds on the norm of $X$; because $\|X\|_F^2$ is simply a sum of $\chi$-square random variables, the next proposition follows from standard concentration bounds (e.g. \cite{W19}).
+\begin{prop}[Norm of $X$]\label{prp:xnorm}
+Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where $D=d_1\cdots{}d_k$. For $t \leq c$,
+$$ (1 - t) nD \leq \|X\|_F^2 \leq (1 + t)nD$$ with probability $2e^{-t^2 nD/8}$.
+\end{prop}
 
 % Both $\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a$ and $\| \samp\|_F^2 - Nd_a \leq .5 N d_a$ hold with probability \CF{blah}$. Now  $$ \|\rho^{\{a\}} - I_a/d_a\|_{op} \leq \|\rho^{\{a\}} - N I_{d_a}/ \|\samp\|_F\|_{op} + $$
 
@@ -770,8 +777,8 @@ $$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq (k - 1) \lambda + k \eps^2 + \eps $$
 
 \begin{theorem}[\CF{new theorem}]\label{thm:tensor-convexity} There is an absolute constant $C$ such that the following holds. Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples $n$ is at least $C k^2 d_1^2/D$. Then, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$ we have
 %$$ I/2 \preceq  \nabla^2 f_{\rv} \preceq 2I.$$
-$$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq 1/4,$$
-in which case $f_{\rv}$ is $3/4$-strongly convex at the identity.
+$$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq 1/4.$$
+In particular, $f_{\rv}$ is $3/4$-strongly convex at the identity.
 \end{theorem}
 
 
@@ -834,7 +841,7 @@ We proceed to bound the operator norm of $\nabla^2_{ab} f: \smallSym^0_{d_b} \to
 = \tr \rho^{(ab)} \left( Y \ot Z \right) - \bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr).\label{eq:grad-off-diag}\end{align}
 As a linear map, define the first term to be $T:Z \mapsto \sqrt{d_a d_b} \tr_b \rho^{(a,b)} (I \ot Z)$. The state $\rho^{(a,b)} = \tr_{\overline{\{a,b\}}} \rho$ is given by $\rho^{{a,b}} =  X X^\dagger/\|X\|^2$ where $X$ is viewed as an $n D/{d_a d_b} \times d_a d_b$ matrix. Equivalently, $\rho^{(a,b)}$ is distributed as 
 $$\frac{1}{\sum_{i} \|Y_i\|^2} Y_i Y_i^T$$ where $Y_i$ are $n D/{d_a d_b}$ i.i.d standard Gaussians on $\R^{d_a} \ot \R^{d_b}$. By \cref{thm:hess-pisier} with $2t^2 = \frac {s \sqrt{nD}}{d_a + d_b}$, the operator norm of $T$ restricted to $\smallSym^0_{d_b}$ is $O(s n D /2 \sum_i \|Y_i\|^2 )$ 
-with probability $(s \sqrt{nD}/(d_a + d_b))^{ - \Omega(d_a + d_b)} \leq (s \sqrt{nD} /d_b)^{ - \Omega(d_a)}$. The denominator is a sum of $nD$ many i.i.d $\chi$-square random variables, and so is $\Omega(nD)$ with failure probability $e^{ -\Omega(nD)} $ \cite{W19}, so finally we have that the operator norm of $T$ restricted to $\smallSym^0_{d_b}$ is $O \left( s/2\right)$.
+with probability $(s \sqrt{nD}/(d_a + d_b))^{ - \Omega(d_a + d_b)} \leq (s \sqrt{nD} /d_b)^{ - \Omega(d_a)}$. The denominator is $\Theta(nD)$ with failure probability $e^{ -\Omega(nD)} $ by \cref{prp:xnorm} so finally we have that the operator norm of $T$ restricted to $\smallSym^0_{d_b}$ is $O \left( s/2\right)$.
 %By \cref{eq:expansion-thing} (\CF{which needs to actually be proved}), with probability $\CF{good}$, the map $Z \to \tr_2 \rho^{(a,b)} (I \ot Z)$ has operator norm at most $\lambda/\sqrt{d_a d_b}$ restricted to traceless $Z$. 
 The second term of \cref{eq:grad-off-diag} defines the quadratic form 
 $$Y,Z \mapsto \sqrt{d_a d_b} (\tr Y \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr).$$ 
@@ -1060,37 +1067,28 @@ By \cref{thm:tensor-convexity}, with failure probability $k^2 ({\sqrt{nD}}/{kd_1
 We are now ready to prove the main result of this section according to the plan outlined in \cref{subsec:outline}.
 \TODO{restate it here?}
 
-\begin{proof}[Proof of \cref{thm:tensor-frobenius}]By \cref{it:reduce} in \cref{subsec:outline}, it is enough to prove the theorem assuming $\Theta = I$.
-We seek to apply \cref{lem:convex-ball}, so we need $\lambda \kappa > \|\nabla f\|$, where $\lambda$ is the strong convexity we can maintain in a $\kappa$-ball. Set $\delta = \eps/\sqrt{k d_1}$. 
+\begin{proof}[Proof of \cref{thm:tensor-frobenius}]By \cref{it:reduce} in \cref{subsec:outline}, it is enough to prove the theorem assuming $\Theta = I$. We first show that the minimizer of $f_\rv$ exists and is close to $I$ with high probability, and then use this to show that the minimizer of $\ell_\rv$ is also close.  Set $\delta = \eps/\sqrt{k d_k}$ and let $c$ be a constant. Consider the following three events.
+\begin{enumerate}
+\item\label{it:grad-bd} $\|(\nabla f_\rv)_{a}\|_{op} \leq \frac{\delta}{\sqrt{d_{a}}}$ for all $a \in [k]$,
+\item\label{it:sc-ball} $f_\rv$ is $1/2$ strongly convex at any point $\Theta$ such that $\sum_a \|\log \Theta_a\|_{op} \leq  c.$
+\item\label{it:norm-bd} $\| \rv\|_F^2 \in (1 \pm k \eps/\sqrt{d_k}) nD.$
+\end{enumerate}
+We now show that these events occur with failure probability $$k^2 \left(\sqrt{nD} / kd_1 \right)^{ - \Omega(d_1)} + O(k e^{ - nD \eps^2 / k d_k^2}).$$ Indeed, by our first assumption on $\eps$, we have $N_a \geq C d_a/\delta^2$ for all $a \in [k]$, we so we may apply \cref{prop:gradient-bound} to conclude \cref{it:grad-bd} occurs with failure probability $O\left( \sum_a \exp ( - N_a \delta^2)\right)$. 
+By \cref{thm:ball-convexity}, if $c$ is a small enough absolute constant then \cref{it:sc-ball} occurs with failure probability at most $k^2 \left(\sqrt{nD} / kd_1 \right)^{ - \Omega(d_1)}$. By \cref{prp:xnorm} with $t = k \eps/\sqrt{d_k}$, \cref{it:norm-bd} occurs with failure probability $2e^{- k nD \eps^2/8 d_k},$ which is dominated by the failure probability for \cref{it:grad-bd}. By the union bound, all three items hold with the desired failure probability. Let $\samp$ be a sample satisfying all three items.
 
- By our first assumption on $\eps$, we have $N_a \geq C d_a/\delta^2$ for all $a \in [k]$, we so we may apply \cref{prop:gradient-bound}. Thus, with failure probability $O\left( \sum_a \exp ( - N_a \delta^2)\right)$ we have $\|(\nabla f)_{a}\|_{op} \leq \frac{\delta}{\sqrt{d_{a}}}$ for all $a \in [k]$ and so
-\[  \|\nabla f\|^{2} = \sum_{a} \|(\nabla f)_{a}\|_{F}^{2} \leq \sum_{a} d_a \|(\nabla f)_{a}\|_{op}^{2} \leq  k \delta^{2}.  \]
-We next bound the radius $\kappa$ of the ball on which our function is geodesically convex. 
-By \cref{thm:ball-convexity}, there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $\Theta$ such that $\sum_a \|\log \Theta_a\|_{op} \leq  c$ for all $a \in [k]$. 
+
+We seek to apply \cref{lem:convex-ball} with $\lambda = 1/2$, so we must find the radius of the largest geodesic ball in the region of $1/2$-strong convexity of $f_\samp$. Thus if we set $\kappa = c/\sqrt{d_1}$ we will have that $f_\samp$ is $1/2$-strongly convex on the $\kappa$-ball by \cref{it:sc-ball}, because for $\Theta \in B_\kappa(I)$ we have
+$$ \sum_a \|\log \Theta_a\|_{op} \leq \sqrt{d_1} d(I, \Theta) \leq c.$$
+Next we must verify that $\|\nabla f\| < \kappa/2$. By \cref{it:grad-bd} we have
+\[  \|\nabla f\|_F^{2} = \sum_{a} \|(\nabla f)_{a}\|_{F}^{2} \leq \sum_{a} d_a \|(\nabla f)_{a}\|_{op}^{2} \leq  k \delta^{2} \]
 %\CF{new cite theorem 9}
 
 %By \cref{thm:tensor-convexity}, with failure probability $\CF{1/poly(D)}$ we have that $f$ is $1-o_{d}(1)$ strongly convex at $I$. Because $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq \delta \leq c$, by \cref{convexRobustness} there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $\Theta$ such that $\sum_a \|\log \Theta_a\|_{op} \leq  c$ for all $a \in [k]$. \CF{end old}
 
-Now note that 
-$$ \sum_a \log \Theta_{op} \leq \sqrt{d_1} d(I, \Theta).$$ Thus if we set $\kappa = c/\max_a \sqrt{d_a}$ we will have that $f$ is $1/2$-strongly convex on the $\kappa$ ball. By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\sqrt{d_1} $ there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$; this inequality holds by our definition of $\delta$ and our second assumption on $\eps$. 
+By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\sqrt{d_k}$, which holds by our definition of $\delta$ and our second assumption on $\eps$, there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$. We now use this bound on geodesic distance to bound error in $d_F$ for the individual Kronecker factors. By our choice of $\kappa$ and because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\log \widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) \leq \sqrt{d_a} d(I, \widehat{\Theta}) \leq 2\delta \sqrt{ k d_a}.$ Applying $\delta = \eps /\sqrt{k d_k}$ yields $\| I_a - \widehat{\Theta}_a\|_F \leq 2\eps \sqrt{ d_a/d_k}$.
 
-By our choice of $\kappa$ and because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) \leq \sqrt{d_a} d(I, \widehat{\Theta}) \leq 2\delta \sqrt{ k d_a}.$ Applying $\eps = \delta \sqrt{k d_1}$ completes the proof.\end{proof}
-
-The minimizers of $\ell_\samp$ and $f_\samp$ are identical restricted to $\SPD$. However, the MLE need not have unit determinant, so it remains to show that we can use our consistency results for the minimizers of $f_\samp$ to show that the MLE itself is consistent.
-
-%However, $\Theta$ need not have unit determinant, and the MLE may not have 
-
-
-\begin{lemma}[Handling non-unit determinant]
-Suppose the minimizer of $f_\samp$ is within $\eps$ of $\Theta$ in $d_F$ (resp. $d_{op}$) with probability at most $p(\eps)$ for all $\Theta \in \SPD$. Then the MLE is within $\eps + \delta$ of $d_{op}$ with probability $p(\eps) + \gamma$.  
-\end{lemma}
-\begin{proof}
-Like the minimizer to $f_\samp$, the MLE is equivariant - that is, because $\ell_{\Sigma^{1/2} \samp} (\Upsilon) = \ell_\samp(\Sigma^{1/2} \Upsilon \Sigma^{1/2})$, for $X \sim \mathcal{N}(0, I)$ the minimizer $\hat{\Theta}_{\Sigma^{1/2}\rv}$ is has the same distribution as $\Sigma^{-1/2} \hat{\Theta}_{\rv} \Sigma^{-1/2}$. Thus, it is enough to prove the claim for $\Theta = I$. 
-
-Recall that if $f_\samp$ is minimized at $\widehat{\Theta}$, then $\ell_\samp$ is minimized at $\Theta':= n D e^{ - f_\samp(\widehat{\Theta})} \widehat{\Theta}:=\alpha  \widehat{\Theta}$. Thus $\Theta'_a := \alpha^{1/k}\widehat{\Theta}_a$. By our bound on $f_\samp(\Theta)$, $\alpha \in (1 \pm \delta)$ with probability $1 - q(\delta)$. \CF{think $\delta = \|\nabla f\|^2;$.} Thus with probability $1 - q(\delta) + p(\eps)$, the distance of the MLE from the truth is $d(\Theta'_a;I) \in d( (1 \pm \delta)^{1/k}\widehat{\Theta}; I)$. By the approximate triangle inequality \CF{cite}, $d( (1 \pm \delta)^{1/k} \widehat{\Theta}_a; I) = O(d(\widehat{\Theta}; I) + d((1 \pm \delta)^{1/k}I; I))$. If $d = d_F$, the latter term is $O(\delta \sqrt{d_a}/k)$; if $d = d_{op}$ the latter is $O(\delta/k)$. \CF{I think the square Frobenius norm of the gradient will typically be at most $d_a(1/d_aN_a) = 1/N_a$; in the $N_a \geq d_a^2$ regime it becomes $1/d_a^2$ and in the other regime it is $1/d_a$. Either does not seem like  cause for concern.}
+We have shown that the minimizer $\widehat{\Theta}$ of $f_\samp$ is close to $I$, but it remains to show that the minimizer $\Theta'$ of $\ell_\samp$ exists and is close to $I$. For this, recall that if $f_\samp$ has the unique minimizer $\widehat{\Theta} \in \SPD$, then $\ell_\samp$ is minimized at $\Theta':= \alpha^{1/k}  \widehat{\Theta}$ where $\alpha:= n D e^{ - f_\samp(\widehat{\Theta})}$. We now show that $\alpha$ is very close to $1$. By \cref{lem:convex-ball}, $f_\samp(\widehat{\Theta}) \geq f_\samp(0) - k\delta^2$. We have $f(0) \geq f_\samp(0) = \log\| \samp\|^2_F$, and by \cref{it:norm-bd} we have $\| \samp\|_F^2 \in (1 \pm t) nD$ with $t = k \eps/\sqrt{\delta_1}$. Thus we have $\alpha \in [(1-t),  (1+t) e^{k \delta^2}]$, or $\alpha^{1/k} \in [1 \pm  O(\eps/\sqrt{d_k})]$ by our choice of $t$. By the approximate triangle inequality for $d_F$ \CF{insert and cite}, $d_F( \Theta'_a; I_a) = O(d_F(\widehat{\Theta}_a; I_a) + d_F(\alpha^{1/k} I_a; I_a)) = O(\eps \sqrt{d_a/d_k})$. The reparametrization $\eps \leftarrow \eps \sqrt{d_k^{3/2}/ n D}$ completes the proof.
 \end{proof}
-
-
 
 
 
@@ -1517,7 +1515,7 @@ Let $\Pi: \mat(m) \to \mat(m)$ denote the projection onto the traceless matrices
 with probability at least $ 1- t^{-c(m+n)}$. 
 \end{theorem}
 
-The relation to our desired expansion result follows from the following: 
+The relation to our desired expansion result follows from the following:  \CF{some bad latex thing happening below}
 \[ Y \otimes Y vec(Z \in \mat(m)) = vec( Y_{i}^{*} Z Y_{i})      \]
 Theorem \ref{thm:hess-pisier} then follows as a corollary by choosing $\alpha \propto \vec{1}$ and standard results from Gaussian concentration. The proof of \ref{thm:Pisier-expansion} proceeds by a symmetrization trick, followed by the trace method. We will first state the necessary concentration results and then give the proof. Our setting required the result on rectangular matrices with strong error bounds, but we claim no originality.  
 
