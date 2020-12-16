@@ -1286,7 +1286,7 @@ In this section we prove that the flip-flop algorithms for the matrix and tensor
 \begin{Algorithm}
 \textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
 
-\textbf{Output}: $\underline{\Sigma} \in \PD_D$ such that $d_F(\underline{\Sigma}, \hat{\Sigma}) < \eps$, where $\hat{\Sigma}$ is the MLE for $\Sigma$. \\[.3ex]
+\textbf{Output}: $\underline{\Sigma} \in \PD_D$ such that $d_F(\underline{\Sigma}_i, \hat{\Sigma}_i) < \eps$, for each $i \in [k]$, where $\hat{\Sigma}$ is the MLE for $\Sigma$. \\[.3ex]
 
 \textbf{Algorithm}:
 \begin{enumerate}
@@ -1295,7 +1295,7 @@ In this section we prove that the flip-flop algorithms for the matrix and tensor
 \begin{itemize}
 \item Compute each component of the gradient $\nabla f_{\samp}(\Theta_1, \ldots, \Theta_k)$, denoting $\nabla_a := \nabla_a f_{\samp}(\Theta_1, \ldots, \Theta_k)$, and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest. 
 \item
-If $\norm{\nabla_a}_F < \eps/k$, output $\left( \bigotimes_{a =1}^k \Theta_a \right)^{-1}$ and return.
+If $\norm{\nabla_a}_F^2 < \eps$, output $\left( \bigotimes_{a =1}^k \Theta_a \right)^{-1}$ and return.
 % S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
 \item Otherwise, set $\Theta_a \leftarrow \det(\rho^{(a)})^{1/d_a} (\rho^{(a)})^{-1} \cdot \Theta_a$.
 \end{itemize}
@@ -1372,7 +1372,7 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 
 \begin{lemma}[Descent Lemma]
 	If $\Theta, \Upsilon$ are successive scalings from the flip-flop algorithm and $\norm{\nabla f_x(\Theta)}_F \leq 1$, then we have:
-	$$ f_x(\Upsilon) \leq f_x(\Theta) - \dfrac{1}{6k} \cdot \norm{\nabla f_x(\Theta)}_F^2 $$
+	$$ f_x(\Upsilon) \leq f_x(\Theta) - \dfrac{1}{6k d_1} \cdot \norm{\nabla f_x(\Theta)}_F^2 $$
 \end{lemma}
 
 \RMO{are we going to assume that $d_1 \geq d_2 \geq \cdots \geq d_k$?}\CF{No actually its $d_1\leq \dots \leq d_k$.}
@@ -1405,15 +1405,22 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 	\end{align*}
 	If $\norm{d_a \rho^{(a)} - I_a}_F > 1$, we have
 	\begin{align*}
-		\frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)}) &\leq - \dfrac{1}{6 d_a}  \leq - \dfrac{1}{6d_a} \cdot \norm{\nabla f_x(\Theta)}_F^2
+		\frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)}) &\leq - \dfrac{1}{6 d_a} \leq - \dfrac{1}{6 d_1} \leq - \dfrac{1}{6d_1} \cdot \norm{\nabla f_x(\Theta)}_F^2
 	\end{align*}
 \end{proof}
 
 \RMO{Initial Conditions + descent lemma imply convergence of flip-flop via \cref{lem:descent-sublevel-set} and \cref{lem:convex-ball}}
 
 \begin{theorem}[Restatement of \cref{thm:tensor-flipflop}]
-
+	If $\hat{\Sigma}$ denotes the MLE estimator for $\Sigma$, then provided $n = \Omega(k^2 \cdot d_1^2/D)$, the flip-flop algorithm computes $\underline{\Sigma}$ with 
+	$$ d_F(\hat{\Sigma}_i, \underline{\Sigma}_i) \leq \epsilon $$
+	in $O(\log(1/\epsilon))$ iterations with probability at least 
+	$$ 1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}.$$
 \end{theorem}
+
+\begin{proof}
+
+\end{proof}
 
 \subsection{Matrix flip-flop convergence}
 
