@@ -44,6 +44,9 @@
 \renewcommand{\vec}{\bm}
 \newcommand{\Z}{{\mathbb{Z}}}
 \renewcommand{\S}{\mathbb{S}}
+\newcommand{\otheta}{\overline{\Theta}}
+\newcommand{\htheta}{\hat{\Theta}}
+\newcommand{\oZ}{\overline{Z}}
 %\renewcommand{\Pr}{\operatorname{Pr}}
 
 \newcommand{\E}{\mathbb{E}}
@@ -83,6 +86,7 @@
 \newcommand{\maps}{\colon}
 \newcommand{\ale}{\lesssim}
 \newcommand{\age}{\gtrsim}
+
 \newcommand{\CF}[1]{{\color{purple}[CF: #1]}}
 \newcommand{\AR}[1]{{\color{orange}[AR: #1]}}
 \newcommand{\RMO}[1]{{\color{red}[RMO: #1]}}
@@ -1300,18 +1304,20 @@ In this section we prove that the flip-flop algorithms for the matrix and tensor
 \begin{Algorithm}
 \textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
 
-\textbf{Output}: $\underline{\Sigma} \in \PD_D$ such that $d_F(\underline{\Sigma}_i, \hat{\Sigma}_i) < \eps$, for each $i \in [k]$, where $\hat{\Sigma}$ is the MLE for $\Sigma$. \\[.3ex]
+\textbf{Output}: $\otheta \in \SPD$ such that $d_F(\otheta_a, \htheta_a) < \eps$, for each $i \in [k]$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
+\RMO{The $\epsilon$ above is different from the $\epsilon$ from the algorithm. Fix this.}
 
 \textbf{Algorithm}:
 \begin{enumerate}
-\item\label{it:flip-flop step 1} Set $\Theta_a = I_a$ for each $a \in [k]$.
-\item\label{it:flip-flop step 2} For $t=1,\dots,T = \poly(D, b) \cdot \log(1/\eps)$, repeat the following:
+\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$.
+\item\label{it:flip-flop step 2} For $t=1,\dots,T = 12 k d_k \cdot \log(1/\eps)$, repeat the following:
+%we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
 \begin{itemize}
-\item Compute each component of the gradient $\nabla f_{\samp}(\Theta_1, \ldots, \Theta_k)$, denoting $\nabla_a := \nabla_a f_{\samp}(\Theta_1, \ldots, \Theta_k)$, and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest. 
+\item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \ldots, \otheta_k)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \ldots, \otheta_k)$, and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest. 
 \item
-If $\norm{\nabla_a}_F^2 < \eps$, output $\left( \bigotimes_{a =1}^k \Theta_a \right)^{-1}$ and return.
+If $\norm{\nabla_a}_F^2 < \eps$, output $\left( \bigotimes_{a =1}^k \otheta_a \right)^{-1}$ and return.
 % S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
-\item Otherwise, set $\Theta_a \leftarrow \det(\rho^{(a)})^{1/d_a} (\rho^{(a)})^{-1} \cdot \Theta_a$.
+\item Otherwise, set $\otheta_a \leftarrow \det(\rho^{(a)})^{1/d_a} (\rho^{(a)})^{-1} \cdot \otheta_a$.
 \end{itemize}
 \end{enumerate}
 \caption{Flip-flop algorithm}\label{alg:flip-flop}
@@ -1357,7 +1363,7 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 
 \TODO{Proof of \cref{thm:tensor-flipflop}; vanilla strong convexity in a sublevel set stuff.}
 
-\begin{lemma}[Initial Conditions]
+\begin{lemma}[Initial Conditions]\label{lem:tensor-initial-conditions}
 	There exist absolute constants $\Gamma, \gamma > 0$ such that the following holds.
 	When the number of samples $n \geq \Gamma \cdot k^2 \cdot d_1^2/D$, with probability at least $1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}$ we have that the following conditions hold:
 	\begin{enumerate}
@@ -1384,12 +1390,10 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 	one of the conditions 1 or 2 will fail to hold. This concludes our proof.
 \end{proof}
 
-\begin{lemma}[Descent Lemma]
+\begin{lemma}[Descent Lemma]\label{lem:tensor-descent-lemma}
 	If $\Theta, \Upsilon$ are successive scalings from the flip-flop algorithm and $\norm{\nabla f_x(\Theta)}_F \leq 1$, then we have:
-	$$ f_x(\Upsilon) \leq f_x(\Theta) - \dfrac{1}{6k d_1} \cdot \norm{\nabla f_x(\Theta)}_F^2 $$
+	$$ f_x(\Upsilon) \leq f_x(\Theta) - \dfrac{1}{6k d_k} \cdot \norm{\nabla f_x(\Theta)}_F^2 $$
 \end{lemma}
-
-\RMO{are we going to assume that $d_1 \geq d_2 \geq \cdots \geq d_k$?}\CF{No actually its $d_1\leq \dots \leq d_k$.}
 
 \begin{proof}
 	Let 
@@ -1419,16 +1423,44 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 	\end{align*}
 	If $\norm{d_a \rho^{(a)} - I_a}_F > 1$, we have
 	\begin{align*}
-		\frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)}) &\leq - \dfrac{1}{6 d_a} \leq - \dfrac{1}{6 d_1} \leq - \dfrac{1}{6d_1} \cdot \norm{\nabla f_x(\Theta)}_F^2
+		\frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)}) &\leq - \dfrac{1}{6 d_a} \leq - \dfrac{1}{6 d_k} \leq - \dfrac{1}{6d_k} \cdot \norm{\nabla f_x(\Theta)}_F^2
 	\end{align*}
+\end{proof}
+
+\begin{lemma}[Distance to Optimum]\label{lem:tensor-distance-opt}
+	Let $\htheta$ be the MLE estimator for $\Theta$, and $\otheta$ be the output of the flip-flop algorithm, assuming that our input samples satisfy the initial conditions of \cref{lem:tensor-initial-conditions}. Then, we have
+	$$ d_F(\htheta; \otheta) \leq  $$
+\end{lemma}
+
+\begin{proof}
+	Let $Z \in \Sym$ be such that $\htheta = \otheta^{1/2} \cdot \exp(\sqrt{\vec d} \cdot Z) \cdot \otheta^{1/2}$, and $\oZ = Z / \norm{Z}_F$.
+	Since 
+	$$ d_F(\htheta, \otheta) = \norm{I_D - \otheta^{-1/2} \htheta \otheta^{-1/2}}_F = \norm{I_D - \exp(\sqrt{\vec d} \cdot Z)}_F $$
+	to prove a good bound on the distance it is enough to show that $\norm{Z}_F$ is small. 
+	We will achieve this by using the strong geodesic convexity of $f_x$.
+	
+	By our initial conditions, we know that $f_x$ is $1/2$-strongly geodesically convex. 
+	Thus, we have that the function $g(t) = f_x(\exp_{\otheta} (t \oZ) )$ is $1/2$-strongly convex, $g(0) = \otheta$ and $g(\norm{Z}_F) = \htheta$, which implies:
+	$$ g(\norm{Z}_F) \geq g(0) + g'(0) \cdot \norm{Z}_F + \frac{\norm{Z}_F^2}{4}. $$
+	Since $\htheta$ is the MLE estimator, we have $g(\norm{Z}_F) \leq g(0)$, and by definition of
+	$g$ and Cauchy-Schwarz, we have that 
+	$$ g'(0) = \langle \nabla f_x(\otheta), \oZ \rangle \geq - \norm{\nabla f_x(\otheta)}_F \norm{\oZ}_F = - \norm{\nabla f_x(\otheta)}_F. $$
+	Putting all the above together, we get 
+	$$ \norm{Z}_F \leq 4 \cdot \norm{\nabla f_x(\otheta)}_F. $$ 
+	Setting $\delta = \norm{\nabla f_x(\otheta)}_F$, the above inequality implies that $Z_a \preceq 4 \delta I_a$ for each $a \in [k]$. This in turn yields 
+	$$ \exp(\sqrt{\vec d} Z) \preceq \exp(\sqrt{\vec d} \cdot 4\delta (I_1, \dots, I_k)) = 
+	\exp\left(4 \delta \cdot \sum_{a=1}^k \sqrt{d_a} \right) \cdot I_D $$
+	and our distance function becomes:
+	$$ d_F(\htheta, \otheta) \leq \exp\left(4 \delta \cdot \sum_{a=1}^k \sqrt{d_a} \right) - 1 \leq 8 \delta \cdot \sum_{a=1}^k \sqrt{d_a}  $$
+	where the last inequality we used $e^t \leq 1 + 2t$ for $t \in (0,1)$.
 \end{proof}
 
 \RMO{Initial Conditions + descent lemma imply convergence of flip-flop via \cref{lem:descent-sublevel-set} and \cref{lem:convex-ball}}
 
 \begin{theorem}[Restatement of \cref{thm:tensor-flipflop}]
-	If $\hat{\Sigma}$ denotes the MLE estimator for $\Sigma$, then provided $n = \Omega(k^2 \cdot d_1^2/D)$, the flip-flop algorithm computes $\underline{\Sigma}$ with 
-	$$ d_F(\hat{\Sigma}_i, \underline{\Sigma}_i) \leq \epsilon $$
-	in $O(\log(1/\epsilon))$ iterations with probability at least 
+	If $\htheta$ denotes the MLE estimator for $\Theta$, then provided $n = \Omega(k^2 \cdot d_1^2/D)$, the flip-flop algorithm computes $\otheta$ with 
+	$$ d_F(\htheta_a, \otheta_a) \leq \epsilon $$
+	in $O(k d_k \log(1/\epsilon))$ iterations with probability at least 
 	$$ 1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}.$$
 \end{theorem}
 
