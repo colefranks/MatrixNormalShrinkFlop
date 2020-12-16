@@ -469,7 +469,7 @@ It is more convenient to maximize a different function than the log-likelihood $
 \end{align*}
 where $\Theta$ denotes the precision matrix $\Sigma^{-1}$. \CF{skip this, go straight to the scale-invariant for tensors?}
 
-We may instead maximize the scale-invariant function
+We instead maximize the scale-invariant function
 \begin{align}\label{eq:tilde ell}
   \tilde\ell_{\samp}(\Theta) = \frac1D\log\det \Theta - \log \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i}.
 \end{align}
@@ -1071,6 +1071,20 @@ Now note that
 $$ \sum_a \log \Theta_{op} \leq \sqrt{d_1} d(I, \Theta).$$ Thus if we set $\kappa = c/\max_a \sqrt{d_a}$ we will have that $f$ is $1/2$-strongly convex on the $\kappa$ ball. By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\sqrt{d_1} $ there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$; this inequality holds by our definition of $\delta$ and our second assumption on $\eps$. 
 
 By our choice of $\kappa$ and because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) \leq \sqrt{d_a} d(I, \widehat{\Theta}) \leq 2\delta \sqrt{ k d_a}.$ Applying $\eps = \delta \sqrt{k d_1}$ completes the proof.\end{proof}
+
+The minimizers of $\ell_\samp$ and $f_\samp$ are identical restricted to $\SPD$. However, the MLE need not have unit determinant, so it remains to show that we can use our consistency results for the minimizers of $f_\samp$ to show that the MLE itself is consistent.
+
+%However, $\Theta$ need not have unit determinant, and the MLE may not have 
+
+
+\begin{lemma}[Handling non-unit determinant]
+Suppose the minimizer of $f_\samp$ is within $\eps$ of $\Theta$ in $d_F$ (resp. $d_{op}$) with probability at most $p(\eps)$ for all $\Theta \in \SPD$. Then the MLE is within $\eps + \delta$ of $d_{op}$ with probability $p(\eps) + \gamma$.  
+\end{lemma}
+\begin{proof}
+Like the minimizer to $f_\samp$, the MLE is equivariant - that is, because $\ell_{\Sigma^{1/2} \samp} (\Upsilon) = \ell_\samp(\Sigma^{1/2} \Upsilon \Sigma^{1/2})$, for $X \sim \mathcal{N}(0, I)$ the minimizer $\hat{\Theta}_{\Sigma^{1/2}\rv}$ is has the same distribution as $\Sigma^{-1/2} \hat{\Theta}_{\rv} \Sigma^{-1/2}$. Thus, it is enough to prove the claim for $\Theta = I$. 
+
+Recall that if $f_\samp$ is minimized at $\widehat{\Theta}$, then $\ell_\samp$ is minimized at $\Theta':= n D e^{ - f_\samp(\widehat{\Theta})} \widehat{\Theta}:=\alpha  \widehat{\Theta}$. Thus $\Theta'_a := \alpha^{1/k}\widehat{\Theta}_a$. By our bound on $f_\samp(\Theta)$, $\alpha \in (1 \pm \delta)$ with probability $1 - q(\delta)$. Thus with probability $1 - q(\delta) + p(\eps)$, the distance of the MLE from the truth is $d(\Theta'_a;I) \in d( (1 \pm \delta)^{1/k}\widehat{\Theta}; I)$. By the approximate triangle inequality \CF{cite}, $d( (1 \pm \delta)^{1/k} \widehat{\Theta}_a; I) = O(d(\widehat{\Theta}; I) + d((1 \pm \delta)^{1/k}I; I))$. If $d = d_F$, the latter term is $O(\delta \sqrt{d_a}/k)$; if $d = d_{op}$ the latter is $O(\delta/k)$. \CF{how large are we thinking delta is?}
+\end{proof}
 
 
 
