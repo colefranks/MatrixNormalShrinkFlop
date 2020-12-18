@@ -1151,7 +1151,7 @@ and looking at the proof of \cref{thm:tensor-convexity}, we see that we actually
 which by Courant-Fischer is sufficient to show $\Phi$ is a $(1-3/4)$-quantum expander. 
 \end{proof}
 
-We will prove \cref{thm:operator-cheeger} in the following section, but before doing so we can use it to prove \cref{thm:matrix-normal}.
+We will prove \cref{thm:operator-cheeger} in the following section, but before doing so we can use it to prove \cref{thm:matrix-normal}. Note that if we used \cref{thm: operator-Pisier} instead, we would get the result of \cref{thm:matrix-normal} albeit with worse failure probability. 
 
 \begin{proof}[Proof of \cref{thm:matrix-normal}] As discussed in \cref{subsec:outline}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. By \cref{thm:operator-cheeger}, provided $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps_0^{-2}\} $ with probability $1 - O(e^{ - \Omega( d_2 \eps_0^2)})$ the operator $\Phi$ is $\delta:=\eps_0  \sqrt{\frac{d_2}{n d_1}}$-balanced and is a $(1 - c)$-quantum expander. Condition on this event. By our choice of $n$, we have $\delta \leq \lambda^2/\log d_1$ if we take $\eps_0 = \eps/\log(d_1)$ for $\eps \leq c$. By \cref{thm:klr},
 \begin{gather*} \| \widehat{\Theta}_1 - I_{d_1}\|_{op}, \| \widehat{\Theta}_2 - I_{d_2}\|_{op} \leq C \eps_0 \sqrt{\frac{d_2}{n d_1}} \log d_1 = O\left(\eps \sqrt{\frac{d_2}{n d_1}}\right).\end{gather*}
