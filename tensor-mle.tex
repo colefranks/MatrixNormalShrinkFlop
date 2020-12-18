@@ -119,6 +119,8 @@ Polishing:
 \item \AR{Can improve the strong convexity stuff by a factor of two by using the projection to traceless on both sides of the inner product}
 \item \CF{for the readers' sake some justification is needed for why perturbing $\samp$ this is the same as considering the Hessian of our function at another point in $\SPD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
 \item Define $B^\infty_c$ to be all $\Theta$ such that $\sum \|\log \Theta_a\|_{op} \leq c$. May be able to avoid this since everything is internal to proofs.
+\item Add some discussion for noise added to data.
+\item 
 \end{enumerate}
 
 }
@@ -126,7 +128,7 @@ Polishing:
 
 \section{Introduction}
 \CF{second try}
-Covariance matrix estimation is an important task in statistics, machine learning, and the empirical sciences. We consider covariance estimation for matrix-variate and tensor-variate data, that is, when individual data points are matrices or tensors. Matrix-variate data arises naturally in numerous applications like gene microarrays, spatio-temporal data, and brain imaging. However the dimensionality of these problems is frequently much higher than the number of samples, making estimation information-theoretically impossible without structural assumptions even in the Gaussian setting. 
+Covariance matrix estimation is an important task in statistics, machine learning, and the empirical sciences. We consider covariance estimation for matrix-variate and tensor-variate Gaussian data, that is, when individual data points are matrices or tensors. Matrix-variate data arises naturally in numerous applications like gene microarrays, spatio-temporal data, and brain imaging. However the dimensionality of these problems is frequently much higher than the number of samples, making estimation information-theoretically impossible without structural assumptions. 
 
 To remedy this issue, matrix-variate data is commonly assumed to follow the \emph{matrix normal distribution} \CF{cite dutilleul 99, werner 08}. That is, the matrix follows a multivariate Gaussian distribution and the covariance between any two entries in the matrix is a product of an inter-row factor and an inter-column factor. In spatio-temporal statistics this is referred to as a separable covariance structure. Formally, if a matrix normal random variable $X$ takes values in the $d_1\times d_2$ matrices, then its covariance matrix $\Sigma$ is a $d_1d_2\times d_1 d_2$ matrix that is the Kronecker product $\Sigma_1 \ot \Sigma_2$ of two positive-semidefinite matrices $\Sigma_1$ and $\Sigma_2$ of dimension $d_1\times d_1$ and $d_2\times d_2$, respectively. This naturally extends to the tensor normal model, the multivariate Gaussians on $k$-dimensional arrays with covariance matrix equal to the Kronecker product of $k$ many positive semidefinite matrices $\Sigma_1, \dots, \Sigma_k$. In this paper we consider the estimation of $\Sigma_1, \dots, \Sigma_k$ from $n$ samples of a matrix or tensor normal random variable $X$. 
 
@@ -242,32 +244,33 @@ $$\SL = \bigoplus_{a=1}^k \SL_{d_a}, \SPD = \bigoplus_{a = 1}^k \PD_{d_a}^1, \Sy
 %=============================================================================
 
 
-We consider the tensor normal model, in which $X_1, \dots, X_n \in \R^D$ are drawn i.i.d. from the random variable $X$ distributed according to the normal distribution $\cN(0, \Sigma)$, where the covariance matrix $\Sigma = \bigotimes_{a = 1}^{k} \Sigma_a \in \PD_D$ is the Kronecker product of positive definite $d_a\times d_a$ matrices $\Sigma_a$ for $a\in [k]$. Our goal is to estimate the $k$ Kronecker factors $\Sigma_1, \dots, \Sigma_k$ given access to the random tuple $X_1, \dots, X_n$. \CF{maybe the following discussion belongs in the intro}. 
+We consider the tensor normal model, in which $X_1, \dots, X_n \in \R^D$ are drawn i.i.d. from the normal distribution $\cN(0, \Sigma)$, where the covariance matrix $\Sigma = \bigotimes_{a = 1}^{k} \Sigma_a \in \PD_D$ is the Kronecker product of positive definite $d_a\times d_a$ matrices $\Sigma_a$ for $a\in [k]$. Our goal is to estimate the $k$ Kronecker factors $\Sigma_1, \dots, \Sigma_k$ given access to the random tuple $X_1, \dots, X_n$. \CF{maybe the following discussion belongs in the intro}. 
 
-One may think of the random variable $X$ as taking values in the set of $d_1 \times \dots \times d_k$ arrays of real numbers. There are $k$ natural ways to ``flatten" $X$ to a matrix: for example, we may think of it as a $d_1 \times d_2d_3...d_k$ matrix whose column indexed by $(i_2,\dots, i_k)$ is the vector in $\R^{d_1}$ with $i_1^{th}$ entry equal to $X_{i_1, \dots, i_k}$. In an analogous way we may flatten it to a $d_2 \times d_1d_3...d_k$ matrix, and so on. In the tensor normal model, the $d_2d_3\dots d_k$ many columns are each distributed as a Gaussian random vector with covariance proportional to $\Sigma_1$. Similarly the columns of the $d_2 \times d_1d_3...d_k$ flattening has columns proportional to $\Sigma_2$, and so on. As such, the columns of the $a^{th}$ flattening can be used to estimate $\Sigma_a$ up to a scalar. However, doing so na\"ively (e.g. using the sample covariance matrix of the columns) can result in an estimator with very high variance. This is because the columns of the flattenings are not independent. They may be so highly correlated that they effectively constitute only one random sample rather than $d_2\dots d_k$ many. The MLE decorrelates the columns to obtain rates like those one would obtain if the columns were independent.
+One may think of each random sample $X_j$ as taking values in the set of $d_1 \times \dots \times d_k$ arrays of real numbers. There are $k$ natural ways to ``flatten" $X_j$ to a matrix: for example, we may think of it as a $d_1 \times d_2d_3...d_k$ matrix whose column indexed by $(i_2,\dots, i_k)$ is the vector in $\R^{d_1}$ with $i_1^{th}$ entry equal to $(X_j)_{i_1, \dots, i_k}$. In an analogous way we may flatten it to a $d_2 \times d_1d_3...d_k$ matrix, and so on. In the tensor normal model, the $d_2d_3\dots d_k$ many columns are each distributed as a Gaussian random vector with covariance proportional to $\Sigma_1$. Similarly the columns of the $d_2 \times d_1d_3...d_k$ flattening has columns proportional to $\Sigma_2$, and so on. As such, the columns of the $a^{th}$ flattening can be used to estimate $\Sigma_a$ up to a scalar. However, doing so na\"ively (e.g. using the sample covariance matrix of the columns) can result in an estimator with very high variance. This is because the columns of the flattenings are not independent. They may be so highly correlated that they effectively constitute only one random sample rather than $d_2\dots d_k$ many. The MLE decorrelates the columns to obtain rates like those one would obtain if the columns were independent.
 
 
 
 The MLE is easier to state in terms of the precision matrices, the inverses of the covariance matrices. Let $\Theta$ denote the precision matrix $\Sigma^{-1}$, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$ where $\Theta_a = \Sigma_a^{-1}$. Given a tuple $\samp$ of samples  $\samp_1,\dots,\samp_n\in\R^D$, up to an additive constant the log likelihood is $
   \ell_{\samp}(\Theta)
 % = \frac n2 \log \det(\Theta/2\pi) - \sum_{i=1}^n \frac12 \braket{\samp_i, \Theta \samp_i} ~
-  = \frac n2 \log \det \Theta - \frac12 \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i}$, which we can write 
+  = \frac n2 \log \det \Theta - \frac12 \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i}$, which we can rewrite as
 \begin{align*}
   \ell_{\samp}(\Theta_1, \dots, \Theta_k)
 % = \frac n2 \log \det(\Theta/2\pi) - \sum_{i=1}^n \frac12 \braket{\samp_i, \Theta \samp_i} ~
-  = \frac {n D} 2 \sum_{a = 1}^k \frac{1}{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i},
+  = \frac {n D} 2 \sum_{a = 1}^k \frac{1}{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i}.
 \end{align*}
 One notes that $\Theta_a$ are not identifiable; we assume $\Theta_a$ have the same determinant in order to ensure identifiability. The maximum likelihood estimator (MLE) for $\Theta_a$ is given by 
 $$\widehat{\Theta}_1, \dots, \widehat{\Theta}_k := \underset{|\Theta_1| = |\Theta_2|= \dots = | \Theta_d|}{ \arg\max} \ell_x(\Theta_1, \dots, \Theta_k).$$
 
 
 
-The flip-flop algorithm has been put forth in \CF{cite dutilleul} to compute the MLE. For simplicity we describe it for the matrix normal model $(k = 2)$, so that $\samp_1, \dots, \samp_n$ can be viewed as $d_1\times d_2$ matrices. Initialize $\overline{\Theta}_a = I_a$, and choose a tolerance $\eps > 0$. 
+The MLE can be computed by an iterative procedure known as the flip-flop algorithm \CF{dutilleul, gurvits}. For simplicity, we describe it for the matrix normal model $(k = 2)$, so that $\samp_1, \dots, \samp_n$ can be viewed as $d_1\times d_2$ matrices. Initialize $\overline{\Theta}_a = I_a$, and choose a tolerance $\eps > 0$. 
 \begin{enumerate}
 %\item Normalize $\samp \leftarrow \samp/\|\samp\|$. 
 \item Set $\overline{\Theta}_1 \leftarrow (\frac{1}{n d_2} \sum_{i = 1}^n \samp_i \overline{\Theta}_2 \samp_i^T)^{-1}.$ 
 \item Set $\Upsilon = \frac{1}{n d_1} \sum_{i = 1}^n \samp_i^T \overline{\Theta}_1 \samp_i$.  If $d_F( \Upsilon; \overline{\Theta}_2) > \eps,$ set $\overline{\Theta}_2 \leftarrow \Upsilon^{-1}$ and return to Step 1; else output $\widehat{\Theta}_1, \widehat{\Theta}_2$.
 \end{enumerate}
+We can motivate this procedure by noting that if in the first step we have $\overline{\Theta}_2 = \Theta_2$, then $\overline{\Theta}_1^{-1} \leftarrow \frac{1}{n d_2} \sum_{i = 1}^n \rv_i \Theta_2 \rv_i^T$ is simply a sum of outer products of $nd_2$ many independent random vectors with covariance $\Sigma_1$; as such this is a good estimator for $\Sigma_1$. As we don't know $\Theta_2$, the flip-flop algorithm instead uses our current best guess $\overline{\Theta}_2$ instead. 
 
 %View the sample $\samp \in \R^{n D}$ as a $d_1\times \dots \times d_k \times n$ array. 
 
@@ -282,12 +285,14 @@ The flip-flop algorithm has been put forth in \CF{cite dutilleul} to compute the
 
 
 
-We may now state precisely our result for the tensor normal models. \CF{We should think a bit about the best parametrization of these bounds. I think they only match the fantasy bounds for the largest marginal.}
+We may now state precisely our result for the tensor normal models. \CF{We should think a bit about the best parametrization of these bounds. I think they only match the fantasy bounds for the largest marginal; off by at worst $\sqrt{d_1/d_k}$}
 \begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius} Suppose $\eps \leq c/\sqrt{d_k}$ and the number of samples satisfies $n \geq C k d_k^3/D\eps^2$. The MLE $(\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) $ for $(\Theta_1, \dots \Theta_k)$ from $n$ independent samples of the tensor normal model satisfies
-$$ d_{F}(\widehat{\Theta}_a, \Theta_a) = O\left( \sqrt{\frac{d_a d_k} {n D/d_k}}\eps\right) $$
+$$ d_{F}(\widehat{\Theta}_a, \Theta_a) = O\left( \sqrt{\frac{d_a d_1}{n D/d_k}}\eps\right) $$
 for $a \in [k]$ with probability at least 
 $$1 - k^2 \left(\sqrt{nD} / kd_1 \right)^{ - \Omega(d_1)} - O(k e^{ - \eps^2 d_k / k}).$$
 \end{theorem}
+For the largest precision matrix $\Theta_k$, this rate matches that of 
+
  In the case of matrix normal models $(k=2)$, we obtain the following stronger result.
 
 \begin{theorem}[Matrix normal model spectral error]\label{thm:matrix-normal} Suppose $d_1 \leq d_2$,
@@ -1087,7 +1092,7 @@ Next we must verify that $\|\nabla f\| < \kappa/2$. By \cref{it:grad-bd} we have
 
 By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\sqrt{d_k}$, which holds by our definition of $\delta$ and our second assumption on $\eps$, there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$. We now use this bound on geodesic distance to bound error in $d_F$ for the individual Kronecker factors. By our choice of $\kappa$ and because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\log \widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) \leq \sqrt{d_a} d(I, \widehat{\Theta}) \leq 2\delta \sqrt{ k d_a}.$ Applying $\delta = \eps /\sqrt{k d_k}$ yields $\| I_a - \widehat{\Theta}_a\|_F \leq 2\eps \sqrt{ d_a/d_k}$.
 
-We have shown that the minimizer $\widehat{\Theta}$ of $f_\samp$ is close to $I$, but it remains to show that the minimizer $\Theta'$ of $\ell_\samp$ exists and is close to $I$. For this, recall that if $f_\samp$ has the unique minimizer $\widehat{\Theta} \in \SPD$, then $\ell_\samp$ is minimized at $\Theta':= \alpha^{1/k}  \widehat{\Theta}$ where $\alpha:= n D e^{ - f_\samp(\widehat{\Theta})}$. We now show that $\alpha$ is very close to $1$. By \cref{lem:convex-ball}, $f_\samp(\widehat{\Theta}) \geq f_\samp(0) - k\delta^2$. We have $f(0) \geq f_\samp(0) = \log\| \samp\|^2_F$, and by \cref{it:norm-bd} we have $\| \samp\|_F^2 \in (1 \pm t) nD$ with $t = k \eps/\sqrt{\delta_1}$. Thus we have $\alpha \in [(1-t),  (1+t) e^{k \delta^2}]$, or $\alpha^{1/k} \in [1 \pm  O(\eps/\sqrt{d_k})]$ by our choice of $t$. By the approximate triangle inequality for $d_F$ \CF{insert and cite}, $d_F( \Theta'_a; I_a) = O(d_F(\widehat{\Theta}_a; I_a) + d_F(\alpha^{1/k} I_a; I_a)) = O(\eps \sqrt{d_a/d_k})$. The reparametrization $\eps \leftarrow \eps \sqrt{d_k^{3/2}/ n D}$ completes the proof.
+We have shown that the minimizer $\widehat{\Theta}$ of $f_\samp$ is close to $I$, but it remains to show that the minimizer $\Theta'$ of $\ell_\samp$ exists and is close to $I$. For this, recall that if $f_\samp$ has the unique minimizer $\widehat{\Theta} \in \SPD$, then $\ell_\samp$ is minimized at $\Theta':= \alpha^{1/k}  \widehat{\Theta}$ where $\alpha:= n D e^{ - f_\samp(\widehat{\Theta})}$. We now show that $\alpha$ is very close to $1$. By \cref{lem:convex-ball}, $f_\samp(\widehat{\Theta}) \geq f_\samp(0) - k\delta^2$. We have $f(0) \geq f_\samp(0) = \log\| \samp\|^2_F$, and by \cref{it:norm-bd} we have $\| \samp\|_F^2 \in (1 \pm t) nD$ with $t = k \eps/\sqrt{\delta_1}$. Thus we have $\alpha \in [(1-t),  (1+t) e^{k \delta^2}]$, or $\alpha^{1/k} \in [1 \pm  O(\eps/\sqrt{d_k})]$ by our choice of $t$. By the approximate triangle inequality for $d_F$ \CF{insert and cite}, $d_F( \Theta'_a; I_a) = O(d_F(\widehat{\Theta}_a; I_a) + d_F(\alpha^{1/k} I_a; I_a)) = O(\eps \sqrt{d_a/d_k})$. The reparametrization $\eps \leftarrow \eps \sqrt{d_k^{3/2}/ n D}$ completes the proof. \CF{fix reparametrization}
 \end{proof}
 
 
@@ -1493,16 +1498,13 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 \CF{prove that flip-flop works as soon as estimation in operator norm works. This goes by using KLR to show strong convexity holds in a ball about the optimizer}.
 
 
+\section{Lower bounds}
 
+Here we show that our bounds for the matrix normal model are best possible for estimating the individual matrices $\Theta_a$. The bound for $\Theta_2$ is clearly best possible because it is what we would obtain even if $\Theta_1$ were known, but in fact even the bound on $\Theta_1$ is tight. 
+\begin{thm}
+Let $\hat{\Theta}_1$ be any estimator. Then there is some value of 
 
-
-
-\section{Noise}
-\TODO{make sure things work under some error in the data; somewhat optional}
-
-
-\section{Complex tensors}
-\TODO{explain how to generalize to complex tensor models, maybe some quantum motivation?!}
+\end{thm}
 
 \section{Open problems}
 \TODO{$d_{op}$} for tensors??
