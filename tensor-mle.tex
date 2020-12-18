@@ -297,7 +297,7 @@ For the largest precision matrix $\Theta_k$, this rate matches that of
 
 \begin{theorem}[Matrix normal model spectral error]\label{thm:matrix-normal} Suppose $d_1 \leq d_2$,
 $$n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \log^2(d_1) \eps^{-2}\}$$ for $C$ a large enough constant and $\eps < c$ for a small enough constant $c$. The MLE $(\widehat{\Theta}_1,\widehat{\Theta}_2) $ for $(\Theta_1, \Theta_2)$ from $n$ independent samples of the matrix normal model satisfies
-$$ d_{op}(\widehat{\Theta}_a, \Theta_a) = O\left(\eps \sqrt{\frac{d_2}{n d_1}} \log d_1\right) $$
+$$ d_{op}(\widehat{\Theta}_2, \Theta_2) = O\left(\eps \sqrt{\frac{d_2}{n d_1}} \log d_1\right) $$
 for $a \in \{1,2\}$ with probability $1 - O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)})$.
 \end{theorem}
 
@@ -1501,10 +1501,13 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 \section{Lower bounds}
 
 Here we show that our bounds for the matrix normal model are best possible for estimating the individual matrices $\Theta_a$. The bound for $\Theta_2$ is clearly best possible because it is what we would obtain even if $\Theta_1$ were known, but in fact even the bound on $\Theta_1$ is tight. 
-\begin{thm}
-Let $\hat{\Theta}_1$ be any estimator. Then there is some value of 
+\begin{theorem}
+Let $\hat{\Theta}_1$ be any estimator for $\Theta_1$. There is a choice of $\Theta_2$ such that there is an estimator $\Theta'$ for the covariance a $d_1\times d_2$ Gaussian with of $\min \{d_1 n, d_2\}$ samples such that MSE $\Theta' \leq$ MSE $\hat{\Theta}$. 
+\end{theorem}
 
-\end{thm}
+\begin{proof}
+\CF{hopefully prove sheds light on the correct quantifier ordering on the statement}
+\end{proof}
 
 \section{Open problems}
 \TODO{$d_{op}$} for tensors??
