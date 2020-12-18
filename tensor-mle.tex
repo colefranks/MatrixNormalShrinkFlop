@@ -1144,11 +1144,11 @@ We have the following translation by \cref{lem:gradient}:
 \[ \sqrt{d_{1}} \nabla_{1} f_{x} = d_{1} \rho^{(1)} - I_{1} = d_{1} \Phi(I_{2})/ Tr[\Phi(I_{2})] - I_{1}  \]
 Therefore by \cref{prop:gradient-bound}, we have that our operator is $\eps$-doubly balanced with failure probability $\leq e^{-n d_{1} \eps^2/2C} + e^{-n d_{2} \eps^2/2C}$. As mentioned above, this is equivalent to $(I_{d_1}/\sqrt{d_1}, I_{d_2}/\sqrt{d_2})$ being an approximate singular pair, and by Lemma 3.6 in \cite{KLR19} we have $\sigma_1(\Phi) \leq (1+\eps)  \tr \Phi(I_{d_1})/\sqrt{d_1 d_2}$. 
 
-Next we would like to use the $k=2$ case of \cref{thm:tensor-convexity} which shows that $f_{x}$ is at least $3/4$-strongly convex at the identity with failure probability $O \left(\frac {\sqrt{nD}}{d_1}\right)^{ - \Omega(d_1)}$. We again have the following translation by \cref{lem:hessian}
+Next we would like to use the $k=2$ case of \cref{thm:tensor-convexity} which shows that $f_{x}$ is at least $3/4$-strongly convex at the identity with failure probability $O \left(\frac {\sqrt{nD}}{d_1}\right)^{ - \Omega(d_1)}$. This is not exactly a bound on $\sigma_{2}(\Phi)$, but we again have the following translation by \cref{lem:hessian}
 \[ \frac{1}{\sqrt{d_{1} d_{2}}} \langle Y, (\nabla_{12}^{2} F) Z \rangle = \langle Y, \Phi(Z) \rangle        \]
 and looking at the proof of \cref{thm:tensor-convexity}, we see that we actually have the bound:
 \[ \sup_{\langle Y, I_{1} \rangle = \langle Z, I_{2} \rangle = 0} \frac{\langle Y, \Phi(Z) \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq \frac{Tr[\Phi(I_{2})]}{4 \sqrt{d_{1} d_{2}}}       \]
-which by Courant-Fischer is sufficient to show $\Phi$ is a $(1-3/4)$-quantum expander. 
+Note by the Courant-Fischer variational characterization of singular values, this is sufficient to show $\Phi$ is a $(1-3/4)$-quantum expander. We remark that if we examine the proof of \cref{thm:klr} it turns out that they eventually translate the balancedness and expansion conditions to strong convexity. 
 \end{proof}
 
 We will prove \cref{thm:operator-cheeger} in the following section, but before doing so we can use it to prove \cref{thm:matrix-normal}. Note that if we used \cref{thm: operator-Pisier} instead, we would get the result of \cref{thm:matrix-normal} albeit with worse failure probability. 
