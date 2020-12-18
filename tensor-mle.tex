@@ -1100,7 +1100,7 @@ We now prove \cref{thm:matrix-normal}, an improvement to \cref{thm:tensor-froben
 
 
 
-The proof plan is similar to that in \cref{subsec:outline}, but rather than strong convexity we use the similar but stronger notion of quantum expansion \CF{cite klr, etc}, which allows us to obtain bounds on the distance to the optimizer from bounds on the \emph{operator norm} on the gradient rather than the Frobenius norm.
+The proof plan is similar to that in \cref{subsec:outline}, but rather than strong convexity we use the similar but stronger notion \AR{Why is this stronger?} of quantum expansion \CF{cite klr, etc}, which allows us to obtain bounds on the distance to the optimizer from bounds on the \emph{operator norm} on the gradient rather than the Frobenius norm.
 \CF{move this to appropriate place?}
 \begin{definition}[Quantum expansion]
 $ $
@@ -1118,7 +1118,7 @@ $$\sigma_2(\Phi) \leq \frac{(1 - \lambda)}{\sqrt{d_1d_2}} \tr \Phi(I_{d_2}).$$
 \end{enumerate}
 \end{definition}
 
-The rationale for the above definition is that $\Phi$ is doubly balanced when $(I_{d_1}/\sqrt{d_1}, I_{d_2}/\sqrt{d_2})$ is a singular pair for $\Phi$. This will approximately be the case in our setting (in fact, $\eps$-balancedness is none other than the conclusion of \cref{prop:gradient-bound} for $k = 2$), and in this case $\sigma_1(\Phi) =  \tr \Phi(I_{d_1})/\sqrt{d_1 d_2}.$ Thus $(1-\lambda)$ is like a spectral gap.
+The rationale for the above definition is that $\Phi$ is doubly balanced when $(I_{d_1}/\sqrt{d_1}, I_{d_2}/\sqrt{d_2})$ is a singular pair for $\Phi$. The conclusion of \cref{prop:gradient-bound} is exactly that $\Phi$ is $\eps$-doubly balanced, so $(I_{d_1}/\sqrt{d_1}, I_{d_2}/\sqrt{d_2})$ is an approximate singular pair and $\sigma_1(\Phi) \leq (1+\eps)  \tr \Phi(I_{d_1})/\sqrt{d_1 d_2}$. Thus $(1-\lambda - \eps)$ is the spectral gap.
 %$\sigma_1(\Phi) = \langle I_{d_1}/\sqrt{d_1}, \Phi(I_{d_1}/\sqrt{d_2}) \rangle$
 Our main tool is the following:
 
@@ -1127,13 +1127,31 @@ Our main tool is the following:
 If $\Phi$ is an $\eps$-balanced, $(1 - \lambda)$-quantum expander, and $\eps \leq c \lambda^2/\log d_1$, then the maximum likelihood estimator $(\widehat{\Theta}_1, \widehat{\Theta}_2) \in \SL_{d_1}\times \SL_{d_2}$ is unique and satisfies
 $$\| \widehat{\Theta}_1 - I_{d_1}\|_{op}, \| \widehat{\Theta}_2 - I_{d_2}\|_{op} \leq \frac{\eps \log d_1}{\lambda}.$$
 \end{theorem}
-Our main result for this section is that $\Phi$ is with high probability a good quantum expander, which allows us to apply the previous theorem.
+Our main result for this section is that $\Phi$ is with high probability a good quantum expander, which allows us to apply the previous theorem. 
 
 \begin{theorem}\label{thm:operator-cheeger}
 There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is $\eps \sqrt{d_2/n d_1}$-balanced and a $1 - c$ quantum expander with failure probability $O(e^{ - \Omega( d_2 \eps^2)}).$
 \end{theorem}
 
-Before proving the above result, we use it to prove \cref{thm:matrix-normal}.
+We will prove the above result in the following section using techniques similar to \cite{FM20} on Cheeger's inequality. As a preliminary result we can already prove that the MLE is close in operator norm, but with slightly worse failure probability using the tools for the tensor case:
+
+\begin{theorem} \label{thm: operator-Pisier}
+There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is $\eps \sqrt{d_2/n d_1}$-balanced and a $1 - c$ quantum expander with failure probability $O \left(\frac {\sqrt{nD}}{d_1}\right)^{ - \Omega(d_1)}$. 
+\end{theorem}
+
+\begin{proof}
+We have the following translation by \cref{lem:gradient}:
+\[ \sqrt{d_{1}} \nabla_{1} f_{x} = d_{1} \rho^{(1)} - I_{1} = d_{1} \Phi(I_{2})/ Tr[\Phi(I_{2})] - I_{1}  \]
+Therefore by \cref{prop:gradient-bound}, we have that our operator is $\eps$-doubly balanced with failure probability $\leq e^{-n d_{1} \eps^2/2C} + e^{-n d_{2} \eps^2/2C}$. As mentioned above, this is equivalent to $(I_{d_1}/\sqrt{d_1}, I_{d_2}/\sqrt{d_2})$ being an approximate singular pair, and by Lemma 3.6 in \cite{KLR19} we have $\sigma_1(\Phi) \leq (1+\eps)  \tr \Phi(I_{d_1})/\sqrt{d_1 d_2}$. 
+
+Next we would like to use the $k=2$ case of \cref{thm:tensor-convexity} which shows that $f_{x}$ is at least $3/4$-strongly convex at the identity with failure probability $O \left(\frac {\sqrt{nD}}{d_1}\right)^{ - \Omega(d_1)}$. We again have the following translation by \cref{lem:hessian}
+\[ \frac{1}{\sqrt{d_{1} d_{2}}} \langle Y, (\nabla_{12}^{2} F) Z \rangle = \langle Y, \Phi(Z) \rangle        \]
+and looking at the proof of \cref{thm:tensor-convexity}, we see that we actually have the bound:
+\[ \sup_{\langle Y, I_{1} \rangle = \langle Z, I_{2} \rangle = 0} \frac{\langle Y, \Phi(Z) \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq \frac{Tr[\Phi(I_{2})]}{4 \sqrt{d_{1} d_{2}}}       \]
+which by Courant-Fischer is sufficient to show $\Phi$ is a $(1-3/4)$-quantum expander. 
+\end{proof}
+
+We will prove \cref{thm:operator-cheeger} in the following section, but before doing so we can use it to prove \cref{thm:matrix-normal}.
 
 \begin{proof}[Proof of \cref{thm:matrix-normal}] As discussed in \cref{subsec:outline}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. By \cref{thm:operator-cheeger}, provided $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps_0^{-2}\} $ with probability $1 - O(e^{ - \Omega( d_2 \eps_0^2)})$ the operator $\Phi$ is $\delta:=\eps_0  \sqrt{\frac{d_2}{n d_1}}$-balanced and is a $(1 - c)$-quantum expander. Condition on this event. By our choice of $n$, we have $\delta \leq \lambda^2/\log d_1$ if we take $\eps_0 = \eps/\log(d_1)$ for $\eps \leq c$. By \cref{thm:klr},
 \begin{gather*} \| \widehat{\Theta}_1 - I_{d_1}\|_{op}, \| \widehat{\Theta}_2 - I_{d_2}\|_{op} \leq C \eps_0 \sqrt{\frac{d_2}{n d_1}} \log d_1 = O\left(\eps \sqrt{\frac{d_2}{n d_1}}\right).\end{gather*}
