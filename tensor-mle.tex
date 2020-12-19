@@ -780,7 +780,7 @@ $$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq (k - 1) \lambda + k \eps^2 + \eps $$
  In particular, $f_{\rv}$ is $\Omega(1)$ strongly convex with probability \TODO{propagate from \cref{cor:off-diag-hess}} . 
 \end{theorem}
 
-\begin{theorem}[\CF{new theorem}]\label{thm:tensor-convexity} There is an absolute constant $C$ such that the following holds. Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples $n$ is at least $C k^2 d_1^2/D$. Then, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$ we have
+\begin{theorem}[Strong convexity]\label{thm:tensor-convexity} There is an absolute constant $C$ such that the following holds. Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples $n$ is at least $C k^2 d_1^2/D$. Then, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$ we have
 %$$ I/2 \preceq  \nabla^2 f_{\rv} \preceq 2I.$$
 $$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq 1/4.$$
 In particular, $f_{\rv}$ is $3/4$-strongly convex at the identity.
@@ -889,7 +889,7 @@ $$ \|e^{\delta} - I\|_{op} \leq \|\delta\|_{op} + \|\delta\|_{op}^{2} \leq 2 \|\
 
 We will follow the structure presented in the last proof %by letting our input at the identity be represented by $x$ \CF{input at identity? use of "input" is in general imprecise} 
 by showing each block of the Hessian only changes a small amount under perturbation $x' := e^{\delta} x$ for $\delta \in \Sym$. In particular we will give bounds on each block under each component-wise perturbation $x' := (e^{\delta_{b}})_{b} x$. Recall (c.f. \cref{lem:hessian}) that the $a^{th}$ diagonal block of the Hessian depends only on $\rho^a_{\samp}$. This motivates the next two lemmas quantifying the change of $\rho^{a}
-_{\samp}$ under perturbations. 
+_{\samp}$ under perturbations. \CF{Akshay, will you use $\tr$ instead of $Tr$}
 
 %\CF{Akshay: $\sum_{a} \|\delta_{a}\|_{op} = \|\delta\|_{op}.$}
 %\CF{say stronger condition}
@@ -1105,7 +1105,7 @@ We now prove \cref{thm:matrix-normal}, an improvement to \cref{thm:tensor-froben
 
 
 
-The proof plan is similar to that in \cref{subsec:outline}, but rather than strong convexity we use the similar but stronger notion \AR{Why is this stronger?} of quantum expansion \CF{cite klr, etc}, which allows us to obtain bounds on the distance to the optimizer from bounds on the \emph{operator norm} on the gradient rather than the Frobenius norm.
+The proof plan is similar to that in \cref{subsec:outline}, but rather than strong convexity we use the similar notion of quantum expansion. Quantum expansion has been used in \CF{cite klr, etc} to obtain bounds on the distance to the optimizer from bounds on the \emph{operator norm} on the gradient rather than the Frobenius norm.
 \CF{move this to appropriate place?}
 \begin{definition}[Quantum expansion]
 $ $
@@ -1140,19 +1140,19 @@ There are absolute constants $c, C$ such that the following holds for all $d_1 \
 
 We will prove the above result in the following section using techniques similar to \cite{FM20} on Cheeger's inequality. As a preliminary result we can already prove that the MLE is close in operator norm, but with slightly worse failure probability using the tools for the tensor case:
 
-\begin{theorem} \label{thm: operator-Pisier}
+\begin{prop} \label{thm: operator-Pisier}
 There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is $\eps \sqrt{d_2/n d_1}$-balanced and a $1 - c$ quantum expander with failure probability $O \left(\frac {\sqrt{nD}}{d_1}\right)^{ - \Omega(d_1)}$. 
-\end{theorem}
+\end{prop}
 
 \begin{proof}
-We have the following translation by \cref{lem:gradient}:
+We have the following translation by \cref{lem:gradient}: \CF{use $\tr$ not $Tr$, also all through the robustness stuff}
 \[ \sqrt{d_{1}} \nabla_{1} f_{x} = d_{1} \rho^{(1)} - I_{1} = d_{1} \Phi(I_{2})/ Tr[\Phi(I_{2})] - I_{1}  \]
 Therefore by \cref{prop:gradient-bound}, we have that our operator is $\eps$-doubly balanced with failure probability $\leq e^{-n d_{1} \eps^2/2C} + e^{-n d_{2} \eps^2/2C}$. As mentioned above, this is equivalent to $(I_{d_1}/\sqrt{d_1}, I_{d_2}/\sqrt{d_2})$ being an approximate singular pair, and by Lemma 3.6 in \cite{KLR19} we have $\sigma_1(\Phi) \leq (1+\eps)  \tr \Phi(I_{d_1})/\sqrt{d_1 d_2}$. 
 
 Next we would like to use the $k=2$ case of \cref{thm:tensor-convexity} which shows that $f_{x}$ is at least $3/4$-strongly convex at the identity with failure probability $O \left(\frac {\sqrt{nD}}{d_1}\right)^{ - \Omega(d_1)}$. This is not exactly a bound on $\sigma_{2}(\Phi)$, but we again have the following translation by \cref{lem:hessian}
 \[ \frac{1}{\sqrt{d_{1} d_{2}}} \langle Y, (\nabla_{12}^{2} F) Z \rangle = \langle Y, \Phi(Z) \rangle        \]
-and looking at the proof of \cref{thm:tensor-convexity}, we see that we actually have the bound:
-\[ \sup_{\langle Y, I_{1} \rangle = \langle Z, I_{2} \rangle = 0} \frac{\langle Y, \Phi(Z) \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq \frac{Tr[\Phi(I_{2})]}{4 \sqrt{d_{1} d_{2}}}       \]
+and looking at the proof of \cref{thm:tensor-convexity} \CF{where? how? If needed, add the below inequality to the proof of theorem 13 and use \cref{} to refer to it here.}, we see that we actually have the bound:
+\[ \sup_{\langle Y, I_{1} \rangle = \langle Z, I_{2} \rangle = 0} \frac{\langle Y, \Phi(Z) \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq \frac{\tr[\Phi(I_{2})]}{4 \sqrt{d_{1} d_{2}}}       \]
 Note by the Courant-Fischer variational characterization of singular values, this is sufficient to show $\Phi$ is a $(1-3/4)$-quantum expander. We remark that if we examine the proof of \cref{thm:klr} it turns out that they eventually translate the balancedness and expansion conditions to strong convexity. 
 \end{proof}
 
@@ -1506,7 +1506,21 @@ Let $\hat{\Theta}_1$ be any estimator for $\Theta_1$. There is a choice of $\The
 \end{theorem}
 
 \begin{proof}
-\CF{hopefully prove sheds light on the correct quantifier ordering on the statement}
+\CF{hopefully proof sheds light on the correct quantifier ordering on the statement}
+\CF{ I think the most you can get is $nd_1$, actually}. 
+
+
+Let $B$ be any matrix such that the last $d_1 - d_2$ columns are zero. Given access to the $n$ samples $\sqrt{\Sigma_1} X_i B^T$, where $X_i$ are i.i.d Gaussian $d_1\times d_2$ matrices, clearly $\Theta_2$ has access to at most $n d_1$ samples of the Gaussian on $\R^{d_1}$ with covariance matrix $\Sigma_1$ because $X_i B^T$ depends only on the first $d_i$ columns of each $X_i$. 
+
+However, to lower bound the rates for estimating $\Theta_1$, we must supply invertible $B$ with this property. Let the first $d_1$ columns of $B$ have entries i.i.d uniform in $[-1,1]$, and let the remaining entries be i.i.d uniform in $[-\delta, \delta]$. If $\delta = 0$, then with access to the random variable $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ by the argument above $\Theta_2$ has access to at most $nd_1$ samples. However, we claim that as $\delta \to 0$, the distribution of $Y_\delta$ tends to that of $Y_0$ in total variation distance. Thus the distribution of $\Theta(Y_\delta) \to \Theta(Y_0)$ in total variation distance.This means that 
+
+
+%Then $\widehat{\Theta}_1$ is an estimator that has access to only $n d_1$ samples of a Gaussian. 
+
+ and let the last $d_2-d_1$ columns of $B$ have entries uniform in $[-\delta,\delta]$
+
+
+
 \end{proof}
 
 \section{Open problems}
