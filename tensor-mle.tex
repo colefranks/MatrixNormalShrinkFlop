@@ -881,192 +881,14 @@ The last thing we need is a lower bound on $\nabla^2_{aa} f.$ This operator is a
 
 
 
-We now show our second strong convexity result, namely that if our function is strongly convex at the origin then it is also strongly convex in an operator norm ball about the origin. We'll use an easy fact relating the exponential map and the operator norm.
+We now show our second strong convexity result, namely that if our function is strongly convex at the origin then it is also strongly convex in an operator norm ball about the origin. The proof is given in the appendix. 
 
-\begin{fact} For all symmetric $d\times d$ matrices $\delta $ such that $ \|\delta\|_{op} \leq \frac{1}{2}$, we have 
-$$ \|e^{\delta} - I\|_{op} \leq \|\delta\|_{op} + \|\delta\|_{op}^{2} \leq 2 \|\delta\|_{op}.$$ 
-\end{fact}
-
-We will follow the structure presented in the last proof %by letting our input at the identity be represented by $x$ \CF{input at identity? use of "input" is in general imprecise} 
-by showing each block of the Hessian only changes a small amount under perturbation $x' := e^{\delta} x$ for $\delta \in \Sym$. In particular we will give bounds on each block under each component-wise perturbation $x' := (e^{\delta_{b}})_{b} x$. Recall (c.f. \cref{lem:hessian}) that the $a^{th}$ diagonal block of the Hessian depends only on $\rho^a_{\samp}$. This motivates the next two lemmas quantifying the change of $\rho^{a}
-_{\samp}$ under perturbations. \CF{Akshay, will you use $\tr$ instead of $Tr$}
 
 %\CF{Akshay: $\sum_{a} \|\delta_{a}\|_{op} = \|\delta\|_{op}.$}
 %\CF{say stronger condition}
 \begin{theorem} \label{convexRobustness}
 There is a constant $c>0$ such that the following holds. If $f_{\samp}$ is $\alpha$-strongly convex at $I$; and for every $a \in [k]$ we have $\|d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a}\|_{op} = \|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$; and $\sum_{a} \|\delta_{a}\|_{op} \leq c$: then $f$ at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$ is $\geq (\alpha - k C \|\delta\|_{op})$-strongly convex for some universal constant $C$. 
 \end{theorem}
-
-Recall the definition of a quadratic form of the Hessian:
-\[ \langle Z, (\nabla^{2} f) Z \rangle = \langle Z, (\nabla^{2} F) Z \rangle + \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle     \]
-The second term is rank one, so the quadratic form is:
-\[ \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle = \left( \sum_{a} \sqrt{d_{a}} \langle \rho^{(a)}, Z_{a} \rangle   \right)^{2}       \]
-For the first term, we follow the same proof structure as $\cref{thm:tensor-convexity}$, and analyze diagonal and off-diagonal blocks separately:
-\[ \langle Z_{a}, \nabla^{2}_{aa} F Z_{a} \rangle = \langle d_{a} \rho^{(a)}, Z_{a}^{2} \rangle       \]
-\[ \langle Z_{a}, \nabla^{2}_{ba} Z_{b} \rangle = \langle \sqrt{d_{a} d_{b}} \rho^{(ab)}, Z_{a} \otimes Z_{b} \rangle   \]
-Theorem $\cref{thm:tensor-convexity}$ gives good bounds on the Hessian of $\samp$; so in order to bound the Hessian at perturbation $\samp' := \prod_{a} (e^{\delta_{a}})_{a} \samp$, it is enough to bound the difference. By the above discussion then we will bound the difference of each of the terms (diagonal $\nabla^{2}_{aa} F$, off-diagonal $\nabla^{2}_{ba} F$, and rank one $(\nabla^{2} f - \nabla^{2} F)$) under each component-wise perturbation. Note all three terms involve only $\{\rho^{(a)}\}, \{\rho^{(ab)}\}$, so we prove perturbations on marginals in the following lemmas.  
-
-\begin{lemma} \label{atoaaRobustness}
-For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{a})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$, if we denote $\samp' := (e^{\delta})_{a} \samp$ then
-\[ \|\rho_{\samp'}^{a} - \rho_{\samp}^{a}\|_{op} \leq 4.5 \|\delta\|_{op} \|\rho_{\samp}^{a}\|_{op}   . \]
-\end{lemma}
-\begin{proof} By definition, $\|\rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}\|_{op} = \sup_{\|Z\|_{1} \leq 1} \langle Z_{a}, \rho_{\samp'} - \rho_{\samp} \rangle $. 
-
-
-Choose $\eta$ such that  $\|(e^{\delta})_{a} \samp\|_{2}^{-1} = \|\samp\|_{2}^{-1} (1 + \eta)$; note that $|\eta| = O(\|\delta\|_{op})$ provided $c$ is small enough. Letting $\delta' := (1+\eta)e^{\delta} - I_{a}$. Assuming without loss of generality that $\|Z\|_{1} = 1$, we have 
-\[ | \langle Z_{a}, (I+\delta')_a \rho_{\samp} (I+\delta')_a - \rho_{\samp} \rangle | \]
-\[ \leq (2\|\delta'\|_{op} + \|\delta'\|_{op}^{2}) \|\rho^{(a)}\|_{op} \|Z\|_{1}    \]
-from which the lemma follows since 
-\[ \|\delta\|_{op} \leq .05 \implies \|\delta'\|_{op} \leq |\eta| + (1+|\eta|)(\|\delta\|_{op} + \|\delta\|_{op}^{2}) \leq  2.1 \|\delta\|_{op} \]
-\end{proof}
-
-%\CF{ I think we should combine these lemmas into a single one with two items.}\AR{The proofs are different, and I like the similar structure for diagonal/off-diagonal blocks. It may clutter the statements more to combine. }
-\begin{lemma} \label{btoaaRobustness}
-For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{b})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$, if we denote $\samp' := (e^{\delta})_{a} \samp$ then for $b \neq a$:
-\[ \|\rho_{\samp'}^{a} - \rho_{\samp}^{a}\|_{op} \leq 9.5 \|\delta\|_{op} \|\rho_{\samp}^{a}\|_{op}      \]
-\end{lemma}
-\begin{proof} 
-Choose $\eta$ such that $\|(e^{\delta})_{b} \samp\|_{2}^{-2} = (1+\eta) \|\samp\|_{2}^{-2}$; let $\delta' := (1+\eta)e^{2\delta} - I$. 
-\[ \|\delta\|_{op} \leq .1 \implies |\eta| \leq 2\|\delta\|_{op} + 4\|\delta\|_{op}^{2}, \hspace{3mm} \|\delta'\|_{op} \leq (2+|\eta|)(2\|\delta\|_{op} + 4\|\delta\|_{op}^{2}) \leq 9.24 \|\delta\|_{op} \]
-We assume for now $Z \succeq 0$. 
-\begin{align*} | \langle Z_{a}, (1+\eta) (e^{\delta})_{b} \rho_{\samp} (e^{\delta})_{b}^{*} - \rho_{\samp} \rangle| 
-& = | \langle Z_{a} \otimes \delta'_{b}, \rho_{\samp} \rangle   |  \\ 
-&\leq \langle Z \otimes |\delta'|, \rho_{\samp}^{(ab)} \rangle   
-\leq \|\delta'\|_{op} \langle Z, \rho_{\samp}^{(a)} \rangle    
-\end{align*}
-Here in the first inequality we used that $\rho_{\samp} \succeq 0, Z \succeq 0$; and the last inequality was by definition of marginals. 
-In general we decompose $Z = Z_{+} - Z_{-}$ and use the above to show
-\[ |\langle Z, \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)} \rangle| \leq \|\delta'\|_{op} (\|Z_{+}\|_{1} + \|Z_{-}\|_{1}) \|\rho_{\samp}^{(a)}\|_{op}     \]
-The lemma follows by noting $\|Z\|_{1} = \|Z_{+}\|_{1} + \|Z_{-}\|_{1}$ and $\|\delta\|_{op} \leq c$:
-\[ \|\delta'\|_{op} = \|(1+\eta) e^{2 \delta} - I\|_{op} \leq |\eta|(1 + 2 \|\delta\|_{op}) + 2\|\delta\|_{op} \leq O(\|\delta\|_{op})   \qedhere  \]
-\end{proof}
-
-This is already enough to prove a bound on the diagonal terms $\{\nabla^{2}_{aa} F\}$ and rank one term $(\nabla^{2} f - \nabla^{2} F)$. 
-
-\begin{corollary} \label{diagRobustness}
-For input $\samp \in \R^{nD}$ such that $\|d_{a} \rho_{\samp}^{(a)}\|_{op} \leq 1 + \frac{1}{20}$; and perturbation $\delta := \sum_{b} (\delta_{b} \in \mat(d_{b}))_{b}$ such that $\|\delta\|_{op} = \sum_{b} \|\delta_{b}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
-\[ \|\nabla^{2}_{aa} F(e^{2\delta}) - \nabla^{2}_{aa} F(I)\|_{op} \leq 11 \|\delta\|_{op}     \]
-\end{corollary}
-%\CF{technically $f(e^{\delta})$ corresponds to $e^{\delta/2} \samp$}
-\begin{proof}
-Recall from the discussion after \cref{convexRobustness} that $\langle Y, \nabla^{2}_{aa} F_{\samp} Y \rangle = \langle d_{a} \rho_{\samp}^{(a)}, Y^{2} \rangle$. We treat the perturbation as the composition of $k$ perturbations; 
-\[ \samp_{(0)}:=\samp \to \samp_{(1)}:= (e^{\delta_{1}})_1 \samp_{(0)} \to ... \to \samp_{(k)}:=(e^{\delta_{k}})_{k} \samp_{(k-1)} = \samp'  \]
-We can use $\cref{atoaaRobustness}$ to handle $e^{\delta_{a}}$ and $\cref{btoaaRobustness}$ for the rest:
-\begin{align*}
- |\langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, Y^{2} \rangle| 
- &\leq \sum_{j=1}^{k} |\langle \rho_{\samp_{(j)}}^{(a)} - \rho_{\samp_{(j-1)}}^{(a)}, Y^{2} \rangle| \underset{\cref{atoaaRobustness},\;\cref{btoaaRobustness}}{\leq} \sum_{j=1}^{k}  9.5 \|\delta_{j}\|_{op} \|\rho_{\samp_{(j-1)}}^{(a)}\|_{op} \|Y^{2}\|_{1} \\
-& \leq \left( \prod_{j=1}^k (1+9.5 \|\delta_{j}\|_{op}) - 1 \right) \|\rho_{\samp}^{(a)}\|_{op} \|Y\|_{F}^{2} \\
-&\leq 10 \|\delta\|_{op} \|\rho_{\samp}^{(a)}\|_{op} \|Y\|_{F}^{2}.   \end{align*}
-The term in parenthesis is shown by induction, and in the inequality we used $\|\delta\|_{op} \leq \frac{1}{20}$. The final step follows by our initial condition on $\|d_{a} \rho_{\samp}^{(a)}\|_{op}$. 
-\end{proof}
-
-\begin{corollary} \label{rankoneRobustness}
-For input $x \in \R^{nD}$ such that for all $a \in [k]$ such that $\|d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a}\|_{op} \leq \frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a} \in \mat(d_{a}))_{a}$ such that $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
-\[ \|(\nabla^{2} f_{\samp'} - \nabla^{2} F_{\samp'}) - (\nabla^{2} f_{\samp} - \nabla^{2} F_{\samp})\|_{op} \leq 1.5 k \|\delta\|_{op}     \]
-\end{corollary}
-\begin{proof}
-Recall again from the discussion after $\cref{convexRobustness}$ that $\langle Z, (\nabla^{2} F - \nabla^{2} f) Z \rangle = \left\langle \rho, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2}$. We use the same iterative strategy as $\cref{diagRobustness}$:
-\[    \left\langle \rho_{\samp'}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2} -  \left\langle \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2}    \]
-\[ = \left\langle \rho_{\samp'} + \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle \left\langle \rho_{\samp'} - \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle  \]
-\[ = \left( \sum_{a} \langle (d_{a} \rho_{\samp'}^{(a)} - \tr[\rho_{\samp'}] I_{a}) + (d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a}) , d_{a}^{-1/2} Z_{a} \rangle \right) \left( \sum_{a} \sqrt{d_{a}} \langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, Z_{a} \rangle \right)     \]
-%\AR{Here I could use that $Z \perp I$ to get a constant factor improvement; need an assumption on $\nabla$; but it improves the overall constant by factor $\approx 2$}
-\[ \leq \left( \sum_{a} (2 + 10 \|\delta\|_{op}) \|d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a} \|_{op} \|d_{a}^{-1/2} Z_{a}\|_{1}   \right) 
-\left( 10\|\delta\|_{op} \sum_{a} \sqrt{d_{a}} \| \rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{1}   \right)    \]
-\[ \leq \left( \sum_{a} \frac{2 + 10 \|\delta\|_{op}}{20} \|Z_{a}\|_{F}  \right) 
-\left( 10\|\delta\|_{op} \sum_{a} (1 + \frac{1}{20}) \|Z_{a}\|_{F} \right) 
-\leq 1.5 k \|\delta\|_{op} \|Z\|^{2}      \]
-%\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s?} \CF{the norm is just the standard norm, there shouldn't be $d_a$'s}
-% The final step follows from the initial conditions on $\|d_{a} \rho_{a}\|_{op}, \|d_{b} \rho_{b}\|_{op}$. 
-In the third line we used that $Z$ is traceless; in the last line we used our initial conditions on $\rho$; the last step was by Cauchy-Schwarz. 
-\end{proof}
-
-The off-diagonal blocks $\{\nabla^{2}_{ba} F\}$ are only slightly more difficult as we need the following on bipartite marginals:
-
-\begin{lemma} \label{btoabRobustness}
-For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{c})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := (e^{\delta})_{c} \samp$, then for $c \in \{a,b\}$ we have
-\[ \sup_{Y \in \smallSym_{d_{a}}^{0}, Z \in \smallSym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq 4.5 \|\delta\|_{op} \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}}        \]
-Note that in the LHS, $Y,Z$ are traceless, whereas on the RHS they are general symmetric matrices. 
-%\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 4.5 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}    \]
-\end{lemma}
-\begin{proof}
-%Recall from the discussion after $\cref{convexRobustness}$ that $\langle Y, (\nabla^{2}_{ab} F) Z \rangle = \sqrt{d_{a} d_{b}} \langle \rho^{(ab)}, Y \otimes Z \rangle$. 
-By taking adjoints, we can assume w.l.o.g. that $c = b$. Let $R : \mat(d_{b}) \to \mat(d_{b})$ be defined as $R(Z) := (1+\eta)^{2} e^{\delta} Z e^{\delta}$ for $\eta$ defined by our normalization $\|(e^{\delta})_{b} \samp\|_{2}^{-1} =: (1+\eta) \|\samp\|_{2}^{-1}$.
-\[ |\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle| = |\langle \rho_{\samp}^{(ab)}, Y \otimes (R(Z) - Z) \rangle|  \]
-The subspace $\smallSym_{d_{b}}^{0}$ is not invariant under $R$, but we show $R \approx I$. Let $\delta' := (1+\eta) e^{\delta} - I$. 
-\[ \|R(Z) - Z\|_{F} \leq 2 \|\delta' Z\|_{F} + \|\delta' Z \delta'\|_{F} \leq (2 \|\delta'\|_{op} + \|\delta'\|_{op}^{2}) \|Z\|_{F}    \]
-So we complete the proof using the fact that $Y,Z$ are traceless on the LHS of the inequality, and $\|\delta\|_{op} \leq \frac{1}{20}$ by the same calculation as in \cref{atoaaRobustness}. 
-\end{proof}
-
-\begin{lemma} \label{ctoabRobustness}
-For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{c})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := (e^{\delta})_{c} \samp$, then for $c \not\in \{a,b\}$ we have
-\[ \sup_{Y \in \smallSym_{d_{a}}^{0}, Z \in \smallSym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq 19 \|\delta\|_{op} \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}}        \]
-%\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 19 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}    \]
-\end{lemma}
-\begin{proof}
-Define $\eta$ for normalization $\|(e^{\delta})_{c} \samp\|_{2}^{-1} =: (1+\eta) \|\samp\|_{2}^{-2}$, and let $\delta' := (1+\eta) e^{2 \delta} - I_{c}$. We will use a similar decomposition to lemma \cref{btoaaRobustness}, so first assume $Y,Z \succeq 0, \|Y\|_{F} = \|Z\|_{F} = 1$:
-%\[ \frac{1}{\sqrt{d_{a} d_{b}} } \langle Y, (\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}) Z \rangle = \langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes \delta' \rangle   \]
-\[ |\langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes \delta' \rangle| \leq \langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes |\delta'| \rangle \leq \|\delta'\|_{op} \langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle   \]
-Here we again used that $\rho_{\samp}^{(abc)} \succeq 0$. %We cannot bound this by $c_{0}$ as $Y \succeq 0$, but the RHS $c$ is sufficient.  
-To finish the lemma we decompose $Y = Y_{+} - Y_{-}, Z = Z_{+} - Z_{-}$ and bound
-\[ |\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle| \leq \left( \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \right) \|\delta'\|_{op} \sum_{s,t \in \{+,-\}} \|Y_{s}\|_{F} \|Z_{t}\|_{F}   \]
-The summation we can bound by Cauchy Schwarz:
-\[ \leq (2\|Y_{+}\|_{F}^{2} + 2\|Y_{-}\|_{F}^{2})^{1/2} (2\|Z_{+}\|_{F}^{2} + 2\|Z_{-}\|_{F}^{2})^{1/2} = 2 \|Y\|_{F} \|Z\|_{F}     \]
-Using the the fact that the LHS is the $\sup$ over traceless matrices, as well as the same calculation from \cref{btoaaRobustness} using the condition $\|\delta\|_{op} \leq .05 \implies \|\delta'\| \leq 9.5 \|\delta\|_{op}$; we get the lemma. 
-\end{proof}
-
-We need the following to translate to statements on the Hessian:
-
-\begin{definition}
-For operator $M : \mat(d_{b}) \to \mat(d_{a})$, we let $\|M\|_{0}$ denote the $F \to F$ norm of its restriction to the traceless subspaces $\smallSym^0_{d_b} \to \smallSym^0_{d_a}$
-\end{definition}
-
-\begin{lemma}[\cite{KLR19}] \label{inftyto2}
-$\|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}^{2} \leq \|d_{a} \rho_{\samp}^{(a)}\|_{op} \|d_{b} \rho_{\samp}^{(b)}\|_{op}$
-\end{lemma}
-%\begin{proof}This was already in KLR and we have two new proofs: one by convexity, and one by Riesz-Thorin. \AR{The proofs are in some other file, we can add it if we like}\end{proof}
-
-\begin{corollary} \label{offdiagRobustness}
-For input $\samp \in \R^{nD}$ such that $\|d_{a} \rho_{\samp}^{(a)}\|_{op}, \|d_{b} \rho_{\samp}^{(b)}\|_{op} \leq 1+\frac{1}{20}$; perturbation $\delta := \sum_{c} (\delta_{c} \in \mat(d_{c}))_{c}$ with $\|\delta\|_{op} = \sum_{c} \|\delta_{c}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
-%\[ \frac{1}{\sqrt{d_{a} d_{b}}} \|\nabla^{2}_{ab} f(e^{2 \delta}) - \nabla^{2}_{ab} f(I)\|_{op} \leq 100 \|\delta\|_{op} \sqrt{\|\rho_{\samp}^{(a)}\|_{op} \|\rho_{\samp}^{(b)}\|_{op}}     \]
-\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 21 \|\delta\|_{op}  \]
-\end{corollary}
-\begin{proof}
-This is just a translation of \cref{btoabRobustness},\cref{ctoabRobustness}:
-\[ \sup_{Y \in \smallSym_{d_{a}}^{0}, Z \in \smallSym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} = \frac{\|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0}}{\sqrt{d_{a} d_{b}} } \]
-\[ \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} = \frac{\|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}}{\sqrt{d_{a} d_{b}} }       \]
-Using the same iterative strategy as \cref{diagRobustness} we can show: 
-\[ |\langle Y, (\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}) Z \rangle| \leq 20 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F} \|Y\|_{F} \|Z\|_{F}    \]
-We used \cref{btoabRobustness} for $\{a,b\}$ and \cref{ctoabRobustness} for the rest. The final step follows from $\cref{inftyto2}$ and the initial conditions on $\|d_{a} \rho_{a}\|_{op}, \|d_{b} \rho_{b}\|_{op}$. 
-\end{proof}
-
-Now it is a simple matter of putting the three terms together. 
-
-\begin{proof} [Proof of Theorem \cref{convexRobustness}]
-Recall the definition of a quadratic form of the Hessian:
-\[ \langle Z, (\nabla^{2} f) Z \rangle = \langle Z, (\nabla^{2} F) Z \rangle + \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle     \]
-\[ = \sum_{a} \langle Z_{a}, (\nabla^{2}_{aa} F) Z_{a} \rangle + \sum_{a \neq b} \langle Z_{a}, (\nabla^{2}_{ab} F) Z_{b} \rangle - \left( \sum_{a} \sqrt{d_{a}} \langle \rho^{(a)}, Z_{a} \rangle  \right)^{2}       \]
-Let $\{\samp'_{i} := e^{\delta} \samp\}$. Then by $\cref{diagRobustness}$ we have a bound on the diagonal blocks; by $\cref{offdiagRobustness}$ we have a bound on the off-diagonal blocks; and by $\cref{rankoneRobustness}$ we have a bound on the rank-one term. 
-\[ \langle Z, (\nabla^2 f_{\samp'} - \nabla^{2} f_{\samp}) Z \rangle \leq \|\delta\|_{op} \left( 11 \sum_{a} \|Z_{a}\|_{F}^{2} + 21 \sum_{a \neq b} \|Z_{a}\|_{F} \|Z_{b}\|_{F} + 1.5 k \|Z\|^{2} \right)   \]
-\[ \leq (11 + 21(k-1) + 1.5 k) \|\delta\|_{op} \|Z\|^{2}    \]
-Note that this also gives a spectral upper bound for $\nabla^{2} f_{\samp'}$. 
-%\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s? Also the constant is $50 k$ now, yay for better constants!}\CF{yay!}
-\end{proof}
-
-Finally we may prove \cref{thm:ball-convexity}.
-\begin{proof}[Proof of \cref{thm:ball-convexity}]
-By \cref{thm:tensor-convexity}, with failure probability $k^2 ({\sqrt{nD}}/{kd_1})^{ - \Omega(d_1)}$ we have that $f$ is $3/4$-strongly convex at $I$. By our bound on $n$,  \cref{prop:gradient-bound} applies and so $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$ with failure probability $\sum_a e^{ - \Omega(nD/d_a)})$. By our assumption on $n$ this is at most $k^2 ({\sqrt{nD}}/{kd_1})^{ - \Omega(d_1)}$. Conditioned on both bounds, by \cref{convexRobustness} there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $Z$ such that $\sum_a \|\log Z_a\|_{op} \leq  c$ for all $a \in [k]$. \end{proof}
-
-
-%$O\left( \sum_a e^{ - \Omega(nD/d_a)}\right)\leq k e^{- \Omega(nD/d_1)}$
-
-
-
-
-
-%\CF{make consistent with def 4, hessian}
-
-
-
 
 \subsection{Proof of \cref{thm:tensor-frobenius}}
 We are now ready to prove the main result of this section according to the plan outlined in \cref{subsec:outline}.
@@ -1138,7 +960,7 @@ Our main result for this section is that $\Phi$ is with high probability a good 
 There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is $\eps \sqrt{d_2/n d_1}$-balanced and a $1 - c$ quantum expander with failure probability $O(e^{ - \Omega( d_2 \eps^2)}).$
 \end{theorem}
 
-We will prove the above result in the following section using techniques similar to \cite{FM20} on Cheeger's inequality. As a preliminary result we can already prove that the MLE is close in operator norm, but with slightly worse failure probability using the tools for the tensor case:
+We will prove the above result in the appendix using techniques similar to \cite{FM20} on Cheeger's inequality. As a preliminary result we can already prove that the MLE is close in operator norm, but with slightly worse failure probability using the tools for the tensor case:
 
 \begin{prop} \label{thm: operator-Pisier}
 There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is $\eps \sqrt{d_2/n d_1}$-balanced and a $1 - c$ quantum expander with failure probability $O \left(\frac {\sqrt{nD}}{d_1}\right)^{ - \Omega(d_1)}$. 
@@ -1157,7 +979,7 @@ note \cref{thm:Pisier-expansion} gives the following with failure probability $\
 Note by the Courant-Fischer variational characterization of singular values, this is sufficient to show $\Phi$ is a $(1-3/4)$-quantum expander. We remark that if we examine the proof of \cref{thm:klr} it turns out that they eventually translate the balancedness and expansion conditions to strong convexity. 
 \end{proof}
 
-We will prove \cref{thm:operator-cheeger} in the following section, but before doing so we can use it to prove \cref{thm:matrix-normal}. Note that if we used \cref{thm: operator-Pisier} instead, we would get the result of \cref{thm:matrix-normal} albeit with worse failure probability. 
+Modulo the proof of \cref{thm:operator-cheeger} in the appendix, we have all the tools in place for \cref{thm:matrix-normal}. Note that if we used \cref{thm: operator-Pisier} instead, we would get the result of \cref{thm:matrix-normal} albeit with worse failure probability. 
 
 \begin{proof}[Proof of \cref{thm:matrix-normal}] As discussed in \cref{subsec:outline}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. By \cref{thm:operator-cheeger}, provided $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps_0^{-2}\} $ with probability $1 - O(e^{ - \Omega( d_2 \eps_0^2)})$ the operator $\Phi$ is $\delta:=\eps_0  \sqrt{\frac{d_2}{n d_1}}$-balanced and is a $(1 - c)$-quantum expander. Condition on this event. By our choice of $n$, we have $\delta \leq \lambda^2/\log d_1$ if we take $\eps_0 = \eps/\log(d_1)$ for $\eps \leq c$. By \cref{thm:klr},
 \begin{gather*} \| \widehat{\Theta}_1 - I_{d_1}\|_{op}, \| \widehat{\Theta}_2 - I_{d_2}\|_{op} \leq C \eps_0 \sqrt{\frac{d_2}{n d_1}} \log d_1 = O\left(\eps \sqrt{\frac{d_2}{n d_1}}\right).\end{gather*}
@@ -1169,154 +991,6 @@ The failure probability becomes $O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)})$.
 
 %The results in this section are better in that the covariances are approximated in operator norm rather than the looser Frobenius norm, and secondly that the failure probability is inverse exponential.
 
-
-
-
-
-
-
-\subsection{The Cheeger constant of a random operator}
-
-To prove \cref{thm:operator-cheeger}, we first define the Cheeger constant of an operator $\Phi:\mat(d_1) \to \mat(d_2)$. This is similar to a concept defined in \cite{H07}.
-\begin{definition}
-Let $\Phi : \mat(d_1) \to \mat(d_2)$ be a completely positive map. The Cheeger constant $\ch(\Phi)$ of the weighted bipartite graph associated to $B$ is given by
-$$\ch(\Phi):=\min_{\Pi_1, \Pi_2: \vol(\Pi_1, \Pi_2) \leq \tr \Phi(I)} \phi(\Pi_1,\Pi_2)$$
-where $\Pi_1: \C^{d_1} \to \C^{d_1}$ and $\Pi_1: \C^{d_2} \to \C^{d_2}$ are orthogonal projections that are not both zero and the \emph{conductance} $\phi$ of the cut $\Pi_1, \Pi_2$ is defined to be
-$$\phi(\Pi_1,\Pi_2) := \frac{\cut(\Pi_1, \Pi_2)}{\vol(\Pi_1,\Pi_2)}$$
-where
-%$$ \vol(\Pi_1,\Pi_2):= \sum_{i \in T, j \in [d_2]} b_{ij} + \sum_{i \in [d_1], j \in S} b_{ij}\textrm{ and } \cut(S, T):= \sum_{i \not\in T, j  \in S} b_{ij} + \sum_{i \in T, j \not\in S} b_{ij}.$$
-$$ \vol(\Pi_1,\Pi_2):=
-\tr \Phi(\Pi_1) + \tr \Phi^*(\Pi_2)$$
-and $$ \cut(\Pi_1, \Pi_2):= \tr \Pi_2 \Phi(I_{d_1} - \Pi_1) + \tr (I_{d_2} - \Pi_2) \Phi(\Pi_1).$$
-\end{definition}
-
-We now cite a slight generalization of \cite{FM20}.
-%Recall the function $$f^{\Phi}:\samp \mapsto \frac{d_1}{d_2} \log\det(\Phi(\samp)) - \log\det (\samp).$$
-
-\begin{lemma} [\cite{FM20}, \cite{KLR19}]\label{lem:op-cheeger} There exist absolute constants $c, C$ such if $\eps < c \ch(\Phi)^2$ and $\Phi$ is $\eps$-balanced, then $\Phi$ is a
-$$ \max\left\{1/2, 1 -  \ch(\Phi)^2 + C \frac{\eps}{\ch(\Phi)^2} \right\}$$
-quantum expander.
-\end{lemma}
-We proceed to bound the Cheeger constant of a random operator. The Cheeger constant of an operator is scale-invariant, so for convenience we let $\Phi$ have Kraus operators $\samp_1, \dots, \samp_n$, each drawn from $\cN(0,  I_{d_1} \ot I_{d_2}).$ Our main observation is the following.
-
-\begin{lemma}\label{fact:chi} Let $\Pi_1:\C^{d_1} \to \C^{d_1}, \Pi_2: \C^{d_2} \to \C^{d_2}$ be orthogonal projections, of rank $r_1, r_2$, respectively. Then $\cut(\Pi_1, \Pi_2), \vol(\Pi_1, \Pi_2), \vol(I_{d_1}, I_{d_2})$ is jointly distributed as
-$$ R_1, R_1 + 2R_2, 2R_1 + 2 R_2 + 2R_3$$ where
-$R_1, R_2, R_3$ are independent $\chi^2$ random variables with $F_1:=n r_1(d_2 - r_2) + n r_2(d_1-r_1), F_2:= n r_1r_2, F_3:= n(d_1 - r_1)(d_2 - r_2)$ degrees of freedom, respectively.
-\end{lemma}
-\begin{proof} As the distribution of $\Phi$ is invariant under the action of unitaries, the distribution of $\cut(\Pi_1, \Pi_2), \vol(\Pi_1, \Pi_2)$ depends only on the rank of $\Pi_1, \Pi_2$. Thus we may compute in the case that $\Pi_1, \Pi_2$ are coordinate projections, in which case one may verify the fact straightforwardly.
-\end{proof}
-
-
- We show a sufficient condition for the Cheeger constant being bounded away from $1$ that is amenable to the previous distributional description.
-\begin{lemma}\label{lem:suff}
-Let $r_1, r_2$ not both zero be the ranks of projections $\Pi_1: \C^{d_1} \to \C^{d_1}, \Pi_2: \C^{d_2} \to \C^{d_2}$, and let $F_1:= n r_1(d_2 - r_2) + n r_2(d_1-r_1)$ and $F_2:=n r_1r_2.$ If
-\begin{itemize}
-\item for all $\Pi_1, \Pi_2$ such that $F_2 \geq (4/9) n d_1 d_2$ we have
-\begin{gather}\vol(\Pi_1, \Pi_2) \geq (1/2 - \delta) \vol(I_{d_1}, I_{d_2}),\label{eq:vol}\end{gather} and
-\item for all $\Pi_1, \Pi_2$ such that $F_2 < (4/9) n d_1 d_2$, we have
-\begin{gather} \vol(\Pi_1, \Pi_2) \leq (4/3 + \delta)(F_1 + 2 F_2) \textrm{ and } \cut(\Pi_1, \Pi_2) \geq (2/3 - \delta) F_1,\label{eq:cut} \end{gather}
-\end{itemize}
-then $\ch(\Phi) \geq 1/6 - O(\delta)$ for $\delta \leq c$.
-\end{lemma}
-\begin{proof} By the first assumption, it remains to show that $F_1/(F_1 + 2 F_2) \geq 1/3$ provided $F_2 < (4/9) n d_1 d_2$, or $r_1 r_2 < (4/9) d_1 d_2$. Indeed, if either $r_1 = 0$ or $r_2 = 0$, then $F_2 = 0$ and $F_1>0$ and the claim holds, else
-\begin{align*}F_1/(F_1 + 2 F_2) &= \frac{r_1 d_2 + r_2 d_1 - 2 r_1 r_2}{r_1 d_2 + r_2 d_1}\\
- &= 1 -2 \sqrt\frac{ r_1 r_2}{d_1 d_2} \frac{1}{ \sqrt{ r_1 d_2/r_2 d_1} + \sqrt{r_2 d_1/ r_1 d_2}} \\
- &\geq 1 - \sqrt{4/9} = 1/3.
-\end{align*}
-
-In the last inequality we used that $a + a^{-1} \geq 2$ for all $a \in \R_+$ and that $r_1 r_2 < (4/9) d_1 d_2$. \end{proof}
-
-
-Next we use this to show that for fixed $\Pi_1, \Pi_2$, with high probability the events in \cref{lem:suff} hold.
-\begin{lemma}\label{lem:probabilities}
-Let $r_1, r_2$ not both zero be the ranks of projections $\Pi_1: \C^{d_1} \to \C^{d_1}, \Pi_2: \C^{d_2} \to \C^{d_2}$, and let $F_1:= n r_1(d_2 - r_2) + n r_2(d_1-r_1)$ and $F_2 = n r_1 r_2$. Then
-\begin{itemize}
-\item if $F_2 \geq (4/9) n d_1 d_2$, then \cref{eq:vol} holds with $\delta = 0$ with probability at least $1 - e^{-\Omega( n d_1 d_2)}$.
-\item else, \cref{eq:cut} holds with $\delta = 0$ with probability at least $1 - e^{-\Omega( F_1)}$.
-\item Finally, $\vol(\Pi_1, \Pi_2) \geq \frac{1}{2}\tr \Phi(I_{d_1}) (d_1/d_2)$ with probability at least $1 - e^{- \Omega(n r_1 d_2 + n r_2 d_1)}$.
-\end{itemize}
-\end{lemma}
-
-
-\begin{proof}
-Recall from \cref{fact:chi} that, $\cut(\Pi_1, \Pi_2), \vol(\Pi_1, \Pi_2), \vol(I_{d_1}, I_{d_2})$ are jointly distributed as $R_1, R_1 + 2R_2, 2R_1 + 2R_2 + 2R_3$ for $R_1, R_2, R_3$ independent $\chi^2$ random variables with $F_1, F_2, F_3$ degrees of freedom, respectively. Thus it is enough to show that
-\begin{itemize}
-\item If $nr_1 r_2 \geq (4/9) n d_1 d_2$, then with probability $1 - e^{- \Omega( n d_1 d_2)}$ we have $R_2 > R_3$, and
-\item if $nr_1 r_2 \leq (2/3) n d_1 d_2$, then with probability $1 - e^{- \Omega(F_1)}$ we have $R_1 \geq (2/3) F_1$ and $R_1 + 2R_2 \leq (4/3) (F_1 + 2 F_2),$
-\item and with probability $1 - e^{- \Omega(F_1 + 2 F_2)}$, $R_1 + 2R_2 \geq (2/3) (F_1 + 2 F_2) = (2/3) n (r_1 d_2 + r_2 d_1)$ and $R_1 + R_2 + R_3 \leq (4/3)(F_1 + F_2 + F_3) = (4/3)n d_1 d_2$.
-\end{itemize}
-All three follow from standard results for concentration of $\chi^2$ random variables \cite{W19}. To prove the first item, first note that $F_1 + 2 F_2 \geq (4/3)(F_1 + F_2 + F_3)$, because
-\begin{align*}
-(F_1 + 2 F_2)/( F_1 + F_2 + F_3) &= \frac{r_1}{d_1} + \frac{r_2}{d_2}\\
- &= \sqrt{ \frac{r_1 r_2}{d_1 d_2}}\left( \sqrt{ \frac{r_1 d_2}{r_2 d_1}} + \sqrt{ \frac{r_2 d_1}{r_1 d_2}}\right) \geq (2/3) \cdot 2 \geq 4/3.
-\end{align*}
-In particular, $F_2 \geq (2/3)(F_2 + F_3)$. Thus, with probability $1 - e^{- c F_2}$, $R_2 \geq (5/9) (F_2 + F_3)$ and $R_2 + R_3 \leq (10/9) (F _2 + F_3),$ so $R_2 > R_3$ with probability $1 - e^{- c F_2} \geq 1 - e^{- c n d_1 d_2}$. The second and third items are straightforward.
-\end{proof}
-
-Finally, we show using an epsilon net that the Cheeger constant is large for \emph{all} projections.
-\begin{lemma}[\cite{FM20}]\label{lem:net} There is a $\delta$-net $N$ of the rank $r$ orthogonal projections $\Pi: \C^d \to \C^d$ with $|N| = \exp(O(d r |\ln \delta|))$.
-\end{lemma}
-As a corollary, the number of pairs of projections $\Pi_1, \Pi_2$ of rank $r_1, r_2$ has a $\delta$-net of size on the order of $(r_1 d_1 + r_2 d_2) |\ln \delta|$.
-
-\begin{lemma}[A net suffices]\label{lem:net-suffices}
-Suppose $\|\Pi'_1 -\Pi_2\|_F, \|\Pi'_2 - \Pi_2\|_F \leq \delta$. Then
-\begin{align*} |\cut(\Pi_1, \Pi_2) - \cut(\Pi'_1, \Pi'_2)| \leq4\delta \tr \Phi(I_{d_1})\\
-\textrm{ and }|\vol(\Pi_1, \Pi_2) - \vol(\Pi'_1, \Pi'_2)| \leq 4\delta \tr \Phi(I_{d_1}).
-\end{align*}
-\end{lemma}
-\begin{proof}
-We first show the first inequality.
-\begin{align*}|\cut(\Pi'_1, \Pi'_2) - \cut(\Pi_1, \Pi_2)| & \leq |\tr \Pi'_2 \Phi(I_{d_1} - \Pi'_1) - \tr \Pi_2 \Phi(I_{d_1} - \Pi_1)|\\
-&  + |\tr (I_{d_2} - \Pi'_2) \Phi(\Pi'_2) - \tr (I_{d_2} - \Pi_2) \Phi(\Pi_2)|.
-\end{align*}
-We begin with the first term.
-\begin{align*}&|\tr \Pi'_2 \Phi(I_{d_1} - \Pi'_1) - \tr \Pi_2 \Phi(I_{d_1} - \Pi_1)|\\
-&= |\tr (\Pi'_2 - \Pi_2) \Phi(I_{d_1} - \Pi'_1) + \tr \Pi_2 \Phi(\Pi_1 - \Pi'_1)|\\
-&\leq \delta\| \Phi(I_{d_1} - \Pi'_1)\|_F + \delta\| \tr \Phi^*(\Pi_2)\|_F\\
-& \leq 2 \delta \tr \Phi(I_{d_1}).
-\end{align*}
-The second term follows by symmetry. The proof of the second inequality is similar.
-\end{proof}
-
-\begin{lemma}[Applying union bound]\label{lem:union}
-Let $d_1 < d_2$. Suppose $n \geq C \frac{d_2}{d_1} \log (d_2/d_1)$. Then $\ch(\Phi) = \Omega(1)$ with failure probability $O(e^{- \Omega(n d_1)})$.
-\end{lemma}
-\begin{proof} Let $\delta' \leq c d_1/d_2$. Let $\cN(r_1, r_2)$ be a $\delta'$-net for the pairs of projections of rank $r_1, r_2$, respectively, with $|\cN(r_1, r_2)| = e^{O((d_1r_1 + d_2 r_2) \log(1/\delta'))}$, and $N = \bigcup_{r_1, r_2} \cN(r_1, r_2)$. We claim that it is enough to show that with probability $\exp( - c n d_1 )$, for all $r_1, r_2$ not both zero we have
-\begin{enumerate}
-\item \cref{eq:vol} holds with $\delta = 0$ for every $\Pi_1,\Pi_2 \in \cN(r_1, r_2)$ when $r_1 r_2 \geq (4/9) d_1 d_2$,
-\item  and \cref{eq:cut} holds with $\delta =0$ for all $\Pi_1, \Pi_2 \in \cN(r_1, r_2)$ otherwise.
-\item $\vol(\Pi_1, \Pi_2) \geq \tr \Phi(I) (d_1/d_2)$.
-\end{enumerate}
-Let us check that the hypotheses of \cref{lem:suff} with $\delta \leq c$ are implied by these three items; this will imply that conditioned on the three items we have $\ch(\Phi) \geq \Omega(1)$. Because every pair $(\Pi'_1,\Pi'_2)$ of projections of ranks $r_1,r_2$ is most $\delta$ far from some element $(\Pi_1, \Pi_2)$ of $\cN(r_1,r_2)$, then by \cref{lem:net-suffices} (and the inequality $\vol(\Pi_1, \Pi_2) \geq \tr \Phi(I)(d_1/d_2)$) we have
-\begin{align*} (1 - 4 \delta'  \cdot d_2/d_1) \vol(\Pi_1, \Pi_2) \leq  \vol(\Pi_1', \Pi_2') \leq  (1 + 4 \delta'  \cdot d_2/d_1) \vol(\Pi_1, \Pi_2).\end{align*}
-By assumption, $4 \delta' \cdot d_2/d_1 \leq c$. This shows \cref{eq:vol} holds with $\delta \leq c$ when $r_1 r_2 \geq (4/9) d_1 d_2$. It remains to show that \cref{eq:cut} holds otherwise. Firstly, when $r_1 r_2 < (4/9) d_1 d_2$ we have
-\begin{gather} \vol(\Pi_1', \Pi_2') \leq (1 + c) \vol(\Pi_1, \Pi_2) \leq  (1 + c)(4/3)(F_1 + 2 F_2).\label{eq:not-net-9a}\end{gather}
-  Next, observe that
-$$  \cut(\Pi_1', \Pi_2') \geq \cut(\Pi_1, \Pi_2) - c \vol(\Pi_1, \Pi_2).$$
-In the proof of \cref{lem:suff} it is shown that if $r_1 r_2 < (4/9) d_1 d_2$ then $F_1 \geq \frac{1}{3} (F_1 + 2 F_2)$, in which case
-\begin{align}
-\cut(\Pi_1', \Pi_2') &\geq \cut(\Pi_1, \Pi_2) - c \vol(\Pi_1, \Pi_2) \geq \nonumber\\
-& \geq (2/3) F_1 -  c (4/3)(F_1 + 2 F_2) \geq (2/3 - c) F_1.\label{eq:not-net-9b}
-\end{align}
-
-Taken together, \cref{eq:not-net-9a,eq:not-net-9b} show that \cref{eq:cut} holds when $r_1 r_2 < (4/9) d_1 d_2$.
-
-We must next show that the three conditions hold with the desired probability. We show that for fixed $r_1, r_2$, each item holds with probability at least $1 - e^{n (r_1 d_2 + r_2 d_1)}$. The sum of $e^{-\Omega(n (r_1d_2 + r_2 d_1))}$ over all $0 \leq r_1 \leq d_1, 0 \leq r_2 \leq d_2$ apart from $r_1 = r_2 = 0$ is $O(e^{- \Omega( n d_1)})$, so the conditions hold for all $r_1, r_2$ with the desired probability. Note that by our choice of $n$ we have $(d_1r_1 + d_2 r_2) \log(1/\delta') \leq c n (r_1d_2 + r_2 d_1)$ for $r_1, r_2$ not both zero.
-
-We first bound the failure probability for the first item. By \cref{lem:probabilities}, if $r_1 r_2 \geq (4/9) d_1 d_2$ then \cref{eq:vol} holds for every $\Pi \in \cN(r_1, r_2)$ with probability
-\begin{align*}
-1 - |\cN(r_1, r_2)|e^{- \Omega( n d_1 d_2) } &= 1 - |\cN(r_1, r_2)| e^{ - \Omega(n (r_2d_1 + r_1d_2))}\\
-&= 1 - e^{ - \Omega(n (r_2d_1 + r_1d_2))}.
-\end{align*}
-
-Next we bound the probability for the second item. By \cref{lem:probabilities}, \cref{eq:cut} holds for fixed $\Pi \in \cN(r_1, r_2)$ with probability $1 - e^{-\Omega( F_1)}$, but as in the proof of \cref{lem:suff} we have $F_1 \geq \frac{1}{3} (F_1 + 2 F_2)$ when $r_1 r_2 < (4/9) d_1 d_2$, so $F_1 = \Omega(n (r_1d_2 + r_2 d_1))$. Now, by the union bound and the lower bound on $n$, \cref{eq:cut} holds for every element of $\cN(r_1, r_2)$ with probability $1 - |\cN(r_1,r_2)| e^{-\Omega(n (r_1d_2 + r_2 d_1)} = 1 - e^{-\Omega(n (r_1d_2 + r_2 d_1)}$.
-
-
-The third item holds with probability $1 - e^{-\Omega(n (r_1d_2 + r_2 d_1))}$ by \cref{lem:probabilities}, so by a similar application of the union bound and our choice of $n$ it holds for all elements of $\cN(r_1, r_2)$ with probability $1 - e^{-\Omega(n (r_1d_2 + r_2 d_1))}$. \end{proof}
-
-\begin{proof}[Proof of \cref{thm:operator-cheeger}]
-To prove \cref{thm:operator-cheeger}, we apply \cref{lem:op-cheeger} using \cref{prop:gradient-bound} to bound the balancedness of $\Phi$ and \cref{lem:union} to bound $\ch(\Phi)$. Indeed, $\|\nabla_a f\|_{op} \leq \eps_0$ for $a \in \{1,2\}$ if and only if $\Phi$ is $\eps_0$-balanced, so by \cref{prop:gradient-bound} the operator $\Phi$ is $\eps_0$-balanced with probability $1 -  e^{-\Omega(n d_1 \eps_0^2)} - e^{-\Omega(n d_2 \eps_0^2)} \geq 1 - 2e^{-\Omega(n d_1 \eps_0^2)}$ provided $n \geq C\eps_0^{-2} d_2/d_1 $. Setting $\eps_0 = \eps \sqrt{\frac{d_2 }{n d_1}}$ proves the balancedness claim. For the expansion, \cref{lem:union} shows $\ch(\Phi) = \Omega(1)$ with failure probability $O(e^{- \Omega(n d_1)}) = O(e^{- \Omega(d_2 \eps^2)})$. By \cref{lem:op-cheeger}, $\Phi$ is a $1 - c$-quantum expander.
-\end{proof}
 
 \newpage
 \section{Convergence of flip-flop algorithms}
@@ -1637,6 +1311,332 @@ The statement follows by $m \leq n$.
 %\[ \sum_{i=1}^{nD/d_{a}d_{b}} \frac{1}{nD} Y_{i} \otimes Y_{i}   \]
 %The norm $\|\cdot\|_{0}$ on its restriction to $\Sym_{d_{b}}^{0} \to \Sym_{d_{a}}^{0}$ is less than the quantity in the theorem, which is on the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}}$ whp, so for constant expansion it suffices that $nD \gg \max_{a} d_{a}^{2}$
 %\end{corollary}
+
+
+\section{Robustness Lemma}
+
+We'll use an easy fact relating the exponential map and the operator norm.
+
+\begin{fact} For all symmetric $d\times d$ matrices $\delta $ such that $ \|\delta\|_{op} \leq \frac{1}{2}$, we have 
+$$ \|e^{\delta} - I\|_{op} \leq \|\delta\|_{op} + \|\delta\|_{op}^{2} \leq 2 \|\delta\|_{op}.$$ 
+\end{fact}
+
+We will follow the structure presented in the last proof %by letting our input at the identity be represented by $x$ \CF{input at identity? use of "input" is in general imprecise} 
+by showing each block of the Hessian only changes a small amount under perturbation $x' := e^{\delta} x$ for $\delta \in \Sym$. In particular we will give bounds on each block under each component-wise perturbation $x' := (e^{\delta_{b}})_{b} x$. Recall (c.f. \cref{lem:hessian}) that the $a^{th}$ diagonal block of the Hessian depends only on $\rho^a_{\samp}$. This motivates the next two lemmas quantifying the change of $\rho^{a}
+_{\samp}$ under perturbations. \CF{Akshay, will you use $\tr$ instead of $Tr$}
+
+
+Recall the definition of a quadratic form of the Hessian:
+\[ \langle Z, (\nabla^{2} f) Z \rangle = \langle Z, (\nabla^{2} F) Z \rangle + \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle     \]
+The second term is rank one, so the quadratic form is:
+\[ \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle = \left( \sum_{a} \sqrt{d_{a}} \langle \rho^{(a)}, Z_{a} \rangle   \right)^{2}       \]
+For the first term, we follow the same proof structure as $\cref{thm:tensor-convexity}$, and analyze diagonal and off-diagonal blocks separately:
+\[ \langle Z_{a}, \nabla^{2}_{aa} F Z_{a} \rangle = \langle d_{a} \rho^{(a)}, Z_{a}^{2} \rangle       \]
+\[ \langle Z_{a}, \nabla^{2}_{ba} Z_{b} \rangle = \langle \sqrt{d_{a} d_{b}} \rho^{(ab)}, Z_{a} \otimes Z_{b} \rangle   \]
+Theorem $\cref{thm:tensor-convexity}$ gives good bounds on the Hessian of $\samp$; so in order to bound the Hessian at perturbation $\samp' := \prod_{a} (e^{\delta_{a}})_{a} \samp$, it is enough to bound the difference. By the above discussion then we will bound the difference of each of the terms (diagonal $\nabla^{2}_{aa} F$, off-diagonal $\nabla^{2}_{ba} F$, and rank one $(\nabla^{2} f - \nabla^{2} F)$) under each component-wise perturbation. Note all three terms involve only $\{\rho^{(a)}\}, \{\rho^{(ab)}\}$, so we prove perturbations on marginals in the following lemmas.  
+
+\begin{lemma} \label{atoaaRobustness}
+For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{a})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$, if we denote $\samp' := (e^{\delta})_{a} \samp$ then
+\[ \|\rho_{\samp'}^{a} - \rho_{\samp}^{a}\|_{op} \leq 4.5 \|\delta\|_{op} \|\rho_{\samp}^{a}\|_{op}   . \]
+\end{lemma}
+\begin{proof} By definition, $\|\rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}\|_{op} = \sup_{\|Z\|_{1} \leq 1} \langle Z_{a}, \rho_{\samp'} - \rho_{\samp} \rangle $. 
+
+
+Choose $\eta$ such that  $\|(e^{\delta})_{a} \samp\|_{2}^{-1} = \|\samp\|_{2}^{-1} (1 + \eta)$; note that $|\eta| = O(\|\delta\|_{op})$ provided $c$ is small enough. Letting $\delta' := (1+\eta)e^{\delta} - I_{a}$. Assuming without loss of generality that $\|Z\|_{1} = 1$, we have 
+\[ | \langle Z_{a}, (I+\delta')_a \rho_{\samp} (I+\delta')_a - \rho_{\samp} \rangle | \]
+\[ \leq (2\|\delta'\|_{op} + \|\delta'\|_{op}^{2}) \|\rho^{(a)}\|_{op} \|Z\|_{1}    \]
+from which the lemma follows since 
+\[ \|\delta\|_{op} \leq .05 \implies \|\delta'\|_{op} \leq |\eta| + (1+|\eta|)(\|\delta\|_{op} + \|\delta\|_{op}^{2}) \leq  2.1 \|\delta\|_{op} \]
+\end{proof}
+
+%\CF{ I think we should combine these lemmas into a single one with two items.}\AR{The proofs are different, and I like the similar structure for diagonal/off-diagonal blocks. It may clutter the statements more to combine. }
+\begin{lemma} \label{btoaaRobustness}
+For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{b})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$, if we denote $\samp' := (e^{\delta})_{a} \samp$ then for $b \neq a$:
+\[ \|\rho_{\samp'}^{a} - \rho_{\samp}^{a}\|_{op} \leq 9.5 \|\delta\|_{op} \|\rho_{\samp}^{a}\|_{op}      \]
+\end{lemma}
+\begin{proof} 
+Choose $\eta$ such that $\|(e^{\delta})_{b} \samp\|_{2}^{-2} = (1+\eta) \|\samp\|_{2}^{-2}$; let $\delta' := (1+\eta)e^{2\delta} - I$. 
+\[ \|\delta\|_{op} \leq .1 \implies |\eta| \leq 2\|\delta\|_{op} + 4\|\delta\|_{op}^{2}, \hspace{3mm} \|\delta'\|_{op} \leq (2+|\eta|)(2\|\delta\|_{op} + 4\|\delta\|_{op}^{2}) \leq 9.24 \|\delta\|_{op} \]
+We assume for now $Z \succeq 0$. 
+\begin{align*} | \langle Z_{a}, (1+\eta) (e^{\delta})_{b} \rho_{\samp} (e^{\delta})_{b}^{*} - \rho_{\samp} \rangle| 
+& = | \langle Z_{a} \otimes \delta'_{b}, \rho_{\samp} \rangle   |  \\ 
+&\leq \langle Z \otimes |\delta'|, \rho_{\samp}^{(ab)} \rangle   
+\leq \|\delta'\|_{op} \langle Z, \rho_{\samp}^{(a)} \rangle    
+\end{align*}
+Here in the first inequality we used that $\rho_{\samp} \succeq 0, Z \succeq 0$; and the last inequality was by definition of marginals. 
+In general we decompose $Z = Z_{+} - Z_{-}$ and use the above to show
+\[ |\langle Z, \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)} \rangle| \leq \|\delta'\|_{op} (\|Z_{+}\|_{1} + \|Z_{-}\|_{1}) \|\rho_{\samp}^{(a)}\|_{op}     \]
+The lemma follows by noting $\|Z\|_{1} = \|Z_{+}\|_{1} + \|Z_{-}\|_{1}$ and $\|\delta\|_{op} \leq c$:
+\[ \|\delta'\|_{op} = \|(1+\eta) e^{2 \delta} - I\|_{op} \leq |\eta|(1 + 2 \|\delta\|_{op}) + 2\|\delta\|_{op} \leq O(\|\delta\|_{op})   \qedhere  \]
+\end{proof}
+
+This is already enough to prove a bound on the diagonal terms $\{\nabla^{2}_{aa} F\}$ and rank one term $(\nabla^{2} f - \nabla^{2} F)$. 
+
+\begin{corollary} \label{diagRobustness}
+For input $\samp \in \R^{nD}$ such that $\|d_{a} \rho_{\samp}^{(a)}\|_{op} \leq 1 + \frac{1}{20}$; and perturbation $\delta := \sum_{b} (\delta_{b} \in \mat(d_{b}))_{b}$ such that $\|\delta\|_{op} = \sum_{b} \|\delta_{b}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
+\[ \|\nabla^{2}_{aa} F(e^{2\delta}) - \nabla^{2}_{aa} F(I)\|_{op} \leq 11 \|\delta\|_{op}     \]
+\end{corollary}
+%\CF{technically $f(e^{\delta})$ corresponds to $e^{\delta/2} \samp$}
+\begin{proof}
+Recall from the discussion after \cref{convexRobustness} that $\langle Y, \nabla^{2}_{aa} F_{\samp} Y \rangle = \langle d_{a} \rho_{\samp}^{(a)}, Y^{2} \rangle$. We treat the perturbation as the composition of $k$ perturbations; 
+\[ \samp_{(0)}:=\samp \to \samp_{(1)}:= (e^{\delta_{1}})_1 \samp_{(0)} \to ... \to \samp_{(k)}:=(e^{\delta_{k}})_{k} \samp_{(k-1)} = \samp'  \]
+We can use $\cref{atoaaRobustness}$ to handle $e^{\delta_{a}}$ and $\cref{btoaaRobustness}$ for the rest:
+\begin{align*}
+ |\langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, Y^{2} \rangle| 
+ &\leq \sum_{j=1}^{k} |\langle \rho_{\samp_{(j)}}^{(a)} - \rho_{\samp_{(j-1)}}^{(a)}, Y^{2} \rangle| \underset{\cref{atoaaRobustness},\;\cref{btoaaRobustness}}{\leq} \sum_{j=1}^{k}  9.5 \|\delta_{j}\|_{op} \|\rho_{\samp_{(j-1)}}^{(a)}\|_{op} \|Y^{2}\|_{1} \\
+& \leq \left( \prod_{j=1}^k (1+9.5 \|\delta_{j}\|_{op}) - 1 \right) \|\rho_{\samp}^{(a)}\|_{op} \|Y\|_{F}^{2} \\
+&\leq 10 \|\delta\|_{op} \|\rho_{\samp}^{(a)}\|_{op} \|Y\|_{F}^{2}.   \end{align*}
+The term in parenthesis is shown by induction, and in the inequality we used $\|\delta\|_{op} \leq \frac{1}{20}$. The final step follows by our initial condition on $\|d_{a} \rho_{\samp}^{(a)}\|_{op}$. 
+\end{proof}
+
+\begin{corollary} \label{rankoneRobustness}
+For input $x \in \R^{nD}$ such that for all $a \in [k]$ such that $\|d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a}\|_{op} \leq \frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a} \in \mat(d_{a}))_{a}$ such that $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
+\[ \|(\nabla^{2} f_{\samp'} - \nabla^{2} F_{\samp'}) - (\nabla^{2} f_{\samp} - \nabla^{2} F_{\samp})\|_{op} \leq 1.5 k \|\delta\|_{op}     \]
+\end{corollary}
+\begin{proof}
+Recall again from the discussion after $\cref{convexRobustness}$ that $\langle Z, (\nabla^{2} F - \nabla^{2} f) Z \rangle = \left\langle \rho, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2}$. We use the same iterative strategy as $\cref{diagRobustness}$:
+\[    \left\langle \rho_{\samp'}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2} -  \left\langle \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2}    \]
+\[ = \left\langle \rho_{\samp'} + \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle \left\langle \rho_{\samp'} - \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle  \]
+\[ = \left( \sum_{a} \langle (d_{a} \rho_{\samp'}^{(a)} - \tr[\rho_{\samp'}] I_{a}) + (d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a}) , d_{a}^{-1/2} Z_{a} \rangle \right) \left( \sum_{a} \sqrt{d_{a}} \langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, Z_{a} \rangle \right)     \]
+%\AR{Here I could use that $Z \perp I$ to get a constant factor improvement; need an assumption on $\nabla$; but it improves the overall constant by factor $\approx 2$}
+\[ \leq \left( \sum_{a} (2 + 10 \|\delta\|_{op}) \|d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a} \|_{op} \|d_{a}^{-1/2} Z_{a}\|_{1}   \right) 
+\left( 10\|\delta\|_{op} \sum_{a} \sqrt{d_{a}} \| \rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{1}   \right)    \]
+\[ \leq \left( \sum_{a} \frac{2 + 10 \|\delta\|_{op}}{20} \|Z_{a}\|_{F}  \right) 
+\left( 10\|\delta\|_{op} \sum_{a} (1 + \frac{1}{20}) \|Z_{a}\|_{F} \right) 
+\leq 1.5 k \|\delta\|_{op} \|Z\|^{2}      \]
+%\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s?} \CF{the norm is just the standard norm, there shouldn't be $d_a$'s}
+% The final step follows from the initial conditions on $\|d_{a} \rho_{a}\|_{op}, \|d_{b} \rho_{b}\|_{op}$. 
+In the third line we used that $Z$ is traceless; in the last line we used our initial conditions on $\rho$; the last step was by Cauchy-Schwarz. 
+\end{proof}
+
+The off-diagonal blocks $\{\nabla^{2}_{ba} F\}$ are only slightly more difficult as we need the following on bipartite marginals:
+
+\begin{lemma} \label{btoabRobustness}
+For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{c})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := (e^{\delta})_{c} \samp$, then for $c \in \{a,b\}$ we have
+\[ \sup_{Y \in \smallSym_{d_{a}}^{0}, Z \in \smallSym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq 4.5 \|\delta\|_{op} \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}}        \]
+Note that in the LHS, $Y,Z$ are traceless, whereas on the RHS they are general symmetric matrices. 
+%\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 4.5 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}    \]
+\end{lemma}
+\begin{proof}
+%Recall from the discussion after $\cref{convexRobustness}$ that $\langle Y, (\nabla^{2}_{ab} F) Z \rangle = \sqrt{d_{a} d_{b}} \langle \rho^{(ab)}, Y \otimes Z \rangle$. 
+By taking adjoints, we can assume w.l.o.g. that $c = b$. Let $R : \mat(d_{b}) \to \mat(d_{b})$ be defined as $R(Z) := (1+\eta)^{2} e^{\delta} Z e^{\delta}$ for $\eta$ defined by our normalization $\|(e^{\delta})_{b} \samp\|_{2}^{-1} =: (1+\eta) \|\samp\|_{2}^{-1}$.
+\[ |\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle| = |\langle \rho_{\samp}^{(ab)}, Y \otimes (R(Z) - Z) \rangle|  \]
+The subspace $\smallSym_{d_{b}}^{0}$ is not invariant under $R$, but we show $R \approx I$. Let $\delta' := (1+\eta) e^{\delta} - I$. 
+\[ \|R(Z) - Z\|_{F} \leq 2 \|\delta' Z\|_{F} + \|\delta' Z \delta'\|_{F} \leq (2 \|\delta'\|_{op} + \|\delta'\|_{op}^{2}) \|Z\|_{F}    \]
+So we complete the proof using the fact that $Y,Z$ are traceless on the LHS of the inequality, and $\|\delta\|_{op} \leq \frac{1}{20}$ by the same calculation as in \cref{atoaaRobustness}. 
+\end{proof}
+
+\begin{lemma} \label{ctoabRobustness}
+For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{c})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := (e^{\delta})_{c} \samp$, then for $c \not\in \{a,b\}$ we have
+\[ \sup_{Y \in \smallSym_{d_{a}}^{0}, Z \in \smallSym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq 19 \|\delta\|_{op} \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}}        \]
+%\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 19 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}    \]
+\end{lemma}
+\begin{proof}
+Define $\eta$ for normalization $\|(e^{\delta})_{c} \samp\|_{2}^{-1} =: (1+\eta) \|\samp\|_{2}^{-2}$, and let $\delta' := (1+\eta) e^{2 \delta} - I_{c}$. We will use a similar decomposition to lemma \cref{btoaaRobustness}, so first assume $Y,Z \succeq 0, \|Y\|_{F} = \|Z\|_{F} = 1$:
+%\[ \frac{1}{\sqrt{d_{a} d_{b}} } \langle Y, (\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}) Z \rangle = \langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes \delta' \rangle   \]
+\[ |\langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes \delta' \rangle| \leq \langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes |\delta'| \rangle \leq \|\delta'\|_{op} \langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle   \]
+Here we again used that $\rho_{\samp}^{(abc)} \succeq 0$. %We cannot bound this by $c_{0}$ as $Y \succeq 0$, but the RHS $c$ is sufficient.  
+To finish the lemma we decompose $Y = Y_{+} - Y_{-}, Z = Z_{+} - Z_{-}$ and bound
+\[ |\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle| \leq \left( \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \right) \|\delta'\|_{op} \sum_{s,t \in \{+,-\}} \|Y_{s}\|_{F} \|Z_{t}\|_{F}   \]
+The summation we can bound by Cauchy Schwarz:
+\[ \leq (2\|Y_{+}\|_{F}^{2} + 2\|Y_{-}\|_{F}^{2})^{1/2} (2\|Z_{+}\|_{F}^{2} + 2\|Z_{-}\|_{F}^{2})^{1/2} = 2 \|Y\|_{F} \|Z\|_{F}     \]
+Using the the fact that the LHS is the $\sup$ over traceless matrices, as well as the same calculation from \cref{btoaaRobustness} using the condition $\|\delta\|_{op} \leq .05 \implies \|\delta'\| \leq 9.5 \|\delta\|_{op}$; we get the lemma. 
+\end{proof}
+
+We need the following to translate to statements on the Hessian:
+
+\begin{definition}
+For operator $M : \mat(d_{b}) \to \mat(d_{a})$, we let $\|M\|_{0}$ denote the $F \to F$ norm of its restriction to the traceless subspaces $\smallSym^0_{d_b} \to \smallSym^0_{d_a}$
+\end{definition}
+
+\begin{lemma}[\cite{KLR19}] \label{inftyto2}
+$\|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}^{2} \leq \|d_{a} \rho_{\samp}^{(a)}\|_{op} \|d_{b} \rho_{\samp}^{(b)}\|_{op}$
+\end{lemma}
+%\begin{proof}This was already in KLR and we have two new proofs: one by convexity, and one by Riesz-Thorin. \AR{The proofs are in some other file, we can add it if we like}\end{proof}
+
+\begin{corollary} \label{offdiagRobustness}
+For input $\samp \in \R^{nD}$ such that $\|d_{a} \rho_{\samp}^{(a)}\|_{op}, \|d_{b} \rho_{\samp}^{(b)}\|_{op} \leq 1+\frac{1}{20}$; perturbation $\delta := \sum_{c} (\delta_{c} \in \mat(d_{c}))_{c}$ with $\|\delta\|_{op} = \sum_{c} \|\delta_{c}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
+%\[ \frac{1}{\sqrt{d_{a} d_{b}}} \|\nabla^{2}_{ab} f(e^{2 \delta}) - \nabla^{2}_{ab} f(I)\|_{op} \leq 100 \|\delta\|_{op} \sqrt{\|\rho_{\samp}^{(a)}\|_{op} \|\rho_{\samp}^{(b)}\|_{op}}     \]
+\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 21 \|\delta\|_{op}  \]
+\end{corollary}
+\begin{proof}
+This is just a translation of \cref{btoabRobustness},\cref{ctoabRobustness}:
+\[ \sup_{Y \in \smallSym_{d_{a}}^{0}, Z \in \smallSym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} = \frac{\|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0}}{\sqrt{d_{a} d_{b}} } \]
+\[ \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} = \frac{\|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}}{\sqrt{d_{a} d_{b}} }       \]
+Using the same iterative strategy as \cref{diagRobustness} we can show: 
+\[ |\langle Y, (\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}) Z \rangle| \leq 20 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F} \|Y\|_{F} \|Z\|_{F}    \]
+We used \cref{btoabRobustness} for $\{a,b\}$ and \cref{ctoabRobustness} for the rest. The final step follows from $\cref{inftyto2}$ and the initial conditions on $\|d_{a} \rho_{a}\|_{op}, \|d_{b} \rho_{b}\|_{op}$. 
+\end{proof}
+
+Now it is a simple matter of putting the three terms together. 
+
+\begin{proof} [Proof of Theorem \cref{convexRobustness}]
+Recall the definition of a quadratic form of the Hessian:
+\[ \langle Z, (\nabla^{2} f) Z \rangle = \langle Z, (\nabla^{2} F) Z \rangle + \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle     \]
+\[ = \sum_{a} \langle Z_{a}, (\nabla^{2}_{aa} F) Z_{a} \rangle + \sum_{a \neq b} \langle Z_{a}, (\nabla^{2}_{ab} F) Z_{b} \rangle - \left( \sum_{a} \sqrt{d_{a}} \langle \rho^{(a)}, Z_{a} \rangle  \right)^{2}       \]
+Let $\{\samp'_{i} := e^{\delta} \samp\}$. Then by $\cref{diagRobustness}$ we have a bound on the diagonal blocks; by $\cref{offdiagRobustness}$ we have a bound on the off-diagonal blocks; and by $\cref{rankoneRobustness}$ we have a bound on the rank-one term. 
+\[ \langle Z, (\nabla^2 f_{\samp'} - \nabla^{2} f_{\samp}) Z \rangle \leq \|\delta\|_{op} \left( 11 \sum_{a} \|Z_{a}\|_{F}^{2} + 21 \sum_{a \neq b} \|Z_{a}\|_{F} \|Z_{b}\|_{F} + 1.5 k \|Z\|^{2} \right)   \]
+\[ \leq (11 + 21(k-1) + 1.5 k) \|\delta\|_{op} \|Z\|^{2}    \]
+Note that this also gives a spectral upper bound for $\nabla^{2} f_{\samp'}$. 
+%\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s? Also the constant is $50 k$ now, yay for better constants!}\CF{yay!}
+\end{proof}
+
+Finally we may prove \cref{thm:ball-convexity}.
+\begin{proof}[Proof of \cref{thm:ball-convexity}]
+By \cref{thm:tensor-convexity}, with failure probability $k^2 ({\sqrt{nD}}/{kd_1})^{ - \Omega(d_1)}$ we have that $f$ is $3/4$-strongly convex at $I$. By our bound on $n$,  \cref{prop:gradient-bound} applies and so $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$ with failure probability $\sum_a e^{ - \Omega(nD/d_a)})$. By our assumption on $n$ this is at most $k^2 ({\sqrt{nD}}/{kd_1})^{ - \Omega(d_1)}$. Conditioned on both bounds, by \cref{convexRobustness} there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $Z$ such that $\sum_a \|\log Z_a\|_{op} \leq  c$ for all $a \in [k]$. \end{proof}
+
+
+%$O\left( \sum_a e^{ - \Omega(nD/d_a)}\right)\leq k e^{- \Omega(nD/d_1)}$
+
+
+
+
+
+%\CF{make consistent with def 4, hessian}
+
+
+\section{The Cheeger constant of a random operator}
+
+To prove \cref{thm:operator-cheeger}, we first define the Cheeger constant of an operator $\Phi:\mat(d_1) \to \mat(d_2)$. This is similar to a concept defined in \cite{H07}.
+\begin{definition}
+Let $\Phi : \mat(d_1) \to \mat(d_2)$ be a completely positive map. The Cheeger constant $\ch(\Phi)$ of the weighted bipartite graph associated to $B$ is given by
+$$\ch(\Phi):=\min_{\Pi_1, \Pi_2: \vol(\Pi_1, \Pi_2) \leq \tr \Phi(I)} \phi(\Pi_1,\Pi_2)$$
+where $\Pi_1: \C^{d_1} \to \C^{d_1}$ and $\Pi_1: \C^{d_2} \to \C^{d_2}$ are orthogonal projections that are not both zero and the \emph{conductance} $\phi$ of the cut $\Pi_1, \Pi_2$ is defined to be
+$$\phi(\Pi_1,\Pi_2) := \frac{\cut(\Pi_1, \Pi_2)}{\vol(\Pi_1,\Pi_2)}$$
+where
+%$$ \vol(\Pi_1,\Pi_2):= \sum_{i \in T, j \in [d_2]} b_{ij} + \sum_{i \in [d_1], j \in S} b_{ij}\textrm{ and } \cut(S, T):= \sum_{i \not\in T, j  \in S} b_{ij} + \sum_{i \in T, j \not\in S} b_{ij}.$$
+$$ \vol(\Pi_1,\Pi_2):=
+\tr \Phi(\Pi_1) + \tr \Phi^*(\Pi_2)$$
+and $$ \cut(\Pi_1, \Pi_2):= \tr \Pi_2 \Phi(I_{d_1} - \Pi_1) + \tr (I_{d_2} - \Pi_2) \Phi(\Pi_1).$$
+\end{definition}
+
+We now cite a slight generalization of \cite{FM20}.
+%Recall the function $$f^{\Phi}:\samp \mapsto \frac{d_1}{d_2} \log\det(\Phi(\samp)) - \log\det (\samp).$$
+
+\begin{lemma} [\cite{FM20}, \cite{KLR19}]\label{lem:op-cheeger} There exist absolute constants $c, C$ such if $\eps < c \ch(\Phi)^2$ and $\Phi$ is $\eps$-balanced, then $\Phi$ is a
+$$ \max\left\{1/2, 1 -  \ch(\Phi)^2 + C \frac{\eps}{\ch(\Phi)^2} \right\}$$
+quantum expander.
+\end{lemma}
+We proceed to bound the Cheeger constant of a random operator. The Cheeger constant of an operator is scale-invariant, so for convenience we let $\Phi$ have Kraus operators $\samp_1, \dots, \samp_n$, each drawn from $\cN(0,  I_{d_1} \ot I_{d_2}).$ Our main observation is the following.
+
+\begin{lemma}\label{fact:chi} Let $\Pi_1:\C^{d_1} \to \C^{d_1}, \Pi_2: \C^{d_2} \to \C^{d_2}$ be orthogonal projections, of rank $r_1, r_2$, respectively. Then $\cut(\Pi_1, \Pi_2), \vol(\Pi_1, \Pi_2), \vol(I_{d_1}, I_{d_2})$ is jointly distributed as
+$$ R_1, R_1 + 2R_2, 2R_1 + 2 R_2 + 2R_3$$ where
+$R_1, R_2, R_3$ are independent $\chi^2$ random variables with $F_1:=n r_1(d_2 - r_2) + n r_2(d_1-r_1), F_2:= n r_1r_2, F_3:= n(d_1 - r_1)(d_2 - r_2)$ degrees of freedom, respectively.
+\end{lemma}
+\begin{proof} As the distribution of $\Phi$ is invariant under the action of unitaries, the distribution of $\cut(\Pi_1, \Pi_2), \vol(\Pi_1, \Pi_2)$ depends only on the rank of $\Pi_1, \Pi_2$. Thus we may compute in the case that $\Pi_1, \Pi_2$ are coordinate projections, in which case one may verify the fact straightforwardly.
+\end{proof}
+
+
+ We show a sufficient condition for the Cheeger constant being bounded away from $1$ that is amenable to the previous distributional description.
+\begin{lemma}\label{lem:suff}
+Let $r_1, r_2$ not both zero be the ranks of projections $\Pi_1: \C^{d_1} \to \C^{d_1}, \Pi_2: \C^{d_2} \to \C^{d_2}$, and let $F_1:= n r_1(d_2 - r_2) + n r_2(d_1-r_1)$ and $F_2:=n r_1r_2.$ If
+\begin{itemize}
+\item for all $\Pi_1, \Pi_2$ such that $F_2 \geq (4/9) n d_1 d_2$ we have
+\begin{gather}\vol(\Pi_1, \Pi_2) \geq (1/2 - \delta) \vol(I_{d_1}, I_{d_2}),\label{eq:vol}\end{gather} and
+\item for all $\Pi_1, \Pi_2$ such that $F_2 < (4/9) n d_1 d_2$, we have
+\begin{gather} \vol(\Pi_1, \Pi_2) \leq (4/3 + \delta)(F_1 + 2 F_2) \textrm{ and } \cut(\Pi_1, \Pi_2) \geq (2/3 - \delta) F_1,\label{eq:cut} \end{gather}
+\end{itemize}
+then $\ch(\Phi) \geq 1/6 - O(\delta)$ for $\delta \leq c$.
+\end{lemma}
+\begin{proof} By the first assumption, it remains to show that $F_1/(F_1 + 2 F_2) \geq 1/3$ provided $F_2 < (4/9) n d_1 d_2$, or $r_1 r_2 < (4/9) d_1 d_2$. Indeed, if either $r_1 = 0$ or $r_2 = 0$, then $F_2 = 0$ and $F_1>0$ and the claim holds, else
+\begin{align*}F_1/(F_1 + 2 F_2) &= \frac{r_1 d_2 + r_2 d_1 - 2 r_1 r_2}{r_1 d_2 + r_2 d_1}\\
+ &= 1 -2 \sqrt\frac{ r_1 r_2}{d_1 d_2} \frac{1}{ \sqrt{ r_1 d_2/r_2 d_1} + \sqrt{r_2 d_1/ r_1 d_2}} \\
+ &\geq 1 - \sqrt{4/9} = 1/3.
+\end{align*}
+
+In the last inequality we used that $a + a^{-1} \geq 2$ for all $a \in \R_+$ and that $r_1 r_2 < (4/9) d_1 d_2$. \end{proof}
+
+
+Next we use this to show that for fixed $\Pi_1, \Pi_2$, with high probability the events in \cref{lem:suff} hold.
+\begin{lemma}\label{lem:probabilities}
+Let $r_1, r_2$ not both zero be the ranks of projections $\Pi_1: \C^{d_1} \to \C^{d_1}, \Pi_2: \C^{d_2} \to \C^{d_2}$, and let $F_1:= n r_1(d_2 - r_2) + n r_2(d_1-r_1)$ and $F_2 = n r_1 r_2$. Then
+\begin{itemize}
+\item if $F_2 \geq (4/9) n d_1 d_2$, then \cref{eq:vol} holds with $\delta = 0$ with probability at least $1 - e^{-\Omega( n d_1 d_2)}$.
+\item else, \cref{eq:cut} holds with $\delta = 0$ with probability at least $1 - e^{-\Omega( F_1)}$.
+\item Finally, $\vol(\Pi_1, \Pi_2) \geq \frac{1}{2}\tr \Phi(I_{d_1}) (d_1/d_2)$ with probability at least $1 - e^{- \Omega(n r_1 d_2 + n r_2 d_1)}$.
+\end{itemize}
+\end{lemma}
+
+
+\begin{proof}
+Recall from \cref{fact:chi} that, $\cut(\Pi_1, \Pi_2), \vol(\Pi_1, \Pi_2), \vol(I_{d_1}, I_{d_2})$ are jointly distributed as $R_1, R_1 + 2R_2, 2R_1 + 2R_2 + 2R_3$ for $R_1, R_2, R_3$ independent $\chi^2$ random variables with $F_1, F_2, F_3$ degrees of freedom, respectively. Thus it is enough to show that
+\begin{itemize}
+\item If $nr_1 r_2 \geq (4/9) n d_1 d_2$, then with probability $1 - e^{- \Omega( n d_1 d_2)}$ we have $R_2 > R_3$, and
+\item if $nr_1 r_2 \leq (2/3) n d_1 d_2$, then with probability $1 - e^{- \Omega(F_1)}$ we have $R_1 \geq (2/3) F_1$ and $R_1 + 2R_2 \leq (4/3) (F_1 + 2 F_2),$
+\item and with probability $1 - e^{- \Omega(F_1 + 2 F_2)}$, $R_1 + 2R_2 \geq (2/3) (F_1 + 2 F_2) = (2/3) n (r_1 d_2 + r_2 d_1)$ and $R_1 + R_2 + R_3 \leq (4/3)(F_1 + F_2 + F_3) = (4/3)n d_1 d_2$.
+\end{itemize}
+All three follow from standard results for concentration of $\chi^2$ random variables \cite{W19}. To prove the first item, first note that $F_1 + 2 F_2 \geq (4/3)(F_1 + F_2 + F_3)$, because
+\begin{align*}
+(F_1 + 2 F_2)/( F_1 + F_2 + F_3) &= \frac{r_1}{d_1} + \frac{r_2}{d_2}\\
+ &= \sqrt{ \frac{r_1 r_2}{d_1 d_2}}\left( \sqrt{ \frac{r_1 d_2}{r_2 d_1}} + \sqrt{ \frac{r_2 d_1}{r_1 d_2}}\right) \geq (2/3) \cdot 2 \geq 4/3.
+\end{align*}
+In particular, $F_2 \geq (2/3)(F_2 + F_3)$. Thus, with probability $1 - e^{- c F_2}$, $R_2 \geq (5/9) (F_2 + F_3)$ and $R_2 + R_3 \leq (10/9) (F _2 + F_3),$ so $R_2 > R_3$ with probability $1 - e^{- c F_2} \geq 1 - e^{- c n d_1 d_2}$. The second and third items are straightforward.
+\end{proof}
+
+Finally, we show using an epsilon net that the Cheeger constant is large for \emph{all} projections.
+\begin{lemma}[\cite{FM20}]\label{lem:net} There is a $\delta$-net $N$ of the rank $r$ orthogonal projections $\Pi: \C^d \to \C^d$ with $|N| = \exp(O(d r |\ln \delta|))$.
+\end{lemma}
+As a corollary, the number of pairs of projections $\Pi_1, \Pi_2$ of rank $r_1, r_2$ has a $\delta$-net of size on the order of $(r_1 d_1 + r_2 d_2) |\ln \delta|$.
+
+\begin{lemma}[A net suffices]\label{lem:net-suffices}
+Suppose $\|\Pi'_1 -\Pi_2\|_F, \|\Pi'_2 - \Pi_2\|_F \leq \delta$. Then
+\begin{align*} |\cut(\Pi_1, \Pi_2) - \cut(\Pi'_1, \Pi'_2)| \leq4\delta \tr \Phi(I_{d_1})\\
+\textrm{ and }|\vol(\Pi_1, \Pi_2) - \vol(\Pi'_1, \Pi'_2)| \leq 4\delta \tr \Phi(I_{d_1}).
+\end{align*}
+\end{lemma}
+\begin{proof}
+We first show the first inequality.
+\begin{align*}|\cut(\Pi'_1, \Pi'_2) - \cut(\Pi_1, \Pi_2)| & \leq |\tr \Pi'_2 \Phi(I_{d_1} - \Pi'_1) - \tr \Pi_2 \Phi(I_{d_1} - \Pi_1)|\\
+&  + |\tr (I_{d_2} - \Pi'_2) \Phi(\Pi'_2) - \tr (I_{d_2} - \Pi_2) \Phi(\Pi_2)|.
+\end{align*}
+We begin with the first term.
+\begin{align*}&|\tr \Pi'_2 \Phi(I_{d_1} - \Pi'_1) - \tr \Pi_2 \Phi(I_{d_1} - \Pi_1)|\\
+&= |\tr (\Pi'_2 - \Pi_2) \Phi(I_{d_1} - \Pi'_1) + \tr \Pi_2 \Phi(\Pi_1 - \Pi'_1)|\\
+&\leq \delta\| \Phi(I_{d_1} - \Pi'_1)\|_F + \delta\| \tr \Phi^*(\Pi_2)\|_F\\
+& \leq 2 \delta \tr \Phi(I_{d_1}).
+\end{align*}
+The second term follows by symmetry. The proof of the second inequality is similar.
+\end{proof}
+
+\begin{lemma}[Applying union bound]\label{lem:union}
+Let $d_1 < d_2$. Suppose $n \geq C \frac{d_2}{d_1} \log (d_2/d_1)$. Then $\ch(\Phi) = \Omega(1)$ with failure probability $O(e^{- \Omega(n d_1)})$.
+\end{lemma}
+\begin{proof} Let $\delta' \leq c d_1/d_2$. Let $\cN(r_1, r_2)$ be a $\delta'$-net for the pairs of projections of rank $r_1, r_2$, respectively, with $|\cN(r_1, r_2)| = e^{O((d_1r_1 + d_2 r_2) \log(1/\delta'))}$, and $N = \bigcup_{r_1, r_2} \cN(r_1, r_2)$. We claim that it is enough to show that with probability $\exp( - c n d_1 )$, for all $r_1, r_2$ not both zero we have
+\begin{enumerate}
+\item \cref{eq:vol} holds with $\delta = 0$ for every $\Pi_1,\Pi_2 \in \cN(r_1, r_2)$ when $r_1 r_2 \geq (4/9) d_1 d_2$,
+\item  and \cref{eq:cut} holds with $\delta =0$ for all $\Pi_1, \Pi_2 \in \cN(r_1, r_2)$ otherwise.
+\item $\vol(\Pi_1, \Pi_2) \geq \tr \Phi(I) (d_1/d_2)$.
+\end{enumerate}
+Let us check that the hypotheses of \cref{lem:suff} with $\delta \leq c$ are implied by these three items; this will imply that conditioned on the three items we have $\ch(\Phi) \geq \Omega(1)$. Because every pair $(\Pi'_1,\Pi'_2)$ of projections of ranks $r_1,r_2$ is most $\delta$ far from some element $(\Pi_1, \Pi_2)$ of $\cN(r_1,r_2)$, then by \cref{lem:net-suffices} (and the inequality $\vol(\Pi_1, \Pi_2) \geq \tr \Phi(I)(d_1/d_2)$) we have
+\begin{align*} (1 - 4 \delta'  \cdot d_2/d_1) \vol(\Pi_1, \Pi_2) \leq  \vol(\Pi_1', \Pi_2') \leq  (1 + 4 \delta'  \cdot d_2/d_1) \vol(\Pi_1, \Pi_2).\end{align*}
+By assumption, $4 \delta' \cdot d_2/d_1 \leq c$. This shows \cref{eq:vol} holds with $\delta \leq c$ when $r_1 r_2 \geq (4/9) d_1 d_2$. It remains to show that \cref{eq:cut} holds otherwise. Firstly, when $r_1 r_2 < (4/9) d_1 d_2$ we have
+\begin{gather} \vol(\Pi_1', \Pi_2') \leq (1 + c) \vol(\Pi_1, \Pi_2) \leq  (1 + c)(4/3)(F_1 + 2 F_2).\label{eq:not-net-9a}\end{gather}
+  Next, observe that
+$$  \cut(\Pi_1', \Pi_2') \geq \cut(\Pi_1, \Pi_2) - c \vol(\Pi_1, \Pi_2).$$
+In the proof of \cref{lem:suff} it is shown that if $r_1 r_2 < (4/9) d_1 d_2$ then $F_1 \geq \frac{1}{3} (F_1 + 2 F_2)$, in which case
+\begin{align}
+\cut(\Pi_1', \Pi_2') &\geq \cut(\Pi_1, \Pi_2) - c \vol(\Pi_1, \Pi_2) \geq \nonumber\\
+& \geq (2/3) F_1 -  c (4/3)(F_1 + 2 F_2) \geq (2/3 - c) F_1.\label{eq:not-net-9b}
+\end{align}
+
+Taken together, \cref{eq:not-net-9a,eq:not-net-9b} show that \cref{eq:cut} holds when $r_1 r_2 < (4/9) d_1 d_2$.
+
+We must next show that the three conditions hold with the desired probability. We show that for fixed $r_1, r_2$, each item holds with probability at least $1 - e^{n (r_1 d_2 + r_2 d_1)}$. The sum of $e^{-\Omega(n (r_1d_2 + r_2 d_1))}$ over all $0 \leq r_1 \leq d_1, 0 \leq r_2 \leq d_2$ apart from $r_1 = r_2 = 0$ is $O(e^{- \Omega( n d_1)})$, so the conditions hold for all $r_1, r_2$ with the desired probability. Note that by our choice of $n$ we have $(d_1r_1 + d_2 r_2) \log(1/\delta') \leq c n (r_1d_2 + r_2 d_1)$ for $r_1, r_2$ not both zero.
+
+We first bound the failure probability for the first item. By \cref{lem:probabilities}, if $r_1 r_2 \geq (4/9) d_1 d_2$ then \cref{eq:vol} holds for every $\Pi \in \cN(r_1, r_2)$ with probability
+\begin{align*}
+1 - |\cN(r_1, r_2)|e^{- \Omega( n d_1 d_2) } &= 1 - |\cN(r_1, r_2)| e^{ - \Omega(n (r_2d_1 + r_1d_2))}\\
+&= 1 - e^{ - \Omega(n (r_2d_1 + r_1d_2))}.
+\end{align*}
+
+Next we bound the probability for the second item. By \cref{lem:probabilities}, \cref{eq:cut} holds for fixed $\Pi \in \cN(r_1, r_2)$ with probability $1 - e^{-\Omega( F_1)}$, but as in the proof of \cref{lem:suff} we have $F_1 \geq \frac{1}{3} (F_1 + 2 F_2)$ when $r_1 r_2 < (4/9) d_1 d_2$, so $F_1 = \Omega(n (r_1d_2 + r_2 d_1))$. Now, by the union bound and the lower bound on $n$, \cref{eq:cut} holds for every element of $\cN(r_1, r_2)$ with probability $1 - |\cN(r_1,r_2)| e^{-\Omega(n (r_1d_2 + r_2 d_1)} = 1 - e^{-\Omega(n (r_1d_2 + r_2 d_1)}$.
+
+
+The third item holds with probability $1 - e^{-\Omega(n (r_1d_2 + r_2 d_1))}$ by \cref{lem:probabilities}, so by a similar application of the union bound and our choice of $n$ it holds for all elements of $\cN(r_1, r_2)$ with probability $1 - e^{-\Omega(n (r_1d_2 + r_2 d_1))}$. \end{proof}
+
+\begin{proof}[Proof of \cref{thm:operator-cheeger}]
+To prove \cref{thm:operator-cheeger}, we apply \cref{lem:op-cheeger} using \cref{prop:gradient-bound} to bound the balancedness of $\Phi$ and \cref{lem:union} to bound $\ch(\Phi)$. Indeed, $\|\nabla_a f\|_{op} \leq \eps_0$ for $a \in \{1,2\}$ if and only if $\Phi$ is $\eps_0$-balanced, so by \cref{prop:gradient-bound} the operator $\Phi$ is $\eps_0$-balanced with probability $1 -  e^{-\Omega(n d_1 \eps_0^2)} - e^{-\Omega(n d_2 \eps_0^2)} \geq 1 - 2e^{-\Omega(n d_1 \eps_0^2)}$ provided $n \geq C\eps_0^{-2} d_2/d_1 $. Setting $\eps_0 = \eps \sqrt{\frac{d_2 }{n d_1}}$ proves the balancedness claim. For the expansion, \cref{lem:union} shows $\ch(\Phi) = \Omega(1)$ with failure probability $O(e^{- \Omega(n d_1)}) = O(e^{- \Omega(d_2 \eps^2)})$. By \cref{lem:op-cheeger}, $\Phi$ is a $1 - c$-quantum expander.
+\end{proof}
 
 \bibliographystyle{alpha}
 \bibliography{refs}
