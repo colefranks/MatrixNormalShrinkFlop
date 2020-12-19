@@ -801,9 +801,9 @@ Quantum channels with this spectral gap condition are called \emph{quantum expan
 %We show that, restricted to the traceless matrices, this quadratic form is small. More precisely, we bound the operator norm of the map $T: Z \mapsto \tr_2 \rho^{(ab)} \left(I \ot Z\right)$ restricted to the traceless symmetric matrices. Such maps are called \emph{quantum channels}, and we will revisit their properties later \CF{where? or earlier?}. The operator norm condition we desire for $T_{\rho}$ is equivalent to $T_{\rho}$ being a good \emph{quantum expander} - this led Pisier to bound the operator norm of $T_{\rho}$ for random $\rho$. \CF{one-sentence motivation of quantum expanders?}
 
 \begin{theorem}\label{thm:hess-pisier} Let $X = (X_1, \dots, X_N)$ be a tuple of standard Gaussians on $(\R^{d_1}\ot \R^{d_2})^n$. Then $\forall t \geq 1$ with failure probability at most $t^{-\Omega(d_{1} + d_{2})}$, the random quantum channel 
-$$T: Z \mapsto \frac{1}{nD}\sum_{i = 1}^N X_i Z X_i^\dagger$$
+$$\Phi: Z \mapsto \frac{1}{nD}\sum_{i = 1}^N X_i Z X_i^\dagger$$
 has operator norm 
-$O \left( t^{2} \frac{d_{1}+d_{2}}{\sqrt{d_{1} d_{2} nD}} \right)$ restricted to the traceless symmetric matrices. \end{theorem}
+$O \left( t^{2} \frac{d_{1}+d_{2}}{\sqrt{d_{1} d_{2} nD}} \right)$ on traceless symmetric matrices. \end{theorem}
 Pisier's actual result is slightly different; \cref{thm:hess-pisier} is essentially Theorem~16.6 in~\cite{pisier2012grothendieck}, together with a standard symmetrization trick (e.g., Proof of Lemma~4.1 in~\cite{P14}). We present the details in an appendix \CF{cref it}. We now apply it to bound the off diagonal terms in the Hessian.
 
 %\begin{corollary}\label{cor:off-diag-hess} For traceless symmetric matrices $Y \in \Sym^0_{d_a}$, $Z \in \Sym^0_{d_a}$, we have 
@@ -894,7 +894,7 @@ _{\samp}$ under perturbations. \CF{Akshay, will you use $\tr$ instead of $Tr$}
 %\CF{Akshay: $\sum_{a} \|\delta_{a}\|_{op} = \|\delta\|_{op}.$}
 %\CF{say stronger condition}
 \begin{theorem} \label{convexRobustness}
-There is a constant $c>0$ such that the following holds. If $f_{\samp}$ is $\alpha$-strongly convex at $I$; and for every $a \in [k]$ we have $\|d_{a} \rho_{\samp}^{(a)} - Tr[\rho_{\samp}] I_{a}\|_{op} = \|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$; and $\sum_{a} \|\delta_{a}\|_{op} \leq c$: then $f$ at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$ is $\geq (\alpha - k C \|\delta\|_{op})$-strongly convex for some universal constant $C$. 
+There is a constant $c>0$ such that the following holds. If $f_{\samp}$ is $\alpha$-strongly convex at $I$; and for every $a \in [k]$ we have $\|d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a}\|_{op} = \|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$; and $\sum_{a} \|\delta_{a}\|_{op} \leq c$: then $f$ at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$ is $\geq (\alpha - k C \|\delta\|_{op})$-strongly convex for some universal constant $C$. 
 \end{theorem}
 
 Recall the definition of a quadratic form of the Hessian:
@@ -961,16 +961,16 @@ The term in parenthesis is shown by induction, and in the inequality we used $\|
 \end{proof}
 
 \begin{corollary} \label{rankoneRobustness}
-For input $x \in \R^{nD}$ such that for all $a \in [k]$ such that $\|d_{a} \rho_{\samp}^{(a)} - Tr[\rho_{\samp}] I_{a}\|_{op} \leq \frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a} \in \mat(d_{a}))_{a}$ such that $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
+For input $x \in \R^{nD}$ such that for all $a \in [k]$ such that $\|d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a}\|_{op} \leq \frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a} \in \mat(d_{a}))_{a}$ such that $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
 \[ \|(\nabla^{2} f_{\samp'} - \nabla^{2} F_{\samp'}) - (\nabla^{2} f_{\samp} - \nabla^{2} F_{\samp})\|_{op} \leq 1.5 k \|\delta\|_{op}     \]
 \end{corollary}
 \begin{proof}
 Recall again from the discussion after $\ref{convexRobustness}$ that $\langle Z, (\nabla^{2} F - \nabla^{2} f) Z \rangle = \left\langle \rho, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2}$. We use the same iterative strategy as $\ref{diagRobustness}$:
 \[    \left\langle \rho_{\samp'}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2} -  \left\langle \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2}    \]
 \[ = \left\langle \rho_{\samp'} + \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle \left\langle \rho_{\samp'} - \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle  \]
-\[ = \left( \sum_{a} \langle (d_{a} \rho_{\samp'}^{(a)} - Tr[\rho_{\samp'}] I_{a}) + (d_{a} \rho_{\samp}^{(a)} - Tr[\rho_{\samp}] I_{a}) , d_{a}^{-1/2} Z_{a} \rangle \right) \left( \sum_{a} \sqrt{d_{a}} \langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, Z_{a} \rangle \right)     \]
+\[ = \left( \sum_{a} \langle (d_{a} \rho_{\samp'}^{(a)} - \tr[\rho_{\samp'}] I_{a}) + (d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a}) , d_{a}^{-1/2} Z_{a} \rangle \right) \left( \sum_{a} \sqrt{d_{a}} \langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, Z_{a} \rangle \right)     \]
 %\AR{Here I could use that $Z \perp I$ to get a constant factor improvement; need an assumption on $\nabla$; but it improves the overall constant by factor $\approx 2$}
-\[ \leq \left( \sum_{a} (2 + 10 \|\delta\|_{op}) \|d_{a} \rho_{\samp}^{(a)} - Tr[\rho_{\samp}] I_{a} \|_{op} \|d_{a}^{-1/2} Z_{a}\|_{1}   \right) 
+\[ \leq \left( \sum_{a} (2 + 10 \|\delta\|_{op}) \|d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a} \|_{op} \|d_{a}^{-1/2} Z_{a}\|_{1}   \right) 
 \left( 10\|\delta\|_{op} \sum_{a} \sqrt{d_{a}} \| \rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{1}   \right)    \]
 \[ \leq \left( \sum_{a} \frac{2 + 10 \|\delta\|_{op}}{20} \|Z_{a}\|_{F}  \right) 
 \left( 10\|\delta\|_{op} \sum_{a} (1 + \frac{1}{20}) \|Z_{a}\|_{F} \right) 
@@ -1145,14 +1145,15 @@ There are absolute constants $c, C$ such that the following holds for all $d_1 \
 \end{prop}
 
 \begin{proof}
-We have the following translation by \cref{lem:gradient}: \CF{use $\tr$ not $Tr$, also all through the robustness stuff}
-\[ \sqrt{d_{1}} \nabla_{1} f_{x} = d_{1} \rho^{(1)} - I_{1} = d_{1} \Phi(I_{2})/ Tr[\Phi(I_{2})] - I_{1}  \]
+We have the following translation by \cref{lem:gradient}: \CF{use $\tr$ not $\tr$, also all through the robustness stuff} \AR{fixed it}
+\[ \sqrt{d_{1}} \nabla_{1} f_{x} = d_{1} \rho^{(1)} - I_{1} = d_{1} \Phi(I_{2})/ \tr[\Phi(I_{2})] - I_{1}  \]
 Therefore by \cref{prop:gradient-bound}, we have that our operator is $\eps$-doubly balanced with failure probability $\leq e^{-n d_{1} \eps^2/2C} + e^{-n d_{2} \eps^2/2C}$. As mentioned above, this is equivalent to $(I_{d_1}/\sqrt{d_1}, I_{d_2}/\sqrt{d_2})$ being an approximate singular pair, and by Lemma 3.6 in \cite{KLR19} we have $\sigma_1(\Phi) \leq (1+\eps)  \tr \Phi(I_{d_1})/\sqrt{d_1 d_2}$. 
 
-Next we would like to use the $k=2$ case of \cref{thm:tensor-convexity} which shows that $f_{x}$ is at least $3/4$-strongly convex at the identity with failure probability $O \left(\frac {\sqrt{nD}}{d_1}\right)^{ - \Omega(d_1)}$. This is not exactly a bound on $\sigma_{2}(\Phi)$, but we again have the following translation by \cref{lem:hessian}
-\[ \frac{1}{\sqrt{d_{1} d_{2}}} \langle Y, (\nabla_{12}^{2} F) Z \rangle = \langle Y, \Phi(Z) \rangle        \]
-and looking at the proof of \cref{thm:tensor-convexity} \CF{where? how? If needed, add the below inequality to the proof of theorem 13 and use \cref{} to refer to it here.}, we see that we actually have the bound:
-\[ \sup_{\langle Y, I_{1} \rangle = \langle Z, I_{2} \rangle = 0} \frac{\langle Y, \Phi(Z) \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq \frac{\tr[\Phi(I_{2})]}{4 \sqrt{d_{1} d_{2}}}       \]
+To prove a bound on $\sigma_{2}(\Phi)$ we 
+%again use the following translation by \cref{lem:hessian}
+%\[ \frac{1}{\sqrt{d_{1} d_{2}}} \langle Y, (\nabla_{12}^{2} F) Z \rangle = \langle Y, \Phi(Z) \rangle     \]
+note \ref{thm:Pisier-expansion} gives the following with failure probability $\leq O \left(\frac {\sqrt{nD}}{d_1}\right)^{ - \Omega(d_1)}$:
+\[ \sup_{\langle Z, I_{2} \rangle = 0} \frac{\langle Y, \Phi(Z) \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq \frac{\tr[\Phi(I_{2})]}{4 \sqrt{d_{1} d_{2}}}       \]
 Note by the Courant-Fischer variational characterization of singular values, this is sufficient to show $\Phi$ is a $(1-3/4)$-quantum expander. We remark that if we examine the proof of \cref{thm:klr} it turns out that they eventually translate the balancedness and expansion conditions to strong convexity. 
 \end{proof}
 
