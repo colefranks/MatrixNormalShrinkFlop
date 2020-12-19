@@ -1031,12 +1031,12 @@ For input $\samp \in \R^{nD}$ such that $\|d_{a} \rho_{\samp}^{(a)}\|_{op}, \|d_
 \[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 21 \|\delta\|_{op}  \]
 \end{corollary}
 \begin{proof}
-This is just a translation of $\ref{btoabRobustness},\ref{ctoabRobustness}$:
+This is just a translation of \cref{btoabRobustness},\cref{ctoabRobustness}:
 \[ \sup_{Y \in \smallSym_{d_{a}}^{0}, Z \in \smallSym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} = \frac{\|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0}}{\sqrt{d_{a} d_{b}} } \]
 \[ \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} = \frac{\|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}}{\sqrt{d_{a} d_{b}} }       \]
-Using the same iterative strategy as $\ref{diagRobustness}$ we can show: 
+Using the same iterative strategy as \cref{diagRobustness} we can show: 
 \[ |\langle Y, (\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}) Z \rangle| \leq 20 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F} \|Y\|_{F} \|Z\|_{F}    \]
-We used $\ref{btoabRobustness}$ for $\{a,b\}$ and $\ref{ctoabRobustness}$ for the rest. The final step follows from $\ref{inftyto2}$ and the initial conditions on $\|d_{a} \rho_{a}\|_{op}, \|d_{b} \rho_{b}\|_{op}$. 
+We used \cref{btoabRobustness} for $\{a,b\}$ and \cref{ctoabRobustness} for the rest. The final step follows from $\ref{inftyto2}$ and the initial conditions on $\|d_{a} \rho_{a}\|_{op}, \|d_{b} \rho_{b}\|_{op}$. 
 \end{proof}
 
 Now it is a simple matter of putting the three terms together. 
@@ -1145,7 +1145,7 @@ There are absolute constants $c, C$ such that the following holds for all $d_1 \
 \end{prop}
 
 \begin{proof}
-We have the following translation by \cref{lem:gradient}: \CF{use $\tr$ not $\tr$, also all through the robustness stuff} \AR{fixed it}
+We have the following translation by \cref{lem:gradient}: 
 \[ \sqrt{d_{1}} \nabla_{1} f_{x} = d_{1} \rho^{(1)} - I_{1} = d_{1} \Phi(I_{2})/ \tr[\Phi(I_{2})] - I_{1}  \]
 Therefore by \cref{prop:gradient-bound}, we have that our operator is $\eps$-doubly balanced with failure probability $\leq e^{-n d_{1} \eps^2/2C} + e^{-n d_{2} \eps^2/2C}$. As mentioned above, this is equivalent to $(I_{d_1}/\sqrt{d_1}, I_{d_2}/\sqrt{d_2})$ being an approximate singular pair, and by Lemma 3.6 in \cite{KLR19} we have $\sigma_1(\Phi) \leq (1+\eps)  \tr \Phi(I_{d_1})/\sqrt{d_1 d_2}$. 
 
@@ -1515,7 +1515,7 @@ Let $B$ be any matrix such that the last $d_1 - d_2$ columns are zero. Given acc
 
 However, to lower bound the rates for estimating $\Theta_1$, we must supply invertible $B$ with this property. Let the first $d_1$ columns of $B$ have entries i.i.d uniform in $[-1,1]$, and let the remaining entries be i.i.d uniform in $[-\delta, \delta]$. If $\delta = 0$, then with access to the random variable $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ by the argument above $\Theta_2$ has access to at most $nd_1$ samples. However, we claim that as $\delta \to 0$, the distribution of $Y_\delta$ tends to that of $Y_0$ in total variation distance. Thus the distribution of $\widehat{\Theta}_1(Y_\delta)$ converges to that of $\widehat{\Theta}_1(Y_0)$ in total variation.
 
-It remains to prove them 
+It remains to prove that $Y_\delta$ converges to $Y_0$ in total variation distance. 
 %Then $\widehat{\Theta}_1$ is an estimator that has access to only $n d_1$ samples of a Gaussian. 
 
 
