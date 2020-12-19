@@ -1189,7 +1189,7 @@ Let $B$ be any matrix such that the last $d_1 - d_2$ columns are zero. Given acc
 
 However, to lower bound the rates for estimating $\Theta_1$, we must supply invertible $B$ with this property. Let the first $d_1$ columns of $B$ have entries i.i.d uniform in $[-1,1]$, and let the remaining entries be i.i.d uniform in $[-\delta, \delta]$. If $\delta = 0$, then with access to the random variable $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ by the argument above $\Theta_2$ has access to at most $nd_1$ samples. However, we claim that as $\delta \to 0$, the distribution of $Y_\delta$ tends to that of $Y_0$ in total variation distance. Thus the distribution of $\widehat{\Theta}_1(Y_\delta)$ converges to that of $\widehat{\Theta}_1(Y_0)$ in total variation.
 
-It remains to prove that $Y_\delta$ converges to $Y_0$ in total variation distance. 
+It remains to prove that $Y_\delta$ converges to $Y_0$ in total variation distance. First note that $Y_\delta = Y_0 + \delta Z$ where $Z_i = \sqrt{\Theta_1} X_i C^T$, where $C$ is a random matrix where the first columns are uniform. 
 %Then $\widehat{\Theta}_1$ is an estimator that has access to only $n d_1$ samples of a Gaussian. 
 
 
