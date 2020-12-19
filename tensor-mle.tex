@@ -300,6 +300,7 @@ $$n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \log^2(d_1) \eps^{-2}\}$$ for $C$ a 
 $$ d_{op}(\widehat{\Theta}_2, \Theta_2) = O\left(\eps \sqrt{\frac{d_2}{n d_1}} \log d_1\right) $$
 for $a \in \{1,2\}$ with probability $1 - O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)})$.
 \end{theorem}
+\CF{I feel like we should be able to get $\tilde{O}\sqrt{\frac{d_1}{n d_2}}$ for the smaller marginal. Akshay and I discussed a lot in rocketchat. }
 
 Our next results show that in either case the flip-flop algorithm can find the MLEs with high probability. \TODO{change flip flops to thetas}
 
@@ -1174,28 +1175,29 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 
 
 \section{Lower bounds}
+One could hope that, for the purposes of estimating $\Theta_1$, having access to $X$ is like having access to $n d_2 \dots, d_k$ independent samples of a Gaussian with precision matrix $\Theta_1$. In particular, one could hope e.g. for an RMSE rate of $\sqrt{ d_1/ n d_2}$ for estimating $A$ in spectral norm. Here we show that this only holds if $d_2 \leq n d_1$; the best rate is actually $\sqrt{d_1/ n \min(n d_1, d_2)}$. Intuitively, this holds because we can choose $\Theta_2$ to have low rank and effectively zero out some entries of $X$. However, this does not quite work because $\Theta_2$ must be invertible - we have to instead choose $\Theta_2$ to be approximately equal to a random low rank matrix.
+%Here we show that our bounds for the matrix normal model are best possible for estimating the individual matrices $\Theta_a$. The bound for $\Theta_2$ is clearly best possible because it is what we would obtain even if $\Theta_1$ were known, but in fact even the bound on $\Theta_1$ is tight.
 
-Here we show that our bounds for the matrix normal model are best possible for estimating the individual matrices $\Theta_a$. The bound for $\Theta_2$ is clearly best possible because it is what we would obtain even if $\Theta_1$ were known, but in fact even the bound on $\Theta_1$ is tight. 
-\begin{theorem}
-Let $\hat{\Theta}_1$ be any estimator for $\Theta_1$. There is a choice of $\Theta_2$ such that there is an estimator $\Theta'$ for the covariance a $d_1\times d_2$ Gaussian with of $\min \{d_1 n, d_2\}$ samples such that MSE $\Theta' \leq$ MSE $\hat{\Theta}$. 
+\begin{theorem}Suppose $d_2 > n d_1$. Let $X$ denote a tuple of $n$ samples from the matrix normal model with precision matrices $\Theta_1, \Theta_2$. Let $Y$ be a tuple of $nd_1$ Gaussians with precision matrix $\Theta_1$. Let $\hat{\Theta}_1$ be any estimator for $\Theta_1$. For every $\delta > 0$, there is a distribution on $\Theta_2$ and an estimator $\tilde{\Theta}$ such that the distribution of $\hat{\Theta}_1(X)$ and the distribution of $\tilde{\Theta}(Y)$ differ by at most $\delta$ in total variation distance. In particular the MSE for $\widehat{\Theta}_1$ can be no better than the minimax MSE for the precision matrix of a $d_1$ dimensional Gaussian with $nd_1$ samples; this holds as well for $\Theta_1$ to subsets such as sparse, etc. \CF{I need to check this final conclusion; it might require some reasonable assumption like boundedness}
 \end{theorem}
+In the proof, one finds that the estimator $\tilde{\Theta}$ uses additional randomness - but by Yao's theorem the minimax MSE is unchanged when estimators with additional randomness are allowed.
 
 \begin{proof}
-\CF{hopefully proof sheds light on the correct quantifier ordering on the statement}
-\CF{ I think the most you can get is $nd_1$, actually}. 
+If $d_2 \leq nd_1$, we are done. Assume $d_2 > n d_1$. Let $B$ be any $d_2\times d_2$ matrix such that the last $d_2 - nd_1$ columns are zero. Given access to the tuple $X$ of $n$ samples $\sqrt{\Sigma_1} X_i B^T$, where $X_i$ are i.i.d Gaussian $d_1\times d_2$ matrices, clearly $\widehat{\Theta}_2$ has access to at most $n d_1$ samples of the Gaussian on $\R^{d_1}$ with covariance matrix $\Sigma_1$ because $X_i B^T$ depends only on the first $d_1$ columns of each $X_i$. 
+
+To lower bound the rates for estimating $\Theta_1$, we must supply \emph{invertible} $B$. Choose the first $nd_1$ columns of $B$ to uniformly at random among the collections of $nd_1$ orthonormal vectors in $\R^{d_2}$. Let the remaining entries be i.i.d uniform in $[-\delta, \delta]$ (the precise distribution of the remaining entries will not matter as long as they are small). Let $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ denote the resulting random variable with $B$ and $X$ chosen independently. If $\delta = 0$, then with access to the random variable $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ by the argument above $\Theta_2$ has access to at most $nd_1$ samples. However, we claim that as $\delta \to 0$, the distribution of $Y_\delta$ tends to that of $Y_0$ in total variation distance. Thus the distribution of $\widehat{\Theta}_1(Y_\delta)$ converges to that of $\widehat{\Theta}_1(Y_0)$ in total variation. Since $Y_0$ only depends on $nd_1$ samples to the Gaussian on $\R^{d_1}$ with precision matrix $\Theta_1$, which we call $Y$, we can let $\tilde{\Theta}(Y) = \widehat{\Theta}_1(Y_0)$. 
+
+It remains to prove that $Y_\delta$ converges to $Y_0$ in total variation distance. First note that $Y_\delta = Y_0 + \delta Z$ where $Z_i = \sqrt{\Theta_1} X_i C^T$, where $C$ is a random matrix where the first columns are zero and the last $d_2 - n d_1$ columns have entries i.i.d uniform on $[-1, 1]$. Because of the zero patterns of $B$ and $C$, $Y_0$ and $Z$ are actually independent. If we can show that $Y_0$ has a density on $\R^{nd_1d_2}$, then $Y_0 + \delta Z$ converges to $Y_0$ in total variation because adding $\delta Z$ corresponds to convolving the density of $Y_0$, an $L_1$ function, by an approximate identity \CF{find reference}. 
+
+By invertibility of $\Sigma_1$, it is enough to show that $Y_0$ has a density when $\Sigma_1 = I_1$. Now $X = (X_i B^T, \dots, X_n B^T)$. Consider the $nd_1$ random vectors that are the rows of $BX_i^T$. Because $B$ is supported only in its first $nd_1$ columns, the joint distribution of these random vectors may be obtained by sampling $n d_1$ independent standard Gaussian vectors $v_i$ on $\R^{nd_1}$ and then multiplying them by the $d_2 \times nd_1$ matrix $B'$ that is the restriction of $B$ to its first $nd_1$ columns. We have chosen $B'$ such that it is an isometry into a uniformly random subspace of $\R^{d_2}$ of dimension $nd_1$. Thus $Bv_i/\|v_i\|$ are $nd_1$ many independent, random unit vectors in $\R^{d_2}$. As $\|v_i\|$ are also independent, $B v_i$ are thus independent. The marginal $Bv_1$has a density; one may sample it by choosing a uniformly random vector and then choosing the length $\|v_1\|$, hence the density is a product density in spherical coordinates. The joint density of the $Bv_i$ is then the product density of the marginal densities. \end{proof}
 
 
-Let $B$ be any matrix such that the last $d_1 - d_2$ columns are zero. Given access to the $n$ samples $\sqrt{\Sigma_1} X_i B^T$, where $X_i$ are i.i.d Gaussian $d_1\times d_2$ matrices, clearly $\Theta_2$ has access to at most $n d_1$ samples of the Gaussian on $\R^{d_1}$ with covariance matrix $\Sigma_1$ because $X_i B^T$ depends only on the first $d_i$ columns of each $X_i$. 
 
-However, to lower bound the rates for estimating $\Theta_1$, we must supply invertible $B$ with this property. Let the first $d_1$ columns of $B$ have entries i.i.d uniform in $[-1,1]$, and let the remaining entries be i.i.d uniform in $[-\delta, \delta]$. Let $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ denote the resulting random variable with $B$ and $X$ chosen independently. If $\delta = 0$, then with access to the random variable $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ by the argument above $\Theta_2$ has access to at most $nd_1$ samples. However, we claim that as $\delta \to 0$, the distribution of $Y_\delta$ tends to that of $Y_0$ in total variation distance. Thus the distribution of $\widehat{\Theta}_1(Y_\delta)$ converges to that of $\widehat{\Theta}_1(Y_0)$ in total variation.
-
-It remains to prove that $Y_\delta$ converges to $Y_0$ in total variation distance. First note that $Y_\delta = Y_0 + \delta Z$ where $Z_i = \sqrt{\Theta_1} X_i C^T$, where $C$ is a random matrix where the first columns are zero and the last $d_2 - d_1$ columns have entries i.i.d uniform on $[-1, 1]$. Because of the zero patterns of $B$ and $C$, $Y_0$ and $Z$ are actually independent. If we can show that $Y_0$ has a density, then $Y_0 + \delta Z$ converges to $Y_0$ in total variation because adding $\delta Z$ corresponds to convolving the density of $Y_0$, an $L_1$ function, by an approximate identity \CF{find reference}. To show that $Y_0$ has a density, it is enough to show that 
 %Then $\widehat{\Theta}_1$ is an estimator that has access to only $n d_1$ samples of a Gaussian. 
 
 
 
 
-\end{proof}
 
 \section{Open problems}
 \TODO{$d_{op}$} for tensors??
