@@ -1513,12 +1513,11 @@ Let $\hat{\Theta}_1$ be any estimator for $\Theta_1$. There is a choice of $\The
 
 Let $B$ be any matrix such that the last $d_1 - d_2$ columns are zero. Given access to the $n$ samples $\sqrt{\Sigma_1} X_i B^T$, where $X_i$ are i.i.d Gaussian $d_1\times d_2$ matrices, clearly $\Theta_2$ has access to at most $n d_1$ samples of the Gaussian on $\R^{d_1}$ with covariance matrix $\Sigma_1$ because $X_i B^T$ depends only on the first $d_i$ columns of each $X_i$. 
 
-However, to lower bound the rates for estimating $\Theta_1$, we must supply invertible $B$ with this property. Let the first $d_1$ columns of $B$ have entries i.i.d uniform in $[-1,1]$, and let the remaining entries be i.i.d uniform in $[-\delta, \delta]$. If $\delta = 0$, then with access to the random variable $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ by the argument above $\Theta_2$ has access to at most $nd_1$ samples. However, we claim that as $\delta \to 0$, the distribution of $Y_\delta$ tends to that of $Y_0$ in total variation distance. Thus the distribution of $\Theta(Y_\delta) \to \Theta(Y_0)$ in total variation distance.This means that 
+However, to lower bound the rates for estimating $\Theta_1$, we must supply invertible $B$ with this property. Let the first $d_1$ columns of $B$ have entries i.i.d uniform in $[-1,1]$, and let the remaining entries be i.i.d uniform in $[-\delta, \delta]$. If $\delta = 0$, then with access to the random variable $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ by the argument above $\Theta_2$ has access to at most $nd_1$ samples. However, we claim that as $\delta \to 0$, the distribution of $Y_\delta$ tends to that of $Y_0$ in total variation distance. Thus the distribution of $\widehat{\Theta}_1(Y_\delta)$ converges to that of $\widehat{\Theta}_1(Y_0)$ in total variation.
 
-
+It remains to prove them 
 %Then $\widehat{\Theta}_1$ is an estimator that has access to only $n d_1$ samples of a Gaussian. 
 
- and let the last $d_2-d_1$ columns of $B$ have entries uniform in $[-\delta,\delta]$
 
 
 
