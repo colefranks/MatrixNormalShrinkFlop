@@ -1033,7 +1033,7 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 \begin{lemma}\label{lem:descent-sublevel-set}
 	Let $f : \SPD \rightarrow \R$ be $\lambda$-strongly geodesically convex in a sublevel set containing $x_0$, $\norm{\nabla f(x_0)}_F^2 \leq 1$ and $\alpha > 0$ be a constant.
 	If $\{x_k\}$ is a descent sequence which satisfies 
-	$$ f(x_{k+1}) \leq f(x_k) - \alpha \cdot \norm{\nabla f(x_k)}^2_F $$
+	$$ f(x_{k+1}) \leq f(x_k) - \alpha \cdot \min\{1,  \norm{\nabla f(x_k)}^2_F \} $$
 	then in $T$ iterations we must have an element $x_t$ with $t\leq T$ such that
 	$$ \norm{\nabla f(x_t)}^2_F \leq 2^{-T \alpha \lambda}.   $$
 \end{lemma}
@@ -1045,7 +1045,7 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 	$$ f^* \geq f(x) - \frac{1}{2\lambda} \cdot \norm{\nabla f(x)}_F^2 $$
 	for any $x \in S$.
 	
-	If $\norm{\nabla f(x_k)}_F^2 \leq \varepsilon$, then we will show that in $\ell \leq 1/\alpha \lambda$ steps we must have an element $x_{k+\ell}$ such that $\norm{\nabla f(x_{k + \ell})}_F^2 \leq \varepsilon/2$. This is enough to conclude the proof of the lemma, as with this claim we see that we half the squared norm of the gradient at every sequence of $1/\alpha \lambda$ steps.
+	If $\norm{\nabla f(x_k)}_F^2 \leq \varepsilon \leq 1$, then we will show that in $\ell \leq 1/\alpha \lambda$ steps we must have an element $x_{k+\ell}$ such that $\norm{\nabla f(x_{k + \ell})}_F^2 \leq \varepsilon/2$. This is enough to conclude the proof of the lemma, as with this claim we see that we half the squared norm of the gradient at every sequence of $1/\alpha \lambda$ steps.
 	
 	To see this, assume that $\norm{\nabla f(x_{k+\ell})}_F^2 \geq \varepsilon/2$ for $0 \leq \ell \leq m$. Then, from our descent property we have
 	$$ f(x_{k+1}) \leq f(x_k) - \alpha \cdot \norm{\nabla f(x_k)}^2_F \leq f(x_k) - \alpha \cdot \varepsilon/2$$
@@ -1090,7 +1090,7 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 
 \begin{lemma}[Descent Lemma]\label{lem:tensor-descent-lemma}
 	If $\Theta, \Upsilon$ are successive scalings from the flip-flop algorithm and $\norm{\nabla f_x(\Theta)}_F \leq 1$, then we have:
-	$$ f_x(\Upsilon) \leq f_x(\Theta) - \dfrac{1}{6k d_k} \cdot \norm{\nabla f_x(\Theta)}_F^2 $$
+	$$ f_x(\Upsilon) \leq f_x(\Theta) - \dfrac{1}{6k d_k} \cdot \min\{1, \norm{\nabla f_x(\Theta)}_F^2\} $$
 \end{lemma}
 
 \begin{proof}
@@ -1121,7 +1121,7 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 	\end{align*}
 	If $\norm{d_a \rho^{(a)} - I_a}_F > 1$, we have
 	\begin{align*}
-		\frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)}) &\leq - \dfrac{1}{6 d_a} \leq - \dfrac{1}{6 d_k} \leq - \dfrac{1}{6d_k} \cdot \norm{\nabla f_x(\Theta)}_F^2
+		\frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)}) &\leq - \dfrac{1}{6 d_a} \leq - \dfrac{1}{6 d_k}
 	\end{align*}
 \end{proof}
 
@@ -1190,7 +1190,7 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 	When the number of samples is $n = \Omega(k^2 \cdot d_1^2/D)$, with probability \\
 	$ 1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}$ we have that the hypothesis of \cref{lem:tensor-initial-conditions} applies, which implies that there exists a constant $\gamma > 0$ such that our objective function $f_x$ is $\frac{1}{2}$-strongly geodesically convex at a ball $B_{\gamma k/2}(I)$ and $\norm{\nabla f_x(I)}_F \leq \gamma k /8$.
 	
-	By \cref{lem:tensor-descent-lemma} and the upper bound on the gradient of any $\otheta \in B_{\gamma k/2}(I)$ from \cref{lem:convex-ball} we have that each step of the flip-flop algorithm will decrease the value of the objective function \RMO{we also need to show that the gradient of the new step is also upper bounded by 1, add this to the statement of \cref{lem:convex-ball}}. 
+	By \cref{lem:tensor-descent-lemma} we have that each step of the flip-flop algorithm will decrease the value of the objective function in accordance with the requirements of \cref{lem:descent-sublevel-set}. 
 	
 	Thus, after $T = O( k d_k \log(d_k/\eps) )$ steps, \cref{lem:descent-sublevel-set} guarantees us that we will encounter a scaling $\otheta$ such that
 	$$ \norm{\nabla f_x(\otheta)}_F \leq \dfrac{\eps^2}{16 d_k^{3/2}}.$$
