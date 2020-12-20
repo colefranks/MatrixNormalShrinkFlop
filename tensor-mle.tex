@@ -993,34 +993,32 @@ The failure probability becomes $O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)})$.
 %The results in this section are better in that the covariances are approximated in operator norm rather than the looser Frobenius norm, and secondly that the failure probability is inverse exponential.
 
 
+
 \newpage
 \section{Convergence of flip-flop algorithms}
 
-In this section we prove that the flip-flop algorithms for the matrix and tensor normal models converge quickly to the MLE estimator with high probability. We begin by stating the flip-flop algorithm and then... \CF{we are using $\Theta_a$ for the true inverse covariances. Would it be possible to use something like $\overline{\Theta}_a$ for the flip-flop scalings? Eventually you'll want a lemma showing that the final $\overline{\Theta}_a$ is close to $\widehat{\Theta}_a$ - this should also follow by strong convexity.}
+In this section we prove that the flip-flop algorithms for the matrix and tensor normal models converge quickly to the MLE estimator with high probability. We begin by stating the flip-flop algorithm and then... 
 
 \begin{Algorithm}
 \textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
 
 \textbf{Output}: $\otheta \in \SPD$ such that $d_F(\otheta_a, \htheta_a) < \eps$, for each $i \in [k]$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
-\RMO{The $\epsilon$ above is different from the $\epsilon$ from the algorithm. Fix this.}
 
 \textbf{Algorithm}:
 \begin{enumerate}
-\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$.
-\item\label{it:flip-flop step 2} For $t=1,\dots,T = 12 k d_k \cdot \log(1/\eps)$, repeat the following:
+\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$, and $\delta = \dfrac{\eps^2}{16 d_k^{3/2}}$.
+\item\label{it:flip-flop step 2} For $t=1,\dots,T = 12 k d_k \cdot \log(k/\delta^2)$, repeat the following:
 %we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
 \begin{itemize}
 \item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \ldots, \otheta_k)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \ldots, \otheta_k)$, and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest. 
 \item
-If $\norm{\nabla_a}_F^2 < \eps$, output $\left( \bigotimes_{a =1}^k \otheta_a \right)^{-1}$ and return.
+If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\left( \bigotimes_{a =1}^k \otheta_a \right)^{-1}$ and return.
 % S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
 \item Otherwise, set $\otheta_a \leftarrow \det(\rho^{(a)})^{1/d_a} (\rho^{(a)})^{-1} \cdot \otheta_a$.
 \end{itemize}
 \end{enumerate}
 \caption{Flip-flop algorithm}\label{alg:flip-flop}
 \end{Algorithm}
-
-\TODO{General descent-lemma + strong convexity folklore}
 
 Before we analyze the convergence of the flip-flop algorithms for the tensor and matrix normal models, we discuss the straightforward generalizations of convergence of general descent methods whenever the objective function is strongly geodesically convex.
 
@@ -1057,8 +1055,6 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 
 \subsection{Tensor flip-flop convergence}
 
-
-\TODO{Proof of \cref{thm:tensor-flipflop}; vanilla strong convexity in a sublevel set stuff.}
 
 \begin{lemma}[Initial Conditions]\label{lem:tensor-initial-conditions}
 	There exist absolute constants $\Gamma, \gamma > 0$ such that the following holds.
@@ -1124,9 +1120,34 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 	\end{align*}
 \end{proof}
 
+\begin{lemma}[Inequality]\label{lem:inequality}
+	Let $0 < \delta < 1/8$ and $0 < x_1 , \ldots, x_n < e^{4 \delta}$ be such that $\prod_{i=1}^n x_i = 1$. Then, we have that 
+	$$ \sum_{i=1}^n (x_i-1)^2 \leq 16 \delta n $$
+\end{lemma}
+
+\begin{proof}
+	Without loss of generality, we can assume that 
+	$$0 < x_1 \leq \cdots \leq x_\ell \leq 1 \leq x_{\ell+1} \leq \cdots \leq x_n < e^{4\delta}. $$
+	Then, we have:
+	$$ \sum_{i=1}^n (x_i-1)^2 \leq \sum_{i=1}^\ell 2 - 2x_i + \sum_{i = \ell+1}^n 64 \delta^2. $$
+	Using that $\prod_{i=1}^n x_i = 1$ and $x_j < e^{4 \delta}$ for $j > \ell$, we get
+	$$e^{-4 \delta n } < e^{-4 \delta(n-\ell)} < \prod_{i=1}^\ell x_i \leq \left( \dfrac{\sum_{i=1}^\ell x_i}{\ell} \right)^\ell $$
+	which implies that $\displaystyle \sum_{i=1}^\ell x_i > \ell \cdot e^{-4 \delta n/\ell } \geq \ell (1- 4 \delta n /\ell)$, where the last inequality follows from $e^t \geq 1 + t$ for $t \leq 0$.
+	
+	Putting everything together, we get
+	\begin{align*}
+		\sum_{i=1}^n (x_i-1)^2 &\leq \sum_{i=1}^\ell 2 - 2x_i + \sum_{i = \ell+1}^n 64 \delta^2 \\
+		&< 2 \ell - 2\ell (1-4 \delta n/\ell) + 64 \delta^2 \cdot (n - \ell) \\
+		&< 8 \delta n + 64 \delta^2 n = 8\delta n (1 + 8 \delta) \leq 16 \delta n
+	\end{align*}	
+\end{proof}
+
 \begin{lemma}[Distance to Optimum]\label{lem:tensor-distance-opt}
-	Let $\htheta$ be the MLE estimator for $\Theta$, and $\otheta$ be the output of the flip-flop algorithm, assuming that our input samples satisfy the initial conditions of \cref{lem:tensor-initial-conditions}. Then, we have
-	$$ d_F(\htheta; \otheta) \leq  $$
+	Let $\htheta$ be the MLE estimator for $\Theta$, $\delta \in \R_+$ be a parameter such that 
+	$0 < \delta < \left(8 \sum_{a=1}^k \sqrt{d_a} \right)^{-1}$ and $\otheta$ be a scaling which satisfies $\delta = \norm{\nabla f_x(\otheta)}_F$. Then, we have
+	$$ d_F(\htheta; \otheta) \leq \left( 16 \delta D \cdot \sum_{a=1}^k \sqrt{d_a} \right)^{1/2} $$
+	and for each component, we have
+	$$ d_F(\htheta_a, \otheta_a) \leq \left( 16 \delta d_a \cdot \sqrt{d_a} \right)^{1/2}. $$
 \end{lemma}
 
 \begin{proof}
@@ -1146,23 +1167,30 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 	$$ \norm{Z}_F \leq 4 \cdot \norm{\nabla f_x(\otheta)}_F. $$ 
 	Setting $\delta = \norm{\nabla f_x(\otheta)}_F$, the above inequality implies that $Z_a \preceq 4 \delta I_a$ for each $a \in [k]$. This in turn yields 
 	$$ \exp(\sqrt{\vec d} Z) \preceq \exp(\sqrt{\vec d} \cdot 4\delta (I_1, \dots, I_k)) = 
-	\exp\left(4 \delta \cdot \sum_{a=1}^k \sqrt{d_a} \right) \cdot I_D $$
-	and our distance function becomes:
-	$$ d_F(\htheta, \otheta) \leq \exp\left(4 \delta \cdot \sum_{a=1}^k \sqrt{d_a} \right) - 1 \leq 8 \delta \cdot \sum_{a=1}^k \sqrt{d_a}  $$
-	where the last inequality we used $e^t \leq 1 + 2t$ for $t \in (0,1)$.
+	\exp\left(4 \delta \cdot \sum_{a=1}^k \sqrt{d_a} \right) \cdot I_D. $$
+	Thus, the conditions of \cref{lem:inequality} apply to the eigenvalues of $\exp(\sqrt{\vec d} Z)$ and our distance function becomes:
+	$$ d_F(\htheta, \otheta) =  \norm{\exp(\sqrt{\vec d} Z) - I_D}_F \leq \left( 16 \delta D \cdot \sum_{a=1}^k \sqrt{d_a} \right)^{1/2}. $$
+	Analogously, since $\htheta_a = \otheta^{1/2}_a \exp(\sqrt{d_a} Z_a) \otheta^{1/2}_a$, we have that
+	$$ d_F(\htheta_a, \otheta_a) =  \norm{\exp(\sqrt{d_a} Z_a) - I_a}_F \leq \left( 16 \delta d_a \cdot \sqrt{d_a} \right)^{1/2}. $$
 \end{proof}
-
-\RMO{Initial Conditions + descent lemma imply convergence of flip-flop via \cref{lem:descent-sublevel-set} and \cref{lem:convex-ball}}
 
 \begin{theorem}[Restatement of \cref{thm:tensor-flipflop}]
 	If $\htheta$ denotes the MLE estimator for $\Theta$, then provided $n = \Omega(k^2 \cdot d_1^2/D)$, the flip-flop algorithm computes $\otheta$ with 
-	$$ d_F(\htheta_a, \otheta_a) \leq \epsilon $$
-	in $O(k d_k \log(1/\epsilon))$ iterations with probability at least 
+	$$ d_F(\htheta_a, \otheta_a) \leq \eps $$
+	in $O(k d_k \log(d_k/\eps))$ iterations with probability at least 
 	$$ 1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}.$$
 \end{theorem}
 
 \begin{proof}
-
+	When the number of samples is $n = \Omega(k^2 \cdot d_1^2/D)$, with probability \\
+	$ 1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}$ we have that the hypothesis of \cref{lem:tensor-initial-conditions} applies, which implies that there exists a constant $\gamma > 0$ such that our objective function $f_x$ is $\frac{1}{2}$-strongly geodesically convex at a ball $B_{\gamma k/2}(I)$ and $\norm{\nabla f_x(I)}_F \leq \gamma k /8$.
+	
+	By \cref{lem:tensor-descent-lemma} and the upper bound on the gradient of any $\otheta \in B_{\gamma k/2}(I)$ from \cref{lem:convex-ball} we have that each step of the flip-flop algorithm will decrease the value of the objective function \RMO{we also need to show that the gradient of the new step is also upper bounded by 1, add this to the statement of \cref{lem:convex-ball}}. 
+	
+	Thus, after $T = O( k d_k \log(d_k/\eps) )$ steps, \cref{lem:descent-sublevel-set} guarantees us that we will encounter a scaling $\otheta$ such that
+	$$ \norm{\nabla f_x(\otheta)}_F \leq \dfrac{\eps^2}{16 d_k^{3/2}}.$$
+	When we find such a gradient, \cref{lem:tensor-distance-opt} implies that for each $a \in [k]$, the component-wise distance from $\otheta$ to $\htheta$ is bounded by
+	$$ d_F(\htheta_a, \otheta_a) \leq \eps. $$
 \end{proof}
 
 \subsection{Matrix flip-flop convergence}
