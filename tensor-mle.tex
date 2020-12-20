@@ -1007,7 +1007,7 @@ In this section we prove that the flip-flop algorithms for the matrix and tensor
 \begin{Algorithm}
 \textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
 
-\textbf{Output}: $\otheta \in \SPD$ such that $d_F(\otheta_a, \htheta_a) < \eps$, for each $i \in [k]$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
+\textbf{Output}: $\otheta \in \SPD$ such that $d_F(\htheta_a; \otheta_a) < \eps$, for each $a \in [k]$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
 
 \textbf{Algorithm}:
 \begin{enumerate}
@@ -1022,7 +1022,7 @@ If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\left( \bigotimes_{a =1}^k \othet
 \item Otherwise, set $\otheta_a \leftarrow \det(\rho^{(a)})^{1/d_a} (\rho^{(a)})^{-1} \cdot \otheta_a$.
 \end{itemize}
 \end{enumerate}
-\caption{Flip-flop algorithm}\label{alg:flip-flop}
+\caption{Tensor flip-flop algorithm}\label{alg:flip-flop}
 \end{Algorithm}
 
 Before we analyze the convergence of the flip-flop algorithms for the tensor and matrix normal models, we discuss the straightforward generalizations of convergence of general descent methods whenever the objective function is strongly geodesically convex.
@@ -1089,7 +1089,7 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 \end{proof}
 
 \begin{lemma}[Descent Lemma]\label{lem:tensor-descent-lemma}
-	If $\Theta, \Upsilon$ are successive scalings from the flip-flop algorithm and $\norm{\nabla f_x(\Theta)}_F \leq 1$, then we have:
+	If $\Theta, \Upsilon$ are successive scalings from the flip-flop algorithm, then we have:
 	$$ f_x(\Upsilon) \leq f_x(\Theta) - \dfrac{1}{6k d_k} \cdot \min\{1, \norm{\nabla f_x(\Theta)}_F^2\} $$
 \end{lemma}
 
@@ -1200,6 +1200,26 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 
 \subsection{Matrix flip-flop convergence}
 
+\begin{Algorithm}
+\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^{d_1 \times d_2}$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
+
+\textbf{Output}: $\otheta \in \SPD$ such that $d_{op}(\htheta_a; \otheta_a) < \eps$, for each $a \in \{1,2\}$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
+
+\textbf{Algorithm}:
+\begin{enumerate}
+\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in \{1,2\}$, and $\delta = \dfrac{\eps^2}{16 d_k^{3/2}}$.
+\item\label{it:flip-flop step 2} For $t=1,\dots,T = 12 k d_k \cdot \log(k/\delta^2)$, repeat the following:
+%we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
+\begin{itemize}
+\item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \otheta_2)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \otheta_2)$, and find the index $a \in \{1,2\}$ for which $\norm{\nabla_a}_{op}$ is largest. 
+\item
+If $\norm{\nabla_a}_{op}^2 < \delta^2$, output $\left( \bigotimes_{a =1}^k \otheta_a \right)^{-1}$ and return.
+% S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
+\item Otherwise, set $\otheta_a \leftarrow \det(\rho^{(a)})^{1/d_a} (\rho^{(a)})^{-1} \cdot \otheta_a$.
+\end{itemize}
+\end{enumerate}
+\caption{Matrix flip-flop algorithm}\label{alg:flip-flop}
+\end{Algorithm}
 
 \TODO{Proof of \cref{thm:matrix-flipflop}}
 
