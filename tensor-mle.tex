@@ -160,7 +160,9 @@ For $A,B$ positive-definite $d\times d$ matrices, define
 d_{op}(A; B) = \| I - B^{-1/2} A B^{-1/2}\|_{op}
 \end{align}
 \end{definition}
-If $\Theta_1, \Theta_2$ are the precision matrices of centered Gaussians, $d_F$ is sometimes called the Mahalanobis distance between them. The Mahalanobis distance is a natural dissimilarity measure on Gaussians because when any of the Mahalanobis, total variation, square of the KL-divergence, or Fisher-Rao distances is at most a small constant then they are on the same order \CF{check, cite} \cite{barsov1987}. Considering $d_{op}$ yields even stronger results, and both can be related to the usual norms by $\|A - B\|_F \leq \|B\|_{op} d_F(A,B)$ and $\|A  - B\|_{op} \leq \|B\|_{op} d_{op}(A,B)$. Our theoretical contribution is as follows:
+If $\Theta_1, \Theta_2$ are the precision matrices of centered Gaussians, $d_F$ is sometimes called the Mahalanobis distance between them. The Mahalanobis distance is a natural dissimilarity measure on Gaussians because when any of the Mahalanobis, total variation, square of the KL-divergence, or Fisher-Rao distances is at most a small constant then they are on the same order \CF{check, cite} \cite{barsov1987}. Considering $d_{op}$ yields even stronger results, and both can be related to the usual norms by $\|A - B\|_F \leq \|B\|_{op} d_F(A,B)$ and $\|A  - B\|_{op} \leq \|B\|_{op} d_{op}(A,B)$. Though $d_F$ and $d_{op}$ are not truly metrics, we will abuse language and call them distances because they are obey approximate symmetry and an approximate triangle inequality \CF{cite}.
+
+Our theoretical contribution is as follows:
 \begin{enumerate}
 \item For the matrix normal model, if $n \geq C (\max\{d_i^2\}/d_1 d_2) \log^2 d_1$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has MSE $O( \max d_i^2/ n \prod d_i )$ for in $d_{op}$; as a corollary the MSE in $d_F$ is $O( \max d_i^3/ n \prod d_i )$.
 \item For the tensor normal model, if $n \geq C \max\{d_i^3\}/ \prod d_i$, then the MLE for the precision matrices $\Theta_1, \dots, \Theta_k$ has MSE $O(\max d_i^3/ n \prod d_i)$ in $d_F$.
@@ -250,7 +252,7 @@ One may think of each random sample $X_j$ as taking values in the set of $d_1 \t
 
 
 
-The MLE is easier to state in terms of the precision matrices, the inverses of the covariance matrices. Let $\Theta$ denote the precision matrix $\Sigma^{-1}$, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$ where $\Theta_a = \Sigma_a^{-1}$. Given a tuple $\samp$ of samples  $\samp_1,\dots,\samp_n\in\R^D$, up to an additive constant the log likelihood is $
+The MLE is easier to describe in terms of the precision matrices, the inverses of the covariance matrices. Let $\Theta$ denote the precision matrix $\Sigma^{-1}$, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$ where $\Theta_a = \Sigma_a^{-1}$. Given a tuple $\samp$ of samples  $\samp_1,\dots,\samp_n\in\R^D$, up to an additive constant the log likelihood is $
   \ell_{\samp}(\Theta)
 % = \frac n2 \log \det(\Theta/2\pi) - \sum_{i=1}^n \frac12 \braket{\samp_i, \Theta \samp_i} ~
   = \frac n2 \log \det \Theta - \frac12 \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i}$, which we can rewrite as
@@ -325,8 +327,11 @@ One may wonder why in the above theorems we consider the distances for the indiv
 %\subsection{Sample complexity from geodesic convexity}\label{subsec:outline}
 %-----------------------------------------------------------------------------
 
-Following \cite{FM20}, and in spirit also \CF{cite weisel}, we use geodesic convexity to prove \cref{thm:tensor-frobenius}.
-\Cref{thm:matrix-normal}, proven later in \cref{sec:matrix-normal}, requires the stronger notion of \emph{quantum expansion}. Though the likelihood function is geodesically convex, we find it somewhat easier to work with a different potential function $f_{\samp}$ to be defined in the next section. We now review the notion of geodesic convexity. 
+It was observed by Weisel \CF{cite} that the negative log-likelihood $-\ell_\samp$ exhibits a certain variant of convexity known as \emph{geodesic convexity}. Following \cite{FM20}, we use geodesic convexity to prove \cref{thm:tensor-frobenius}.
+\Cref{thm:matrix-normal}, proven later in \cref{sec:matrix-normal}, requires additional tools. We now discuss the geodesic convexity used here. 
+
+We start by introducing a manifold structure on the set $\PD_d$ of positive-definite matrices. Rather than simply considering the metric induced by the Euclidean metric on $\smallSym_d$, we consider a metric whose unit length geodesics through $\Theta$ are of the form $\Theta^{1/2} e^{Ht} \Theta^{1/2}$ for $t \in [0,1]$ and a symmetric matrix $H \in \smallSym_d$ with $\|H\|_F = 1$. This metric arises from the Hessian of the log-determinant \cite{bhatia2009positive} and also as the Fisher-Rao metric on centered Gaussians parametrized by their precision matrices \CF{cite}. Note that $\PD^1$ is a geodesically convex submanifold of $\PD$ whose geodesics arise from traceless symmetric matrices $H \in \smallSym_d^0$. We now extend this to a metric on set $\SPD$ of tuples of matrices in $\PD^1$, but we do not simply take the product metric. Instead we take the metric induced from the embedding $\SPD \to \PD_D$ given by $(\Theta_1, \dots, \Theta_d) \mapsto \Theta_1 \ot \dots \ot \Theta_d,$ which has slightly different geodesics which we describe below.
+
 
 
 
@@ -337,7 +342,8 @@ Following \cite{FM20}, and in spirit also \CF{cite weisel}, we use geodesic conv
  Let $\Theta \in \SPD$. The \emph{exponential map} $\exp_\Theta:\Sym \to \SPD$ at $\Theta$ is defined by 
 $$ \exp_\Theta(Z) = \Theta^{1/2} e^{\sqrt{\vec d}Z} \Theta^{1/2},$$
 where $\sqrt{\vec d} Z$ denotes the componentwise product $(\sqrt{d_1} Z_1, \dots, \sqrt{d_k}Z_k)$.
-The \emph{geodesics} through $\Theta$ are the curves $t\mapsto \exp_\Theta(tZ)$ for $t \in \R$. These curves are in fact geodesics, or ``straight lines,'' through $\Theta$ for a natural Riemannian metric on~$\SPD$~\cite{bhatia2009positive}. \CF{fisher-rao}
+The geodesics through $\Theta$ are the curves $t\mapsto \exp_\Theta(tZ)$ for $t \in \R$. 
+%These curves are in fact geodesics, or ``straight lines,'' through $\Theta$ for a natural Riemannian metric on~$\SPD$~\cite{bhatia2009positive}. \CF{fisher-rao}
 % The length of the curve given by restricting $\gamma$ to $[0,1]$, or $\gamma|_{[0,1]}$, is defined to be $\|Z\|_F$. 
 
 
@@ -354,41 +360,38 @@ Further, say $f$ is \emph{$\lambda$-strongly geodesically convex} at a point $\T
 % \end{align*}
 %Here we use the norm $\norm{\cdot}_{\vec d}$ induced by the rescaled Hilbert-Schmidt inner product $\braket{X, Y}_{\vec d} = \sum_{a=1}^k \frac1{d_a} \tr(X_a Y_a)$ for $X, Y \in \Sym$.
 \end{definition}
-
-The function $f_{\samp}$ defined in \cref{dfn:function} is geodesically convex~\cite{burgisser2019towards}. 
+We also note that the MLE obeys a certain ``equivariance" property under transformations. For all $\Theta \in \SPD$, $A \in \SL$, and $\samp=(\samp_1,\dots,\samp_n)$, the log-likelihood satisfies $\ell_{A^{-1} \samp}(A^T \Theta A) = \ell_{\samp}(\Theta)$ where we write $A^{-1} \samp = (A^{-1} \samp_1,\cdots,A^{-1} \samp_n)$.  Thus the MLE satisfies
+\begin{align}\label{eq:equivariance}
+\widehat\Theta_{\Theta^{-1/2} \samp} = \Theta^{1/2} \widehat\Theta_{\samp} \Theta^{1/2}\end{align}
+where we write $A^{-1} \samp = (A^{-1} \samp_1,\cdots,A^{-1} \samp_n)$
+ assuming either maximizer exists and is unique. Furthermore, the distances we use are \emph{invariant} under such transformations: for $C \in \GL_d$, $A, B \in \PD_d$, we have 
+ \begin{align*}
+  d_F(C A C^T; C B C^T)
+%= \norm{ I - \Theta^{-1/2} \widehat\Theta_{\Theta^{-1/2} \samp} \Theta^{-1/2} }_F
+% = \norm{ I - \widehat\Theta_{\Theta^{1/2} \samp} }_F
+= d_F(A; B),
+\end{align*}
+and likewise for the distance $d_{op}$. This invariance is natural because changing a pair of precision matrices in this way does not change the statistical relationship between the corresponding Gaussians; in particular the total variation distance, Fisher-Rao, and Kullback-Leibler divergence are unchanged \CF{double check}.
+ 
+ 
+%The function $f_{\samp}$ defined in \cref{dfn:function} is geodesically convex~\cite{burgisser2019towards}. 
 %\CF{see the commented out motivation. Where to put it?}
 %\MW{Write $\norm Z_F^2 = \sum_i \norm{Z_i}_F^2$???}
 %One might wonder why we define $\exp_\Theta$ using the componentwise multiplication by $\sqrt{\vec d}$. In fact, this is equal to the exponential map for the Riemannian metric $\braket{X, Y}_{\vec d} = \sum_{a=1}^k \frac1{d_a} \tr(X_a Y_a)$. Oddly enough, defining the gradient and Hessian according to this metric, rather than the usual Hilbert-Schmidt inner product, improves the ratio between the norm of the gradient of $f_{\samp}$ and its strong geodesic convexity parameter - a ratio which controls the quality of our statistical estimate. 
 %RMO: Is this oddity simply because of the structure of the g-convex function that we are studying, the fact that it is a function over $\otimes \Theta_i$ and therefore we will get these $d_i$'s naturally? (todo for myself: do these calculations and see)
-We also note that $f$ has a certain useful transformation property or ``equivariance." For all $\Theta \in \SPD$, $A \in \SL$, and $\samp=(\samp_1,\dots,\samp_n)$, we have that
-\begin{align}\label{eq:equivariance}
-  f_{A^{-1} \samp}(A^T \Theta A) = f_{\samp}(\Theta),
-\end{align}
-where we write $A^{-1} \samp = (A^{-1} \samp_1,\cdots,A^{-1} \samp_n)$.
-With these definitions in place, we are able to state the rather straightforward plan.
+
+With these definitions in place, we are able to state the rather straightforward plan. For simplicity we restrict to $\Theta \in \SPD$ \CF{$\PD_D$?}.
 
 \begin{enumerate}
-\item\label{it:reduce} \textbf{Reduce to identity:}
-Firstly, \cref{eq:equivariance} implies that $\widehat\Theta_{\Theta^{-1/2} \samp} = \Theta^{1/2} \widehat\Theta_{\samp} \Theta^{1/2}$ assuming either minimizer exists and is unique.
-Therefore,
-\begin{align*}
-  d_F(\widehat\Theta_{\Theta^{-1/2} \samp}; \Theta)
-= \norm{ I - \Theta^{-1/2} \widehat\Theta_{\Theta^{-1/2} \samp} \Theta^{-1/2} }_F
-% = \norm{ I - \widehat\Theta_{\Theta^{1/2} \samp} }_F
-= d_F(\widehat\Theta_{\samp}; I)
-\end{align*}
-and likewise for the distance $d_{\op}$.
-Now if $\rv$ is distributed as $n$ independent samples from a standard Gaussian, $\Theta^{-1/2} \rv$ is distributed as $n$ independent samples from $\cN(0, \Theta^{-1})$.
-This shows that to prove \cref{thm:tensor-frobenius} it is enough to consider the case that $\Theta = I$ and $\rv$ is standard Gaussian.
+\item\label{it:reduce} \textbf{Reduce to identity:} We obtain $n$ samples from from $\cN(0, \Theta^{-1})$ as $\Theta^{-1/2} \rv$ where $\rv$ is distributed as $n$ independent samples from a standard Gaussian.
+By equivariance, the MLE $\widehat{\Theta}_{\Theta^{-1/2}\rv}$ is exactly $\Theta^{1/2} \widehat\Theta_{\rv} \Theta^{1/2}$. By invariance of the distance, $d_F(\widehat\Theta_{\Theta^{-1/2} \rv}; \Theta)
+= d_F(\widehat\Theta_\rv; I).$ This shows that to prove \cref{thm:tensor-frobenius} it is enough to consider the case that $\Theta = I$, i.e. $\rv$ is standard Gaussian.
 \item\label{it:grad} \textbf{Bound the gradient:}
-Show that the gradient $\nabla f_{\rv}(I)$ (defined below) is small with high probability.
+Show that the gradient $\nabla \log \ell_{\rv}(I)$ (defined below) is small with high probability.
 \item\label{it:convexity} \textbf{Show strong convexity:}
-Show that, with high probability, $f_{\rv}$ is $\Omega(1)$-strongly geodesically convex near $I$.
+Show that, with high probability, $-\log\ell_{\rv}$ is $\Omega(1)$-strongly geodesically convex near $I$.
 \end{enumerate}
-
-These together imply the desired sample complexity bounds -- as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far.
-Furthermore, like in the Euclidean case, if a function is strongly geodesically convex in a region and one can prove a \emph{descent lemma} for a sequence in the region, then it must converge exponentially quickly to an optimizer.
-It is well-known that various optimization algorithms applied to $f_{\samp}$ satisfy such a descent lemma~\cite{burgisser2019towards}.
+These together imply the desired sample complexity bounds -- as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far. Note that we have used $f_\samp=-\log\ell_\samp$ rather than the negative log-likelihood. In fact, $f_\samp$ is also geodesically convex, and has additional nice properties such as Lipschitz continuity and a Lipschitz-continous gradient \cite{burgisser2019towards}. In particular various optimization algorithms applied to $f_\samp$ obey a descent lemma \cite{burgisser2019towards} \CF{other}, and as such these algorithms must converge exponentially quickly by strong g-convexity of $f_\samp$. Using this we will show that the flip-flop algorithm converges exponentially quickly with high probability.
 
 To make this discussion more concrete, we now define the gradient formally and state the lemma that we will use to relate the gradient and strong convexity to the distance to the optimizer as in the plan above.
 
@@ -515,6 +518,8 @@ As explained above, $\widehat{\Theta}_{\samp} = \widehat{\Theta}_{\samp,1} \ot \
 We will often identify $\Theta$ with the tuple $(\Theta_1,\dots,\Theta_k)$, and similarly for $\widehat{\Theta}_{\samp}$.
 When $\samp$ is clear from context we will drop it.
 
+
+%\CF{put somewhere}. It is well-known that various optimization algorithms applied to $f_{\samp}$ satisfy such a descent lemma~\cite{burgisser2019towards}.
 %-----------------------------------------------------------------------------
 \subsection{Bounding the gradient}
 %-----------------------------------------------------------------------------
@@ -1206,7 +1211,7 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 One could hope that, for the purposes of estimating $\Theta_1$, having access to $X$ is like having access to $n d_2 \dots, d_k$ independent samples of a Gaussian with precision matrix $\Theta_1$. In particular, one could hope e.g. for an RMSE rate of $\sqrt{ d_1/ n d_2}$ for estimating $A$ in spectral norm. Here we show that this only holds if $d_2 \leq n d_1$; the best rate is actually $\sqrt{d_1/ n \min(n d_1, d_2)}$. Intuitively, this holds because we can choose $\Theta_2$ to have low rank and effectively zero out some entries of $X$. However, this does not quite work because $\Theta_2$ must be invertible - we have to instead choose $\Theta_2$ to be approximately equal to a random low rank matrix.
 %Here we show that our bounds for the matrix normal model are best possible for estimating the individual matrices $\Theta_a$. The bound for $\Theta_2$ is clearly best possible because it is what we would obtain even if $\Theta_1$ were known, but in fact even the bound on $\Theta_1$ is tight.
 
-\begin{theorem}Suppose $d_2 > n d_1$. Let $X$ denote a tuple of $n$ samples from the matrix normal model with precision matrices $\Theta_1, \Theta_2$. Let $Y$ be a tuple of $nd_1$ Gaussians with precision matrix $\Theta_1$. Let $\hat{\Theta}_1$ be any estimator for $\Theta_1$. For every $\delta > 0$, there is a distribution on $\Theta_2$ and an estimator $\tilde{\Theta}$ such that the distribution of $\hat{\Theta}_1(X)$ and the distribution of $\tilde{\Theta}(Y)$ differ by at most $\delta$ in total variation distance. In particular the MSE for $\widehat{\Theta}_1$ can be no better than the minimax MSE for the precision matrix of a $d_1$ dimensional Gaussian with $nd_1$ samples; this holds as well for $\Theta_1$ to subsets such as sparse, etc. \CF{I need to check this final conclusion; it might require some reasonable assumption like boundedness}
+\begin{theorem}Suppose $d_2 > n d_1$. Let $X$ denote a tuple of $n$ samples from the matrix normal model with precision matrices $\Theta_1, \Theta_2$. Let $Y$ be a tuple of $nd_1$ Gaussians with precision matrix $\Theta_1$. Let $\hat{\Theta}_1$ be any estimator for $\Theta_1$. For every $\delta > 0$, there is a distribution on $\Theta_2$ and an estimator $\tilde{\Theta}$ such that the distribution of $\hat{\Theta}_1(X)$ and the distribution of $\tilde{\Theta}(Y)$ differ by at most $\delta$ in total variation distance. In particular the MSE for $\widehat{\Theta}_1$ can be no less than the minimax MSE for the precision matrix of a $d_1$ dimensional Gaussian with $nd_1$ samples; this holds as well for $\Theta_1$ to subsets such as sparse, etc. \CF{I need to check this final conclusion; it might require some reasonable assumption like boundedness}
 \end{theorem}
 In the proof, one finds that the estimator $\tilde{\Theta}$ uses additional randomness - but by Yao's theorem the minimax MSE is unchanged when estimators with additional randomness are allowed.
 
