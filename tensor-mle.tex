@@ -206,7 +206,9 @@ To handle the undersampled case, we also introduce a regularized estimator that 
 
 \subsection{Notation}
 \CF{some aspects of this seem awfully specific to the tensor normal model and maybe could wait until after we define it, or simply merge the two, i.e. "Notation and model"}
-The letter $n$ will denote a number of samples, and $d_1\leq \dots \leq d_k$ will denote sorted dimensions, and we set $D:=\prod_{i = 1}^k d_i$. Let $\PD_d$ denote the positive definite $d\times d$ matrices with unit determinant, and $\PD_d^1$ the subset of $\PD$ with unit determinant. Let $\smallSym_d$ denote the vector space of $d\times d$ symmetric matrices, and $\smallSym^0_d$ the subspace of traceless matrices in $\smallSym_d$, i.e. the tangent space of $\PD_d^1$. Let~$\SL_d$ denote the group of $d\times d$ matrices with unit determinant.
+The letter $n$ will denote a number of samples, and $d_1\leq \dots \leq d_k$ will denote sorted dimensions, and we set $D:=\prod_{i = 1}^k d_i$. Let $\PD_d$ denote the positive definite $d\times d$ matrices with unit determinant, and $\PD_d^1$ the subset of $\PD$ with unit determinant. $\rv$ will denote the random tuple $(\rv_1, \dots, \rv_n)$ where $\rv_i \in \RR^{D}$ are drawn i.i.d from the tensor normal model with precision matrix $\Theta \in \PD_D$, and $\samp$ will denote a deterministic tuple of tensors. 
+
+Let $\smallSym_d$ denote the vector space of $d\times d$ symmetric matrices, and $\smallSym^0_d$ the subspace of traceless matrices in $\smallSym_d$, i.e. the tangent space of $\PD_d^1$. Let~$\SL_d$ denote the group of $d\times d$ matrices with unit determinant.
 %Then, $A^T e^Z A \in \PD_d^1$ for any $A \in \SL_d$ and $Z\in\Sym_d^0$.
 % Any matrix in $\PD_d^1$ can be written as the matrix exponential of a matrix in $\Sym_d^0$.
 Let 
@@ -219,7 +221,8 @@ $$\SL = \bigoplus_{a=1}^k \SL_{d_a}, \SPD = \bigoplus_{a = 1}^k \PD_{d_a}^1, \Sy
 %\item Number of samples $n$, dimensions $d_1\leq \dots \leq d_k$. $D$ for product of these. 
 %\item $X$ for the tensor random variable, $\samp_1, \dots, \samp_n$ for each , $\samp = (\samp_1, \dots, \samp_n)$ for the random tuple of samples. $\rho = \samp \samp^T/\|\samp\|_F^2$. Lower case $x$ for samples.
 
-\item $\rv$ for the random tuple $(\rv_1, \dots, \rv_n)$, $x$ for the tuple of samples $(x_1, \dots, x_n)$ when no longer random. Think of $\rv$ as $D \times n$ matrix, $\rho = \rv\rv^T,xx^T$ etc. When $x_i$ is a matrix, which unfortunately does happen sometimes, we'll use $x_i^\dagger$ for the matrix transpose (open to suggestions on this one).
+%\item $\rv$ for the random tuple $(\rv_1, \dots, \rv_n)$, $x$ for the tuple of samples $(x_1, \dots, x_n)$ when no longer random. Think of $\rv$ as $D \times n$ matrix, $\rho = \rv\rv^T,xx^T$ etc. 
+\item When $x_i$ is a matrix, which unfortunately does happen sometimes, we'll use $x_i^\dagger$ for the matrix transpose (open to suggestions on this one).
 %\item $\braket{\cdot,\cdot}_{\vec d}$ denote modified Hilbert-Schmidt inner products\MW{sadly the corresponding norms look like $\ell_p$ norms},
 \item $f_{\rv}$ for the function in \cref{dfn:function}, mostly drop $\rv$. $\langle \cdot, \cdot \rangle$ is the $\ell_2$ inner product of vectors
 
@@ -499,7 +502,8 @@ One may think of \cref{eq:f extension} as proportional, up to an additive consta
 %-----------------------------------------------------------------------------
 Proceeding according the plan from the previous section, we now compute the gradient of $f_{\samp}$ and bound it using basic matrix concentration results.
 
-To calculate the gradient, we need a definition from linear algebra.
+To calculate the gradient, we need a definition from linear algebra. Recall that our data comes as an $n$-tuple of $D$-dimensional vectors. We think of such a sample $\samp$ as a $D \times n$ matrix, so that $\samp^T$ denotes its $n \times D$ transpose. We can compute the gradient from the ``sample covariance matrix" $\rho = \samp \samp^T$.
+%Think of $\rv$ as $D \times n$ matrix, $\rho = \rv\rv^T,xx^T$ etc.
 
 \begin{definition}[Partial trace]\label{def:single marginal}
 For $\rho \in \PD_D$ and $a\in[k]$, let $\rho^{(a)} \in \PD_{d_a}$ denote the \emph{partial trace} defined by the condition that
@@ -510,7 +514,9 @@ for all $d_a \times d_a$ matrices $Z$, where $Z_a = (I_1 \ot \cdots \ot I_{a-1} 
 Here and in the following we write $I_a$ for the $d_a\times d_a$ identity matrix. \CF{can I suggest $Z_{(a)}$ instead to avoid the confusion with components below?}
 \end{definition}
 
-\MW{Explain how to compute in terms of $\samp$. Ref above \cref{cor:vershynin}.}
+If the definition above seems abstract, one can compute the partial trace of $\rho = \samp \samp^T$ from the different flattenings we mentioned in the introduction. The partial trace $\rho_1$ is computed by computing the flattening of $\samp$ into a $d_1\times d_2 d_3 \dots d_k n$ matrix $M$ and then setting $\rho_1 = M M^T$. The other matrices $\rho_2, \dots, \rho_k$ are analogous.
+
+%\MW{Explain how to compute in terms of $\samp$. Ref above \cref{cor:vershynin}.}
 
 \begin{lemma}[Riemannian gradient]\label{lem:gradient}
 Let $\rho = \sum_{i=1}^n \samp_i \samp_i^T / \norm{\samp}_2^2$.
@@ -565,7 +571,7 @@ for all $a\in[k]$, and hence $\norm{\nabla f_{\rv}}^2 \leq k \eps^2$.
 
 To prove this we will need a standard result in matrix concentration.
 Recall that $\nabla_a f_{\samp} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}$ by \cref{lem:gradient}.
-It is not hard to see that $\rho^{(a)}$ is distributed as $Y Y^T / \norm{Y}_F^2$, where $Y$ is a $d_a \times N_a$ matrix with independent Gaussian entries.
+Recall from the discussion below \cref{def:single marginal} that $\rho^{(a)}$ is distributed as $Y Y^T / \norm{Y}_F^2$, where $Y$ is a $d_a \times N_a$ matrix with independent Gaussian entries.
 The following result bounds the singular values of such random matrices.
 
 \begin{theorem}[Corollary 5.35 of \cite{vershynin2010introduction}]\label{cor:vershynin}
@@ -637,7 +643,7 @@ We now prove our main strong convexity result, \cref{thm:ball-convexity}, in ord
 %\begin{theorem}\label{thm:ball-convexity}There is $c> 0$ such that the following holds: with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, the function $f_{\rv}$ is $1/2$-strongly convex at all points $Z\in \PD$ with $\sum_{i = 1}^n \|\log Z_a\|_{op} < c/k.$\end{theorem}
 
 
-\begin{theorem}\label{thm:ball-convexity} There are constants $C,c>0$ such that the following holds. For $n \geq C k^2 d_1^2/D$, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, $f$ is $1/2$ strongly convex at any point $Z \in \SPD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$. \CF{define the ell-infty ball}
+\begin{theorem}\label{thm:ball-convexity} There are constants $C,c>0$ such that the following holds. For $n \geq C k^2 d_1^2/D$, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, $f$ is $1/2$ strongly convex at any point $Z \in \SPD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$. 
 \end{theorem}
 
 
