@@ -1231,7 +1231,6 @@ By invertibility of $\Sigma_1$, it is enough to show that $Y_0$ has a density wh
 
 
 
-
 \section{Open problems}
 \TODO{$d_{op}$} for tensors??
 
@@ -1261,9 +1260,9 @@ Let $\Pi: \mat(m) \to \mat(m)$ denote the projection onto the traceless matrices
 with probability at least $ 1- t^{-c(m+n)}$. 
 \end{theorem}
 
-The relation to our desired expansion result follows from the following:  \CF{some bad latex thing happening below}
-\[ Y \otimes Y vec(Z \in \mat(m)) = vec( Y_{i}^{*} Z Y_{i})      \]
-Theorem \cref{thm:hess-pisier} then follows as a corollary by choosing $\alpha \propto \vec{1}$ and standard results from Gaussian concentration. The proof of \cref{thm:Pisier-expansion} proceeds by a symmetrization trick, followed by the trace method. We will first state the necessary concentration results and then give the proof. Our setting required the result on rectangular matrices with strong error bounds, but we claim no originality.  
+The relation to our desired expansion result follows from the following: for $Y \in \R^{n \times m}$ we have $Y \otimes Y : \R^{m \times m} \to \R^{n \times n}$, and so for $Z \in \mat(m)$:  \CF{some bad latex thing happening below}
+\[ Y \otimes Y (\text{vec}(Z)) = \text{vec}( Y^{*} Z Y)      \]
+\cref{thm:hess-pisier} then follows as a corollary by choosing $\alpha \propto \vec{1}$ and standard results from Gaussian concentration. The proof of \cref{thm:Pisier-expansion} proceeds by a symmetrization trick, followed by the trace method. We will first state the necessary concentration results and then give the proof. Our setting required the result on rectangular matrices with strong error bounds, but we claim no originality.  
 
 \begin{theorem} \cite{P86}
 We denote a random Gaussian matrix $Y \in \R^{m \times n}$ (for $m < n$) with $Y_{ij} \sim \mathcal{N}(0,1)$, we have the following bound
