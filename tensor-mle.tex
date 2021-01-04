@@ -107,11 +107,11 @@
 \TODO{
 \begin{enumerate}
 %\item Use $n$ instead of $T$ for number of samples.
-\item Replace the failure probability $1/poly(D)$ by an actual expression.
 \item Fix the dimension issue in \cref{thm:tensor-convexity}.
-\item Small annoying thing - we assume determinant 1. This can be handled easily, but needs to be done.
+\item At some point we need to mention that the final step in flip-flop is to supply the normalizing constant. 
+\item 
 %\item When not random, use lower case $x$.
-\item Comment that the geodesic distance is some variation on the Fischer-Rao distance.
+%\item Comment that the geodesic distance is some variation on the Fischer-Rao distance.
 \end{enumerate}
 Polishing:
 \begin{enumerate}
@@ -181,7 +181,7 @@ For interesting cases of the tensor normal model such as $d\times d \times d$ te
 
 \CF{I think I'd like to do a better job at gradually defining notation so its clear that these are the right numbers.}
 
-To handle the undersampled case, we also introduce a regularized estimator that is much simpler to compute than the penalized regularizers introduced in \CF{tsilig, sun, zhou}, and empirically has comparable and sometimes better performance to existing regularizers. Our regularizer has a Bayesian interpretation as coming from a Wishart prior for the covariance, and is closer in spirit to the shrinkage estimators considered by \CF{cite Weisel, etc}. \CF{expand up on this; put it in the bulleted list also?}
+To handle the undersampled case, we also introduce a regularized estimator that is much simpler to compute than the penalized regularizers introduced in \CF{tsilig, sun, zhou}, and empirically has comparable to and sometimes better performance than existing regularizers. Our regularizer has a Bayesian interpretation as coming from a Wishart prior for the covariance, and is closer in spirit to the shrinkage estimators considered by \CF{cite Weisel, etc}. \CF{expand up on this; put it in the bulleted list also?}
 
 
 
@@ -227,7 +227,7 @@ $$\SL = \bigoplus_{a=1}^k \SL_{d_a}, \SPD = \bigoplus_{a = 1}^k \PD_{d_a}^1, \Sy
 \item $f_{\rv}$ for the function in \cref{dfn:function}, mostly drop $\rv$. $\langle \cdot, \cdot \rangle$ is the $\ell_2$ inner product of vectors
 
 %\item $\smallSym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite, $\smallSym_d^0$ for traceless symmetric, $\PD_d^1$ for $\det=1$ positive definite? 
-\item $\Theta$ for big tensor product pd concentration matrix, $\Theta_a$ for individual pd's.
+\item $\Theta$ for big tensor product pd concentration matrix, $\Theta_a$ for individual pd's. \CF{at some point $\Theta$ gets used for the tuple. We need to decide what to do about this.}
 %\item I'm going to call $\SL = \oplus \SL_{d_i}, \SPD = \oplus \PD_{d_i}^1, \Sym = \oplus \smallSym_{d_i}^0$. Explain somewhere how $\Sym$ is the tangent space of $\SPD$. 
 %\MW{Suppressing the $^1$ and $^0$ is a bit confusing I think. Maybe $\operatorname{SPD}$ for $\SPD$ with $\det=1$? I still feel that $\Sym$ looks somewhat horrible (with or without subscript, but I am not sure what would be better).}
 %\item $G = \prod_{a=1}^k \SL_{d_a}$, $P = \prod_{a=1}^k \PD_{d_a}^1$, and $S = \bigoplus_{a=1}^k \Sym_{d_a}^0$.
@@ -383,7 +383,7 @@ and likewise for the distance $d_{op}$. This invariance is natural because chang
 %One might wonder why we define $\exp_\Theta$ using the componentwise multiplication by $\sqrt{\vec d}$. In fact, this is equal to the exponential map for the Riemannian metric $\braket{X, Y}_{\vec d} = \sum_{a=1}^k \frac1{d_a} \tr(X_a Y_a)$. Oddly enough, defining the gradient and Hessian according to this metric, rather than the usual Hilbert-Schmidt inner product, improves the ratio between the norm of the gradient of $f_{\samp}$ and its strong geodesic convexity parameter - a ratio which controls the quality of our statistical estimate. 
 %RMO: Is this oddity simply because of the structure of the g-convex function that we are studying, the fact that it is a function over $\otimes \Theta_i$ and therefore we will get these $d_i$'s naturally? (todo for myself: do these calculations and see)
 
-With these definitions in place, we are able to state the rather straightforward plan. For simplicity we restrict to $\Theta \in \SPD$ \CF{I'm somewhat irritated because the below plan is simpler to see for $\PD_D$. Fix on later pass}.
+With these definitions in place, we are able to state a proof plan, which is a Riemannian version of the standard approach using strong convexity. For simplicity we restrict to $\Theta \in \SPD$ \CF{I'm somewhat irritated because the below plan is simpler to see for $\PD_D$. Fix on later pass}.
 
 \begin{enumerate}
 \item\label{it:reduce} \textbf{Reduce to identity:} We obtain $n$ samples from from $\cN(0, \Theta^{-1})$ as $\Theta^{-1/2} \rv$ where $\rv$ is distributed as $n$ independent samples from a standard Gaussian.
@@ -482,7 +482,7 @@ Let $(\widehat{\Theta}_{\samp,1}, \dots, \widehat{\Theta}_{\samp,k})$ denote the
 \end{definition}
 
 The estimator $\widehat{\Theta}_{\samp} = \widehat{\Theta}_{\samp,1} \ot \cdots \ot \widehat{\Theta}_{\samp,k}$ is directly related to the maximum likelihood estimator for the tensor normal model by a multiplicative factor that can be computed once $\widehat{\Theta}_\samp$ is known. To see this, for any $\Theta \in \PD_D$ write $\Theta = \lambda \Theta'$ for $\lambda>0$ and $\Theta'\in\PD_D^1$ and maximize $\ell_\samp$ over~$\lambda$.
-The result is $\lambda = n D e^{- f_\samp(\Theta)}$. We may extend $f_x$ to $\oplus_i \PD_{d_i}$ by writing 
+The result is $\lambda = n D e^{- f_\samp(\Theta')}$. We may extend $f_x$ to $\oplus_i \PD_{d_i}$ by writing 
 \begin{align}
   f_{\samp}(\Theta_1,\dots,\Theta_k) &=  \frac1D\log\det \Theta - \log \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i} \nonumber\\
   &= \sum_{i=1}^k \frac1{d_a} \log \det \Theta_a - \log \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i},\label{eq:f extension}
@@ -490,7 +490,7 @@ The result is $\lambda = n D e^{- f_\samp(\Theta)}$. We may extend $f_x$ to $\op
 
 %\begin{align}\label{eq:tilde ell}  \tilde\ell_{\samp}(\Theta) = \frac1D\log\det \Theta - \log \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i};\end{align}
 
-One may think of \cref{eq:f extension} as proportional, up to an additive constant, to the log-likelihood of $[\samp_1, \dots, \samp_n]$ under the tensor normal model, the equivalence class of the tuple of samples in projective space.
+One may think of \cref{eq:f extension} as proportional, up to an additive constant, to the log-likelihood of $[\samp_1, \dots, \samp_n]$ under the tensor normal model. Here $[\samp_1, \dots, \samp_n]$ denotes the equivalence class of the tuple of samples $(x_1, \dots, x_n)$ in projective space.
 
 
 %When $\samp$ is clear from context we will drop it.
@@ -1369,6 +1369,26 @@ These formulas can be proved simply by induction. From here we can use the follo
 \[ \det(X) = \sum_{\sigma \in S_{N}} (-1)^{|\sigma|} \prod_{i} X_{i,\sigma(i)} \leq \sum_{\sigma \in S_{N}} \prod_{i} |X_{i,\sigma(i)}| \leq \prod_{i} \left( \sum_{j} |X_{ij}| \right)     \]
 \[ \det(X) \leq \prod_{i} \|X_{i}\|_{2}     \]
 I'm having a bit of trouble actually doing bounds though. 
+
+\section{Numerics and regularization}
+Here we show experimentally that, in some natural situations, the MLE performs better than regularized estimators. We also show that in the undersampled regime, a simpler regularizer can match and sometimes outperform the GLASSO-type estimators appearing in \CF{tsilig, zhou}. Instead of the MLE, we consider the following penalized log-likelihood: 
+
+\begin{align*}
+  \ell_{\samp}^\alpha(\Theta_1, \dots, \Theta_k)\\
+% = \frac n2 \log \det(\Theta/2\pi) - \sum_{i=1}^n \frac12 \braket{\samp_i, \Theta \samp_i} ~
+  := \frac {n D} 2 \sum_{a = 1}^k \frac{1}{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i} + \alpha \prod_{i=1}^k \tr \Theta_a,
+\end{align*} 
+where $\alpha$ is a parameter to be tuned. Set $\widehat{\Theta}^\alpha_x = \arg\min_{|\Theta|_1 =\dots =  |\Theta_k|} \ell^\alpha_\samp(\Theta)$. 
+Observe the following:
+\begin{enumerate}
+\item If $\alpha > 0$, then $\widehat{\Theta}^\alpha_x$ exists uniquely for every $x$.
+\item $\widehat{\Theta}^\alpha_x$ is equal to $\widehat{\Theta}_{y}$ where $y$ is the tuple of $n + D$ vectors given by $(x_1, \dots, x_n, \alpha e_{1\dots 1}, \dots, \alpha e_{d_1d_2 \dots d_k})$. Here $e_{i_1 \dots i_k}$ denotes the standard basis vector in $\R^{d_1d_2 \dots d_k}$. Thus the flip-flop estimator applied to the tuple $y$ converges to $\widehat{\Theta}^\alpha_x$.
+\item $\widehat{\Theta}^\alpha_x$ is the maximum a posterior probability (MAP) estimator for $\Theta$ assuming $\Theta$ is drawn from the Wishart prior with $D + 1$ degrees of freedom and $V = I/\alpha$. That is, $\Theta_1, \dots, \Theta_k$ are selected proportional to $e^{- \alpha \tr \Theta_1 \ot \dots \ot \Theta_k}.$ 
+\end{enumerate}
+%As in the unpenalized case, we will often consider the scale-invariant function $f^\alpha_x$ given by 
+
+
+The flip-flop algorithm for this regularized estimator is quite simple. Instead of $\rho_\alpha$, we replace 
 
 
 
