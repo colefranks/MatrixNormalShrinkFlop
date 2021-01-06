@@ -120,7 +120,7 @@ Polishing:
 \item \CF{for the readers' sake some justification is needed for why perturbing $\samp$ this is the same as considering the Hessian of our function at another point in $\SPD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
 \item Define $B^\infty_c$ to be all $\Theta$ such that $\sum \|\log \Theta_a\|_{op} \leq c$. May be able to avoid this since everything is internal to proofs.
 \item Add some discussion for noise added to data.
-\item 
+\item Reprove theorem 13 (strong convexity at the identity) using intermediate deterministic lemma so better bounds on failure probability or quantum expansion can be plugged in. 
 \end{enumerate}
 
 }
@@ -766,6 +766,8 @@ $$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq (k - 1) \lambda + k \eps^2 + \eps $$
  In particular, $f_{\rv}$ is $\Omega(1)$ strongly convex with probability \TODO{propagate from \cref{cor:off-diag-hess}} . 
 \end{theorem}
 
+\CF{prove this using intermediate lemma showing quantum expansion of off-diagonal operators suffices for strong convexity.}
+
 \begin{theorem}[Strong convexity]\label{thm:tensor-convexity} There is an absolute constant $C$ such that the following holds. Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples $n$ is at least $C k^2 d_1^2/D$. Then, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$ we have
 %$$ I/2 \preceq  \nabla^2 f_{\rv} \preceq 2I.$$
 $$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq 1/4.$$
@@ -790,6 +792,9 @@ Quantum channels with this spectral gap condition are called \emph{quantum expan
 $$\Phi: Z \mapsto \frac{1}{nD}\sum_{i = 1}^N X_i Z X_i^\dagger$$
 has operator norm 
 $O \left( t^{2} \frac{d_{1}+d_{2}}{\sqrt{d_{1} d_{2} nD}} \right)$ on traceless symmetric matrices. \end{theorem}
+
+\CF{relate theorem 14 to quantum expansion; something like if $\|\Phi\|_0 = \lambda$ then $\Phi$ is $\lambda - C \eps$ quantum expander when balanced and if $\Phi$ is an $\eps$-balanced quantum expander then $\|\Phi\|_0$ has operator norm $\lambda - C \eps$}.
+
 Pisier's actual result is slightly different; \cref{thm:hess-pisier} is essentially Theorem~16.6 in~\cite{pisier2012grothendieck}, together with a standard symmetrization trick (e.g., Proof of Lemma~4.1 in~\cite{P14}). We present the details in an appendix \CF{cref it}. We now apply it to bound the off diagonal terms in the Hessian.
 
 %\begin{corollary}\label{cor:off-diag-hess} For traceless symmetric matrices $Y \in \Sym^0_{d_a}$, $Z \in \Sym^0_{d_a}$, we have 
