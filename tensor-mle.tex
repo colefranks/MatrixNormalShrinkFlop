@@ -1328,7 +1328,7 @@ Let our vector space be $\R^{d} \otimes \R^{n}$, and consider $V \in \R^{d \time
 We first exhibit the coupling between $V,u$. Let $v_{1}, ..., v_{a}$ be the columns of $V$, then lift to
 \[ V' := \{v_{1} \otimes e_{1}, ..., v_{a} \otimes e_{a} \} \subseteq \R^{d} \otimes \R^{n}     \]
 \[ u := V' 1_{a} = \sum_{i} v_{i} \otimes e_{i} \in \R^{d} \otimes \R^{n}      \]
-Choosing $\{e_{i}\}$ as any orthonormal vectors does not change the partial trace $V V^{*} = Tr_{n} [V' V'^{*}] = Tr_{n}[ u u^{*} ]$. As $V$ runs over all possible bases, and $\{e_{i}\}$ runs over all possible bases, we recover $u$ uniformly random over the sphere in $\R^{d} \otimes \R^{n}$. Finally since the partial traces are equal, we get that $u u^{*}$ is a spread of $V' V'^{*}$ wrt $\{X \otimes I_{n} \mid X \in L(\R^{d}) \}$. The comparison of MGFs then follows by Jensen's inequality. 
+Choosing $\{e_{i}\}$ as any orthonormal vectors does not change the partial trace $V V^{*} = Tr_{n} [V' V'^{*}] = Tr_{n}[ u u^{*} ]$. As $V$ runs over all possible bases, and $\{e_{i}\}$ runs over all possible bases, we recover $u$ uniformly random over the sphere in $\R^{d} \otimes \R^{n}$. Finally since the partial traces are equal, we get that $u u^{*}$ is a spread of $V' V'^{*}$ wrt $\{X \otimes I_{n} \mid X \in L(\R^{d}) \}$; equivalently $Tr_{n}[u u^{*}]$ is a spread of $V V^{*}$ wrt $L(\R^{d})$. The comparison of MGFs then follows by Jensen's inequality. 
 \end{proof}
 
 So we have the following sequence of inequalities for MGFs:
