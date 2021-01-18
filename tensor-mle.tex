@@ -1250,8 +1250,7 @@ If the mean of $Y$ is bounded then we have Markov's inequality. Let $\eps > 0$; 
 
 %Then $\widehat{\Theta}_1$ is an estimator that has access to only $n d_1$ samples of a Gaussian. 
 
-\subsection{Better Attempt for Matrix Normal Model}
-
+\subsection{Further improvements for matrix normal model}
 \subsubsection{Gaussian Version}
 We will eventually compare all our bounds to gaussian inputs, so we will analyze marginal error for gaussians first. 
 
@@ -1290,6 +1289,7 @@ By the discussion above, $Y^{*} Y$ is distributed as a uniformly random orthogon
 Because I like the vocabulary used in \url{https://arxiv.org/abs/2006.14009}, I will rewrite the proof for completeness using ideas of "spreading". I claim no originality, this is merely a translation of terms to fit in this theory. 
 
 \subsubsection{Spreading}
+\CF{Perhaps we can give some references for where spreading comes up to justify using the terminology instead of just citing.}
 
 \begin{definition} [Def 2.1]
 We say that random variable $Y \in \R^{d}$ is a spread of random variable $X \in \R^{d}$ if
@@ -1313,13 +1313,13 @@ We just have to notice $g g^{*} = \|g\|_{2}^{2} \frac{g g^{*}}{\|g\|_{2}^{2}}$, 
 \end{proof}
 
 The above corollary is the content of Lemma 2.3 of \url{https://arxiv.org/pdf/quant-ph/0307104.pdf}, and the proof strategy is exactly the same, I just added the spreading vocabulary. Similarly, since we want to compare MGFs of higher rank projections, there is a trick in Lemma 3.5 of \url{https://arxiv.org/pdf/quant-ph/0407049.pdf} that we can copy here with slightly different notation. 
-
 \begin{definition}
 As a weakening, for $K \subseteq \R^{d}$ we say $Y \in \R^{d}$ is a spread of $X \in \R^{d}$ wrt $K$ if
 there exists a coupling of $X,Y$ such that 
 \[ \forall \xi \in K:  \langle \xi, \E[Y |X] \rangle = \langle \xi, X  \rangle   \]
 Note for $K = \R^{d}$, the definitions are the same. 
 \end{definition}
+\CF{I would state the next lemma like "$Tr_{n}[u u^{*}]$ is a spread of $V V^{*}$ wrt $L(\R^{d})$, therefore (insert inequality)". This better motivates the additional terminology of spreading.}
 
 \begin{corollary}
 Let our vector space be $\R^{d} \otimes \R^{n}$, and consider $V \in \R^{d \times a}$ distributed an a uniformly random rank $a < n$ isometry on $\R^{d}$, and consider $u$ a uniformly random unit vector on $\R^{d} \otimes \R^{n}$. Then for any $L(\R^{d}) \ni X \succeq 0$:
@@ -1329,7 +1329,7 @@ Let our vector space be $\R^{d} \otimes \R^{n}$, and consider $V \in \R^{d \time
 We first exhibit the coupling between $V,u$. Let $v_{1}, ..., v_{a}$ be the columns of $V$, then lift to
 \[ V' := \{v_{1} \otimes e_{1}, ..., v_{a} \otimes e_{a} \} \subseteq \R^{d} \otimes \R^{n}     \]
 \[ u := V' 1_{a} = \sum_{i} v_{i} \otimes e_{i} \in \R^{d} \otimes \R^{n}      \]
-Choosing $\{e_{i}\}$ as any orthonormal vectors does not change the partial trace $V V^{*} = Tr_{n} [V' V'^{*}] = Tr_{n}[ u u^{*} ]$. As $V$ runs over all possible bases, and $\{e_{i}\}$ runs over all possible bases, we recover $u$ uniformly random over the sphere in $\R^{d} \otimes \R^{n}$. Finally since the partial traces are equal, we get that $u u^{*}$ is a spread of $V' V'^{*}$ wrt $\{X \otimes I_{n} \mid X \in L(\R^{d}) \}$; equivalently $Tr_{n}[u u^{*}]$ is a spread of $V V^{*}$ wrt $L(\R^{d})$. The comparison of MGFs then follows by Jensen's inequality. 
+Choosing $\{e_{i}\}$ as any orthonormal vectors does not change the partial trace  \CF{use $\tr$ not $Tr$} $V V^{*} = Tr_{n} [V' V'^{*}] = Tr_{n}[ u u^{*} ]$. As $V$ runs over all possible bases, and $\{e_{i}\}$ runs over all possible bases, we recover $u$ uniformly random over the sphere in $\R^{d} \otimes \R^{n}$. Finally since the partial traces are equal, we get that $u u^{*}$ is a spread of $V' V'^{*}$ wrt $\{X \otimes I_{n} \mid X \in L(\R^{d}) \}$; equivalently $Tr_{n}[u u^{*}]$ is a spread of $V V^{*}$ wrt $L(\R^{d})$. The comparison of MGFs then follows by Jensen's inequality. 
 \end{proof}
 
 So we have the following sequence of inequalities for MGFs:
@@ -1343,167 +1343,31 @@ If $X_{1}, ..., X_{n}$ are iid from $N(0, \frac{1}{n d_{a} d_{b}} I_{d_{a} \time
 \[ \left\| \sum_{i} Y_{i}^{*} Y_{i} - \frac{1}{d_{b}} I_{b}    \right\|_{op} \leq O(1) \frac{1}{d_{b}} \sqrt{ \frac{d_{b}}{n d_{a}}}   \]
 \end{corollary}
 
+\subsection{Net and union bound}
+\CF{do the net bound like in the vershynin survey}
 
-\subsection{Attempt at better upper bound for matrix normal model}
-Note if $d_{a} > d_{b}$, the error of the $a$ marginal will be much larger than that of the $b$ marginal. So we could try to analyze what happens after one iteration of flip-flop where we normalize the $a$ to identity. We claim our input if our input is $X_{1}, ..., X_{n} \subseteq \R^{d_{a} \times d_{b}}$ iid from $N(0,I_{a \times b})$, and we normalize so that the rows of $X$ form an orthogonal basis for $\R^{d_{a}}$, our new input $Y$ will be uniform from the Stiefel manifold of bases for $d_{a}$ dimensional subspaces of $\R^{nd_{b}}$. Given this we can try to run a net argument to bound the $b$ marginal:
-
-\[ Y := \left( \sum_{i=1}^{n} X_{i} X_{i}^{*} \right)^{-1/2} X      \]
-\[ \mu_{b}(Y) = \sup_{\xi \in \R^{b}} \langle \xi \xi^{*}, \sum_{i} X_{i}^{*} \left( \sum_{j} X_{i} X_{i}^{*} \right)^{-1} X_{i} \rangle       \]
-
-All this to say I would like to bound the following using HC formula:
-
-\begin{theorem} 
-For Hermitian $A,B \in \R^{N}$, wlog diagonal and increasing $a_{1} < ... < a_{N}, b_{1} < ... < b_{N}$ we have:
-\[  \int_{U(N)} \exp \langle A, U B U^{*} \rangle dU = \prod_{k=1}^{N-1} k!  \frac{\det\{e^{a_{i} b_{j}}\}_{ij}}{\prod_{j > i} (a_{j} - a_{i}) (b_{j} - b_{i})} \]
-\end{theorem}
-
-I would like to choose $A$ to be a rank $d_{a}$ orthogonal projection and $B$ a rank $n$ orthogonal projection in $\R^{N = nd_{b}}$. Because these have non-distinct eigenvalues we use L'hopital's rule to take limits. 
-
-\[ \lim_{a_{1} \to 0} e^{a_{1} b_{j}} = 1     \]
-\[ \lim_{a_{1} \to 0} a_{j} - a_{1} = a_{j}     \]
-So the matrix has first row all ones and denominator $\prod_{j > i > 1} (a_{j} - a_{i}) \prod_{j > 1} a_{j}$. In this case if we set $a_{2} = 0$, the second row will become the same as the first, so the matrix becomes singular. Luckily the denominator also has an $a_{2}$ term so we use L'hopitals:
-\[ \lim_{a_{2} \to 0} \partial_{a_{2}} e^{a_{2} b_{j}} = b_{j}     \]
-\[ \lim_{a_{2} \to 0} \partial_{a_{2}} \prod_{j > i > 1} (a_{j} - a_{i}) \prod_{j > 1} a_{j} = \prod_{j > i > 2} (a_{j} - a_{i}) \prod_{j > 2} a_{j}^{2}    \]
-The last step is by the product rule, since the only non-vanishing term is when the $\partial$ is applied to the $a_{2}$ term. 
-
-Now the matrix has first row $\vec{1}$ and second row $\vec{b}$. Therefore setting $a_{3} = 0$ will make the matrix singular, and so will the derivative. Again luckily there is an order two zero in the denominator $a_{3}^{2}$ so we apply L'hopitals twice:
-\[ \lim_{a_{3} \to 0} \partial_{a_{3}}^{2} e^{a_{2} b_{j}} = b_{j}^{2}     \]
-\[ \lim_{a_{3} \to 0} \partial_{a_{3}}^{2} \prod_{j > i > 2} (a_{j} - a_{i}) \prod_{j > 2} a_{j}^{2} = 2! \prod_{j > i > 3} (a_{j} - a_{i}) \prod_{j > 3} a_{j}^{3}    \]
-Continuing this way we get the first $N-d_{a}$ rows 
-\[ \begin{pmatrix} 1 & 1 & ... & 1
-\\ b_{1} & b_{2} & ... & b_{N}
-\\ b_{1}^{2} & b_{2}^{2} & ... & b_{N}^{2}
-\\ & & ... & 
-\\ b_{1}^{N-d_{a}-1} & b_{2}^{N-d_{a}-1} & ... & b_{N}^{N-d_{a} - 1}
-\end{pmatrix}        \]
-And the denominator terms including $A$ are 
-\[ \prod_{k=1}^{N-d_{a}-1} k! \prod_{j > i > N-d_{a}} (a_{j} - a_{i}) \prod_{j > N-d_{a}} a_{j}^{N-d_{a}}     \]
-
-Now we will set $b_{1} = ... = b_{N-n} = 0$ by the same process:
-\[ \lim_{b_{1} \to 0} b_{1}^{0} = 1, \hspace{3mm} \lim_{b_{1} \to 0} b_{1}^{(i-1) \geq 1} = 0, \hspace{3mm} \lim_{b_{1} \to 0} e^{a_{i} b_{1}} = 1     \]
-\[ \lim_{b_{1} \to 0} \prod_{j > i} (b_{j} - b_{i}) = \prod_{j > i > 1} (b_{j} - b_{i}) \prod_{j > 1} b_{j}     \]
-Therefore the first column is $(1, 0, ..., 0, 1, 1, ..., 1)$, i.e. the first entry and the last $d_{a}$ entries are $1$. In the second iteration setting $b_{2} = 0$ would make the matrix singular and also make the denominator vanish:
-\[ \lim_{b_{2} \to 0} \partial_{b_{2}} b_{2}^{0} = 0, \hspace{3mm} \lim_{b_{2} \to 0} \partial_{b_{2}} b_{2}^{1} = 1, \hspace{3mm} \lim_{b_{2} \to 0} \partial_{b_{2}} b_{2}^{(i-1) > 1} = 0, \lim_{b_{2} \to 0} \partial_{b_{2}} e^{a_{i} b_{2}} = a_{i}    \]
-\[ \lim_{b_{2} \to 0} \partial_{b_{2}} \prod_{j > i > 1} (b_{j} - b_{i}) \prod_{j > 1} b_{j} = \prod_{j > i > 2} (b_{j} - b_{i}) \prod_{j > 2} b_{j}^{2}    \]
-The second column is therefore $(0,1,0, ..., 0, a_{N-d_{a}+1}, ..., a_{N})$. One more iteration:
-\[ \lim_{b_{3} \to 0} \partial_{b_{2}}^{2} b_{2}^{0} = 0, \hspace{3mm} \lim_{b_{2} \to 0} \partial_{b_{2}}^{2} b_{2}^{1} = 0, \hspace{3mm} \lim_{b_{2} \to 0} \partial_{b_{2}}^{2} b_{2}^{2} = 2!, 
-\hspace{3mm} \lim_{b_{2} \to 0} \partial_{b_{2}}^{2} b_{2}^{(i-1) > 2} = 0, \lim_{b_{2} \to 0} \partial_{b_{2}}^{2} e^{a_{i} b_{2}} = a_{i}^{2}    \]
-\[ \lim_{b_{2} \to 0} \partial_{b_{2}}^{2} \prod_{j > i > 2} (b_{j} - b_{i}) \prod_{j > 2} b_{j}^{2} = 2! \prod_{j > i > 3} (b_{j} - b_{i}) \prod_{j > 3} b_{j}^{3}     \]
-Wlog at this point we assume $d_{a} > n$ so $N-d_{a} < N-n$. So continuing this way we have the top left block $(N-d_{a}) \times (N-n)$, the first $N-d_{a}$ columns are $\text{diag}\{(i-1)!\}$ and the next $d_{a} - n$ columns are all $0$. The bottom left block $d_{a} \times N-n$ is 
-\[ \begin{pmatrix} 1 & a_{N-d_{a}+1} & a_{N-d_{a}+1}^{2} & ... & a_{N-d_{a}+1}^{N-n-1}
-\\ 1 & a_{N-d_{a}+2} & a_{N-d_{a}+2}^{2} & ... & a_{N-d_{a}+2}^{N-n-1}
-\\ & & ... & 
-\\ 1 & a_{N} & a_{N}^{2} & ... & a_{N}^{N-n-1} 
-\end{pmatrix}        \]
-The denominator terms involving $b$ are 
-\[ \prod_{k=1}^{N-n-1} k! \prod_{j > i > N-n} (b_{j} - b_{i}) \prod_{j > N-n} b_{j}^{N-n}     \]
-
-Now we would like to set $b_{N-n+1} = ... = b_{N} = 1$. 
-\[ \lim_{b_{N-n+1} \to 1} b_{N-n+1}^{i-1} = 1, \hspace{5mm} \lim_{b_{N-n+1} \to 1} e^{a_{i} b_{N-n+1}} = e^{a_{i}}     \]
-\[ \lim_{b_{N-n+1} \to 1} \prod_{j > i > N-n} (b_{j} - b_{i}) = \prod_{j > i > N-n+1} (b_{j} - b_{i}) \prod_{j > N-n+1} (b_{j} - 1)    \]
-We have left out the term $\prod_{j > N-n} b_{j}^{N-n}$ as we will set them all to one and so this term will end up being $1$. So the first column in this block is $(1, ..., 1, e^{a_{N-d_{a}+1}}, ..., e^{a_{N}})$. If we set $b_{N-n+2} = 1$ then the column will be the same and the denominator has a root:
-\[ \lim_{b \to 1} \partial_{b} b^{i-1} = i-1, \hspace{5mm} \lim_{b \to 1} \partial_{b} e^{a_{i} b} = a_{i} e^{a_{i}}    \]
-\[ \lim_{b_{N-n+2} \to 1} \partial_{b_{N-n+2}} \prod_{j > i > N-n+1} (b_{j} - b_{i}) \prod_{j > N-n+1} (b_{j} - 1) = \prod_{j > i > N-n+2} (b_{j} - b_{i}) \prod_{j > N-n+2} (b_{j} - 1)^{2}   \]
-One more iteration:
-\[ \lim_{b \to 1} \partial_{b}^{2} b^{i-1} = (i-1)(i-2), \hspace{5mm} \lim_{b \to 1} \partial_{b}^{2} e^{a_{i} b} = a_{i}^{2} e^{a_{i}}    \]
-\[ \lim_{b_{N-n+3} \to 1} \partial_{b_{N-n+2}}^{2} \prod_{j > i > N-n+2} (b_{j} - b_{i}) \prod_{j > N-n+2} (b_{j} - 1)^{2} = \prod_{j > i > N-n+3} (b_{j} - b_{i}) 2! \prod_{j > N-n+3} (b_{j}-1)^{3}  \]
-Continuing on this way we can write the right block. For $i \in \{0, ..., N-d_{a}-1\}$ and $j \in \{0, ..., n-1\}$, the entry in position $(i+1, N-n+j+1)$ is $(i)_{j} := i! / (i-j)!$. In the bottom right block we have for $i \in \{N-d_{a}+1, ..., N\}$ and $j \in \{0, ..., n-1\}$, the entry in position $(i,N-n+j+1)$ is $a_{i}^{j} e^{a_{i}}$. We have set all $b$ variables to scalars, so there are no more $b$ variables in the denominator and we have added a term $\prod_{k=1}^{n-1} k!$. 
-
-
-Now we would like the set $a_{N-d_{a}+1} = ... = a_{N} = t$. 
-\[ \lim_{a_{N-d_{a}+1} \to t} a_{N-d_{a}+1}^{j-1} = t^{j-1}     \]
-\[ \lim_{a_{N-d_{a}+1} \to t} \prod_{j > i > N-d_{a}} (a_{j} - a_{i}) \prod_{j > N-d_{a}} a_{j}^{N-d_{a}} = \prod_{j > i > N-d_{a}+1} (a_{j} - a_{i}) \prod_{j > N-d_{a}+1} (a_{j} -t) \prod_{j > N-d_{a} + 1} a_{j}^{N-d_{a}} t^{N-d_{a}}    \]
-Again setting $a_{N-d_{a}+2} = 1$ would make the matrix singular and the denominator would vanish so we have
-\[ \lim_{a \to t} \partial_{a} a^{j-1} = (j-1) t^{j-2}    \]
-\[ \lim_{a_{N-d_{a}+2} \to t} \partial_{a_{N-d_{a}+2}} \prod_{j > i > N-d_{a}+1} (a_{j} - a_{i}) \prod_{j > N-d_{a}+1} (a_{j} -t) \prod_{j > N-d_{a} + 1} a_{j}^{N-d_{a}} t^{N-d_{a}} \]
-\[= \prod_{j > i > N-d_{a}+2} (a_{j} - a_{i}) \prod_{j > N-d_{a}+2} (a_{j} -t)^{2} \prod_{j > N-d_{a} + 2} a_{j}^{N-d_{a}} t^{2(N-d_{a})}     \]
-Continuing on this way we can find the bottom left block. For $i \in \{0, ..., d_{a}-1\}$ and $j \in \{0, ..., N-n-1\}$, the entry in position $(N-d_{a}+i+1,j+1)$ is $(j)_{i} t^{j-i}$. For $j \in \{0, ..., n-1\}$ the entry in position $(N-d_{a}+i+1,N-n+j+1)$ is $\partial_{x=t}^{i} x^{j} e^{x}$. This is not an explicit formula but we will arrive at some recurrences involving these terms. The denominator is $\prod_{k=1}^{d_{a}-1} k! t^{d_{a}(N-d_{a})}$. In total we will rewrite the whole matrix after all the L'hopitals
-\[ \begin{pmatrix}  X^{00} & X^{01} \\ X^{t0} & X^{t1} \end{pmatrix}     \]
-The subscripts indicate the setting of $a_{i}, b_{j}$ in that block. Then $X^{00} \in \R^{(N-d_{a}) \times (N-n)}$ and its top left square block of size $(N-d_{a}) \times (N-d_{a})$ is a diagonal matrix with entries 
-\[  (X^{00})_{i+1,i+1} = i! \]
-The rest is $0$. $X^{01} \in \R^{(N-d_{a}) \times n}$ has entries 
-\[ (X^{01})_{i+1,j+1} = (i)_{j}    \]
-Note this is $0$ for $i < j$. $X^{t0} \in \R^{d_{a} \times (N-n)}$ has entries 
-\[ (X^{t0})_{i+1,j+1} = (j)_{i} t^{j-i}     \]
-Again this is $0$ for $j < i$. $X^{t1} \in \R^{d_{a} \times n}$ is the most complicated and has entries 
-\[ (X^{t1})_{i+1,j+1} = \partial_{x=t}^{i} x^{j} e^{x}  \]
-
-It is easy to calculate the beginning terms: $\partial_{x=t}^{0} x^{j} e^{x} = t^{j} e^{t}$ and $\partial_{x=t}^{i} x^{0} e^{t} = e^{t}$. Further note the following recurrence:
-\[ \partial_{x}^{i} (x^{j} e^{x}) = \partial_{x}^{i-1} (j x^{j-1} e^{x} + x^{j} e^{x})   \]
-We can rewrite this in block form where now $i,j$ index the $(i+1,j+1)$ entry of the given block:
-\[ \begin{pmatrix} \text{diag}\{i!\}_{i=0}^{N-d_{a}-1} & 0_{(N-d_{a}) \times (d_{a}-n)} & \{(i)_{j}\}_{i=0,j=0}^{i=N-d_{a}-1, j=n-1}
-\\ \{(j)_{i} t^{j-i}\}_{i=0,j=0}^{i=d_{a}-1,j=N-n-1} & & \{\partial_{x}^{i} x_{j} e^{x} \}_{i=0,j=0}^{i=d_{a}-1,j=n-1}
-\end{pmatrix}     \]
-We give new names for ease of use:
-\[ \begin{pmatrix} A & 0 & B
-\\ C & & D
-\end{pmatrix}     \]
-
-So the HC formula has reduced to the determinant of the above matrix divided by the following factorial terms:
-\[ \left( \prod_{k=1}^{N-d_{a}-1} k! \right) \left( \prod_{k=1}^{N-n-1} k! \right) \left( \prod_{k=1}^{n-1} k! \right) \left( \prod_{k=1}^{d_{a}-1} k! \right) \left( t^{d_{a}(N-d_{a})} \right) / \left( \prod_{k=1}^{N-1} k! \right)     \]
-The final term is from the numerator of the original formula. 
-
-
-To calculate the determinant we will use Schur complement:
-\[ \det \begin{pmatrix} A & 0 & B
-\\ C & & D
-\end{pmatrix} = \det(A) \det(D - C A^{-1} B)    \]
-with slight abuse of notation as the first $d_{a} - n$ columns of the top right block are $0$ and so don't affect the Schur complement. In particular if $\{B_{j+1}\}$ are the columns of $B$ and $\{C_{i+1}\}$ are the rows of $C$, we want to calculate $\{ C_{i+1}^{*} A^{-1} B_{j+1} \}$. We can find an explicit for when $i=0$ or $j=0$ and then we will show that these inner products satisfy the same recurrence as the $D$ block. 
-
-$C_{1} = (1, t, t^{2}, ..., t^{N-d_{a}-1})$, and $B_{1} = (1, 1, ..., 1)$. Since $A$ is diagonal $(A^{-1})_{i+1} = (i!)^{-1}$. Therefore:
-\[ C_{1}^{*} A^{-1} B_{1} = \sum_{k=0}^{N-d_{a}-1} \frac{C_{1,k+1} B_{1,k+1}}{A_{k+1}} = \sum_{k=0}^{N-d_{a}-1} \frac{t^{k}}{k!}    \]
-Note this is the first $N-d_{a}-1$ terms of the Taylor approximation for $e^{t}$ at $0$. For $B_{j+1}$ the first $j$ entries are $0$, and after this the terms are $j$ falling terms. 
-\[ C_{1}^{*} A^{-1} B_{j+1} = \sum_{k=0}^{N-d_{a}-1} \frac{C_{1,k+1} B_{j+1,k+1}}{A_{k+1}} = \sum_{k = j}^{N-d_{a}-1} \frac{t^{k} k! / (k-j)!}{k!} = t^{j} \sum_{k = 0}^{N-d_{a}-j-1} \frac{t^{k}}{k!}      \]
-Similarly we can note the first $i$ terms of $C_{i+1}$ are $0$:
-\[ C_{i+1}^{*} A^{-1} B_{1} = \sum_{k = i}^{N-d_{a}-1} \frac{ t^{k-i} k! / (k-i)! \cdot 1}{k!} = \sum_{k=0}^{N-d_{a}-i-1} \frac{t^{k}}{k!}    \]
-By our previous easy calculation of the first row and column of $D$, this gives easy approximations for the first row and column of the Schur complement: 
-\[ (D - C A^{-1} B)_{i+1,1} = e^{t} - \sum_{k=0}^{N-d_{a}-i-1} \frac{t^{k}}{k!} \in \left(0, \frac{t^{N-d_{a}-i}}{(N-d_{a}-i)!} \right)   \]
-\[ (D - C A^{-1} B)_{1,j+1} = t^{j} \left( e^{t} - \sum_{k=0}^{N-d_{a}-j-1} \frac{t^{k}}{k!} \right) \left(0, \frac{t^{N-d_{a}}}{(N-d_{a}-j)!} \right) \]
-We will also show the same recurrence as $D$:
-\[ C_{i+1}^{*} A^{-1} B_{j+1} = C_{i}^{*} A^{-1} B_{j+1} + j C_{i}^{*} A^{-1} B_{j}      \]
-This is accomplished by the following recurrence relations:
-\[ C_{i+1,k+1} = (k)_{i} t^{k-i} = k (k-1)_{i-1} t^{k-i} = k C_{i,k} \]
-\[ A_{k+1} = k! = k (k-1)! = k A_{k}  \]
-\[ B_{j+1,k+1} = (k)_{j} = k (k-1)_{j-1} = k B_{j,k}     \]
-\[ B_{j+1,k} = (k-1)! / (k-1-j)! = (k-j) (k-1)! / (k-j)! = (k-j) B_{j,k} \]
-Again noting the first $j$ terms of $C_{j+1}$ are $0$:
-\[ C_{i+1}^{*} A^{-1} B_{j+1} = \sum_{k=j}^{N-d_{a}-1} \frac{C_{i+1,k+1} B_{j+1,k+1}}{A_{k+1}} = \sum_{k=j}^{N-d_{a}-1} \frac{k C_{i,k}}{k A_{k}} (k B_{j, k})      \]
-\[ = j \sum_{k \geq j} \frac{C_{i,k} B_{j,k}}{A_{k}} + \sum_{k \geq j} \frac{C_{i,k}}{A_{k}} ((k-j) B_{j,k}) = j C_{i}^{*} A^{-1} B_{j} + C_{i}^{*} A^{-1} B_{j+1}     \]
-
-So we have in fact shown all entries of the matrix $D - C A^{-1} B$ are nonnegative, and we have a simple recurrence as we go down the rows. One more simplification for the sake of bounds is to write everything in terms of the first row and column, for which we have clean bounds. In general our matrix $M$ satisfies $M_{i+1,j+1} = M_{i,j+1} + j M_{i,j}$. Under this condition we show
-
-Above the main diagonal, i.e. $j \geq i$, the recurrence stops at the first row:
-\[ M_{i+1,j+1} = \sum_{k=0}^{i} {i \choose k} (j)_{k} M_{1,j+1-k} = \sum_{k=0}^{i} \frac{i! j!}{k! (i-k)! (j-k)!} M_{1,j+1-k}     \]
-Otherwise, if $i > j$ we have contribution from the first column
-\[ M_{i+1,j+1} = \sum_{k=0}^{j} \frac{i! j!}{k! (i-k)! (j-k)!} M_{1,j+1-k} + \sum_{k=0}^{i-j} {j+k \choose k} j! M_{(i-j) +1-k,1} - {i \choose j} j! M_{11}    \]
-This last term is because we counted $M_{11}$ in both sums. We can rewrite this 
-\[ M_{i+1,j+1} = \sum_{k=0}^{j} \frac{i! j!}{k! (i-k)! (j-k)!} M_{1,j+1-k} + \sum_{k=j+1}^{i} (k)_{j} M_{i+2-k,1}    \]
-\[ = \sum_{k=0}^{j} \frac{i! j!}{k! (i-k)! (j-k)!} M_{1,j+1-k} +  \sum_{k=0}^{i-j} (i-k)_{j} M_{k+1,1}   \]
-
-These formulas can be proved simply by induction. From here we can use the following approximations:
-\[ \det(X) = \sum_{\sigma \in S_{N}} (-1)^{|\sigma|} \prod_{i} X_{i,\sigma(i)} \leq \sum_{\sigma \in S_{N}} \prod_{i} |X_{i,\sigma(i)}| \leq \prod_{i} \left( \sum_{j} |X_{ij}| \right)     \]
-\[ \det(X) \leq \prod_{i} \|X_{i}\|_{2}     \]
-I'm having a bit of trouble actually doing bounds though. 
 
 \section{Numerics and regularization}
 Here we show experimentally that, in some natural situations, the MLE performs better than regularized estimators. We also show that in the undersampled regime, a simpler regularizer can match and sometimes outperform the GLASSO-type estimators appearing in \CF{tsilig, zhou}. Instead of the MLE, we consider the following penalized log-likelihood: 
 
 \begin{align*}
-  \ell_{\samp}^\alpha(\Theta_1, \dots, \Theta_k)\\
+  \ell_{\samp}^\alpha(\Theta_1, \dots, \Theta_k)
 % = \frac n2 \log \det(\Theta/2\pi) - \sum_{i=1}^n \frac12 \braket{\samp_i, \Theta \samp_i} ~
-  := \frac {n D} 2 \sum_{a = 1}^k \frac{1}{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i} + \alpha \prod_{i=1}^k \tr \Theta_a,
+%  := \frac {n D} 2 \sum_{a = 1}^k \frac{1}{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i} + \alpha \prod_{i=1}^k \tr \Theta_a,
+  := \ell_{\samp}(\Theta_1, \dots, \Theta_k) + \alpha \prod_{i=1}^k \tr \Theta_a,
 \end{align*} 
 where $\alpha$ is a parameter to be tuned. Set $\widehat{\Theta}^\alpha_x = \arg\min_{|\Theta|_1 =\dots =  |\Theta_k|} \ell^\alpha_\samp(\Theta)$. 
 Observe the following:
 \begin{enumerate}
 \item If $\alpha > 0$, then $\widehat{\Theta}^\alpha_x$ exists uniquely for every $x$.
-\item $\widehat{\Theta}^\alpha_x$ is equal to $\widehat{\Theta}_{y}$ where $y$ is the tuple of $n + D$ vectors given by $(x_1, \dots, x_n, \alpha e_{1\dots 1}, \dots, \alpha e_{d_1d_2 \dots d_k})$. Here $e_{i_1 \dots i_k}$ denotes the standard basis vector in $\R^{d_1d_2 \dots d_k}$. Thus the flip-flop estimator applied to the tuple $y$ converges to $\widehat{\Theta}^\alpha_x$.
+\item $\widehat{\Theta}^\alpha_x$ is equal to $\widehat{\Theta}_{y}$ where $y$ is the tuple of $n + D$ vectors given by 
+$$(x_1, \dots, x_n, \alpha e_{1\dots 1}, \dots, \alpha e_{d_1d_2 \dots d_k}).$$ Here $e_{i_1 \dots i_k}$ denotes the standard basis vector in $\R^{d_1d_2 \dots d_k}$. Thus the flip-flop estimator applied to the tuple $y$ converges to $\widehat{\Theta}^\alpha_x$.
 \item $\widehat{\Theta}^\alpha_x$ is the maximum a posterior probability (MAP) estimator for $\Theta$ assuming $\Theta$ is drawn from the Wishart prior with $D + 1$ degrees of freedom and $V = I/\alpha$. That is, $\Theta_1, \dots, \Theta_k$ are selected proportional to $e^{- \alpha \tr \Theta_1 \ot \dots \ot \Theta_k}.$ 
 \end{enumerate}
 %As in the unpenalized case, we will often consider the scale-invariant function $f^\alpha_x$ given by 
 
 
-The flip-flop algorithm for this regularized estimator is quite simple. Instead of $\rho_\alpha$, we replace 
+The flip-flop algorithm for this regularized estimator is quite simple. Instead of $\rho_\alpha$, we replace \CF{continue}
 
 
 
