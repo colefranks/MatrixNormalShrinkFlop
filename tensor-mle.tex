@@ -229,9 +229,10 @@ Our regularizer has a Bayesian interpretation as coming from a Wishart prior for
 \subsection{Notation}
 %-----------------------------------------------------------------------------
 \CF{some aspects of this seem awfully specific to the tensor normal model and maybe could wait until after we define it, or simply merge the two, i.e. "Notation and model"}
+\MW{I think I like the former best.}
 The letter $n$ will denote a number of samples, and $d_1\leq \dots \leq d_k$ will denote sorted dimensions, and we set $D:=\prod_{i = 1}^k d_i$. Let $\PD_d$ denote the positive definite $d\times d$ matrices with unit determinant, and $\PD_d^1$ the subset of $\PD$ with unit determinant. $\rv$ will denote the random tuple $(\rv_1, \dots, \rv_n)$ where $\rv_i \in \R^{D}$ are drawn i.i.d from the tensor normal model with precision matrix $\Theta \in \PD_D$, and $\samp$ will denote a deterministic tuple of tensors.
 
-Let $\smallSym_d$ denote the vector space of $d\times d$ symmetric matrices, and $\smallSym^0_d$ the subspace of traceless matrices in $\smallSym_d$, i.e. the tangent space of $\PD_d^1$. Let~$\SL_d$ denote the group of $d\times d$ matrices with unit determinant.
+Let $\smallSym_d$ denote the vector space of $d\times d$ real symmetric matrices, and $\smallSym^0_d$ the subspace of traceless matrices in $\smallSym_d$, i.e. the tangent space of $\PD_d^1$. Let~$\SL_d$ denote the group of $d\times d$ matrices with unit determinant.
 %Then, $A^T e^Z A \in \PD_d^1$ for any $A \in \SL_d$ and $Z\in\Sym_d^0$.
 % Any matrix in $\PD_d^1$ can be written as the matrix exponential of a matrix in $\Sym_d^0$.
 Let
