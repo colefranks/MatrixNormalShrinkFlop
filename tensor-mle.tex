@@ -1279,7 +1279,7 @@ Rearranging terms, we see that for $\eta < \frac{1}{5}$, the $\sup$ over $N$ giv
 So choosing $c = 3 \sqrt{d/n}$ gives the result.
 \end{proof}
 
-\subsubsection{Steifel Version}
+\subsubsection{Stiefel Version}
 
 Note if $d_{a} > d_{b}$, the error of the $a$ marginal will be much larger than that of the $b$ marginal. So we could try to analyze what happens after one iteration of flip-flop where we normalize the $a$ to identity. We claim our input if our input is $X_{1}, ..., X_{n} \subseteq \R^{d_{a} \times d_{b}}$ iid from $N(0,I_{a \times b})$, and we normalize so that the rows of $X$ form an orthogonal basis for $\R^{d_{a}}$, our new input $Y$ will be uniform from the Stiefel manifold of bases for $d_{a}$ dimensional subspaces of $\R^{nd_{b}}$. Given this we can try to run a net argument to bound the $b$ marginal and compare it to the gaussian case above:
 \[ \mu_{b}(Y) = \sum_{i} X_{i}^{*} \left( \sum_{j} X_{i} X_{i}^{*} \right)^{-1} X_{i} - \frac{d_{a}}{d_{b}} I_{b}      \]
@@ -1343,7 +1343,7 @@ So we have the following sequence of inequalities for MGFs:
 The desired bound then follows from the gaussian part. We use the correct normalization to be consistent with the rest of the paper below.
 
 \begin{corollary}
-If $X_{1}, ..., X_{n}$ are iid from $N(0, \frac{1}{n d_{a} d_{b}} I_{d_{a} \times d_{b}})$, then let $Y$ be the output after one iteration of flip-flop, so $Y$ is uniformly distributed as $\frac{1}{d_{a}}$ times the $d_{a}$-dimensional Steifel manifold on $\R^{n d_{b}}$. By definition $\mu_{a}(Y) = 0$. We have the following bound on $\mu_{b}(Y)$ with failure probability $\leq \exp(- \Omega(d_{b}))$:
+If $X_{1}, ..., X_{n}$ are iid from $N(0, \frac{1}{n d_{a} d_{b}} I_{d_{a} \times d_{b}})$, then let $Y$ be the output after one iteration of flip-flop, so $Y$ is uniformly distributed as $\frac{1}{d_{a}}$ times the $d_{a}$-dimensional Stiefel manifold on $\R^{n d_{b}}$. By definition $\mu_{a}(Y) = 0$. We have the following bound on $\mu_{b}(Y)$ with failure probability $\leq \exp(- \Omega(d_{b}))$:
 \[ \left\| \sum_{i} Y_{i}^{*} Y_{i} - \frac{1}{d_{b}} I_{b}    \right\|_{op} \leq O(1) \frac{1}{d_{b}} \sqrt{ \frac{d_{b}}{n d_{a}}}   \]
 \end{corollary}
 
