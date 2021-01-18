@@ -130,85 +130,104 @@ Polishing:
 }
 
 
+%=============================================================================
 \section{Introduction}
-\CF{second try}
-Covariance matrix estimation is an important task in statistics, machine learning, and the empirical sciences. We consider covariance estimation for matrix-variate and tensor-variate Gaussian data, that is, when individual data points are matrices or tensors. Matrix-variate data arises naturally in numerous applications like gene microarrays, spatio-temporal data, and brain imaging. However the dimensionality of these problems is frequently much higher than the number of samples, making estimation information-theoretically impossible without structural assumptions.
+%=============================================================================
+Covariance matrix estimation is an important task in statistics, machine learning, and the empirical sciences.
+We consider covariance estimation for matrix-variate and tensor-variate Gaussian data, that is, when individual data points are matrices or tensors. Matrix-variate data arises naturally in numerous applications like gene microarrays, spatio-temporal data, and brain imaging.
+A significant challenge is that the dimensionality of these problems is frequently much higher than the number of samples, making estimation information-theoretically impossible without structural assumptions.
 
-To remedy this issue, matrix-variate data is commonly assumed to follow the \emph{matrix normal distribution} \CF{cite dutilleul 99, werner 08}. That is, the matrix follows a multivariate Gaussian distribution and the covariance between any two entries in the matrix is a product of an inter-row factor and an inter-column factor. In spatio-temporal statistics this is referred to as a separable covariance structure. Formally, if a matrix normal random variable $X$ takes values in the $d_1\times d_2$ matrices, then its covariance matrix $\Sigma$ is a $d_1d_2\times d_1 d_2$ matrix that is the Kronecker product $\Sigma_1 \ot \Sigma_2$ of two positive-semidefinite matrices $\Sigma_1$ and $\Sigma_2$ of dimension $d_1\times d_1$ and $d_2\times d_2$, respectively. This naturally extends to the tensor normal model, the multivariate Gaussians on $k$-dimensional arrays with covariance matrix equal to the Kronecker product of $k$ many positive semidefinite matrices $\Sigma_1, \dots, \Sigma_k$. In this paper we consider the estimation of $\Sigma_1, \dots, \Sigma_k$ from $n$ samples of a matrix or tensor normal random variable $X$.
+To remedy this issue, matrix-variate data is commonly assumed to follow the \emph{matrix normal distribution}~\cite{dutilleul1999mle,werner2008estimation}.
+Here the matrix follows a multivariate Gaussian distribution and the covariance between any two entries in the matrix is a product of an inter-row factor and an inter-column factor.
+In spatio-temporal statistics this is referred to as a separable covariance structure.
+Formally, if a matrix normal random variable~$X$ takes values in the~$d_1\times d_2$ matrices, then its covariance matrix $\Sigma$ is a $d_1d_2\times d_1 d_2$ matrix that is the Kronecker product~$\Sigma_1 \ot \Sigma_2$ of two positive-semidefinite matrices~$\Sigma_1$ and~$\Sigma_2$ of dimension~$d_1\times d_1$ and~$d_2\times d_2$, respectively.
+This naturally extends to the \emph{tensor normal model}, where $X$ is a $k$-dimensional array, with covariance matrix equal to the Kronecker product of $k$ many positive semidefinite matrices~$\Sigma_1, \dots, \Sigma_k$.
+In this paper we consider the estimation of $\Sigma_1, \dots, \Sigma_k$ from $n$ samples of a matrix or tensor normal random variable $X$.
 
-Much research has been devoted to estimating the covariance matrix for the matrix and tensor normal models, but gaps in rigorous understanding remain. Dutilleul \CF{cite} and later Werner et. al \CF{cite} proposed an iterative algorithm, known as the flip-flop algorithm, to compute the maximum likelihood estimator (MLE). In the same work Werner et. al. also showed that the MLE is consistent and asymptotically normal, and showed the same for the estimator obtained by terminating the flip-flop after three steps. Here we will be interested in non-asymptotic rates; standard estimation of the covariance matrix $\Sigma$ by the sample covariance matrix yields a mean-squared Frobenius norm error of $(d_1 d_2)^2/n$ assuming $n \geq C d_1 d_2$. The matrix normal model, however, has $\Theta(d_1^2 + d_2^2)$ parameters so it should be possible to do much better. Assuming that the covariance factors have constant condition number and that $n$ is at least $\tilde{\Omega}(\max\{d_1,d_2\})$, in \CF{tsilig} it was shown that the three-step flip-flop estimator has mean-squared Frobenius error of $O((d_1^2 + d_2^2)/n)$ for the full matrix $\Sigma$; they did not state a bound for the individual factors $\Sigma_1,\Sigma_2$. The same authors showed tighter rates which hold even for $n\ll d_i$ were shown for a penalized estimator under the additional assumption that the precision matrices $\Sigma_i^{-1}$ are sparse. In the extremely undersampled regime, Zhou demonstrated a single-step penalized estimator that converges even for a single matrix $(n=1)$ when the precision matrices have constant condition number, are highly sparse, and have bounded $\ell_1$ norm off the diagonal. Simply setting $\Sigma_2 = I_{d_2}$ or $\Sigma_1 = I_{d_1}$, in which case the matrix normal model reduces to standard covariance estimation with $d_1n$ (resp. $d_2 n$) samples, shows the necessity of additional assumptions like sparsity or well-conditionedness if $n < \max\{d_1/d_2, d_2/d_1\}$. Allen and Tibshirani also considered penalized estimators for the purpose of missing data imputation \CF{cite allen}. For the tensor normal model, a natural generalization of the flip-flop algorithm has been proposed to compute the MLE \CF{cite dutilleul} but is not known to converge. Assuming bounded constant condition number of the true covariances and knowledge of initializers within constant Frobenius distance of the true precision matrices, the authors of \CF{sun} propose an estimator with tight rates. In both the matrix and tensor case, no estimator for the Kronecker factors has been proven to have tight rates without additional assumptions on the factors' structure.
-
-
+Much research has been devoted to estimating the covariance matrix for the matrix and tensor normal models, but gaps in rigorous understanding remain.
+Dutilleul and later Werner et al.~proposed an iterative algorithm, known as the \emph{flip-flop algorithm}, to compute the maximum likelihood estimator (MLE)~\cite{dutilleul1999mle,werner2008estimation}.
+In the same work Werner et al.\ also showed that the MLE is consistent and asymptotically normal, and showed the same for the estimator obtained by terminating the flip-flop after three steps.
+Here we will be interested in non-asymptotic rates.
+Standard estimation of the covariance matrix $\Sigma$ by the sample covariance matrix yields a mean-squared Frobenius norm error of $(d_1 d_2)^2/n$ assuming $n \geq C d_1 d_2$.
+The matrix normal model, however, has $\Theta(d_1^2 + d_2^2)$ parameters so it should be possible to do much better.
+Assuming that the covariance factors have constant condition number and that $n$ is at least $\tilde{\Omega}(\max\{d_1,d_2\})$, in~\cite{tsiligkaridis2013convergence} it was shown that the three-step flip-flop estimator has mean-squared Frobenius error of $O((d_1^2 + d_2^2)/n)$ for the full matrix $\Sigma$; they did not state a bound for the individual factors $\Sigma_1,\Sigma_2$.
+The same authors showed tighter rates which hold even for~$n\ll d_i$ for a penalized estimator under the additional assumption that the precision matrices $\Sigma_i^{-1}$ are sparse.
+In the extremely undersampled regime, Zhou demonstrated a single-step penalized estimator that converges even for a single matrix $(n=1)$ when the precision matrices have constant condition number, are highly sparse, and have bounded $\ell_1$ norm off the diagonal~\cite{zhou2014gemini}.
+Simply setting $\Sigma_2 = I_{d_2}$ or $\Sigma_1 = I_{d_1}$, in which case the matrix normal model reduces to standard covariance estimation with $d_1 n$ (resp. $d_2 n$) samples, shows the necessity of additional assumptions like sparsity or well-conditionedness if $n < \max\{d_1/d_2, d_2/d_1\}$.
+Allen and Tibshirani also considered penalized estimators for the purpose of missing data imputation~\cite{allen2010transposable}.
+For the tensor normal model, a natural generalization of the flip-flop algorithm has been proposed to compute the MLE but is not known to converge~\cite{mardia1993spatial,manceur2013maximum}.
+Assuming bounded constant condition number of the true covariances and knowledge of initializers within constant Frobenius distance of the true precision matrices, the authors of~\cite{sun2015nonconvex} propose an estimator with tight rates.
+In both the matrix and tensor case, no estimator for the Kronecker factors has been proven to have tight rates without additional assumptions on the factors' structure.
 \CF{The sparse folks should not feel bad because it's considered that estimating sparse GGMs without condition number bounds or irrepresentability conditions is NP hard.}
 
+Even characterizing the existence of the MLE for the matrix and tensor normal model has remained elusive until recently.
+It was recently noted that the matrix normal and tensor MLEs are equivalent to algebraic problems about a group action called the \emph{left-right action} and the \emph{tensor action}, respectively~\cite{amendola2020invariant}.
+In the computer science literature these two problems are called \emph{tensor} and \emph{operator scaling}, respectively.
+It was independently pointed out in~\cite{FM20} that the Tyler's M estimator for elliptical distributions (which arises as the matrix normal problem under the additional promise that~$\Sigma_2$ is diagonal) is a special case of operator scaling.
+Using the connection to the left-right action, exact sample size thresholds for the existence of the MLE were recently determined for the matrix normal model and subsequently for the tensor normal model~\cite{derksen2020matrix,derksen2020tensor}.
+In the context of operator scaling, Gurvits showed much earlier that the flip-flop algorithm converges to the matrix normal MLE whenever it exists~\cite{gurvits2004classical}, and later it was shown that the number of flip-flop steps to obtain precision~$\eps$ for the tensor and matrix normal model is polynomial in the input size and~$1/\eps$~\cite{GGOW19,burgisser2017alternating} (cf.~\cite{burgisser2019towards}).
+\MW{Can we clarify what `precision' means?}
 
-%Despite advances in understanding other estimators,
-
-Even characterizing the existence of the MLE for the matrix and tensor normal model has remained elusive until recently. It was recently noted that the matrix normal and tensor MLEs are equivalent to algebraic problems about a group action called the \emph{left-right action} \CF{cite philipp} and the \emph{tensor action}, respectively. In the computer science literature these two problems are called \emph{tensor} and \emph{operator scaling}, respectively. It was independently pointed out in \CF{cite tyler M} that the Tyler's M estimator for elliptical distributions (which arises as the matrix normal problem under the additional promise that $\Sigma_2$ is diagonal) is a special case of operator scaling. Using the connection to the left-right action, the existence of the matrix normal MLE in terms of $d_1,d_2,n$ was recently characterized in full \CF{cite visu} and was extended to the tensor tensor normal model in \CF{cite michael, visu}. In the context of operator scaling, Gurvits showed much earlier that the flip-flop algorithm converges to the matrix normal MLE whenever it exists \CF{cite gurv}, and later it was shown that the number of flip-flop steps to obtain precision $\eps$ for the tensor and matrix normal model is polynomial in the input size and $1/\eps$ \CF{cite ggow, cite burgisser}.
 %In the context of tensor scaling, it was shown earlier that the flip-flop algorithm converges to the tensor MLE whenever it exists \CF{cite tensor scaling}.
 
 %In the current literature on matrix normal and tensor models, typically the estimators are assessed using Frobenius or spectral norm between the estimated parameter and the truth. However, neither of these metrics bound statistical distances of interest such as the total variation or Kullback-Leibler divergence between the true distribution and that corresponding to the estimated parameter, or the Fischer-Rao distance. These quantities are affinely invariant, meaning that for any invertible matrix $g$ we have $d(\Sigma, \Sigma') = d(g \Sigma g^T, g \Sigma' g^T)$. \CF{not exactly sure how to write this, but I want it to say that we get the right rates with no assumptions and we use more appropriate metrics. Amusingly, to get from these metrics TO the less useful metrics or vice versa, one needs the condition number assumptions. Also, it appears that the reason that the better metrics aren't being used is that the estimators didn't have the equivariance property.}
 
+%-----------------------------------------------------------------------------
 \subsection{Our contribution}
+%-----------------------------------------------------------------------------
+We take a geodesically convex optimization approach to provide bounds to estimate the precision matrices without any assumptions on their structure.
+For the matrix normal model our rates are tight in every regime up to logarithmic factors, and for the tensor normal model our rates our tight if there are enough samples.
 
-We take a geodesically convex optimization approach to provide bounds to estimate the precision matrices without any assumptions on their structure. For the matrix normal model our rates are tight in every regime up to logarithmic factors, and for the tensor normal model our rates our tight if there are enough samples.
+In the current literature on matrix normal and tensor models, typically the estimators are assessed using Frobenius or spectral norm between the estimated parameter and the truth. However, neither of these metrics bound statistical dissimilarity measures of interest such as the total variation or Kullback-Leibler divergence between the true distribution and that corresponding to the estimated parameter, or the Fisher-Rao distance.
+To this end, we consider the following dissimilarity measures:
 
-In the current literature on matrix normal and tensor models, typically the estimators are assessed using Frobenius or spectral norm between the estimated parameter and the truth. Neither of these metrics bound statistical dissimilarity measures of interest such as the total variation or Kullback-Leibler divergence between the true distribution and that corresponding to the estimated parameter, or the Fisher-Rao distance. To this end, we consider the following dissimilarity measures:
-\begin{definition}[Mahalanobis distance]
+\begin{definition}
 For $A,B$ positive-definite $d\times d$ matrices, define
-% \begin{align}d_{F}(\Sigma_1; \Sigma_2) = \| I - \Sigma_2^{1/2} \Sigma_1^{-1} \Sigma_2^{1/2}\|_F\\
-% d_{op}(\Sigma_1; \Sigma_2) = \| I - \Sigma_2^{1/2} \Sigma_1^{-1} \Sigma_2^{1/2}\|_{op}
-% \end{align}
-% and
-\begin{align}d_{F}(A; B) = \| I - B^{-1/2} A B^{-1/2}\|_F\\
-d_{op}(A; B) = \| I - B^{-1/2} A B^{-1/2}\|_{op}
-\end{align}
+\begin{align*}
+d_{F}(A \Vert B) &= \norm{I - B^{-1/2} A B^{-1/2}}_F, \\
+d_{\op}(A \Vert B) &= \norm{I - B^{-1/2} A B^{-1/2}}_{\op}.
+\end{align*}
+If $A, B$ are the precision matrices of centered Gaussians, $d_F$ is sometimes called the \emph{Mahalanobis distance}.
 \end{definition}
-If $\Theta_1, \Theta_2$ are the precision matrices of centered Gaussians, $d_F$ is sometimes called the Mahalanobis distance between them. The Mahalanobis distance is a natural dissimilarity measure on Gaussians because when any of the Mahalanobis, total variation, square of the KL-divergence, or Fisher-Rao distances is at most a small constant then they are on the same order \CF{check, cite} \cite{barsov1987}. Considering $d_{op}$ yields even stronger results, and both can be related to the usual norms by $\|A - B\|_F \leq \|B\|_{op} d_F(A,B)$ and $\|A  - B\|_{op} \leq \|B\|_{op} d_{op}(A,B)$. Though $d_F$ and $d_{op}$ are not truly metrics, we will abuse language and call them distances because they are obey approximate symmetry and an approximate triangle inequality \CF{cite}.
 
-Our theoretical contribution is as follows:
+The Mahalanobis distance is a natural dissimilarity measure on Gaussians because when any of the Mahalanobis, total variation, square of the KL-divergence, or Fisher-Rao distances is at most a small constant then they are on the same order \CF{check, cite}~\cite{barsov1987estimates}.
+Considering $d_{\op}$ yields even stronger results.
+\MW{Can we give an indication of what `stronger' means?}
+Both can be related to the usual norms by $\norm{A - B}_F \leq \norm{B}_{\op} \, d_F(A\Vert B)$ and $\norm{A  - B}_{\op} \leq \norm{B}_{\op} \, d_{\op}(A \Vert B)$.
+Though we caution that $d_F$ and $d_{\op}$ are not truly metrics, we will call them distances because they are obey approximate symmetry and an approximate triangle inequality \CF{cite}.
+\MW{Alternativelly just call it a `divergence'.}
+
+Our theoretical contributions are as follows:
 \begin{enumerate}
-\item For the matrix normal model, if $n \geq C (\max\{d_i^2\}/d_1 d_2) \log^2 d_1$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has MSE $O( \max d_i^2/ n \prod d_i )$ for in $d_{op}$; as a corollary the MSE in $d_F$ is $O( \max d_i^3/ n \prod d_i )$.
-\item For the tensor normal model, if $n \geq C \max\{d_i^3\}/ \prod d_i$, then the MLE for the precision matrices $\Theta_1, \dots, \Theta_k$ has MSE $O(\max d_i^3/ n \prod d_i)$ in $d_F$.
+\item For the matrix normal model, if $n \geq C \max\{\frac{d_1}{d_2},\frac{d_2}{d_1}\} \log^2 \min\{d_1,d_2\}$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has MSE $O( \max\{ \frac{d_1}{nd_2}, \frac{d_2}{nd_1} \} )$ in $d_{\op}$.
+As a corollary the MSE in $d_F$ is $O( \max \{ \frac{d_1^2}{nd_2}, \frac{d_2^2}{nd_1} \} )$.
+% \item For the matrix normal model, if $n \geq C (\max\{d_1^2,d_2^2\}/d_1 d_2) \log^2 d_1$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has MSE $O( \max\{ d_1^2, d_2^2 \}/ (n d_1 d_2) )$ in $d_{\op}$.
+% As a corollary the MSE in $d_F$ is $O( \max \{ d_1^3, d_2^3 \} / (nd_1d_2) )$.
+\item For the tensor normal model, if $n \geq C \max\{d_i^3\}/ \prod_i d_i$, then the MLE for the precision matrices $\Theta_1, \dots, \Theta_k$ has MSE $O(\max \{ d_i^3 \} / (n \prod_i d_i ) )$ in $d_F$.
 \item Under the same sample requirements as above in each case, the flip-flop algorithm converges exponentially quickly to the MLE with high probability. As a corollary, there is an algorithm to compute the MLE with expected runtime polynomial in the input size and $\log(1/\eps)$.
 \end{enumerate}
-\CF{can we say better for each individual matrix? Another thought is that if one of the matrices is too big, we can still try to get the other ones by marginalizing the bad one out)}
-
-\CF{mention $d_{TV}$ again}
+\MW{Define `MSE'\dots}
+\CF{Can we say better for each individual matrix? Another thought is that if one of the matrices is too big, we can still try to get the other ones by marginalizing the bad one out.}
+\CF{Mention $d_{TV}$ again.}
 
 The first result is tight up to logarithmic factors, and the second result is tight. Without the restriction on $n$ in the first result, no estimator can converge in spectral norm as the parameters grow, so we consider the restriction mild. Likewise for the second result no estimator can converge in Frobenius norm without the restriction on $n$.
-%The first result is tight up to logarithmic factors, and the second is tight provided the number of samples is large enough for it to apply. Without the restriction on $n$ in our second result, no estimator can converge in Frobenius norm, so we consider it mild.
+\MW{When you say `in spectral/Frobenius norm' you mean `in $d_{\op}$/$d_F$'?}
 
-%Clearly one requires $n \geq C d_i^2/\prod d_i$ for any estimator to converge to the $i^th$ marginal even in spectral norm; the restriction in our section result asks that $n$ is a $d_i$ factor larger than this.
-
-For interesting cases of the tensor normal model such as $d\times d \times d$ tensors we just require that $n$ is at least a large constant. For the matrix normal model, our first result removes the added constraint $n \geq C \max\{d_1,d_2\}$ in \CF{tsilig}. For the tensor normal model we leave extending our MSE bounds for $d_{op}$ to $k \geq 3$ as an open problem.
+For interesting cases of the tensor normal model such as $d\times d \times d$ tensors we just require that $n$ is at least a large constant.
+For the matrix normal model, our first result removes the added constraint $n \geq C \max\{d_1,d_2\}$ in~\cite{tsiligkaridis2013convergence}.
+For the tensor normal model we leave extending our MSE bounds for $d_{\op}$ as an open problem.
 
 \CF{I think I'd like to do a better job at gradually defining notation so its clear that these are the right numbers.}
 
-To handle the undersampled case, we also introduce a regularized estimator that is much simpler to compute than the penalized regularizers introduced in \CF{tsilig, sun, zhou}, and empirically has comparable to and sometimes better performance than existing regularizers. Our regularizer has a Bayesian interpretation as coming from a Wishart prior for the covariance, and is closer in spirit to the shrinkage estimators considered by \CF{cite Weisel, etc}. \CF{expand up on this; put it in the bulleted list also?}
+To handle the undersampled case, we also introduce a regularized estimator that is much simpler to compute than the penalized regularizers introduced in~\cite{tsiligkaridis2013convergence,sun2015nonconvex,zhou2014gemini}, and empirically has comparable to and sometimes better performance than existing regularizers.
+Our regularizer has a Bayesian interpretation as coming from a Wishart prior for the covariance, and is closer in spirit to the shrinkage estimators considered by \CF{cite Weisel, etc}.
+\CF{Expand up on this; put it in the bulleted list also?}
 
+\CF{Then add some discussion of methods.}
 
-
-
-
-%These distances are invariant under changes of basis on $\R^d$, which is desirable as
-
-%Our bounds on $d_{op}$ will strengthen those on $d_F$.
-
-%In some regimes we are able to obtain stronger results by considering $d_{op}$.
-%if the Mahalanobis distance is at most a small constant then it is on the order of the total variation distance $\widehat{\Sigma}$ \cite{barsov1987estimates} and the Fisher-Rao distance.
-
-% We consider the second quantity $d_{op}$ because we are often able to show that $d_{op}$ is much smaller than our estimates.
-
-
-
-
-
-%\CF{The more recent stuff; philipp, visu, etc.}\\
-
-\CF{then some discussion of methods}
-
+%-----------------------------------------------------------------------------
 \subsection{Notation}
+%-----------------------------------------------------------------------------
 \CF{some aspects of this seem awfully specific to the tensor normal model and maybe could wait until after we define it, or simply merge the two, i.e. "Notation and model"}
 The letter $n$ will denote a number of samples, and $d_1\leq \dots \leq d_k$ will denote sorted dimensions, and we set $D:=\prod_{i = 1}^k d_i$. Let $\PD_d$ denote the positive definite $d\times d$ matrices with unit determinant, and $\PD_d^1$ the subset of $\PD$ with unit determinant. $\rv$ will denote the random tuple $(\rv_1, \dots, \rv_n)$ where $\rv_i \in \RR^{D}$ are drawn i.i.d from the tensor normal model with precision matrix $\Theta \in \PD_D$, and $\samp$ will denote a deterministic tuple of tensors.
 
