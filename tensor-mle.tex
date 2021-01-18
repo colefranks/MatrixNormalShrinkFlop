@@ -302,10 +302,11 @@ For the largest precision matrix $\Theta_k$, this rate matches that of
 
 \begin{theorem}[Matrix normal model spectral error]\label{thm:matrix-normal} Suppose $d_1 \leq d_2$,
 $$n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \log^2(d_1) \eps^{-2}\}$$ for $C$ a large enough constant and $\eps < c$ for a small enough constant $c$. The MLE $(\widehat{\Theta}_1,\widehat{\Theta}_2) $ for $(\Theta_1, \Theta_2)$ from $n$ independent samples of the matrix normal model satisfies
-$$ d_{op}(\widehat{\Theta}_2, \Theta_2) = O\left(\eps \sqrt{\frac{d_2}{n d_1}} \log d_1\right) $$
+$$ d_{op}(\widehat{\Theta}_a, \Theta_a) = O\left(\eps \sqrt{\frac{d_a^2}{nD}} \log d_1\right) $$
 for $a \in \{1,2\}$ with probability $1 - O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)})$.
 \end{theorem}
 \CF{I feel like we should be able to get $\tilde{O}\sqrt{\frac{d_1}{n d_2}}$ for the smaller marginal. Akshay and I discussed a lot in rocketchat. }
+\CF{we can! based on michael's calc}
 
 Our next results show that in either case the flip-flop algorithm can find the MLEs with high probability. \TODO{change flip flops to thetas}
 
