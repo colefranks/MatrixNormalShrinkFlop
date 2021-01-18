@@ -889,7 +889,7 @@ We first apply the inequality from \cref{cor:off-diag-hess} to the upper-left tw
   \end{bmatrix}.\end{align*}
  Applying this for all $a < b$ we find that
  $$\nabla^2 f  \succeq \bigoplus_{a \in [k]} \nabla^2_{aa} f - (k - 1) (\lambda + \eps^2) I_{d_a}.$$
-The last thing we need is a lower bound on $\nabla^2_{aa} f.$ This operator is again a sum of two terms, the latter of which we have already analyzed. The former defines the quadratic form $Y \mapsto d_a \tr \rho^{(a)} Y^2$ on $\smallSym^0_{d_a}$, and using the bound $\|\rho^{(a)} - I_{d_a}/{d_a}\|_{op} \leq \eps/d_a$ one checks that $\tr \rho^{(a)} Y^2 \in \frac{1 \pm \eps }{d_a} \tr Y^2 = \frac{1 \pm \eps }{d_a} \|Y\|_{F}^2. $ Combining this bound with the bound on the second term, we have $\nabla^2_{aa} f \succeq (1 -  \eps  - \eps^2 ) I_{d_a}$. Plugging this into the direct sum, we have $\nabla^2 f \succeq (1  - \eps - \eps^2  - (k - 1) (\lambda + \eps^2)) I$. Reversing the inequalities in all the steps also yields $\nabla^2 f \preceq (1  + \eps + \eps^2  + (k - 1) (\lambda + \eps^2))$.
+The last thing we need is a lower bound on $\nabla^2_{aa} f.$ This operator is again a sum of two terms, the latter of which we have already analyzed. The former defines the quadratic form $Y \mapsto d_a \tr \rho^{(a)} Y^2$ on $\smallSym^0_{d_a}$, and using the bound $\|\rho^{(a)} - I_{d_a}/{d_a}\|_{op} \leq \eps/d_a$ one checks that $\tr \rho^{(a)} Y^2 \in \frac{1 \pm \eps }{d_a} \tr Y^2 = \frac{1 \pm \eps }{d_a} \|Y\|_{F}^2. $ Combining this bound with the bound on the second term, we have $\nabla^2_{aa} f \succeq (1 -  \eps  - \eps^2 ) I_{d_a}$. Plugging this into the direct sum, we have $\nabla^2 f \succeq (1  - \eps - \eps^2  - (k - 1) (\lambda + \eps^2)) I$. Reversing the inequalities in all the steps also yields $\nabla^2 f \preceq (1  + \eps + \eps^2  + (k - 1) (\lambda + \eps^2))$. \CF{set epsilon, apply probability bounds}
 \end{proof}
 
 
@@ -930,7 +930,7 @@ Next we must verify that $\|\nabla f\| < \kappa/2$. By \cref{it:grad-bd} we have
 
 By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\sqrt{d_k}$, which holds by our definition of $\delta$ and our second assumption on $\eps$, there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$. We now use this bound on geodesic distance to bound error in $d_F$ for the individual Kronecker factors. By our choice of $\kappa$ and because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\log \widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) \leq \sqrt{d_a} d(I, \widehat{\Theta}) \leq 2\delta \sqrt{ k d_a}.$ Applying $\delta = \eps /\sqrt{k d_k}$ yields $\| I_a - \widehat{\Theta}_a\|_F \leq 2\eps \sqrt{ d_a/d_k}$.
 
-We have shown that the minimizer $\widehat{\Theta}$ of $f_\samp$ is close to $I$, but it remains to show that the minimizer $\Theta'$ of $\ell_\samp$ exists and is close to $I$. For this, recall that if $f_\samp$ has the unique minimizer $\widehat{\Theta} \in \SPD$, then $\ell_\samp$ is minimized at $\Theta':= \alpha^{1/k}  \widehat{\Theta}$ where $\alpha:= n D e^{ - f_\samp(\widehat{\Theta})}$. We now show that $\alpha$ is very close to $1$. By \cref{lem:convex-ball}, $f_\samp(\widehat{\Theta}) \geq f_\samp(0) - k\delta^2$. We have $f(0) \geq f_\samp(0) = \log\| \samp\|^2_F$, and by \cref{it:norm-bd} we have $\| \samp\|_F^2 \in (1 \pm t) nD$ with $t = k \eps/\sqrt{\delta_1}$. Thus we have $\alpha \in [(1-t),  (1+t) e^{k \delta^2}]$, or $\alpha^{1/k} \in [1 \pm  O(\eps/\sqrt{d_k})]$ by our choice of $t$. By the approximate triangle inequality for $d_F$ \CF{insert and cite}, $d_F( \Theta'_a; I_a) = O(d_F(\widehat{\Theta}_a; I_a) + d_F(\alpha^{1/k} I_a; I_a)) = O(\eps \sqrt{d_a/d_k})$. The reparametrization $\eps \leftarrow \eps \sqrt{d_k^{3/2}/ n D}$ completes the proof. \CF{fix reparametrization}
+We have shown that the minimizer $\widehat{\Theta}$ of $f_\samp$ is close to $I$, but it remains to show that the minimizer $\Theta'$ of $\ell_\samp$ exists and is close to $I$. For this, recall that if $f_\samp$ has the unique minimizer $\widehat{\Theta} \in \SPD$, then $\ell_\samp$ is minimized at $\Theta':= \alpha^{1/k}  \widehat{\Theta}$ where $\alpha:= n D e^{ - f_\samp(\widehat{\Theta})}$. We now show that $\alpha$ is very close to $1$. By \cref{lem:convex-ball}, $f_\samp(\widehat{\Theta}) \geq f_\samp(0) - k\delta^2$. We have $f(0) \geq f_\samp(0) = \log\| \samp\|^2_F$, and by \cref{it:norm-bd} we have $\| \samp\|_F^2 \in (1 \pm t) nD$ with $t = k \eps/\sqrt{\delta_1}$. Thus we have $\alpha \in [(1-t),  (1+t) e^{k \delta^2}]$, or $\alpha^{1/k} \in [1 \pm  O(\eps/\sqrt{d_k})]$ by our choice of $t$. By the approximate triangle inequality for $d_F$ \CF{insert and cite}, $d_F( \Theta'_a; I_a) = O(d_F(\widehat{\Theta}_a; I_a) + d_F(\alpha^{1/k} I_a; I_a)) = O(\eps \sqrt{d_a/d_k})$. The reparametrization $\eps \leftarrow \eps \sqrt{d_k^{3/2}/ n D}$ completes the proof. \TODO{check reparametrization}
 \end{proof}
 
 
@@ -1371,7 +1371,7 @@ If $X_{1}, ..., X_{n}$ are iid from $N(0, \frac{1}{n d_{a} d_{b}} I_{d_{a} \time
 \CF{do the net bound like in the vershynin survey}
 
 
-\section{Numerics and regularization}
+\section{Numerics and regularization}\label{sec:numerics}
 Here we show experimentally that, in some natural situations, the MLE performs better than regularized estimators. We also show that in the undersampled regime, a simpler regularizer can match and sometimes outperform the GLASSO-type estimators appearing in \CF{tsilig, zhou}. Instead of the MLE, we consider the following penalized log-likelihood:
 
 \begin{align*}
@@ -1392,32 +1392,34 @@ $$(x_1, \dots, x_n, \alpha e_{1\dots 1}, \dots, \alpha e_{d_1d_2 \dots d_k}).$$ 
 %As in the unpenalized case, we will often consider the scale-invariant function $f^\alpha_x$ given by
 
 
-The flip-flop algorithm for this regularized estimator is quite simple: see \cref{alg:reg-flip-flop}.
+The flip-flop algorithm for this regularized estimator is quite simple: see \cref{alg:reg-flip-flop}. \CF{I need to check the regularization term carefully - it's probably not quite that nice} 
 
 
 \begin{Algorithm}
-\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$.  \\[.3ex]
+\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$ and a real number $\eps > 0$.  
 % where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation.
 
-\textbf{Output}: Regularized estimators $\otheta \in \SPD$.
+\textbf{Output}: Regularized estimators $\otheta \in \SPD$.\\[.1ex]
 % such that $\| \nabla \ell^\alpha_x (\otheta)\|_F < \eps$. \\[.3ex]
 
 \textbf{Algorithm}:
 \begin{enumerate}
-\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$.
-\item\label{it:flip-flop step 2} While $\CF{do}$, 
+\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$, and $\otheta:= \otimes_a \otheta_a$.
+\item\label{it:flip-flop step 2} Repeat the following:
 %we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
 \begin{itemize}
 %\item Set $\otheta^1$
-\item Define $\otheta^a:= \otheta_1 \ot \dots \ot \otheta_{a-1} \ot I_{d_a} \ot \otheta_{a+1} \ot \dots \ot \otheta_{d}$, the tensor product in which the $i^{th}$ factor is $\otheta_i$ except for the $a^{th}$ which is $I_{d_a}$.  Let 
+\item Set $\sigma = \otheta^{1/2} \rho \; \otheta^{1/2}/ \tr \otheta \rho$. Let $$a = \arg\max_{i \in [k]} \sqrt{d_i}\| (\sigma_i - I_{d_i}/d_i)\|_F,$$ 
+i.e., the index $a$ for which $\|\nabla_a f(\otheta)\|_F$ is largest. If $\|\nabla_a f(\otheta)\|_F < \eps$, end loop and \textbf{return} $(\otheta_1, \dots, \otheta_a)$.  
+\item Define $\otheta^a:= \otheta_{(a)}^{-1} \otheta$, the tensor product in which the $i^{th}$ factor is $\otheta_i$ except for the $a^{th}$ which is $I_{d_a}$, and set 
+$$\otheta_a = \frac{n D}{d_a}\left(\tr_{[k] \setminus a} \otheta^a \rho + \alpha \left(\prod_{i \neq a} \tr \otheta_a\right) I_{d_a} \right)^{-1}.$$
 % $Y_a := \tr_{[k] \setminus a} \otheta_1 \ot \dots \ot \otheta_{a-1} \ot I_{d_a} \ot \otheta_{a+1} \ot \dots \ot \otheta_{d},$ 
-\item
-If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\left( \bigotimes_{a =1}^k \otheta_a \right)^{-1}$ and return.
+%\item If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\left( \bigotimes_{a =1}^k \otheta_a \right)^{-1}$ and return.
 % S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
-\item Otherwise, set $\otheta_a \leftarrow \det(\rho^{(a)})^{1/d_a} (\rho^{(a)})^{-1} \cdot \otheta_a$.
+%\item Otherwise, set $\otheta_a \leftarrow \det(\rho^{(a)})^{1/d_a} (\rho^{(a)})^{-1} \cdot \otheta_a$.
 \end{itemize}
 \end{enumerate}
-\caption{Tensor flip-flop algorithm}\label{alg:reg-flip-flop}
+\caption{Regularized flip-flop algorithm}\label{alg:reg-flip-flop}
 \end{Algorithm}
 The gradient should be... $\rho^{a} $ 
 
