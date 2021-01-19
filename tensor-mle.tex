@@ -342,11 +342,11 @@ $$\SL = \prod_{a=1}^k \SL_{d_a}, \SPD = \prod_{a = 1}^k \PD_{d_a}^1, \Sym = \big
 %\MW{Suppressing the $^1$ and $^0$ is a bit confusing I think. Maybe $\operatorname{SPD}$ for $\SPD$ with $\det=1$? I still feel that $\Sym$ looks somewhat horrible (with or without subscript, but I am not sure what would be better).}
 %\item $G = \prod_{a=1}^k \SL_{d_a}$, $P = \prod_{a=1}^k \PD_{d_a}^1$, and $S = \bigoplus_{a=1}^k \Sym_{d_a}^0$.
 
-\item $\nabla, \nabla^2$ for Riemannian Hessians and gradients, $\nabla_a f$, $\nabla^2_{ab} f$ for components. $\nabla f$ means at the identity. $\|\nabla^2_{ab}f\|_{op}:=\|\nabla^2_{ab}f\|_{F\to F}$.
+\item $\nabla, \nabla^2$ for Riemannian Hessians and gradients, $\nabla_a f$, $\nabla^2_{ab} f$ for components. $\nabla f$ means at the identity. $\|\nabla^2_{ab}f\|_{op}:=\|\nabla^2_{ab}f\|_{F\to F}$. \CF{as operator from $\Sym_{d}^0$ to self?}
 %\item $C, c$ large (resp. small) constants that change line to line.
 \item $\rho^{(a)}$, $\rho^{(ab)}$ for marginals.
 %\item $I$ for an identity matrix, $I_a$ for the $d_a \times d_a$ identity matrix
-\item $\norm{\cdot}_p$ for the $\ell_p$ norm of vectors and the Schatten-$p$ norm of operators
+\item $\norm{\cdot}_p$ for the $\ell_p$ norm of vectors and the Schatten-$p$ norm of operators.
 \end{itemize}
 
 
@@ -817,8 +817,6 @@ We now state our strong convexity result at the identity:
 
 %\begin{theorem}\label{thm:tensor-convexity-old}Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples is $N \geq k^2 \max_{a=1}^k d_a^2 / D$. Then, with probability at least $1 - 1/{\color{red}\poly(D)}$ \TODO{propagate from \cref{cor:off-diag-hess}} ,$$ (1 - (k - 1) \lambda - k \eps^2 - \eps) I \preceq \nabla^2 f_{\rv} \preceq (1 + (k - 1) \lambda + k \eps^2 + \eps) I.$$ $$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq (k - 1) \lambda + k \eps^2 + \eps $$ In particular, $f_{\rv}$ is $\Omega(1)$ strongly convex with probability \TODO{propagate from \cref{cor:off-diag-hess}} \end{theorem}
 
-\CF{prove this using intermediate lemma showing quantum expansion of off-diagonal operators suffices for strong convexity.}
-
 \begin{theorem}[Strong convexity]\label{thm:tensor-convexity} There is an absolute constant $C$ such that the following holds. Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples $n$ is at least $C k d_k^2/D$ for $k \geq 2$. Then, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$ we have
 %$$ I/2 \preceq  \nabla^2 f_{\rv} \preceq 2I.$$
 $$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq 1/4.$$
@@ -833,7 +831,6 @@ $$T: Z \mapsto \tr_2 \rho \left(I \ot Z\right),$$
 $$ T(Z) = \sum_{i = 1}^N x_i Z x_i^\dagger = \left(\sum_{i = 1}^N x_i \ot x_i\right) Z.$$
 Here $x_i$ are viewed as $d_1 \times d_2$ matrices and $x_i^\dagger$ is the matrix transpose. In our proof of strong convexity, we will show that for $\rho = \rho^{(a,b)}$ this quantum channel has a spectral gap, or rather that $T$ has a small operator norm on the traceless symmetric matrices.
 
-\CF{define quantum expanders using akshay's $\|\|_0$ norm?}
 
 Quantum channels with this spectral gap condition are called \emph{quantum expanders}, and play an important role in quantum information theory and quantum computation. Analogously to random graphs, it is known that random quantum channels, namely those obtained by choosing $x_i$ from various distributions, yield good quantum expanders. Pisier studied the case when $x_i$ are chosen from a standard Gaussian, which applies in our setting. He showed the following result.
 
@@ -877,7 +874,7 @@ with probability $1 - e^{-D n s/2Cd_a}$.
 % for $s \geq d_b /\sqrt{n D}.$
 
 In particular, for any constant $c>0$ there is $C>0$ such that if $n \geq C k d_k^2/D$ then with probability 
-$$1 - 2k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}.$$ we have $\|\nabla^2_{ab} f_{\rv}\|_0 \leq c/k$ for all $a,b \in [k]$ and $\|\nabla^2_{aa}f - I\|_0 \leq \sqrt{c/k}$ for all $a \in [k]$.
+$$1 - 2k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}.$$ we have $\|\nabla^2_{ab} f_{\rv}\|_0 \leq c/k$ for all $a,b \in [k]$ and $\|\nabla^2_{aa}f - I\|_0 \leq c$ for all $a \in [k]$.
 
 
 %with probability $1 - e^{-D n /2 C k d_a}$.
@@ -909,26 +906,33 @@ Next we prove \cref{eq:diag-hess}. Recall again from \cref{lem:hessian} that the
 \end{align}
 Recall again that $\norm{\nabla_a f_{\rv}}_{\op} = \|\sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}\|_{op} \leq \eps/\sqrt{d_a}$ with probability $1 - e^{-D n \eps^2/2Cd_a}$; condition on this event. Reusing the calculation in \cref{eq:second-term-hess} shows that the second term of the right-hand-side of \cref{eq:on-diag-hess-ii} is at most $\eps^2\|Y\|_F.$ Similarly, the bound on the gradient tells us $ |\tr (\sqrt{d_a} \rho^{(a)}  - I_a/\sqrt{d_a})Y^2| \leq \eps \tr Y^2/\sqrt{d_a}$, or that the first term of \cref{eq:on-diag-hess-ii} is at most $\eps$. Hence the two together are at most $\eps^2 + \eps$; setting $\eps^2 = s/3$ completes the proof.
 \end{proof}
-We now have the bounds we need to prove \cref{thm:tensor-convexity}.
+ Because it will prove useful later on, we prove \cref{thm:tensor-convexity} using an intermediate lemma about semidefiniteness of block matrices.
 
-\begin{proof}[Proof of \cref{thm:tensor-convexity}]
+\begin{lemma}\label{lem:block-matrix}
+Let $M$ be a square, symmetric block matrix with blocks $M_{ab}$ of dimension $d_a \times d_b$ for $a,b \in [k]$. Suppose that for all $a < b \in [k]$, $\|M_{ab}\|_{op} \leq \lambda/2k$ and for all $a \in [k]$ $\|M_{aa} - I_{d_a}\|_{op} \leq \lambda/2$. Then $\|M - I\|_{op} \leq \lambda$.%, and in particular $f$ is $(1 - \lambda)$-geodesically convex at the identity.
+\end{lemma}
+\begin{proof}
 We use the inequality for block matrices
-$$\begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix} \succeq - \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}$$ for any $A,B \succeq 0$ such that $\|A^{-1/2} K B^{-1/2}\|_{op} \leq 1,$ which may be proved by computing Schur complements. We will sequentially apply this inequality to the block matrix $\nabla^2 f$ until we are left with a diagonal matrix. By the final bound in \cref{cor:off-diag-hess} with $c = 1/25$, with probability $1 - 2k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$ we have $\|\nabla^2_{ab} f_{\rv}\|_0 \leq 1/25k$ for all $a,b \in [k]$ and $\|\nabla^2_{aa}f - I\|_0 \leq \sqrt{1/25k}$ for all $a \in [k]$. 
+$$\begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix} \succeq - \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}$$ for any $A,B \succeq 0$ such that $\|A^{-1/2} K B^{-1/2}\|_{op} \leq 1,$ which may be proved by computing Schur complements. By changing basis it can be shown that this inequality also holds with $\| \cdot \|_{op}$ replaced by $\|\cdot\|_0$. We will sequentially apply this inequality to each $2\times 2$ principal block submatrix until we are left with a block diagonal matrix. 
+%By the final bound in \cref{cor:off-diag-hess} with $c = 1/25$, with probability $1 - 2k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$ we have $\|\nabla^2_{ab} f_{\rv}\|_0 \leq 1/25k$ for all $a,b \in [k]$ and $\|\nabla^2_{aa}f - I\|_0 \leq \sqrt{1/25k}$ for all $a \in [k]$. 
 
-We first apply the inequality from \cref{cor:off-diag-hess} with $a = 1$ and $b = 2$ to the upper-left block two-by-two matrix. By our bound on $\|\nabla^2_{ab} f\|_{0}$, we may take
-   $A = I_{d_1}/25k$, $B = I_{d_2}/25k$ to find that
+We first apply the inequality to the upper-left block two-by-two matrix. By our bound on $\|M_{12}\|_{op}$, we may take
+   $A = (\lambda/2k) I_{d_1}$, $B = (\lambda/2k) I_{d_2}$ to find that
    \begin{align*}
-\nabla^2 f \succeq \begin{bmatrix}
- \nabla^2_{11} f -  I_{d_1}/25k & 0 & \hdots &  \nabla^2_{1k} f \\
-0 & \nabla^2_{22} f - I_{d_2}/25k & \ddots & \vdots \\
+M \succeq \begin{bmatrix}
+M_{11}-  (\lambda/2k) I_{d_1} & 0 & \hdots &  M_{1k} \\
+0 & M_{11} - (\lambda/2k) I_{d_2} & \ddots & \vdots \\
 \vdots & \ddots & \ddots & \vdots\\
-\nabla^2_{k1}f & \hdots &  \hdots & \nabla^2_{kk} f \\
+M_{k1} & \hdots &  \hdots & M_{kk}\\
   \end{bmatrix}.\end{align*}
  Applying this for all $a < b$ we find that
- $$\nabla^2 f  \succeq \bigoplus_{a \in [k]} \nabla^2_{aa} f - I_{d_a}/25 \succeq (1 - \sqrt{1/50} - 1/25) I \geq 3/4 I. $$
- Reversing the inequalities in all the steps also yields $\nabla^2 f \preceq 5/4 I$. \CF{make notation for psd order restricted to symmetric,traceless?}
-%The last thing we need is a lower bound on $\nabla^2_{aa} f.$ This operator is again a sum of two terms, the latter of which we have already analyzed. The former defines the quadratic form $Y \mapsto d_a \tr \rho^{(a)} Y^2$ on $\smallSym^0_{d_a}$, and using the bound $\|\rho^{(a)} - I_{d_a}/{d_a}\|_{op} \leq \eps/d_a$ one checks that $\tr \rho^{(a)} Y^2 \in \frac{1 \pm \eps }{d_a} \tr Y^2 = \frac{1 \pm \eps }{d_a} \|Y\|_{F}^2. $ Combining this bound with the bound on the second term, we have $\nabla^2_{aa} f \succeq (1 -  \eps  - \eps^2 ) I_{d_a}$. Plugging this into the direct sum, we have $\nabla^2 f \succeq (1  - \eps - \eps^2  - (k - 1) (\lambda + \eps^2)) I$. Reversing the inequalities in all the steps also yields $\nabla^2 f \preceq (1  + \eps + \eps^2  + (k - 1) (\lambda + \eps^2))$. \CF{set epsilon, apply probability bounds}
-\end{proof}
+ $$M \succeq \bigoplus_{a \in [k]} M_{aa} -  \lambda I_{d_a}/2 \succeq (1 -\lambda) I, $$
+ where the last inequality follows form our bound on $M_{aa}.$ Reversing the inequalities in all the steps also yields $M_a \preceq 5/4 I$. \end{proof}
+
+We now have the bounds we need to prove \cref{thm:tensor-convexity}. \CF{we need to decide whether to use $\|\|_0$ or $\| \|_{op}$}
+
+
+\begin{proof}[Proof of \cref{thm:tensor-convexity}] We apply \cref{lem:block-matrix} with $M = \nabla^2_f$ and $\lambda = 1/4$. By a change of basis, \cref{lem:block-matrix} also applies with $\| \cdot \|_{op}$ replaced by $\|\cdot \|_0$. By the final bound in \cref{cor:off-diag-hess} with $c = 1/8$, with probability $1 - 2k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$ we have $\|\nabla^2_{ab} f_{\rv}\|_0 \leq 1/8k$ for all $a,b \in [k]$ and $\|\nabla^2_{aa}f - I\|_0 \leq 1/8$ for all $a \in [k]$. The conclusion follows from \cref{lem:block-matrix}.\end{proof}
 
 
 %$$\bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr)$$
@@ -1018,7 +1022,7 @@ Our main result for this section is that $\Phi$ is with high probability a good 
 There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is $\eps \sqrt{d_2/n d_1}$-balanced and a $1 - c$ quantum expander with failure probability $O(e^{ - \Omega( d_2 \eps^2)}).$
 \end{theorem}
 
-We will prove the above result in the appendix using techniques similar to \cite{FM20} on Cheeger's inequality. As a preliminary result we can already prove that the MLE is close in operator norm, but with slightly worse failure probability using the tools for the tensor case:
+We will prove the above result in the appendix using techniques similar to \cite{FM20} on Cheeger's inequality. As a preliminary result we can already prove that the MLE is accurate in operator norm, but with slightly worse failure probability using the tools for the tensor case:
 
 \begin{prop} \label{thm: operator-Pisier}
 There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is $\eps \sqrt{d_2/n d_1}$-balanced and a $1 - c$ quantum expander with failure probability $O \left(\frac {\sqrt{nD}}{d_1}\right)^{ - \Omega(d_1)}$.
@@ -1042,7 +1046,9 @@ Note by the Courant-Fischer variational characterization of singular values, thi
 %-----------------------------------------------------------------------------
 Modulo the proof of \cref{thm:operator-cheeger} in the appendix, we have all the tools in place for \cref{thm:matrix-normal}. Note that if we used \cref{thm: operator-Pisier} instead, we would get the result of \cref{thm:matrix-normal} albeit with worse failure probability.
 
-\begin{proof}[Proof of \cref{thm:matrix-normal}] As discussed in \cref{subsec:outline}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. By \cref{thm:operator-cheeger}, provided $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps_0^{-2}\} $ with probability $1 - O(e^{ - \Omega( d_2 \eps_0^2)})$ the operator $\Phi$ is $\delta:=\eps_0  \sqrt{\frac{d_2}{n d_1}}$-balanced and is a $(1 - c)$-quantum expander. Condition on this event. By our choice of $n$, we have $\delta \leq \lambda^2/\log d_1$ if we take $\eps_0 = \eps/\log(d_1)$ for $\eps \leq c$. By \cref{thm:klr},
+\begin{proof}[Proof of \cref{thm:matrix-normal}] As discussed in \cref{subsec:outline}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. By \cref{thm:operator-cheeger}, provided 
+$$n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps_0^{-2}\} $$
+ with probability $1 - O(e^{ - \Omega( d_2 \eps_0^2)})$ the operator $\Phi$ is $\delta:=\eps_0  \sqrt{\frac{d_2}{n d_1}}$-balanced and is a $(1 - c)$-quantum expander. Condition on this event. By our choice of $n$, we have $\delta \leq \lambda^2/\log d_1$ if we take $\eps_0 = \eps/\log(d_1)$ for $\eps \leq c$. By \cref{thm:klr},
 \begin{gather*} \| \widehat{\Theta}_1 - I_{d_1}\|_{op}, \| \widehat{\Theta}_2 - I_{d_2}\|_{op} \leq C \eps_0 \sqrt{\frac{d_2}{n d_1}} \log d_1 = O\left(\eps \sqrt{\frac{d_2}{n d_1}}\right).\end{gather*}
 The failure probability becomes $O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)})$.
 \end{proof}
@@ -1610,7 +1616,7 @@ The second term is rank one, so the quadratic form is:
 For the first term, we follow the same proof structure as $\cref{thm:tensor-convexity}$, and analyze diagonal and off-diagonal blocks separately:
 \[ \langle Z_{a}, \nabla^{2}_{aa} F Z_{a} \rangle = \langle d_{a} \rho^{(a)}, Z_{a}^{2} \rangle       \]
 \[ \langle Z_{a}, \nabla^{2}_{ba} Z_{b} \rangle = \langle \sqrt{d_{a} d_{b}} \rho^{(ab)}, Z_{a} \otimes Z_{b} \rangle   \]
-Theorem $\cref{thm:tensor-convexity}$ gives good bounds on the Hessian of $\samp$; so in order to bound the Hessian at perturbation $\samp' := \prod_{a} (e^{\delta_{a}})_{a} \samp$, it is enough to bound the difference. By the above discussion then we will bound the difference of each of the terms (diagonal $\nabla^{2}_{aa} F$, off-diagonal $\nabla^{2}_{ba} F$, and rank one $(\nabla^{2} f - \nabla^{2} F)$) under each component-wise perturbation. Note all three terms involve only $\{\rho^{(a)}\}, \{\rho^{(ab)}\}$, so we prove perturbations on marginals in the following lemmas.
+\cref{thm:tensor-convexity} gives good bounds on the Hessian of $\samp$; so in order to bound the Hessian at perturbation $\samp' := \prod_{a} (e^{\delta_{a}})_{a} \samp$, it is enough to bound the difference. By the above discussion then we will bound the difference of each of the terms (diagonal $\nabla^{2}_{aa} F$, off-diagonal $\nabla^{2}_{ba} F$, and rank one $(\nabla^{2} f - \nabla^{2} F)$) under each component-wise perturbation. Note all three terms involve only $\{\rho^{(a)}\}, \{\rho^{(ab)}\}$, so we prove perturbations on marginals in the following lemmas.
 
 \begin{lemma} \label{atoaaRobustness}
 For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{a})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$, if we denote $\samp' := (e^{\delta})_{a} \samp$ then
