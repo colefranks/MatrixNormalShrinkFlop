@@ -1019,8 +1019,13 @@ $$\| \widehat{\Theta}_1 - I_{d_1}\|_{op}, \| \widehat{\Theta}_2 - I_{d_2}\|_{op}
 Our main result for this section is that $\Phi$ is with high probability a good quantum expander, which allows us to apply the previous theorem.
 
 \begin{theorem}\label{thm:operator-cheeger}
-There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is $\eps \sqrt{d_2/n d_1}$-balanced and a $1 - c$ quantum expander with failure probability $O(e^{ - \Omega( d_2 \eps^2)}).$
+There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is $\eps \sqrt{d_2/n d_1}$-balanced and is a $(1 - c)$-quantum expander, with failure probability $O(e^{ - \Omega( d_2 \eps^2)}).$
 \end{theorem}
+The above theorem follows from a slightly different result, which is identical to the above theorem except the condition ``$(1-c)$-quantum expander" is replaced by $\|\Phi\|_0 \leq 1 - c$. Applying \cref{lem:block-matrix} to $\nabla^2 f$ with this bound on $\|\Phi\|_0 = \|\nabla^2_{12} f\|_{0}$ improves \cref{thm:tensor-convexity}, and consequently also \cref{thm:ball-convexity}, as follows. 
+
+\begin{corollary}\label{cor:matrix-convexity} There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then with failure probability $O(e^{ - \Omega( d_2 \eps^2)}),$ $f$ is $c$-strongly convex at any point $Z \in \SPD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$.
+\end{corollary}
+
 
 We will prove the above result in the appendix using techniques similar to \cite{FM20} on Cheeger's inequality. As a preliminary result we can already prove that the MLE is accurate in operator norm, but with slightly worse failure probability using the tools for the tensor case:
 
@@ -1794,10 +1799,12 @@ $$ \vol(\Pi_1,\Pi_2):=
 and $$ \cut(\Pi_1, \Pi_2):= \tr \Pi_2 \Phi(I_{d_1} - \Pi_1) + \tr (I_{d_2} - \Pi_2) \Phi(\Pi_1).$$
 \end{definition}
 
-We now cite a slight generalization of \cite{FM20}.
+We now cite a slight generalization of \cite{FM20}. In that work only the bound on $\|\Phi\|_0$ is shown explicitly, but the paper also shows that the second bound follows from the first.
 %Recall the function $$f^{\Phi}:\samp \mapsto \frac{d_1}{d_2} \log\det(\Phi(\samp)) - \log\det (\samp).$$
 
-\begin{lemma} [\cite{FM20}, \cite{KLR19}]\label{lem:op-cheeger} There exist absolute constants $c, C$ such if $\eps < c \ch(\Phi)^2$ and $\Phi$ is $\eps$-balanced, then $\Phi$ is a
+\begin{lemma} [\cite{FM20}, Remark 5.5]\label{lem:op-cheeger} There exist absolute constants $c, C$ such if $\eps < c \ch(\Phi)^2$ and $\Phi$ is $\eps$-balanced, then $\Phi$ satisfies 
+$$\| \Phi\|_0 \leq \max\left\{1/2, 1 -  \ch(\Phi)^2 + C \frac{\eps}{\ch(\Phi)^2} \right\}$$ 
+and so is a
 $$ \max\left\{1/2, 1 -  \ch(\Phi)^2 + C \frac{\eps}{\ch(\Phi)^2} \right\}$$
 quantum expander.
 \end{lemma}
@@ -1849,7 +1856,7 @@ Recall from \cref{fact:chi} that, $\cut(\Pi_1, \Pi_2), \vol(\Pi_1, \Pi_2), \vol(
 \item if $nr_1 r_2 \leq (2/3) n d_1 d_2$, then with probability $1 - e^{- \Omega(F_1)}$ we have $R_1 \geq (2/3) F_1$ and $R_1 + 2R_2 \leq (4/3) (F_1 + 2 F_2),$
 \item and with probability $1 - e^{- \Omega(F_1 + 2 F_2)}$, $R_1 + 2R_2 \geq (2/3) (F_1 + 2 F_2) = (2/3) n (r_1 d_2 + r_2 d_1)$ and $R_1 + R_2 + R_3 \leq (4/3)(F_1 + F_2 + F_3) = (4/3)n d_1 d_2$.
 \end{itemize}
-All three follow from standard results for concentration of $\chi^2$ random variables \cite{W19}. To prove the first item, first note that $F_1 + 2 F_2 \geq (4/3)(F_1 + F_2 + F_3)$, because
+All three follow from standard results for concentration of $\chi^2$ random variables; see e.g. \cite{W19}. To prove the first item, first note that $F_1 + 2 F_2 \geq (4/3)(F_1 + F_2 + F_3)$, because
 \begin{align*}
 (F_1 + 2 F_2)/( F_1 + F_2 + F_3) &= \frac{r_1}{d_1} + \frac{r_2}{d_2}\\
  &= \sqrt{ \frac{r_1 r_2}{d_1 d_2}}\left( \sqrt{ \frac{r_1 d_2}{r_2 d_1}} + \sqrt{ \frac{r_2 d_1}{r_1 d_2}}\right) \geq (2/3) \cdot 2 \geq 4/3.
