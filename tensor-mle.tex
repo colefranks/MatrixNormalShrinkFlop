@@ -291,7 +291,7 @@ $\ell(\Theta|x) = \frac{n}2 \log \det \Theta - \frac12 \sum_{i=1}^n x_i^T \Theta
 One notes that the $\Theta_a$ are not identifiable; we assume all $\Theta_a$ have the same determinant in order to ensure identifiability.
 The \emph{maximum likelihood estimator (MLE)} for $\Theta_a$ is then
 \begin{align*}
-  \widehat{\Theta}_1, \dots, \widehat{\Theta}_k := \underset{\det \Theta_1 = \ldots = \det \Theta_k}{ \arg\max} \ell_x(\Theta_1, \dots, \Theta_k).
+  \widehat{\Theta}_1, \dots, \widehat{\Theta}_k := \underset{\det \Theta_1 = \ldots = \det \Theta_k}{ \arg\max} \ell(\Theta_1, \dots, \Theta_k|x).
 \end{align*}
 
 The MLE can be computed by an iterative procedure known as the \emph{flip-flop algorithm} \citep{dutilleul1999mle,gurvits2004classical}.
@@ -299,7 +299,7 @@ For simplicity, we describe it for the matrix normal model ($k=2$), so that the 
 Initialize $\overline{\Theta}_1 = I_{d_1}$, $\overline{\Theta}_2 = I_{d_2}$, and choose a tolerance $\eps > 0$.
 \begin{enumerate}
 \item Set $\overline{\Theta}_1 \leftarrow (\frac{1}{n d_2} \sum_{i = 1}^n X_i \overline{\Theta}_2 X_i^T)^{-1}.$
-\item Set $\Upsilon = \frac{1}{n d_1} \sum_{i = 1}^n \samp_i^T \overline{\Theta}_1 \samp_i$.
+\item Set $\Upsilon = \frac{1}{n d_1} \sum_{i = 1}^n X_i^T \overline{\Theta}_1 X_i$.
 If $d_F( \Upsilon; \overline{\Theta}_2) > \eps,$ set $\overline{\Theta}_2 \leftarrow \Upsilon^{-1}$ and return to Step 1.
 \item Output $\overline{\Theta}_1, \overline{\Theta}_2$.
 \end{enumerate}
