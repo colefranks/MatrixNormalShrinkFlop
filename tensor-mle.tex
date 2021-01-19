@@ -94,24 +94,22 @@
 \begin{frontmatter}
 \title{Optimal sample complexity for matrix and tensor normal models via geodesic convexity}
 \runtitle{Optimal sample complexity for matrix and tensor normal models}
-
+%=============================================================================
 \begin{aug}
 \author[A]{\fnms{Cole} \snm{Franks}\corref{}\ead[label=e1]{franks@mit.edu}},
 \author[B]{\fnms{Rafael} \snm{Oliveira}\corref{}\ead[label=e2]{second@somewhere.com}},
-\author[B]{\fnms{Akshay} \snm{Ramachandran}\corref{}\ead[label=e3]{third@somewhere.com}} \\
-\and
+\author[B]{\fnms{Akshay} \snm{Ramachandran}\corref{}\ead[label=e3]{third@somewhere.com}} \\ \and
 \author[C]{\fnms{Michael} \snm{Walter}\corref{}\ead[label=e4]{m.walter@uva.nl}}
 \runauthor{C.\ Franks, R.\ Oliveira, A.\ Ramachandran \and M.\ Walter}
-
 \affiliation[A]{Massachusetts Institute of Technology} %, \printead{e1}
 \affiliation[B]{University of Waterloo} %, \printead{e2,e3}}
 \affiliation[C]{University of Amsterdam} %, \printead{e4}}
 \end{aug}
-
+%=============================================================================
 \begin{abstract}
 \MW{We need an abstract.}
 \end{abstract}
-
+%=============================================================================
 \begin{keyword}[class=MSC2020]
 \kwd[Primary ]{???}
 \kwd{???}
@@ -122,9 +120,8 @@
 \kwd{???}
 \kwd{???}
 \end{keyword}
-
 \end{frontmatter}
-
+%=============================================================================
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Please use \tableofcontents for articles %%
 %% with 50 pages and more                   %%
@@ -197,7 +194,7 @@ Recently it was shown that the number of flip-flop steps to obtain precision~$\e
 %In the current literature on matrix normal and tensor models, typically the estimators are assessed using Frobenius or spectral norm between the estimated parameter and the truth. However, neither of these metrics bound statistical distances of interest such as the total variation or Kullback-Leibler divergence between the true distribution and that corresponding to the estimated parameter, or the Fischer-Rao distance. These quantities are affinely invariant, meaning that for any invertible matrix $g$ we have $d(\Sigma, \Sigma') = d(g \Sigma g^T, g \Sigma' g^T)$. \CF{not exactly sure how to write this, but I want it to say that we get the right rates with no assumptions and we use more appropriate metrics. Amusingly, to get from these metrics TO the less useful metrics or vice versa, one needs the condition number assumptions. Also, it appears that the reason that the better metrics aren't being used is that the estimators didn't have the equivariance property.}
 
 %-----------------------------------------------------------------------------
-\subsection{Our contribution}
+\subsection{Our contributions}
 %-----------------------------------------------------------------------------
 We take a geodesically convex optimization approach to provide bounds to estimate the precision matrices without any assumptions on their structure.
 For the matrix normal model our rates are tight in every regime up to logarithmic factors, and for the tensor normal model our rates our tight if there are enough samples.
@@ -226,7 +223,9 @@ As a corollary the MSE in $d_F$ is $O( \max \{ \frac{d_1^2}{nd_2}, \frac{d_2^2}{
 \CF{Can we say better for each individual matrix? Another thought is that if one of the matrices is too big, we can still try to get the other ones by marginalizing the bad one out.}
 \CF{Mention $d_{TV}$ again.}
 
-The first result is tight up to logarithmic factors, and the second result is tight. Without the restriction on $n$ in the first result, no estimator can converge in spectral norm as the parameters grow, so we consider the restriction mild. Likewise for the second result no estimator can converge in Frobenius norm without the restriction on $n$.
+The first result is tight up to logarithmic factors, and the second result is tight.
+Without the restriction on $n$ in the first result, no estimator can converge in spectral norm as the parameters grow, so we consider the restriction mild. Likewise for the second result no estimator can converge in Frobenius norm without the restriction on $n$.
+\MW{Maybe say that we show this.}
 \MW{When you say `in spectral/Frobenius norm' you mean `in $d_{\op}$/$d_F$'?}
 \CF{I think I'd like to do a better job at gradually defining notation so its clear that these are the right numbers.}
 
@@ -241,12 +240,14 @@ Our regularizer has a Bayesian interpretation as coming from a Wishart prior for
 
 \CF{Then add some discussion of methods.}
 
-%By simply setting $\Sigma_2 = I_{d_2}$, it is easy to see that one cannot obtain better MSE rates than $d_1^2/d_2 n$ for estimating $\Sigma_1$ in Frobenius norm.
+%-----------------------------------------------------------------------------
+\subsection{Outline}
+%-----------------------------------------------------------------------------
+\TODO{In Section xxx, we\dots}
 
 %=============================================================================
-\section{The tensor and matrix normal models}
+\section{Model and main results}
 %=============================================================================
-
 %-----------------------------------------------------------------------------
 \subsection{Notation}
 %-----------------------------------------------------------------------------
@@ -285,7 +286,9 @@ $$\SL = \prod_{a=1}^k \SL_{d_a}, \SPD = \prod_{a = 1}^k \PD_{d_a}^1, \Sym = \big
 \item $\norm{\cdot}_p$ for the $\ell_p$ norm of vectors and the Schatten-$p$ norm of operators
 \end{itemize}
 
-\subsection{The tensor and matrix normal models}
+%-----------------------------------------------------------------------------
+\subsection{Tensor and matrix normal models}
+%-----------------------------------------------------------------------------
 We consider the tensor normal model, in which $X_1, \dots, X_n \in \R^D$ are drawn i.i.d. from the normal distribution $\cN(0, \Sigma)$, where the covariance matrix $\Sigma = \bigotimes_{a = 1}^{k} \Sigma_a \in \PD_D$ is the Kronecker product of positive definite $d_a\times d_a$ matrices $\Sigma_a$ for $a\in [k]$. Our goal is to estimate the $k$ Kronecker factors $\Sigma_1, \dots, \Sigma_k$ given access to the random tuple $X_1, \dots, X_n$. \CF{maybe the following discussion belongs in the intro}.
 
 One may think of each random sample $X_j$ as taking values in the set of $d_1 \times \dots \times d_k$ arrays of real numbers. There are $k$ natural ways to ``flatten" $X_j$ to a matrix: for example, we may think of it as a $d_1 \times d_2d_3...d_k$ matrix whose column indexed by $(i_2,\dots, i_k)$ is the vector in $\R^{d_1}$ with $i_1^{th}$ entry equal to $(X_j)_{i_1, \dots, i_k}$. In an analogous way we may flatten it to a $d_2 \times d_1d_3...d_k$ matrix, and so on. In the tensor normal model, the $d_2d_3\dots d_k$ many columns are each distributed as a Gaussian random vector with covariance proportional to $\Sigma_1$. Similarly the columns of the $d_2 \times d_1d_3...d_k$ flattening has columns proportional to $\Sigma_2$, and so on. As such, the columns of the $a^{th}$ flattening can be used to estimate $\Sigma_a$ up to a scalar. However, doing so na\"ively (e.g. using the sample covariance matrix of the columns) can result in an estimator with very high variance. This is because the columns of the flattenings are not independent. They may be so highly correlated that they effectively constitute only one random sample rather than $d_2\dots d_k$ many. The MLE decorrelates the columns to obtain rates like those one would obtain if the columns were independent.
@@ -322,11 +325,9 @@ We can motivate this procedure by noting that if in the first step we have $\ove
 
 
 
-\subsection{Results}
-
-
-
-
+%-----------------------------------------------------------------------------
+\subsection{Results on the MLE}
+%-----------------------------------------------------------------------------
 We may now state precisely our result for the tensor normal models. \CF{We should think a bit about the best parametrization of these bounds. I think they only match the fantasy bounds for the largest marginal; off by at worst $\sqrt{d_1/d_k}$}
 \begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius} Suppose $\eps \leq c/\sqrt{d_k}$ and the number of samples satisfies $n \geq C k d_k^3/D\eps^2$. The MLE $(\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) $ for $(\Theta_1, \dots \Theta_k)$ from $n$ independent samples of the tensor normal model satisfies
 $$ d_{F}(\widehat{\Theta}_a, \Theta_a) = O\left( \sqrt{\frac{d_a d_1}{n D/d_k}}\eps\right) $$
@@ -345,6 +346,9 @@ for $a \in \{1,2\}$ with probability $1 - O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)
 \CF{I feel like we should be able to get $\tilde{O}\sqrt{\frac{d_1}{n d_2}}$ for the smaller marginal. Akshay and I discussed a lot in rocketchat. }
 \CF{we can! based on michael's calc}
 
+%-----------------------------------------------------------------------------
+\subsection{Results on the flip-flop algorithm}
+%-----------------------------------------------------------------------------
 Our next results show that in either case the flip-flop algorithm can find the MLEs with high probability. \TODO{change flip flops to thetas}
 
 \begin{theorem}[Tensor flip-flop]\label{thm:tensor-flipflop} If $\hat{\Sigma}$ denotes the MLE estimator for $\Sigma$, then provided $n \geq \TODO{}$ the flip-flop algorithm computes $\underline{\Sigma}$ with
@@ -362,12 +366,9 @@ One may wonder why in the above theorems we consider the distances for the indiv
 
 
 
+%=============================================================================
 \section{Geodesic convexity and sample complexity}\label{subsec:outline}
-
-%-----------------------------------------------------------------------------
-%\subsection{Sample complexity from geodesic convexity}\label{subsec:outline}
-%-----------------------------------------------------------------------------
-
+%=============================================================================
 It was observed by Weisel \CF{cite} that the negative log-likelihood $-\ell_\samp$ exhibits a certain variant of convexity known as \emph{geodesic convexity}. Following \cite{FM20}, we use geodesic convexity to prove \cref{thm:tensor-frobenius}.
 \Cref{thm:matrix-normal}, proven later in \cref{sec:matrix-normal}, requires additional tools. We now discuss the geodesic convexity used here.
 
@@ -530,11 +531,6 @@ The result is $\lambda = n D e^{- f_\samp(\Theta')}$. We may extend $f_x$ to $\o
 
 One may think of \cref{eq:f extension} as proportional, up to an additive constant, to the log-likelihood of $[\samp_1, \dots, \samp_n]$ under the tensor normal model. Here $[\samp_1, \dots, \samp_n]$ denotes the equivalence class of the tuple of samples $(x_1, \dots, x_n)$ in projective space.
 
-
-%When $\samp$ is clear from context we will drop it.
-
-
-%\CF{put somewhere}. It is well-known that various optimization algorithms applied to $f_{\samp}$ satisfy such a descent lemma~\cite{burgisser2019towards}.
 %-----------------------------------------------------------------------------
 \subsection{Bounding the gradient}
 %-----------------------------------------------------------------------------
@@ -671,11 +667,6 @@ $$ (1 - t) nD \leq \|X\|_F^2 \leq (1 + t)nD$$ with probability $2e^{-t^2 nD/8}$.
 %-----------------------------------------------------------------------------
 \subsection{Strong convexity}
 %-----------------------------------------------------------------------------
-%\CF{will move this to the appropriate place; rafael you can cite this for section 4 and just eventually put in the right probability bound.}
-
-
-
-
 We now prove our main strong convexity result, \cref{thm:ball-convexity}, in order to carry out step~\cref{it:convexity} of the plan from \cref{subsec:outline}. The theorem states that, with high probability, $f_X$ is strongly convex for $Z$ sufficiently close to the identity.
 
 %\begin{theorem}\label{thm:ball-convexity}There is $c> 0$ such that the following holds: with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, the function $f_{\rv}$ is $1/2$-strongly convex at all points $Z\in \PD$ with $\sum_{i = 1}^n \|\log Z_a\|_{op} < c/k.$\end{theorem}
@@ -925,7 +916,9 @@ We now show our second strong convexity result, namely that if our function is s
 There is a constant $c>0$ such that the following holds. If $f_{\samp}$ is $\alpha$-strongly convex at $I$; and for every $a \in [k]$ we have $\|d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a}\|_{op} = \|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$; and $\sum_{a} \|\delta_{a}\|_{op} \leq c$: then $f$ at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$ is $\geq (\alpha - k C \|\delta\|_{op})$-strongly convex for some universal constant $C$.
 \end{theorem}
 
+%-----------------------------------------------------------------------------
 \subsection{Proof of \cref{thm:tensor-frobenius}}
+%-----------------------------------------------------------------------------
 We are now ready to prove the main result of this section according to the plan outlined in \cref{subsec:outline}.
 \TODO{restate it here?}
 
@@ -956,7 +949,9 @@ We have shown that the minimizer $\widehat{\Theta}$ of $f_\samp$ is close to $I$
 
 %\CF{I think right now this doesn't use our convention in \cref{dfn:g-convexity} which leads to the Hessian in \cref{lem:hessian} }
 
+%=============================================================================
 \section{Improvements for the matrix normal model}\label{sec:matrix-normal}
+%=============================================================================
 We now prove \cref{thm:matrix-normal}, an improvement to \cref{thm:tensor-frobenius} in the case $k=2$. The results for $k = 2$ are stronger in that the MLE can be shown to be close to the truth in operator norm rather than the looser Frobenius norm, and that the failure probability is inverse exponential in the number of samples rather than inverse polynomial.
 
 
@@ -1014,6 +1009,9 @@ note \cref{thm:Pisier-expansion} gives the following with failure probability $\
 Note by the Courant-Fischer variational characterization of singular values, this is sufficient to show $\Phi$ is a $(1-3/4)$-quantum expander. We remark that if we examine the proof of \cref{thm:klr} it turns out that they eventually translate the balancedness and expansion conditions to strong convexity.
 \end{proof}
 
+%-----------------------------------------------------------------------------
+\subsection{Proof of \cref{thm:matrix-normal}}
+%-----------------------------------------------------------------------------
 Modulo the proof of \cref{thm:operator-cheeger} in the appendix, we have all the tools in place for \cref{thm:matrix-normal}. Note that if we used \cref{thm: operator-Pisier} instead, we would get the result of \cref{thm:matrix-normal} albeit with worse failure probability.
 
 \begin{proof}[Proof of \cref{thm:matrix-normal}] As discussed in \cref{subsec:outline}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. By \cref{thm:operator-cheeger}, provided $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps_0^{-2}\} $ with probability $1 - O(e^{ - \Omega( d_2 \eps_0^2)})$ the operator $\Phi$ is $\delta:=\eps_0  \sqrt{\frac{d_2}{n d_1}}$-balanced and is a $(1 - c)$-quantum expander. Condition on this event. By our choice of $n$, we have $\delta \leq \lambda^2/\log d_1$ if we take $\eps_0 = \eps/\log(d_1)$ for $\eps \leq c$. By \cref{thm:klr},
@@ -1021,16 +1019,9 @@ Modulo the proof of \cref{thm:operator-cheeger} in the appendix, we have all the
 The failure probability becomes $O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)})$.
 \end{proof}
 
-
-
-
-%The results in this section are better in that the covariances are approximated in operator norm rather than the looser Frobenius norm, and secondly that the failure probability is inverse exponential.
-
-
-
-\newpage
+%=============================================================================
 \section{Convergence of flip-flop algorithms}
-
+%=============================================================================
 In this section we prove that the flip-flop algorithms for the matrix and tensor normal models converge quickly to the MLE estimator with high probability. We begin by stating the flip-flop algorithm and then...
 
 \begin{Algorithm}
@@ -1087,9 +1078,9 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 	which implies $m \leq \frac{1}{\alpha \lambda}$. This concludes our proof.
 \end{proof}
 
+%-----------------------------------------------------------------------------
 \subsection{Tensor flip-flop convergence}
-
-
+%-----------------------------------------------------------------------------
 \begin{lemma}[Initial Conditions]\label{lem:tensor-initial-conditions}
 	There exist absolute constants $\Gamma, \gamma > 0$ such that the following holds.
 	When the number of samples $n \geq \Gamma \cdot k^2 \cdot d_1^2/D$, with probability at least $1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}$ we have that the following conditions hold:
@@ -1227,8 +1218,9 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 	$$ d_F(\htheta_a, \otheta_a) \leq \eps. $$
 \end{proof}
 
+%-----------------------------------------------------------------------------
 \subsection{Matrix flip-flop convergence}
-
+%-----------------------------------------------------------------------------
 \begin{Algorithm}
 \textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^{d_1 \times d_2}$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
 
@@ -1256,7 +1248,9 @@ If $\norm{\nabla_a}_{op}^2 < \delta^2$, output $\left( \bigotimes_{a =1}^k \othe
 \CF{prove that flip-flop works as soon as estimation in operator norm works. This goes by using KLR to show strong convexity holds in a ball about the optimizer}.
 
 
+%=============================================================================
 \section{Lower bounds}
+%=============================================================================
 One could hope that, for the purposes of estimating $\Theta_1$, having access to $X$ is like having access to $n D$ independent samples of a Gaussian with precision matrix $\Theta_1$. In particular, one could hope e.g. for an RMSE rate of $\sqrt{ d_1/ n d_2}$ for estimating $A$ in spectral norm in the matrix model. Here we show that this only holds if $d_2 \leq n d_1$; the rate cannot be better than $O(\sqrt{d_1/ n \min(n d_1, d_2)})$. Intuitively, this holds because we can choose $\Theta_2$ to have low rank and effectively zero out some entries of $X$. However, this does not quite work because $\Theta_2$ must be invertible - we have to instead choose $\Theta_2$ to be approximately equal to a random low rank matrix.
 %Here we show that our bounds for the matrix normal model are best possible for estimating the individual matrices $\Theta_a$. The bound for $\Theta_2$ is clearly best possible because it is what we would obtain even if $\Theta_1$ were known, but in fact even the bound on $\Theta_1$ is tight.
 
@@ -1293,7 +1287,10 @@ If the mean of $Y$ is bounded then we have Markov's inequality. Let $\eps > 0$; 
 
 %Then $\widehat{\Theta}_1$ is an estimator that has access to only $n d_1$ samples of a Gaussian.
 
+%-----------------------------------------------------------------------------
 \subsection{Further improvements for matrix normal model}
+%-----------------------------------------------------------------------------
+
 \subsubsection{Gaussian Version}
 We will eventually compare all our bounds to gaussian inputs, so we will analyze marginal error for gaussians first.
 
@@ -1386,11 +1383,15 @@ If $X_{1}, ..., X_{n}$ are iid from $N(0, \frac{1}{n d_{a} d_{b}} I_{d_{a} \time
 \[ \left\| \sum_{i} Y_{i}^{*} Y_{i} - \frac{1}{d_{b}} I_{b}    \right\|_{op} \leq O(1) \frac{1}{d_{b}} \sqrt{ \frac{d_{b}}{n d_{a}}}   \]
 \end{corollary}
 
+%-----------------------------------------------------------------------------
 \subsection{Net and union bound}
+%-----------------------------------------------------------------------------
 \CF{do the net bound like in the vershynin survey}
 
 
+%=============================================================================
 \section{Numerics and regularization}\label{sec:numerics}
+%=============================================================================
 Here we show experimentally that, in some natural situations, the MLE performs better than regularized estimators. We also show that in the undersampled regime, a simpler regularizer can match and sometimes outperform the GLASSO-type estimators appearing in \CF{tsilig, zhou}. Instead of the MLE, we consider the following penalized log-likelihood:
 
 \begin{align*}
@@ -1443,7 +1444,9 @@ $$\otheta_a = \frac{n D}{d_a}\left(\tr_{[k] \setminus a} \otheta^a \rho + \alpha
 The gradient should be... $\rho^{a} $ 
 
 
-\section{Open problems}
+%=============================================================================
+\section{Conclusion and open problems}
+%=============================================================================
 \TODO{$d_{op}$} for tensors??
 
 
@@ -1453,7 +1456,9 @@ The gradient should be... $\rho^{a} $
 %One can calculate $$ H_{I, v}(\samp, \samp) = \langle w, \Pi(\samp)^2 w \rangle - \langle w, \Pi(\samp) w \rangle^2 $$ where $w = v/\|v\|$. We may calculate the Hessian $H_{P,v}$ using $H_{P, v} = H_{I, \sqrt{P}v}$.
 
 
+%=============================================================================
 \section{Pisier's proof of expansion}\label{sec:pisier}
+%=============================================================================
 We restate the theorem in language closer to Pisier's original:
 
 % Appendix - \url{https://arxiv.org/abs/1209.2059}
@@ -1553,8 +1558,9 @@ The statement follows by $m \leq n$.
 %\end{corollary}
 
 
+%=============================================================================
 \section{Robustness Lemma}
-
+%=============================================================================
 We'll use an easy fact relating the exponential map and the operator norm.
 
 \begin{fact} For all symmetric $d\times d$ matrices $\delta $ such that $ \|\delta\|_{op} \leq \frac{1}{2}$, we have
@@ -1735,8 +1741,9 @@ By \cref{thm:tensor-convexity}, with failure probability $k^2 ({\sqrt{nD}}/{kd_1
 %\CF{make consistent with def 4, hessian}
 
 
+%=============================================================================
 \section{The Cheeger constant of a random operator}
-
+%=============================================================================
 To prove \cref{thm:operator-cheeger}, we first define the Cheeger constant of an operator $\Phi:\mat(d_1) \to \mat(d_2)$. This is similar to a concept defined in \cite{H07}.
 \begin{definition}
 Let $\Phi : \mat(d_1) \to \mat(d_2)$ be a completely positive map. The Cheeger constant $\ch(\Phi)$ of the weighted bipartite graph associated to $B$ is given by
@@ -1880,7 +1887,9 @@ To prove \cref{thm:operator-cheeger}, we apply \cref{lem:op-cheeger} using \cref
 
 \end{appendix}
 
+%=============================================================================
 \section*{Acknowledgements}
+%=============================================================================
 This work was supported in part by NWO Veni grant no.~680-47-459 and NWO grant OCENW.KLEIN.267.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
