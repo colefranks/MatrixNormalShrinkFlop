@@ -253,24 +253,24 @@ Our regularizer has a Bayesian interpretation as coming from a Wishart prior for
 In this section we define the matrix and tensor normal models and we state our main technical results.
 
 %-----------------------------------------------------------------------------
-\subsection{Matrix and tensor normal models}
+\subsection{Matrix and tensor normal models and the flip-flop algorithm}
 %-----------------------------------------------------------------------------
+The tensor normal model, of which the matrix normal model is a particular case, is formally defined as follows.
 
 \begin{definition}
-For positive definite matrices $\Sigma_1,\dots,\Sigma_k$, we define the \emph{tensor normal model} as the multivariate Gaussian distribution with covariance matrix given by the Kronecker product $\Sigma = \Sigma_1 \ot \dots \ot \Sigma_k$.
+For positive definite matrices $\Sigma_1,\dots,\Sigma_k$, we define the \emph{tensor normal model} as the centered multivariate Gaussian distribution with covariance matrix given by the Kronecker product $\Sigma = \Sigma_1 \ot \dots \ot \Sigma_k$.
 For $k=2$, this is known as the \emph{matrix normal model}.
 \end{definition}
 
 \noindent
 Note that if each $\Sigma_a$ is a $d_a\times d_a$ matrix then $\Sigma$ is a $D\times D$-matrix, where $D=d_1 \cdots d_k$.
-Our goal is to estimate the $k$ Kronecker factors $\Sigma_1, \dots, \Sigma_k$ given access to $n$ i.i.d.\ random samples $X_1, \dots, X_n \in \R^D$ drawn from the model.
+Our goal is to estimate the $k$ Kronecker factors $\Sigma_1, \dots, \Sigma_k$ given access to $n$ i.i.d.\ random samples $x_1, \dots, x_n \in \R^D$ drawn from the model.
 
-One may also think of each random sample $X_j$ as taking values in the set of $d_1 \times \dots \times d_k$ arrays of real numbers.
-There are $k$ natural ways to ``flatten" $X_j$ to a matrix:
-for example, we may think of it as a $d_1 \times d_2d_3\cdots{}d_k$ matrix whose column indexed by $(i_2,\dots, i_k)$ is the vector in $\R^{d_1}$ with $i_1^{\text{th}}$ entry equal to $(X_j)_{i_1, \dots, i_k}$.
+One may also think of each random sample $x_j$ as taking values in the set of $d_1 \times \dots \times d_k$ arrays of real numbers.
+There are $k$ natural ways to ``flatten" $x_j$ to a matrix:
+for example, we may think of it as a $d_1 \times d_2d_3\cdots{}d_k$ matrix whose column indexed by $(i_2,\dots, i_k)$ is the vector in $\R^{d_1}$ with $i_1^{\text{th}}$ entry equal to $(x_j)_{i_1, \dots, i_k}$.
 In an analogous way we may flatten it to a $d_2 \times d_1d_3\cdots{}d_k$ matrix, and so on.
-\MW{A picture would help.}
-\MW{It might be useful to define notation for the flattening (then we can just define $\rho^{(a)}$ as $FF^T$.}
+\MW{It might be useful to define notation for the flattening (so that we can just define $\rho^{(a)}$ as $FF^T$). If so, maybe add a picture\dots}
 In the tensor normal model, the $d_2d_3\cdots{}d_k$ many columns are each distributed as a Gaussian random vector with covariance proportional to~$\Sigma_1$.
 Similarly the columns of the $d_2 \times d_1d_3\cdots{}d_k$ flattening have covariance proportional to~$\Sigma_2$, and so on.
 As such, the columns of the $a^{\text{th}}$ flattening can be used to estimate~$\Sigma_a$ up to a scalar.
@@ -279,35 +279,37 @@ This is because the columns of the flattenings are not independent.
 In fact they may be so highly correlated that they effectively constitute only one random sample rather than $d_2\dots d_k$ many.
 The MLE decorrelates the columns to obtain rates like those one would obtain if the columns were independent.
 
-%%% MICHAEL MARKER %55
-
-The MLE is easier to describe in terms of the precision matrices, the inverses of the covariance matrices. Let $\Theta$ denote the precision matrix $\Sigma^{-1}$, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$ where $\Theta_a = \Sigma_a^{-1}$. Given a tuple $\samp$ of samples  $\samp_1,\dots,\samp_n\in\R^D$, up to an additive constant the log likelihood is $
-  \ell_{\samp}(\Theta)
-% = \frac n2 \log \det(\Theta/2\pi) - \sum_{i=1}^n \frac12 \braket{\samp_i, \Theta \samp_i} ~
-  = \frac n2 \log \det \Theta - \frac12 \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i}$, which we can rewrite as
+The MLE is easier to describe in terms of the precision matrices, the inverses of the covariance matrices.
+Let $\Theta$ denote the \emph{precision matrix}, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$, where $\Theta_a = \Sigma_a^{-1}$.
+Given a tuple $x$ of samples $\samp_1,\dots,\samp_n\in\R^D$, up to an additive constant the log-likelihood of the tensor normal model is
+$\ell(\Theta|x) = \frac{n}2 \log \det \Theta - \frac12 \sum_{i=1}^n x_i^T \Theta x_i$, which we can rewrite as
 \begin{align*}
-  \ell_{\samp}(\Theta_1, \dots, \Theta_k)
-% = \frac n2 \log \det(\Theta/2\pi) - \sum_{i=1}^n \frac12 \braket{\samp_i, \Theta \samp_i} ~
-  = \frac {n D} 2 \sum_{a = 1}^k \frac{1}{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i}.
+  \ell(\Theta_1, \dots, \Theta_k|x)
+% &= \frac{n}2 \log \det \Theta - \frac12 \sum_{i=1}^n x_i^T \Theta x_i \\
+&= \frac{n D}2 \sum_{a=1}^k \frac1{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k \Theta_a \right) x_i
 \end{align*}
-One notes that $\Theta_a$ are not identifiable; we assume $\Theta_a$ have the same determinant in order to ensure identifiability. The maximum likelihood estimator (MLE) for $\Theta_a$ is given by
-$$\widehat{\Theta}_1, \dots, \widehat{\Theta}_k := \underset{|\Theta_1| = |\Theta_2|= \dots = | \Theta_d|}{ \arg\max} \ell_x(\Theta_1, \dots, \Theta_k).$$
+One notes that the $\Theta_a$ are not identifiable; we assume all $\Theta_a$ have the same determinant in order to ensure identifiability.
+The \emph{maximum likelihood estimator (MLE)} for $\Theta_a$ is then
+\begin{align*}
+  \widehat{\Theta}_1, \dots, \widehat{\Theta}_k := \underset{\det \Theta_1 = \ldots = \det \Theta_k}{ \arg\max} \ell_x(\Theta_1, \dots, \Theta_k).
+\end{align*}
 
-
-
-The MLE can be computed by an iterative procedure known as the flip-flop algorithm \CF{dutilleul, gurvits}. For simplicity, we describe it for the matrix normal model $(k = 2)$, so that $\samp_1, \dots, \samp_n$ can be viewed as $d_1\times d_2$ matrices. Initialize $\overline{\Theta}_a = I_a$, and choose a tolerance $\eps > 0$.
+The MLE can be computed by an iterative procedure known as the \emph{flip-flop algorithm} \citep{dutilleul1999mle,gurvits2004classical}.
+For simplicity, we describe it for the matrix normal model ($k=2$), so that the samples $\samp_i$ can be viewed as $d_1\times d_2$ matrices which we denote by $X_i$.
+Initialize $\overline{\Theta}_1 = I_{d_1}$, $\overline{\Theta}_2 = I_{d_2}$, and choose a tolerance $\eps > 0$.
 \begin{enumerate}
-%\item Normalize $\samp \leftarrow \samp/\|\samp\|$.
-\item Set $\overline{\Theta}_1 \leftarrow (\frac{1}{n d_2} \sum_{i = 1}^n \samp_i \overline{\Theta}_2 \samp_i^T)^{-1}.$
-\item Set $\Upsilon = \frac{1}{n d_1} \sum_{i = 1}^n \samp_i^T \overline{\Theta}_1 \samp_i$.  If $d_F( \Upsilon; \overline{\Theta}_2) > \eps,$ set $\overline{\Theta}_2 \leftarrow \Upsilon^{-1}$ and return to Step 1; else output $\widehat{\Theta}_1, \widehat{\Theta}_2$.
+\item Set $\overline{\Theta}_1 \leftarrow (\frac{1}{n d_2} \sum_{i = 1}^n X_i \overline{\Theta}_2 X_i^T)^{-1}.$
+\item Set $\Upsilon = \frac{1}{n d_1} \sum_{i = 1}^n \samp_i^T \overline{\Theta}_1 \samp_i$.
+If $d_F( \Upsilon; \overline{\Theta}_2) > \eps,$ set $\overline{\Theta}_2 \leftarrow \Upsilon^{-1}$ and return to Step 1.
+\item Output $\overline{\Theta}_1, \overline{\Theta}_2$.
 \end{enumerate}
-We can motivate this procedure by noting that if in the first step we have $\overline{\Theta}_2 = \Theta_2$, then $\overline{\Theta}_1^{-1} \leftarrow \frac{1}{n d_2} \sum_{i = 1}^n \rv_i \Theta_2 \rv_i^T$ is simply a sum of outer products of $nd_2$ many independent random vectors with covariance $\Sigma_1$; as such this is a good estimator for $\Sigma_1$. As we don't know $\Theta_2$, the flip-flop algorithm instead uses our current best guess $\overline{\Theta}_2$ instead.
 
-%View the sample $\samp \in \R^{n D}$ as a $d_1\times \dots \times d_k \times n$ array.
+We can motivate this procedure by noting that if in the first step we have $\overline{\Theta}_2 = \Theta_2$, then $\overline{\Theta}_1^{-1} \leftarrow \frac{1}{n d_2} \sum_{i = 1}^n X_i \Theta_2 X_i^T$ is simply a sum of outer products of $nd_2$ many independent random vectors with covariance $\Sigma_1$; as such this is a good estimator for $\Sigma_1$.
+As we don't know $\Theta_2$, the flip-flop algorithm instead uses $\overline{\Theta}_2$ our current best guess.
 
-%\begin{enumerate}\item \item Normalize $\samp \leftarrow \samp/\|\samp\|$.  \item Compute the $k$ different flattenings $M_1,\dots, M_k$ of $\samp$ described above; set $M_1 \leftarrow M_1 \sqrt{\Theta_2 \ot \dots \ot \Theta_k}$ (and analogously for $M_1, \dots, \end{enumerate}
+In the flip flop algorithm for the general tensor normal model, we cycle through the $k$~many dimensions, using the $a^\text{th}$ flattening of the samples $x_i$ to update $\Theta_a$ in the $a^\text{th}$ step.
 
-%however it is identifiable if we assume  $\Theta_a$ have the same determinant.
+%%% MICHAEL MARKER %55
 
 %-----------------------------------------------------------------------------
 \subsection{Notation}
