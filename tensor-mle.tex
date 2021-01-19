@@ -204,6 +204,7 @@ In the current literature on matrix normal and tensor models, typically the esti
 However, neither of these metrics bound statistical dissimilarity measures of interest such as the total variation or Kullback-Leibler divergence between the true distribution and that corresponding to the estimated parameter, or the Fisher-Rao distance.
 
 Here we consider the \emph{Mahalanobis distance} $d_{F}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_F$ of the precision matrices.
+\MW{The notation $d_F$ is a bit problematic as it might suggest Frobenius distance. I hope the $\Vert$ help.}
 This is a natural dissimilarity measure on Gaussians because when any of the Mahalanobis, total variation, square of the KL-divergence, or Fisher-Rao distances is at most a small constant then they are all on the same order \CF{check, cite} \citep{barsov1987estimates}.
 We also consider $d_{\op}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_{\op}$, which yields even stronger results.
 \MW{Can we give an indication of what `stronger' means?}
