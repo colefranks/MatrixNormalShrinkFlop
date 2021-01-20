@@ -181,7 +181,7 @@ Simply setting $\Sigma_2 = I_{d_2}$ or $\Sigma_1 = I_{d_1}$, in which case the m
 For the tensor normal model, a natural generalization of the flip-flop algorithm has been proposed to compute the MLE but was not known to converge \citep{mardia1993spatial,manceur2013maximum}.
 Assuming bounded constant condition number of the true covariances and knowledge of initializers within constant Frobenius distance of the true precision matrices, \cite{sun2015nonconvex} propose an estimator with tight rates.
 In both the matrix and tensor case, no estimator for the Kronecker factors has been proven to have tight rates without additional assumptions on the factors' structure.
-\CF{The sparse folks should not feel bad because it's considered that estimating sparse GGMs without condition number bounds or irrepresentability conditions is NP hard.}
+\CF{The sparse folks should not feel bad because it's considered possible that estimating sparse GGMs without condition number bounds or irrepresentability conditions is NP hard.}
 
 Even characterizing the existence of the MLE for the matrix and tensor normal model has remained elusive until recently.
 \cite{amendola2020invariant} recently noted that the matrix normal and tensor MLEs are equivalent to algebraic problems about a group action called the \emph{left-right action} and the \emph{tensor action}, respectively.
@@ -364,7 +364,7 @@ Initialize $\overline{\Theta}_1 = I_{d_1}$, $\overline{\Theta}_2 = I_{d_2}$, and
 \begin{enumerate}
 \item Set $\overline{\Theta}_1 \leftarrow (\frac{1}{n d_2} \sum_{i = 1}^n X_i \overline{\Theta}_2 X_i^T)^{-1}.$
 \item Set $\Upsilon = \frac{1}{n d_1} \sum_{i = 1}^n X_i^T \overline{\Theta}_1 X_i$.
-If $d( \Upsilon; \overline{\Theta}_2) > \eps$, set $\overline{\Theta}_2 \leftarrow \Upsilon^{-1}$ and return to Step 1.
+If $d( \Upsilon^{-1}; \overline{\Theta}_2) > \eps$, set $\overline{\Theta}_2 \leftarrow \Upsilon^{-1}$ and return to Step 1.
 \item Output $\overline{\Theta}_1, \overline{\Theta}_2$.
 \end{enumerate}
 
@@ -1068,6 +1068,13 @@ By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\sqrt{d_k}$, which h
 We have shown that the minimizer $\widehat{\Theta}$ of $f_\samp$ is close to $I$, but it remains to show that the minimizer $\Theta'$ of $\ell_\samp$ exists and is close to $I$. For this, recall that if $f_\samp$ has the unique minimizer $\widehat{\Theta} \in \SPD$, then $\ell_\samp$ is minimized at $\Theta':= \alpha^{1/k}  \widehat{\Theta}$ where $\alpha:= n D e^{ - f_\samp(\widehat{\Theta})}$. We now show that $\alpha$ is very close to $1$. By \cref{lem:convex-ball}, $f_\samp(\widehat{\Theta}) \geq f_\samp(0) - k\delta^2$. We have $f(0) \geq f_\samp(0) = \log\| \samp\|^2_F$, and by \cref{it:norm-bd} we have $\| \samp\|_F^2 \in (1 \pm t) nD$ with $t = k \eps/\sqrt{\delta_1}$. Thus we have $\alpha \in [(1-t),  (1+t) e^{k \delta^2}]$, or $\alpha^{1/k} \in [1 \pm  O(\eps/\sqrt{d_k})]$ by our choice of $t$. By the approximate triangle inequality for $D_F$ \CF{insert and cite}, $D_F( \Theta'_a; I_a) = O(D_F(\widehat{\Theta}_a; I_a) + D_F(\alpha^{1/k} I_a; I_a)) = O(\eps \sqrt{d_a/d_k})$. The reparametrization $\eps \leftarrow \eps \sqrt{d_k^{3/2}/ n D}$ completes the proof. \TODO{check reparametrization}
 \end{proof}
 
+\section{Improvements for the matrix normal model}\label{sec:matrix-normal-ii}
+$ $
+
+\CF{I want to just rewrite the section using the new concentration results.}
+
+
+
 
 
 %\CF{I think right now this doesn't use our convention in \cref{dfn:g-convexity} which leads to the Hessian in \cref{lem:hessian} }
@@ -1488,7 +1495,7 @@ If $\norm{\nabla_a}_{op}^2 < \delta^2$, output $\left( \bigotimes_{a =1}^k \othe
 %=============================================================================
 \section{Lower bounds}
 %=============================================================================
-One could hope that, for the purposes of estimating $\Theta_1$, having access to $X$ is like having access to $n D$ independent samples of a Gaussian with precision matrix $\Theta_1$. In particular, one could hope e.g. for an RMSE rate of $\sqrt{ d_1/ n d_2}$ for estimating $A$ in spectral norm in the matrix model. Here we show that this only holds if $d_2 \leq n d_1$; the rate cannot be better than $O(\sqrt{d_1/ n \min(n d_1, d_2)})$. Intuitively, this holds because we can choose $\Theta_2$ to have low rank and effectively zero out some entries of $X$. However, this does not quite work because $\Theta_2$ must be invertible - we have to instead choose $\Theta_2$ to be approximately equal to a random low rank matrix.
+One could hope that, for the purposes of estimating $\Theta_1$, having access to $X$ is like having access to $n D/d_1$ independent samples of a Gaussian with precision matrix $\Theta_1$. In particular, one could hope e.g. for an RMSE rate of $\sqrt{ d_1/ n d_2}$ for estimating $A$ in spectral norm in the matrix model. Here we show that this only holds if $d_2 \leq n d_1$; the rate cannot be better than $O(\sqrt{d_1/ n \min(n d_1, d_2)})$. Intuitively, this holds because we can choose $\Theta_2$ to have low rank and effectively zero out some entries of $X$. However, this does not quite work because $\Theta_2$ must be invertible - we have to instead choose $\Theta_2$ to be approximately equal to a random low rank matrix.
 %Here we show that our bounds for the matrix normal model are best possible for estimating the individual matrices $\Theta_a$. The bound for $\Theta_2$ is clearly best possible because it is what we would obtain even if $\Theta_1$ were known, but in fact even the bound on $\Theta_1$ is tight.
 
 \begin{theorem}Suppose $d_2 > n d_1$. Let $X$ denote a tuple of $n$ samples from the matrix normal model with precision matrices $\Theta_1, \Theta_2$. Let $Y$ be a tuple of $nd_1$ Gaussians with precision matrix $\Theta_1$. Let $\widehat{\Theta}_1$ be any estimator for $\Theta_1$. For every $\delta > 0$, there is a distribution on $\Theta_2$ and an estimator $\tilde{\Theta}$ such that the distribution of $\widehat{\Theta}_1(X)$ and the distribution of $\tilde{\Theta}(Y)$ differ by at most $\delta$ in total variation distance. In particular (see \cref{lem:dtv}), the minimax MSE for $\widehat{\Theta}_1$ can be no less than the minimax MSE for the precision matrix of a $d_1$ dimensional Gaussian with $nd_1$ samples; this holds as well for $\Theta_1$ to subsets such as sparse, etc. %\CF{I need to check this final conclusion; it might require some reasonable assumption like boundedness}
