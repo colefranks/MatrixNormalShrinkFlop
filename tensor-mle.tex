@@ -35,13 +35,17 @@
 \DeclareMathOperator{\GL}{GL}
 \DeclareMathOperator{\tr}{Tr}
 \DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\PD}{PD}
 
 \DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
 \DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
 \DeclarePairedDelimiter{\ip}{\langle}{\rangle}
 
 \newcommand{\R}{{\mathbb{R}}}
+\renewcommand{\P}{{\mathbb{P}}}
 \newcommand{\C}{{\mathbb{C}}}
+\renewcommand{\H}{{\mathbb{H}}}
+\newcommand{\G}{{\mathbb{G}}}
 \newcommand{\Q}{{\mathbb{Q}}}
 \newcommand{\N}{{\mathbb{N}}}
 \newcommand{\Z}{{\mathbb{Z}}}
@@ -58,7 +62,6 @@
 \newcommand{\HH}{\mathcal{H}}
 \newcommand{\GG}{\mathcal{G}}
 \newcommand{\SL}{\operatorname{SL}}
-\newcommand{\PD}{\operatorname{P}}
 \newcommand{\Herm}{\operatorname{Herm}}
 \newcommand{\Sym}{\mathcal{S}}
 \newcommand{\smallSym}{S}
@@ -252,6 +255,7 @@ Our regularizer has a Bayesian interpretation as coming from a Wishart prior for
 \subsection{Notation}
 %-----------------------------------------------------------------------------
 For a matrix $A$, $\norm{A}_{\op}$ denotes the operator norm and $\norm{A}_F = (\tr A^T A)^{\frac12}$ the Frobenius norm.
+We write $\PD(d)$ for the space of $d\times d$ positive definite matrices; $\GL(d)$ denotes the group of invertible $d\times d$ matrices.
 We use the notation $x \lesssim y$ (or $x \gtrsim y$) if there exists a universal constant $C>0$ such that $x \leq C y$ (or $x \geq C y$).
 \MW{Do you like this instead of writing $x \leq C y$ with an undefined $C$? Also, when do we use this notation and when do we use big O?}
 
@@ -262,7 +266,7 @@ In this section we define the matrix and tensor normal models and we state our m
 \MW{I need to re-read this section once our definite results are in.}
 
 %-----------------------------------------------------------------------------
-\subsection{Matrix and tensor normal models and the flip-flop algorithm}
+\subsection{Matrix and tensor normal model}
 %-----------------------------------------------------------------------------
 The tensor normal model, of which the matrix normal model is a particular case, is formally defined as follows.
 
@@ -290,17 +294,18 @@ The MLE decorrelates the columns to obtain rates like those one would obtain if 
 
 The MLE is easier to describe in terms of the precision matrices, the inverses of the covariance matrices.
 Let $\Theta$ denote the \emph{precision matrix}, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$, where $\Theta_a = \Sigma_a^{-1}$.
-Given a tuple $x$ of samples $\samp_1,\dots,\samp_n\in\R^D$, up to an additive constant the log-likelihood of the tensor normal model is
-$\ell(\Theta|x) = \frac{n}2 \log \det \Theta - \frac12 \sum_{i=1}^n x_i^T \Theta x_i$, which we can rewrite as
+Given a tuple $x$ of samples $\samp_1,\dots,\samp_n\in\R^D$, up to an additive constant the log-likelihood of the tensor normal model is given by the following expression:
+% $\ell(\Theta|x) = \frac{n}2 \log \det \Theta - \frac12 \sum_{i=1}^n x_i^T \Theta x_i$, which we can rewrite as
 \begin{align*}
   \ell(\Theta_1, \dots, \Theta_k|x)
 % &= \frac{n}2 \log \det \Theta - \frac12 \sum_{i=1}^n x_i^T \Theta x_i \\
-&= \frac{n D}2 \sum_{a=1}^k \frac1{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k \Theta_a \right) x_i
+&= \frac n 2 \log \det \left( \textstyle\bigotimes_{a=1}^k \Theta_a \right)  - \frac12 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k \Theta_a \right) x_i
+% &= \frac{n D}2 \sum_{a=1}^k \frac1{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k \Theta_a \right) x_i
 \end{align*}
 One notes that the $\Theta_a$ are not identifiable; we assume all $\Theta_a$ have the same determinant in order to ensure identifiability.
 The \emph{maximum likelihood estimator (MLE)} for $\Theta_a$ is then
 \begin{align*}
-  (\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) := \underset{\det \Theta_1 = \ldots = \det \Theta_k}{ \arg\max} \ell(\Theta_1, \dots, \Theta_k|x).
+  (\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) := \underset{\det \Theta_1 = \dots = \det \Theta_k}{ \arg\max} \ell(\Theta_1, \dots, \Theta_k|x).
 \end{align*}
 
 %-----------------------------------------------------------------------------
@@ -401,99 +406,128 @@ One may wonder why in the above theorems we consider the distances for the indiv
 
 
 %=============================================================================
-\section{Geodesic convexity and sample complexity}\label{subsec:outline}
+\section{Sample complexity for the tensor normal model}\label{sec:tensor-normal}
 %=============================================================================
-%%% MICHAEL MARKER %55
+It was observed by \cite{wiesel2012geodesic} that the negative log-likelihood exhibits a certain variant of convexity known as \emph{geodesic convexity}.
+In this section, we use geodesic convexity, following a strategy similar to \cite{FM20}, to prove \cref{thm:tensor-frobenius}.
+Our improved result for the matrix normal model, \cref{thm:matrix-normal}, requires additional tools and will
+be proved later in \cref{sec:matrix-normal}.
+
 %-----------------------------------------------------------------------------
-\subsection{Notation}
+\subsection{Geometry of precision matrices and geodesic convexity}
 %-----------------------------------------------------------------------------
-\CF{some aspects of this seem awfully specific to the tensor normal model and maybe could wait until after we define it, or simply merge the two, i.e. "Notation and model"}
-\MW{I think I like the former best.}
-The letter $n$ will denote a number of samples, and $d_1\leq \dots \leq d_k$ will denote sorted dimensions, and we set $D:=\prod_{i = 1}^k d_i$. Let $\PD_d$ denote the positive definite $d\times d$ matrices with unit determinant, and $\PD_d^1$ the subset of $\PD$ with unit determinant. $\rv$ will denote the random tuple $(\rv_1, \dots, \rv_n)$ where $\rv_i \in \R^{D}$ are drawn i.i.d from the tensor normal model with precision matrix $\Theta \in \PD_D$, and $\samp$ will denote a deterministic tuple of tensors.
+We now discuss the geodesic convexity used here and outline the strategy for our proof.
+We start by introducing a Riemannian metric on the manifold $\PD(d)$ of positive-definite $d\times d$ matrices.
+Rather than simply considering the metric induced by the Euclidean metric on the symmetric matrices, we consider a metric whose unit-speed geodesics starting at a point $\Theta \in \PD(d)$ are of the form $\Theta^{1/2} e^{Ht} \Theta^{1/2}$ for $t \in \R$ and a symmetric matrix~$H$ with $\norm H_F=1$.
+This metric arises from the Hessian of the log-determinant \citep{bhatia2009positive} and also as the Fisher-Rao metric on centered Gaussians parametrized by their precision matrices \CF{cite}.
 
-Let $\smallSym_d$ denote the vector space of $d\times d$ real symmetric matrices, and $\smallSym^0_d$ the subspace of traceless matrices in $\smallSym_d$, i.e. the tangent space of $\PD_d^1$. Let~$\SL_d$ denote the group of $d\times d$ matrices with unit determinant.
-%Then, $A^T e^Z A \in \PD_d^1$ for any $A \in \SL_d$ and $Z\in\Sym_d^0$.
-% Any matrix in $\PD_d^1$ can be written as the matrix exponential of a matrix in $\Sym_d^0$.
-Let
-$$\SL = \prod_{a=1}^k \SL_{d_a}, \SPD = \prod_{a = 1}^k \PD_{d_a}^1, \Sym = \bigoplus_{a = 1}^k \smallSym_{d_a}^0.$$ For a $k$-tuple of $A = (A_1, \dots, A_k)$ of matrices, $\|A\|_F^2:=\sum_{i = 1}^k \|A_i\|_F^2$.
- We denote by $AB=(A_1B_1,\dots,A_kB_k)$ and $e^Z=(e^{Z_1},\dots,e^{Z_k})$ the componentwise product and matrix exponential, respectively, of matrix tuples $A, B \in \SL$ and $Z\in\Sym$. $I$ will denote an identity matrix, and $I_{a}$ a $d_a\times d_a$ identity matrix. $\langle \cdot, \cdot \rangle$ denotes the standard inner product. $C, c$ denote large (resp. small) absolute constants that change line to line.
-
-
-\CF{further notation to be introduced; delete as is done}
-\begin{itemize}
-%\item Number of samples $n$, dimensions $d_1\leq \dots \leq d_k$. $D$ for product of these.
-%\item $X$ for the tensor random variable, $\samp_1, \dots, \samp_n$ for each , $\samp = (\samp_1, \dots, \samp_n)$ for the random tuple of samples. $\rho = \samp \samp^T/\|\samp\|_F^2$. Lower case $x$ for samples.
-
-%\item $\rv$ for the random tuple $(\rv_1, \dots, \rv_n)$, $x$ for the tuple of samples $(x_1, \dots, x_n)$ when no longer random. Think of $\rv$ as $D \times n$ matrix, $\rho = \rv\rv^T,xx^T$ etc.
-\item When $x_i$ is a matrix, which unfortunately does happen sometimes, we'll use $x_i^\dagger$ for the matrix transpose (open to suggestions on this one).
-%\item $\braket{\cdot,\cdot}_{\vec d}$ denote modified Hilbert-Schmidt inner products\MW{sadly the corresponding norms look like $\ell_p$ norms},
-\item $f_{\rv}$ for the function in \cref{dfn:function}, mostly drop $\rv$. $\langle \cdot, \cdot \rangle$ is the $\ell_2$ inner product of vectors
-
-%\item $\smallSym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite, $\smallSym_d^0$ for traceless symmetric, $\PD_d^1$ for $\det=1$ positive definite?
-\item $\Theta$ for big tensor product pd precision matrix, $\Theta_a$ for individual pd's. \CF{at some point $\Theta$ gets used for the tuple. We need to decide what to do about this.}
-%\item I'm going to call $\SL = \oplus \SL_{d_i}, \SPD = \oplus \PD_{d_i}^1, \Sym = \oplus \smallSym_{d_i}^0$. Explain somewhere how $\Sym$ is the tangent space of $\SPD$.
-%\MW{Suppressing the $^1$ and $^0$ is a bit confusing I think. Maybe $\operatorname{SPD}$ for $\SPD$ with $\det=1$? I still feel that $\Sym$ looks somewhat horrible (with or without subscript, but I am not sure what would be better).}
-%\item $G = \prod_{a=1}^k \SL_{d_a}$, $P = \prod_{a=1}^k \PD_{d_a}^1$, and $S = \bigoplus_{a=1}^k \Sym_{d_a}^0$.
-
-\item $\nabla, \nabla^2$ for Riemannian Hessians and gradients, $\nabla_a f$, $\nabla^2_{ab} f$ for components. $\nabla f$ means at the identity. $\|\nabla^2_{ab}f\|_{op}:=\|\nabla^2_{ab}f\|_{F\to F}$. \CF{as operator from $\Sym_{d}^0$ to self?}
-%\item $C, c$ large (resp. small) constants that change line to line.
-\item $\rho^{(a)}$, $\rho^{(ab)}$ for marginals.
-%\item $I$ for an identity matrix, $I_a$ for the $d_a \times d_a$ identity matrix
-\end{itemize}
-It was observed by Weisel \CF{cite} that the negative log-likelihood $-\ell_\samp$ exhibits a certain variant of convexity known as \emph{geodesic convexity}. Following \cite{FM20}, we use geodesic convexity to prove \cref{thm:tensor-frobenius}.
-\Cref{thm:matrix-normal}, proven later in \cref{sec:matrix-normal}, requires additional tools. We now discuss the geodesic convexity used here.
-
-We start by introducing a manifold structure on the set $\PD_d$ of positive-definite matrices. Rather than simply considering the metric induced by the Euclidean metric on $\smallSym_d$, we consider a metric whose unit length geodesics through $\Theta$ are of the form $\Theta^{1/2} e^{Ht} \Theta^{1/2}$ for $t \in [0,1]$ and a symmetric matrix $H \in \smallSym_d$ with $\|H\|_F = 1$. This metric arises from the Hessian of the log-determinant \cite{bhatia2009positive} and also as the Fisher-Rao metric on centered Gaussians parametrized by their precision matrices \CF{cite}. Note that $\PD^1$ is a totally geodesic submanifold of $\PD$ whose geodesics arise from traceless symmetric matrices $H \in \smallSym_d^0$. We now extend this to a metric on set $\SPD$ of tuples of matrices in $\PD^1$, but we do not simply take the product metric. The set of separable covariance matrices (i.e. $\Theta$ of the form $\Theta_1 \ot \dots \ot \Theta_k$) in $\PD_D$ is a totally geodesic submanifold, so we may use it to induce a metric on tuples. Indeed, we take the metric induced from the embedding $\SPD \to \PD_D$ given by $(\Theta_1, \dots, \Theta_d) \mapsto \Theta_1 \ot \dots \ot \Theta_d,$ which has slightly different geodesics which we describe below.
-
-
-
-
-%\CF{technically $\Theta(t)$ is ill-defined} Then, the curve $\Theta(t) = A^T e^{tZ} A = (A_1^T e^{t Z_1} A_1, \dots, A_k^T e^{t Z_k} A_k)$ is a geodesic or `straight line' through $\Theta = A^T A$ with direction~$Z$ for a natural Riemannian metric on~$P$~\cite{bhatia2009positive}.
-
-
-\begin{definition}[Geodesic convexity]\label{dfn:g-convexity}
- Let $\Theta \in \SPD$. The \emph{exponential map} $\exp_\Theta:\Sym \to \SPD$ at $\Theta$ is defined by
-$$ \exp_\Theta(Z) = \Theta^{1/2} e^{\sqrt{\vec d}Z} \Theta^{1/2},$$
-where $\sqrt{\vec d} Z$ denotes the componentwise product $(\sqrt{d_1} Z_1, \dots, \sqrt{d_k}Z_k)$.
-The geodesics through $\Theta$ are the curves $t\mapsto \exp_\Theta(tZ)$ for $t \in \R$.
-%These curves are in fact geodesics, or ``straight lines,'' through $\Theta$ for a natural Riemannian metric on~$\SPD$~\cite{bhatia2009positive}. \CF{fisher-rao}
-% The length of the curve given by restricting $\gamma$ to $[0,1]$, or $\gamma|_{[0,1]}$, is defined to be $\|Z\|_F$.
-
-
-A function $f\colon \SPD \to \R$ is said to be \emph{geodesically convex} if the function
-$$\R \to \R, \quad t \mapsto f (\exp_\Theta( tZ))$$ is convex for every $\Theta \in \SPD, Z \in \Sym$, i.e. the function $f \circ \gamma$ is convex for every geodesic $\gamma$. Equivalently, assuming $f$ is twice differentiable, $\partial^2_t f(\exp_\Theta(tZ)) \geq 0.$
-
-Further, say $f$ is \emph{$\lambda$-strongly geodesically convex} at a point $\Theta \in \SPD$ if, for some (equivalently, for any) $A \in \SL$ with $\Theta = A^T A$ and for any $Z \in \Sym$, we have
+\MW{I've been playing around with some new notation in this section; work in progress.}
+As observed by \cite{wiesel2012geodesic}, the negative log-likelihood of the tensor normal model is jointly convex in~$\Theta_1,\dots,\Theta_k$ along these geodesics.
+% , i.e., $-\log \ell(\Theta_1^{1/2} e^{H_1t} \Theta_1^{1/2}, \dots, \Theta_k^{1/2} e^{H_kt} \Theta_k^{1/2}|x)$ is convex in $t\in\R$ for any choice of $\Theta_1,\dots,\Theta_k$ and~$H_1,\dots,H_k$.
+However, it is not strongly convex.
+This directly related to the non-identifiability of the $\Theta_a$, which makes the MLE not unique.
+As above, we can fix this by working with tuples of precision matrices with equal determinant:
 \begin{align*}
-  \partial^2_{t=0} f(\exp_\Theta(tZ)) \geq \lambda \norm{Z}^2.
-\end{align*}
-% and \emph{$L$-geodesically smooth} with respect to the norm $\norm\cdot$ if
-% \begin{align*}
-%   \partial^2_t f(A^T e^{t Z} A) \leq L \norm{Z}^2 \qquad (\forall Z\in S).
+  \P &= \{ (\Theta_1,\dots,\Theta_k) \in \PD(d_1) \times \dots \times \PD(d_k) \;:\; \det \Theta_1 = \dots = \det \Theta_k \}.
 % \end{align*}
-%Here we use the norm $\norm{\cdot}_{\vec d}$ induced by the rescaled Hilbert-Schmidt inner product $\braket{X, Y}_{\vec d} = \sum_{a=1}^k \frac1{d_a} \tr(X_a Y_a)$ for $X, Y \in \Sym$.
+\intertext{The tangent space of this manifold is naturally identified with the real vector space}
+% \begin{align*}
+  \H &= \{ (H_1,\dots,H_k) \;:\; H_a \text{ symmetric $d_a \times d_a$ matrix}, \, \tr H_1 = \dots = \tr H_k \}.
+\end{align*}
+The embedding $(\Theta_1,\dots,\Theta_d) \mapsto \Theta_1 \ot \dots \ot \Theta_d$ identifies $\P$ with the separable covariance matrices, which form a totally geodesic submanifold of $\PD(D)$.
+This induces a Riemannian metric with the following geodesics. \MW{Sadly no longer true. Should really think of $\{\tr=0\} \op I$ or $\{\det=1\} \times \R_+$.}
+
+\begin{definition}[Geodesics]
+Let $\Theta\in\P$.
+The \emph{exponential map} $\exp_\Theta \colon \H \to \P$ at~$\Theta$ is defined by
+\begin{align*}
+  \exp_\Theta(H) = \exp_{(\Theta_1,\dots,\Theta_k)}(H_1,\dots,H_k) = \left( \Theta_1^{1/2} e^{\sqrt{d_1} H_1} \Theta_1^{1/2}, \dots, \Theta_k^{1/2} e^{\sqrt{d_k} H_k} \Theta_k^{1/2} \right).
+\end{align*}
+By definition, the \emph{geodesics} through $\Theta$ are the curves $t \mapsto \exp_\Theta(t H)$ for $t\in\R$ and $H\in\H$.
+\MW{I think these are unit speed if $\norm{H}_F^2=1/D$.}
 \end{definition}
-We also note that the MLE obeys a certain ``equivariance" property under transformations. For all $\Theta \in \SPD$, $A \in \SL$, and $\samp=(\samp_1,\dots,\samp_n)$, the log-likelihood satisfies $\ell_{A^{-1} \samp}(A^T \Theta A) = \ell_{\samp}(\Theta)$ where we write $A^{-1} \samp = (A^{-1} \samp_1,\cdots,A^{-1} \samp_n)$.  Thus the MLE satisfies
+
+Accordingly, we obtain the following notions of geodesic convexity.
+
+\begin{definition}[Geodesic convexity]
+A function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $\Theta\in\P$ if the functions $t \mapsto f(\exp_\Theta(tH))$ are convex in $t\in\R$ for all~$H \in \H$.
+We say~$f$ is \emph{$\lambda$-strongly geodesically convex} at $\Theta$ for some $\lambda>0$ if the same is true for the functions $t \mapsto f(\exp_\Theta(tH))$ for all~$H\in \H$.
+
+Assuming the function is twice differentiable, it is geodesically convex if $\partial^2_t f(\exp_\Theta(tH)) \geq 0$ for all~$H\in\H$,
+and $\lambda$-strongly geodesically convex if $\partial^2_t f(\exp_\Theta(tH)) \geq \lambda \norm{H}_F^2$ for all~$H\in\H$, where we define $\norm{H}_F^2 := \sum_{a=1}^k \norm{H_a}_F^2$.
+\end{definition}
+
+If $\Theta$ is positive definite and $C$ an invertible matrix then $C\Theta C^T$ is again in positive definite.
+The transformation $\Theta \mapsto C\Theta C^T$ is an isometry, i.e., it preserves the geodesic distance.
+Importantly, the statistical distances we use are also \emph{invariant} under such transformations:
+\begin{align*}
+  d_F(C \Theta C^T \Vert C \Theta' C^T) = d_F(\Theta \Vert \Theta')
+\end{align*}
+and likewise for the distance~$d_{\op}$.
+This invariance is natural because changing a pair of precision matrices in this way does not change the statistical relationship between the corresponding Gaussians; in particular the total variation distance, Fisher-Rao, and Kullback-Leibler divergence are unchanged \CF{double check}.
+
+These properties are directly inherited for tuples of precision matrices.
+The manifold $\P$ carries a natural action by the group
+\begin{align*}
+  \G = \{ (C_1,\dots,C_k) \in \GL(d_1) \times \dots \times \GL(d_k) \;:\: \det C_1 = \dots = \det C_k \};
+\end{align*}
+Namely, if $\Theta \in \P$ and $C \in \G$ then the tuple $C \Theta C^T := (C_1 \Theta_1 C_1^T, \dots, C_k \Theta_k C_k^T) \in \P$.
+Moreover, the mapping $\Theta \mapsto C\Theta C^T$ is an isometry and it preserves the statistical distances~$d_F$ and $d_{\op}$ between the individual precision matrices.
+
+We also note that the MLE obeys a certain \emph{``equivariance''} property under such transformations.
+For all $\Theta \in \P$, $C \in \G$, and $x=(x_1,\dots,x_n)$, the log-likelihood satisfies
+\begin{align*}
+  \ell(\Theta | x) = \ell(C^T \Theta C | C^{-1} x),
+\end{align*}
+where we write $C^{-1} x = ((C_1 \ot \dots C_k) x_1, \dots, (C_1 \ot \dots C_k) x_n)$.
+Thus the MLE satisfies
 \begin{align}\label{eq:equivariance}
 \widehat\Theta_{\Theta^{-1/2} \samp} = \Theta^{1/2} \widehat\Theta_{\samp} \Theta^{1/2}\end{align}
-where we write $A^{-1} \samp = (A^{-1} \samp_1,\cdots,A^{-1} \samp_n)$
- assuming either maximizer exists and is unique. Furthermore, the distances we use are \emph{invariant} under such transformations: for $C \in \GL_d$, $A, B \in \PD_d$, we have
- \begin{align*}
-  d_F(C A C^T; C B C^T)
-%= \norm{ I - \Theta^{-1/2} \widehat\Theta_{\Theta^{-1/2} \samp} \Theta^{-1/2} }_F
-% = \norm{ I - \widehat\Theta_{\Theta^{1/2} \samp} }_F
-= d_F(A; B),
-\end{align*}
-and likewise for the distance $d_{op}$. This invariance is natural because changing a pair of precision matrices in this way does not change the statistical relationship between the corresponding Gaussians; in particular the total variation distance, Fisher-Rao, and Kullback-Leibler divergence are unchanged \CF{double check}.
+assuming either maximizer exists and is unique.
+
+%%% MICHAEL MARKER %55
+
+% %-----------------------------------------------------------------------------
+% \subsection{Notation}
+% %-----------------------------------------------------------------------------
+% \CF{some aspects of this seem awfully specific to the tensor normal model and maybe could wait until after we define it, or simply merge the two, i.e. "Notation and model"}
+% \MW{I think I like the former best.}
+% The letter $n$ will denote a number of samples, and $d_1\leq \dots \leq d_k$ will denote sorted dimensions, and we set $D:=\prod_{i = 1}^k d_i$. Let $\PD_d$ denote the positive definite $d\times d$ matrices with unit determinant, and $\PD_d^1$ the subset of $\PD$ with unit determinant. $\rv$ will denote the random tuple $(\rv_1, \dots, \rv_n)$ where $\rv_i \in \R^{D}$ are drawn i.i.d from the tensor normal model with precision matrix $\Theta \in \PD_D$, and $\samp$ will denote a deterministic tuple of tensors.
+
+% Let $\smallSym_d$ denote the vector space of $d\times d$ real symmetric matrices, and $\smallSym^0_d$ the subspace of traceless matrices in $\smallSym_d$, i.e. the tangent space of $\PD_d^1$. Let~$\SL_d$ denote the group of $d\times d$ matrices with unit determinant.
+% %Then, $A^T e^Z A \in \PD_d^1$ for any $A \in \SL_d$ and $Z\in\Sym_d^0$.
+% % Any matrix in $\PD_d^1$ can be written as the matrix exponential of a matrix in $\Sym_d^0$.
+% Let
+% $$\SL = \prod_{a=1}^k \SL_{d_a}, \SPD = \prod_{a = 1}^k \PD_{d_a}^1, \Sym = \bigoplus_{a = 1}^k \smallSym_{d_a}^0.$$ For a $k$-tuple of $A = (A_1, \dots, A_k)$ of matrices, $\|A\|_F^2:=\sum_{i = 1}^k \|A_i\|_F^2$.
+%  We denote by $AB=(A_1B_1,\dots,A_kB_k)$ and $e^Z=(e^{Z_1},\dots,e^{Z_k})$ the componentwise product and matrix exponential, respectively, of matrix tuples $A, B \in \SL$ and $Z\in\Sym$. $I$ will denote an identity matrix, and $I_{a}$ a $d_a\times d_a$ identity matrix. $\langle \cdot, \cdot \rangle$ denotes the standard inner product. $C, c$ denote large (resp. small) absolute constants that change line to line.
 
 
-%The function $f_{\samp}$ defined in \cref{dfn:function} is geodesically convex~\cite{burgisser2019towards}.
-%\CF{see the commented out motivation. Where to put it?}
-%\MW{Write $\norm Z_F^2 = \sum_i \norm{Z_i}_F^2$???}
-%One might wonder why we define $\exp_\Theta$ using the componentwise multiplication by $\sqrt{\vec d}$. In fact, this is equal to the exponential map for the Riemannian metric $\braket{X, Y}_{\vec d} = \sum_{a=1}^k \frac1{d_a} \tr(X_a Y_a)$. Oddly enough, defining the gradient and Hessian according to this metric, rather than the usual Hilbert-Schmidt inner product, improves the ratio between the norm of the gradient of $f_{\samp}$ and its strong geodesic convexity parameter - a ratio which controls the quality of our statistical estimate.
-%RMO: Is this oddity simply because of the structure of the g-convex function that we are studying, the fact that it is a function over $\otimes \Theta_i$ and therefore we will get these $d_i$'s naturally? (todo for myself: do these calculations and see)
+% \CF{further notation to be introduced; delete as is done}
+% \begin{itemize}
+% %\item Number of samples $n$, dimensions $d_1\leq \dots \leq d_k$. $D$ for product of these.
+% %\item $X$ for the tensor random variable, $\samp_1, \dots, \samp_n$ for each , $\samp = (\samp_1, \dots, \samp_n)$ for the random tuple of samples. $\rho = \samp \samp^T/\|\samp\|_F^2$. Lower case $x$ for samples.
+
+% %\item $\rv$ for the random tuple $(\rv_1, \dots, \rv_n)$, $x$ for the tuple of samples $(x_1, \dots, x_n)$ when no longer random. Think of $\rv$ as $D \times n$ matrix, $\rho = \rv\rv^T,xx^T$ etc.
+% \item When $x_i$ is a matrix, which unfortunately does happen sometimes, we'll use $x_i^\dagger$ for the matrix transpose (open to suggestions on this one).
+% %\item $\braket{\cdot,\cdot}_{\vec d}$ denote modified Hilbert-Schmidt inner products\MW{sadly the corresponding norms look like $\ell_p$ norms},
+% \item $f_{\rv}$ for the function in \cref{dfn:function}, mostly drop $\rv$. $\langle \cdot, \cdot \rangle$ is the $\ell_2$ inner product of vectors
+
+% %\item $\smallSym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite, $\smallSym_d^0$ for traceless symmetric, $\PD_d^1$ for $\det=1$ positive definite?
+% \item $\Theta$ for big tensor product pd precision matrix, $\Theta_a$ for individual pd's. \CF{at some point $\Theta$ gets used for the tuple. We need to decide what to do about this.}
+% %\item I'm going to call $\SL = \oplus \SL_{d_i}, \SPD = \oplus \PD_{d_i}^1, \Sym = \oplus \smallSym_{d_i}^0$. Explain somewhere how $\Sym$ is the tangent space of $\SPD$.
+% %\MW{Suppressing the $^1$ and $^0$ is a bit confusing I think. Maybe $\operatorname{SPD}$ for $\SPD$ with $\det=1$? I still feel that $\Sym$ looks somewhat horrible (with or without subscript, but I am not sure what would be better).}
+% %\item $G = \prod_{a=1}^k \SL_{d_a}$, $P = \prod_{a=1}^k \PD_{d_a}^1$, and $S = \bigoplus_{a=1}^k \Sym_{d_a}^0$.
+
+% \item $\nabla, \nabla^2$ for Riemannian Hessians and gradients, $\nabla_a f$, $\nabla^2_{ab} f$ for components. $\nabla f$ means at the identity. $\|\nabla^2_{ab}f\|_{op}:=\|\nabla^2_{ab}f\|_{F\to F}$. \CF{as operator from $\Sym_{d}^0$ to self?}
+% %\item $C, c$ large (resp. small) constants that change line to line.
+% \item $\rho^{(a)}$, $\rho^{(ab)}$ for marginals.
+% %\item $I$ for an identity matrix, $I_a$ for the $d_a \times d_a$ identity matrix
+% \end{itemize}
+
+\subsection{Sketch of proof}
 
 With these definitions in place, we are able to state a proof plan, which is a Riemannian version of the standard approach using strong convexity. For simplicity we restrict to $\Theta \in \SPD$ \CF{I'm somewhat irritated because the below plan is simpler to see for $\PD_D$. Fix on later pass}.
+\MW{For $\PD_D$ the strong convexity is false, right?}
 
 \begin{enumerate}
 \item\label{it:reduce} \textbf{Reduce to identity:} We obtain $n$ samples from from $\cN(0, \Theta^{-1})$ as $\Theta^{-1/2} \rv$ where $\rv$ is distributed as $n$ independent samples from a standard Gaussian.
@@ -504,7 +538,7 @@ Show that the gradient $\nabla \log \ell_{\rv}(I)$ (defined below) is small with
 \item\label{it:convexity} \textbf{Show strong convexity:}
 Show that, with high probability, $-\log\ell_{\rv}$ is $\Omega(1)$-strongly geodesically convex near $I$.
 \end{enumerate}
-These together imply the desired sample complexity bounds -- as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far. Note that we have used $f_\samp=-\log\ell_\samp$ rather than the negative log-likelihood. In fact, $f_\samp$ is also geodesically convex, and has additional nice properties such as Lipschitz continuity and a Lipschitz-continous gradient \cite{burgisser2019towards}. In particular various optimization algorithms applied to $f_\samp$ obey a descent lemma \cite{burgisser2017alternating}, and as such these algorithms must converge exponentially quickly by strong g-convexity of $f_\samp$. Using this we will show that the flip-flop algorithm converges exponentially quickly with high probability.
+These together imply the desired sample complexity bounds -- as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far. Note that we have used $f_\samp=-\log\ell_\samp$ rather than the negative log-likelihood. \MW{Isn't this exactly the negative log-likelihood function?} In fact, $f_\samp$ is also geodesically convex, and has additional nice properties such as Lipschitz continuity and a Lipschitz-continous gradient \cite{burgisser2019towards}. In particular various optimization algorithms applied to $f_\samp$ obey a descent lemma \cite{burgisser2017alternating}, and as such these algorithms must converge exponentially quickly by strong g-convexity of $f_\samp$. Using this we will show that the flip-flop algorithm converges exponentially quickly with high probability.
 
 To make this discussion more concrete, we now define the gradient formally and state the lemma that we will use to relate the gradient and strong convexity to the distance to the optimizer as in the plan above.
 
