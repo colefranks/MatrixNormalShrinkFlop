@@ -435,7 +435,7 @@ As above, we can fix this by working with tuples of precision matrices with equa
   \H &= \{ (H_1,\dots,H_k) \;:\; H_a \text{ symmetric $d_a \times d_a$ matrix}, \, \tr H_1 = \dots = \tr H_k \}.
 \end{align*}
 The embedding $(\Theta_1,\dots,\Theta_d) \mapsto \Theta_1 \ot \dots \ot \Theta_d$ identifies $\P$ with the separable covariance matrices, which form a totally geodesic submanifold of $\PD(D)$.
-This induces a Riemannian metric with the following geodesics. \MW{Sadly no longer true. Should really think of $\{\tr=0\} \op I$ or $\{\det=1\} \times \R_+$.}
+This induces a Riemannian metric with the following geodesics. \MW{Sadly the `unit speed' condition is no longer fixed $\norm H_F$ if we don't demand $\tr H_a=0$. Should really think of $\{\tr=0\} \op I$ or $\{\det=1\} \times \R_+$. So maybe it's indeed easiest if we define $\P$, $\H$ as before.}
 
 \begin{definition}[Geodesics]
 Let $\Theta\in\P$.
@@ -447,7 +447,7 @@ By definition, the \emph{geodesics} through $\Theta$ are the curves $t \mapsto \
 \MW{I think these are unit speed if $\norm{H}_F^2=1/D$.}
 \end{definition}
 
-Accordingly, we obtain the following notions of geodesic convexity.
+Accordingly, we obtain the following notion of geodesic convexity.
 
 \begin{definition}[Geodesic convexity]
 A function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $\Theta\in\P$ if the functions $t \mapsto f(\exp_\Theta(tH))$ are convex in $t\in\R$ for all~$H \in \H$.
@@ -622,7 +622,7 @@ Given $n$ samples $\rv = (\samp_1, \dots, \samp_n)$ in $\R^D$, define the functi
 \begin{align}\label{eq:projective-likelihood}
   f_{\samp}(\Theta_1,\dots,\Theta_k) = \log \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i}.
 \end{align}
-Let $(\widehat{\Theta}_{\samp,1}, \dots, \widehat{\Theta}_{\samp,k})$ denote the minimizer of $f_{\samp}$ if it exists and is unique. \CF{we need to resolve the notation clash between this $\widehat{\Theta}$ and the actual MLE}.
+Let $(\widehat{\Theta}_{\samp,1}, \dots, \widehat{\Theta}_{\samp,k})$ denote the minimizer of $f_{\samp}$ if it exists and is unique. \CF{we need to resolve the notation clash between this $\widehat{\Theta}$ and the actual MLE}. \MW{Use stars?}
 \end{definition}
 
 The estimator $\widehat{\Theta}_{\samp} = \widehat{\Theta}_{\samp,1} \ot \cdots \ot \widehat{\Theta}_{\samp,k}$ is directly related to the maximum likelihood estimator for the tensor normal model by a multiplicative factor that can be computed once $\widehat{\Theta}_\samp$ is known. To see this, for any $\Theta \in \PD_D$ write $\Theta = \lambda \Theta'$ for $\lambda>0$ and $\Theta'\in\PD_D^1$ and maximize $\ell_\samp$ over~$\lambda$.
@@ -634,7 +634,9 @@ The result is $\lambda = n D e^{- f_\samp(\Theta')}$. We may extend $f_x$ to $\o
 
 %\begin{align}\label{eq:tilde ell}  \tilde\ell_{\samp}(\Theta) = \frac1D\log\det \Theta - \log \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i};\end{align}
 
-One may think of \cref{eq:f extension} as proportional, up to an additive constant, to the log-likelihood of $[\samp_1, \dots, \samp_n]$ under the tensor normal model. Here $[\samp_1, \dots, \samp_n]$ denotes the equivalence class of the tuple of samples $(x_1, \dots, x_n)$ in projective space.
+One may think of \cref{eq:f extension} as proportional, up to an additive constant, to the log-likelihood of $[\samp_1, \dots, \samp_n]$ under the tensor normal model.
+\MW{I think we can discuss this without defining the `logarithmic extension' of $f$ above.}
+Here $[\samp_1, \dots, \samp_n]$ denotes the equivalence class of the tuple of samples $(x_1, \dots, x_n)$ in projective space.
 
 %-----------------------------------------------------------------------------
 \subsection{Bounding the gradient}
