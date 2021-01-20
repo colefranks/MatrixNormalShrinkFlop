@@ -444,17 +444,17 @@ The \emph{exponential map} $\exp_\Theta \colon \H \to \P$ at~$\Theta$ is defined
   \exp_\Theta(H) = \exp_{(\Theta_1,\dots,\Theta_k)}(H_1,\dots,H_k) = \left( \Theta_1^{1/2} e^{\sqrt{d_1} H_1} \Theta_1^{1/2}, \dots, \Theta_k^{1/2} e^{\sqrt{d_k} H_k} \Theta_k^{1/2} \right).
 \end{align*}
 By definition, the \emph{geodesics} through $\Theta$ are the curves $t \mapsto \exp_\Theta(t H)$ for $t\in\R$ and $H\in\H$.
-\MW{I think these are unit speed if $\norm{H}_F^2=1/D$.}
+\MW{I think these are unit speed if $\norm{H}_F^2=1/D$. Does anything become nicer if we incorporate this factor, e.g., in the definition of strong convexity?}
 \end{definition}
 
 Accordingly, we obtain the following notion of geodesic convexity.
 
 \begin{definition}[Geodesic convexity]
 A function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $\Theta\in\P$ if the functions $t \mapsto f(\exp_\Theta(tH))$ are convex in $t\in\R$ for all~$H \in \H$.
-We say~$f$ is \emph{$\lambda$-strongly geodesically convex} at $\Theta$ for some $\lambda>0$ if the same is true for the functions $t \mapsto f(\exp_\Theta(tH))$ for all~$H\in \H$.
+Assuming $f$ is twice differentiable, this holds if $\partial^2_t f(\exp_\Theta(tH)) \geq 0$ for all~$H\in\H$.
 
-Assuming the function is twice differentiable, it is geodesically convex if $\partial^2_t f(\exp_\Theta(tH)) \geq 0$ for all~$H\in\H$,
-and $\lambda$-strongly geodesically convex if $\partial^2_t f(\exp_\Theta(tH)) \geq \lambda \norm{H}_F^2$ for all~$H\in\H$, where we define $\norm{H}_F^2 := \sum_{a=1}^k \norm{H_a}_F^2$.
+Similarly, $f$ is called \emph{$\lambda$-strongly geodesically convex} at $\Theta$ for some $\lambda>0$ if the same is true for the functions $t \mapsto f(\exp_\Theta(tH))$ for all~$H\in \H$.
+Assuming the function is twice differentiable, this holds if $\partial^2_t f(\exp_\Theta(tH)) \geq \lambda \norm{H}_F^2$ for all~$H\in\H$, where $\norm{H}_F^2 := \sum_{a=1}^k \norm{H_a}_F^2$.
 \end{definition}
 
 If $\Theta$ is positive definite and $A$ an invertible matrix then $A\Theta A^T$ is again in positive definite.
