@@ -423,7 +423,9 @@ As observed by \cite{wiesel2012geodesic}, the negative log-likelihood of the ten
 % , i.e., $-\log \ell(\Theta_1^{1/2} e^{H_1t} \Theta_1^{1/2}, \dots, \Theta_k^{1/2} e^{H_kt} \Theta_k^{1/2}|x)$ is convex in $t\in\R$ for any choice of $\Theta_1,\dots,\Theta_k$ and~$H_1,\dots,H_k$.
 However, it is not strongly convex.
 This directly related to the non-identifiability of the $\Theta_a$, which makes the MLE not unique.
-\MW{blabla determinant 1 story and formula for $\lambda$}
+\MW{Say that it will be convenient to write $\Theta = \lambda \Theta_1 \ot \dots \ot \Theta_k$ for $\lambda>0$ and all $\det\Theta_a=1$. The main challenge will be maximizing the log-likelihood funcion for $\lambda=1$. Indeed, one can then determine the right $\lambda$ as (formula from below).}
+
+Thus we define
 % As above, we can fix this by working with tuples of precision matrices with equal determinant:
 \begin{align*}
   \P &= \{ (\Theta_1,\dots,\Theta_k) \in \PD(d_1) \times \dots \times \PD(d_k) \;:\; \det \Theta_1 = \dots = \det \Theta_k = 1 \}.
