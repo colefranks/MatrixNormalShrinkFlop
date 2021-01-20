@@ -1527,7 +1527,7 @@ If the mean of $Y$ is bounded then we have Markov's inequality. Let $\eps > 0$; 
 %=============================================================================
 \section{Numerics and regularization}\label{sec:numerics}
 %=============================================================================
-Here we show experimentally that, in some natural situations, the MLE performs better than regularized estimators. We also show that in the undersampled regime, a simpler regularizer can match and sometimes outperform the GLASSO-type estimators appearing in \CF{tsilig, zhou}. Instead of the MLE, we consider the following penalized log-likelihood:
+Here we show experimentally that, in some natural situations, the MLE performs better than regularized estimators. We also show that in the undersampled regime, a simpler regularizer can match and sometimes outperform the GLASSO-type estimators appearing in \CF{tsilig, zhou}. The estimator is closer to a shrinkage estimator as in \CF{cite goes, weisel, thresholding.} Instead of the MLE, we consider the following penalized log-likelihood:
 
 \begin{align*}
   \ell_{\samp}^\alpha(\Theta_1, \dots, \Theta_k)
@@ -1547,7 +1547,7 @@ $$(x_1, \dots, x_n, \alpha e_{1\dots 1}, \dots, \alpha e_{d_1d_2 \dots d_k}).$$ 
 %As in the unpenalized case, we will often consider the scale-invariant function $f^\alpha_x$ given by
 
 
-The flip-flop algorithm for this regularized estimator is quite simple: see \cref{alg:reg-flip-flop}. \CF{I need to check the regularization term carefully - it's probably not quite that nice} 
+The flip-flop algorithm for this regularized estimator is nearly as simple as the unregularized flip-flop algorithm: see \cref{alg:reg-flip-flop}. The only difference that a certain multiple of the identity is added in each flip-flop step.  \CF{I need to check the regularization term carefully - it probably comes with a normalization factor} 
 
 
 \begin{Algorithm}
@@ -1576,7 +1576,8 @@ $$\otheta_a = \frac{n D}{d_a}\left(\tr_{[k] \setminus a} \otheta^a \rho + \alpha
 \end{enumerate}
 \caption{Regularized flip-flop algorithm}\label{alg:reg-flip-flop}
 \end{Algorithm}
-The gradient should be... $\rho^{a} $ 
+
+We compare the performance of the estimator with Zhou's single step estimator \CF{cite gemini} for the matrix normal model. We find that when both marginals are well-conditioned, 
 
 
 %=============================================================================
