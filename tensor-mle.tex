@@ -8,7 +8,7 @@
 \RequirePackage[capitalize]{cleveref}
 
 \startlocaldefs
-\newtheorem{theorem}{Theorem}
+\newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{prop}[theorem]{Proposition}
 \newtheorem{lemma}[theorem]{Lemma}
@@ -16,11 +16,12 @@
 \newtheorem{fact}[theorem]{Fact}
 \newtheorem{claim}[theorem]{Claim}
 \theoremstyle{definition}
-\newtheorem{remark}{Remark}
-\newtheorem{definition}{Definition}
-\newtheorem{example}{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
 \floatstyle{boxed}\newfloat{Algorithm}{ht}{alg}
 \crefname{Algorithm}{Algorithm}{Algorithms}
+\numberwithin{equation}{section}
 
 \DeclareMathOperator{\Lie}{Lie}
 \DeclareMathOperator{\Lin}{L}
@@ -74,8 +75,6 @@
 \newcommand{\AP}{\mathcal{AP}}
 \newcommand{\eqdef}{:=}
 \newcommand{\maps}{\colon}
-\newcommand{\ale}{\lesssim}
-\newcommand{\age}{\gtrsim}
 \newcommand{\email}[1]{\href{mailto:#1}{\texttt{#1}}}
 
 \newcommand{\CF}[1]{{\color{purple}[CF: #1]}}
@@ -204,7 +203,7 @@ In the current literature on matrix normal and tensor models, typically the esti
 However, neither of these metrics bound statistical dissimilarity measures of interest such as the total variation or Kullback-Leibler divergence between the true distribution and that corresponding to the estimated parameter, or the Fisher-Rao distance.
 
 Here we consider the \emph{Mahalanobis distance} $d_{F}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_F$ of the precision matrices.
-\MW{The notation $d_F$ is a bit problematic as it might suggest Frobenius distance. I hope the $\Vert$ help.}
+\MW{The notation $d_F$ is a bit problematic as it might suggest Frobenius distance. I hope the $\Vert$ help?}
 This is a natural dissimilarity measure on Gaussians because when any of the Mahalanobis, total variation, square of the KL-divergence, or Fisher-Rao distances is at most a small constant then they are all on the same order \CF{check, cite} \citep{barsov1987estimates}.
 We also consider $d_{\op}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_{\op}$, which yields even stronger results.
 \MW{Can we give an indication of what `stronger' means?}
@@ -215,15 +214,17 @@ Though we caution that $d_F$ and $d_{\op}$ are not truly metrics, we will call t
 Our theoretical contributions are as follows:
 \begin{enumerate}
 \item For the matrix normal model, if $n \geq C \max\{\frac{d_1}{d_2},\frac{d_2}{d_1}\} \log^2 \min\{d_1,d_2\}$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has MSE $O( \max\{ \frac{d_1}{nd_2}, \frac{d_2}{nd_1} \} )$ in $d_{\op}$.
+\MW{Define the acronym MSE when first used.}
 As a corollary the MSE in $d_F$ is $O( \max \{ \frac{d_1^2}{nd_2}, \frac{d_2^2}{nd_1} \} )$.
 % \item For the matrix normal model, if $n \geq C (\max\{d_1^2,d_2^2\}/d_1 d_2) \log^2 d_1$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has MSE $O( \max\{ d_1^2, d_2^2 \}/ (n d_1 d_2) )$ in $d_{\op}$.
 % As a corollary the MSE in $d_F$ is $O( \max \{ d_1^3, d_2^3 \} / (nd_1d_2) )$.
 \item For the tensor normal model, if $n \geq C \max\{d_i^3\}/ \prod_i d_i$, then the MLE for the precision matrices $\Theta_1, \dots, \Theta_k$ has MSE $O(\max \{ d_i^3 \} / (n \prod_i d_i ) )$ in $d_F$.
-\item Under the same sample requirements as above in each case, the flip-flop algorithm converges exponentially quickly to the MLE with high probability. As a corollary, there is an algorithm to compute the MLE with expected runtime polynomial in the input size and $\log(1/\eps)$.
+\item Under the same sample requirements as above in each case, the flip-flop algorithm converges exponentially quickly to the MLE with high probability. As a corollary, there is an algorithm to compute the MLE with expected runtime polynomial in the input size and~$\log\frac1\eps$.
+\MW{$\eps$ is not defined}
 \end{enumerate}
-\MW{Define `MSE'\dots}
 \CF{Can we say better for each individual matrix? Another thought is that if one of the matrices is too big, we can still try to get the other ones by marginalizing the bad one out.}
 \CF{Mention $d_{TV}$ again.}
+\MW{Check that what is written above is the same as the results advertised in \cref{sec:main results}. Right now it isn't.}
 
 The first result is tight up to logarithmic factors, and the second result is tight.
 Without the restriction on $n$ in the first result, no estimator can converge in spectral norm as the parameters grow, so we consider the restriction mild. Likewise for the second result no estimator can converge in Frobenius norm without the restriction on $n$.
@@ -247,10 +248,18 @@ Our regularizer has a Bayesian interpretation as coming from a Wishart prior for
 %-----------------------------------------------------------------------------
 \TODO{In Section xxx, we\dots}
 
+%-----------------------------------------------------------------------------
+\subsection{Notation}
+%-----------------------------------------------------------------------------
+For a matrix $A$, $\norm{A}_{\op}$ denotes the operator norm and $\norm{A}_F = (\tr A^T A)^{\frac12}$ the Frobenius norm.
+We use the notation $x \lesssim y$ (or $x \gtrsim y$) if there exists a universal constant $C>0$ such that $x \leq C y$ (or $x \geq C y$).
+\MW{Do you like this instead of writing $x \leq C y$ with an undefined $C$? Also, when do we use this notation and when do we use big O?}
+
 %=============================================================================
-\section{Model and main results}
+\section{Model and main results}\label{sec:main results}
 %=============================================================================
 In this section we define the matrix and tensor normal models and we state our main technical results.
+\MW{I need to re-read this section once our definite results are in.}
 
 %-----------------------------------------------------------------------------
 \subsection{Matrix and tensor normal models and the flip-flop algorithm}
@@ -291,26 +300,110 @@ $\ell(\Theta|x) = \frac{n}2 \log \det \Theta - \frac12 \sum_{i=1}^n x_i^T \Theta
 One notes that the $\Theta_a$ are not identifiable; we assume all $\Theta_a$ have the same determinant in order to ensure identifiability.
 The \emph{maximum likelihood estimator (MLE)} for $\Theta_a$ is then
 \begin{align*}
-  \widehat{\Theta}_1, \dots, \widehat{\Theta}_k := \underset{\det \Theta_1 = \ldots = \det \Theta_k}{ \arg\max} \ell(\Theta_1, \dots, \Theta_k|x).
+  (\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) := \underset{\det \Theta_1 = \ldots = \det \Theta_k}{ \arg\max} \ell(\Theta_1, \dots, \Theta_k|x).
 \end{align*}
 
-The MLE can be computed by an iterative procedure known as the \emph{flip-flop algorithm} \citep{dutilleul1999mle,gurvits2004classical}.
+%-----------------------------------------------------------------------------
+\subsection{Results on the MLE}
+%-----------------------------------------------------------------------------
+We may now state precisely our result for the tensor normal models.
+As mentioned in the introduction, we use the following natural dissimilarity measures.
+\MW{Say again how they compare with KL, TV, etc?}
+
+\begin{definition}
+For positive definite matrix $A, B$, define their \emph{Mahalanobis distance} as
+\begin{align*}
+  d_{F}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_F
+\end{align*}
+Similarly, define
+\begin{align*}
+  d_{\op}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_{\op}.
+\end{align*}
+\end{definition}
+
+Without loss of generality, we assume that the dimensions $d_1 \leq \dots \leq d_k$ are sorted, and we set $D := \prod_{i=1}^k d_a$ as above.
+\MW{Could also use $d_{\min}$ and $d_{\max}$ instead of sorting.}
+\MW{`Frobenius error' in the theorem title vs `Mahalanobis error'? Similar for `spectral error'?}
+
+\begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius}
+Suppose $\eps \lesssim 1/\sqrt{d_k}$ and the number of samples satisfies $n \gtrsim \frac{k d_k^3}{D\eps^2}$.
+Then the MLE $(\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) $ for $(\Theta_1, \dots, \Theta_k)$ from $n$ independent samples of the tensor normal model satisfies
+\begin{align*}
+  d_{F}(\widehat{\Theta}_a, \Theta_a) = O\left( \sqrt{\frac{d_a d_1}{n D/d_k}}\eps\right)
+\end{align*}
+for all $a \in [k]$, with probability at least
+\begin{align*}
+  1 - k^2 \left(\sqrt{nD} / kd_1 \right)^{ - \Omega(d_1)} - O(k e^{ - \eps^2 d_k / k}).
+\end{align*}
+\end{theorem}
+
+\noindent
+For the largest precision matrix $\Theta_k$, this rate matches that of \TODO{XXX}.
+
+In the case of matrix normal models $(k=2)$, we obtain the following stronger result.
+As before, we assume $d_1 \leq d_2$.
+
+\begin{theorem}[Matrix normal model spectral error]\label{thm:matrix-normal}
+Assume the number of samples sastisfies $n \gtrsim \frac{d_2}{d_1} \max \{\log \frac{d_2}{d_1},  \frac{\log^2 d_1}{\eps^2}\}$.
+Then the MLE $(\widehat{\Theta}_1,\widehat{\Theta}_2) $ for $(\Theta_1, \Theta_2)$ from $n$ independent samples of the matrix normal model satisfies
+$$ d_{op}(\widehat{\Theta}_a, \Theta_a) = O\left(\eps \sqrt{\frac{d_a^2}{nD}} \log d_1\right) $$
+for $a \in \{1,2\}$ with probability $1 - O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)})$.
+\end{theorem}
+\CF{I feel like we should be able to get $\tilde{O}\sqrt{\frac{d_1}{n d_2}}$ for the smaller marginal. Akshay and I discussed a lot in rocketchat. }
+\CF{we can! based on michael's calc}
+
+%-----------------------------------------------------------------------------
+\subsection{Flip-flop algorithm}
+%-----------------------------------------------------------------------------
+The MLE can be computed by a natural iterative procedure known as the \emph{flip-flop algorithm} \citep{dutilleul1999mle,gurvits2004classical}.
+
 For simplicity, we describe it for the matrix normal model ($k=2$), so that the samples $\samp_i$ can be viewed as $d_1\times d_2$ matrices which we denote by $X_i$.
-Initialize $\overline{\Theta}_1 = I_{d_1}$, $\overline{\Theta}_2 = I_{d_2}$, and choose a tolerance $\eps > 0$.
+Initialize $\overline{\Theta}_1 = I_{d_1}$, $\overline{\Theta}_2 = I_{d_2}$, and choose a distance measure~$d$ and a tolerance $\eps > 0$.
 \begin{enumerate}
 \item Set $\overline{\Theta}_1 \leftarrow (\frac{1}{n d_2} \sum_{i = 1}^n X_i \overline{\Theta}_2 X_i^T)^{-1}.$
 \item Set $\Upsilon = \frac{1}{n d_1} \sum_{i = 1}^n X_i^T \overline{\Theta}_1 X_i$.
-If $d_F( \Upsilon; \overline{\Theta}_2) > \eps,$ set $\overline{\Theta}_2 \leftarrow \Upsilon^{-1}$ and return to Step 1.
+If $d( \Upsilon; \overline{\Theta}_2) > \eps$, set $\overline{\Theta}_2 \leftarrow \Upsilon^{-1}$ and return to Step 1.
 \item Output $\overline{\Theta}_1, \overline{\Theta}_2$.
 \end{enumerate}
 
 We can motivate this procedure by noting that if in the first step we have $\overline{\Theta}_2 = \Theta_2$, then $\overline{\Theta}_1^{-1} \leftarrow \frac{1}{n d_2} \sum_{i = 1}^n X_i \Theta_2 X_i^T$ is simply a sum of outer products of $nd_2$ many independent random vectors with covariance $\Sigma_1$; as such this is a good estimator for $\Sigma_1$.
 As we don't know $\Theta_2$, the flip-flop algorithm instead uses $\overline{\Theta}_2$ our current best guess.
 
-In the flip flop algorithm for the general tensor normal model, we cycle through the $k$~many dimensions, using the $a^\text{th}$ flattening of the samples $x_i$ to update $\overline{\Theta}_a$ in the $a^\text{th}$ step.
+For the general tensor normal model, the flip flop algorithm cycles through the $k$~many dimensions, using the $a^\text{th}$ flattening of the samples~$x_i$ (which are just $X_i$ and $X_i^T$ in the matrix case) to update $\overline{\Theta}_a$ in the $a^\text{th}$ step.
 
+%-----------------------------------------------------------------------------
+\subsection{Results on the flip-flop algorithm}
+%-----------------------------------------------------------------------------
+Our next results show that the flip-flop algorithm can efficiently find the MLEs with high probability.
+We first state our result for the general tensor normal model and then give an improved version for the matrix normal model.
+
+\begin{theorem}[Tensor flip-flop]\label{thm:tensor-flipflop}
+Suppose \TODO{}.
+Let $(\widehat{\Theta}_1,\dots,\widehat{\Theta}_k)$ denote the MLE for $(\Theta_1,\dots,\Theta_k)$.
+Then given $n$ samples of the tensor normal model, the flip-flop algorithm computes $(\overline{\Theta}_1,\dots,\overline{\Theta}_k)$ with
+\begin{align*}
+  d_F(\overline{\Theta}_a, \widehat{\Theta}_a) \leq \eps
+\end{align*}
+for all $a\in[k]$ in $O(\TODO{\log(1/\eps)})$ iterations, with probability at least \TODO{}.
+\end{theorem}
+
+\begin{theorem}[Matrix flip-flop]\label{thm:matrix-flipflop}
+Suppose \TODO{}.
+Let $(\widehat{\Theta}_1,\widehat{\Theta}_2)$ denote the MLE for $(\Theta_1,\Theta_2)$.
+Then given $n$ samples of the matrix normal model, the flip-flop algorithm computes $(\overline{\Theta}_1,\overline{\Theta}_2)$ with
+\begin{align*}
+  d_F(\overline{\Theta}_a, \widehat{\Theta}_a) \leq \eps
+\end{align*}
+for $a\in\{1,2\}$ in $O(\TODO{\log(1/\eps)})$ iterations, with probability at least \TODO{}.
+\end{theorem}
+
+One may wonder why in the above theorems we consider the distances for the individual tensor factors and not the covariance matrix itself, but tight bounds for the covariance matrix itself follow from the above bounds (apart from the logarithmic factor in the matrix normal case and a constant factor in general).
+
+
+%=============================================================================
+\section{Geodesic convexity and sample complexity}\label{subsec:outline}
+%=============================================================================
 %%% MICHAEL MARKER %55
-
 %-----------------------------------------------------------------------------
 \subsection{Notation}
 %-----------------------------------------------------------------------------
@@ -346,57 +439,7 @@ $$\SL = \prod_{a=1}^k \SL_{d_a}, \SPD = \prod_{a = 1}^k \PD_{d_a}^1, \Sym = \big
 %\item $C, c$ large (resp. small) constants that change line to line.
 \item $\rho^{(a)}$, $\rho^{(ab)}$ for marginals.
 %\item $I$ for an identity matrix, $I_a$ for the $d_a \times d_a$ identity matrix
-\item $\norm{\cdot}_p$ for the $\ell_p$ norm of vectors and the Schatten-$p$ norm of operators.
 \end{itemize}
-
-
-
-
-
-%-----------------------------------------------------------------------------
-\subsection{Results on the MLE}
-%-----------------------------------------------------------------------------
-We may now state precisely our result for the tensor normal models. \CF{We should think a bit about the best parametrization of these bounds. I think they only match the fantasy bounds for the largest marginal; off by at worst $\sqrt{d_1/d_k}$}
-\begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius} Suppose $\eps \leq c/\sqrt{d_k}$ and the number of samples satisfies $n \geq C k d_k^3/D\eps^2$. The MLE $(\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) $ for $(\Theta_1, \dots \Theta_k)$ from $n$ independent samples of the tensor normal model satisfies
-$$ d_{F}(\widehat{\Theta}_a, \Theta_a) = O\left( \sqrt{\frac{d_a d_1}{n D/d_k}}\eps\right) $$
-for $a \in [k]$ with probability at least
-$$1 - k^2 \left(\sqrt{nD} / kd_1 \right)^{ - \Omega(d_1)} - O(k e^{ - \eps^2 d_k / k}).$$
-\end{theorem}
-For the largest precision matrix $\Theta_k$, this rate matches that of
-
- In the case of matrix normal models $(k=2)$, we obtain the following stronger result.
-
-\begin{theorem}[Matrix normal model spectral error]\label{thm:matrix-normal} Suppose $d_1 \leq d_2$,
-$$n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \log^2(d_1) \eps^{-2}\}$$ for $C$ a large enough constant and $\eps < c$ for a small enough constant $c$. The MLE $(\widehat{\Theta}_1,\widehat{\Theta}_2) $ for $(\Theta_1, \Theta_2)$ from $n$ independent samples of the matrix normal model satisfies
-$$ d_{op}(\widehat{\Theta}_a, \Theta_a) = O\left(\eps \sqrt{\frac{d_a^2}{nD}} \log d_1\right) $$
-for $a \in \{1,2\}$ with probability $1 - O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)})$.
-\end{theorem}
-\CF{I feel like we should be able to get $\tilde{O}\sqrt{\frac{d_1}{n d_2}}$ for the smaller marginal. Akshay and I discussed a lot in rocketchat. }
-\CF{we can! based on michael's calc}
-
-%-----------------------------------------------------------------------------
-\subsection{Results on the flip-flop algorithm}
-%-----------------------------------------------------------------------------
-Our next results show that in either case the flip-flop algorithm can find the MLEs with high probability. \TODO{change flip flops to thetas}
-
-\begin{theorem}[Tensor flip-flop]\label{thm:tensor-flipflop} If $\hat{\Sigma}$ denotes the MLE estimator for $\Sigma$, then provided $n \geq \TODO{}$ the flip-flop algorithm computes $\underline{\Sigma}$ with
-$$ d_F(\underline{\Sigma}, \hat{\Sigma}) \leq \eps $$
-in $O(\TODO{\log(1/\eps)})$ iterations with probability at least $\TODO{}$.
-\end{theorem}
-
-\begin{theorem}[Matrix flip-flop]\label{thm:matrix-flipflop} If $(\hat{\Theta}_1, \hat{\Theta}_2) $ denotes the MLE estimator for $(\Theta_1, \Theta_2)$, then provided $n \geq \TODO{}$ the flip-flop algorithm computes $(\underline{\Theta}_1, \underline{\Theta}_2)$ with
-$$ d_F(\underline{\Theta}_i, \hat{\Theta}_i) \leq \eps $$
-for $i \in \{1,2\}$ in $O(\TODO{\log(1/\eps)})$ iterations with probability at least $\TODO{}$.
-\end{theorem}
-
-One may wonder why in the above theorems we consider the distances for the individual tensor factors and not the covariance matrix itself, but tight bounds for the covariance matrix itself follow from the above bounds (apart from the logarithmic factor in the matrix normal case and a constant factor in general).
-
-
-
-
-%=============================================================================
-\section{Geodesic convexity and sample complexity}\label{subsec:outline}
-%=============================================================================
 It was observed by Weisel \CF{cite} that the negative log-likelihood $-\ell_\samp$ exhibits a certain variant of convexity known as \emph{geodesic convexity}. Following \cite{FM20}, we use geodesic convexity to prove \cref{thm:tensor-frobenius}.
 \Cref{thm:matrix-normal}, proven later in \cref{sec:matrix-normal}, requires additional tools. We now discuss the geodesic convexity used here.
 
@@ -1398,7 +1441,7 @@ If $\norm{\nabla_a}_{op}^2 < \delta^2$, output $\left( \bigotimes_{a =1}^k \othe
 One could hope that, for the purposes of estimating $\Theta_1$, having access to $X$ is like having access to $n D$ independent samples of a Gaussian with precision matrix $\Theta_1$. In particular, one could hope e.g. for an RMSE rate of $\sqrt{ d_1/ n d_2}$ for estimating $A$ in spectral norm in the matrix model. Here we show that this only holds if $d_2 \leq n d_1$; the rate cannot be better than $O(\sqrt{d_1/ n \min(n d_1, d_2)})$. Intuitively, this holds because we can choose $\Theta_2$ to have low rank and effectively zero out some entries of $X$. However, this does not quite work because $\Theta_2$ must be invertible - we have to instead choose $\Theta_2$ to be approximately equal to a random low rank matrix.
 %Here we show that our bounds for the matrix normal model are best possible for estimating the individual matrices $\Theta_a$. The bound for $\Theta_2$ is clearly best possible because it is what we would obtain even if $\Theta_1$ were known, but in fact even the bound on $\Theta_1$ is tight.
 
-\begin{theorem}Suppose $d_2 > n d_1$. Let $X$ denote a tuple of $n$ samples from the matrix normal model with precision matrices $\Theta_1, \Theta_2$. Let $Y$ be a tuple of $nd_1$ Gaussians with precision matrix $\Theta_1$. Let $\hat{\Theta}_1$ be any estimator for $\Theta_1$. For every $\delta > 0$, there is a distribution on $\Theta_2$ and an estimator $\tilde{\Theta}$ such that the distribution of $\hat{\Theta}_1(X)$ and the distribution of $\tilde{\Theta}(Y)$ differ by at most $\delta$ in total variation distance. In particular (see \cref{lem:dtv}), the minimax MSE for $\widehat{\Theta}_1$ can be no less than the minimax MSE for the precision matrix of a $d_1$ dimensional Gaussian with $nd_1$ samples; this holds as well for $\Theta_1$ to subsets such as sparse, etc. %\CF{I need to check this final conclusion; it might require some reasonable assumption like boundedness}
+\begin{theorem}Suppose $d_2 > n d_1$. Let $X$ denote a tuple of $n$ samples from the matrix normal model with precision matrices $\Theta_1, \Theta_2$. Let $Y$ be a tuple of $nd_1$ Gaussians with precision matrix $\Theta_1$. Let $\widehat{\Theta}_1$ be any estimator for $\Theta_1$. For every $\delta > 0$, there is a distribution on $\Theta_2$ and an estimator $\tilde{\Theta}$ such that the distribution of $\widehat{\Theta}_1(X)$ and the distribution of $\tilde{\Theta}(Y)$ differ by at most $\delta$ in total variation distance. In particular (see \cref{lem:dtv}), the minimax MSE for $\widehat{\Theta}_1$ can be no less than the minimax MSE for the precision matrix of a $d_1$ dimensional Gaussian with $nd_1$ samples; this holds as well for $\Theta_1$ to subsets such as sparse, etc. %\CF{I need to check this final conclusion; it might require some reasonable assumption like boundedness}
 \end{theorem}
 In the proof, one finds that the estimator $\tilde{\Theta}$ uses additional randomness - but by Yao's theorem the minimax MSE is unchanged when estimators with additional randomness are allowed.
 
