@@ -418,7 +418,8 @@ be proved later in \cref{sec:matrix-normal}.
 %-----------------------------------------------------------------------------
 We now discuss the geodesic convexity used here and outline the strategy for our proof.
 We start by introducing a Riemannian metric on the manifold $\PD(d)$ of positive-definite $d\times d$ matrices.
-Rather than simply considering the metric induced by the Euclidean metric on the symmetric matrices, we consider a metric whose unit-speed geodesics starting at a point $\Theta \in \PD(d)$ are of the form $\Theta^{1/2} e^{Ht} \Theta^{1/2}$ for $t \in \R$ and a symmetric matrix~$H$ with $\norm H_F=1$.
+Rather than simply considering the metric induced by the Euclidean metric on the symmetric matrices, we consider the metric whose unit-speed geodesics starting at a point $\Theta \in \PD(d)$ are of the form $\Theta^{1/2} e^{Ht} \Theta^{1/2}$ for $t \in \R$ and a symmetric matrix~$H$ with $\norm H_F=1$.
+Accordingly, the geodesic distance between $\Theta, \Theta'$ is given by $\norm{\log(\Theta^{-1/2} \Theta' \Theta^{-1/2})}_F$.
 This metric arises from the Hessian of the log-determinant \citep{bhatia2009positive} and also as the Fisher-Rao metric on centered Gaussians parametrized by their precision matrices \CF{cite}.
 
 \MW{I've been playing around with some new notation in this section; work in progress.}
@@ -444,7 +445,8 @@ The \emph{exponential map} $\exp_\Theta \colon \H \to \P$ at~$\Theta$ is defined
   \exp_\Theta(H) = \exp_{(\Theta_1,\dots,\Theta_k)}(H_1,\dots,H_k) = \left( \Theta_1^{1/2} e^{\sqrt{d_1} H_1} \Theta_1^{1/2}, \dots, \Theta_k^{1/2} e^{\sqrt{d_k} H_k} \Theta_k^{1/2} \right).
 \end{align*}
 By definition, the \emph{geodesics} through $\Theta$ are the curves $t \mapsto \exp_\Theta(t H)$ for $t\in\R$ and $H\in\H$.
-\MW{I think these are unit speed if $\norm{H}_F^2=1/D$. Does anything become nicer if we incorporate this factor, e.g., in the definition of strong convexity?}
+
+\MW{I think these are unit speed if $\norm{H}_F^2=1/D$. Does anything become nicer if we incorporate this factor below, e.g.\ in the definition of strong convexity?}
 \end{definition}
 
 Accordingly, we obtain the following notion of geodesic convexity.
@@ -615,8 +617,8 @@ It follows that $h(t) > h(0)$ for any $t\neq0$.
 Since $Z$ was arbitrary, this shows that $f(\Theta') > f(\Theta^*)$ for any $\Theta'\neq\Theta^*$.
 \end{proof}
 
-
 As discussed in the proof plan above, the geodesically convex function we use to implement the plan is actually $f_x = - \log \ell_x$ restricted to the manifold $\SPD$. The expression we must minimize is thus
+\MW{I'd state this above (including of MLE to this).}
  \begin{definition}[Objective function]\label{dfn:function}
 Given $n$ samples $\rv = (\samp_1, \dots, \samp_n)$ in $\R^D$, define the function $f_{\samp}\colon \SPD \to \R$ by
 \begin{align}\label{eq:projective-likelihood}
