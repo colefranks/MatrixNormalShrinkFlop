@@ -205,23 +205,21 @@ For the matrix normal model our rates are tight in every regime up to logarithmi
 In the current literature on matrix normal and tensor models, typically the estimators are assessed using Frobenius or spectral norm between the estimated parameter and the truth.
 However, neither of these metrics bound statistical dissimilarity measures of interest such as the total variation or Kullback-Leibler divergence between the true distribution and that corresponding to the estimated parameter, or the Fisher-Rao distance.
 
-Here we consider the \emph{Mahalanobis distance} $d_{F}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_F$ of the precision matrices.
-\MW{The notation $d_F$ is a bit problematic as it might suggest Frobenius distance. I hope the $\Vert$ help?}
-This is a natural dissimilarity measure on Gaussians because when any of the Mahalanobis, total variation, square of the KL-divergence, or Fisher-Rao distances is at most a small constant then they are all on the same order \CF{check, cite} \citep{barsov1987estimates}.
-We also consider $d_{\op}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_{\op}$, which yields even stronger results.
+Here we consider the \emph{relative Frobenius error} $D_F(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_F$ of the precision matrices, which is sometimes also called the \emph{Mahalanobis distance}.
+This is a natural dissimilarity measure on Gaussians because when any of~$D_F$, total variation distance, square of the KL-divergence, or Fisher-Rao distance is at most a small constant then they are all on the same order \CF{check, cite} \citep{barsov1987estimates}.
+We also consider the \emph{relative spectral error} $D_{\op}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_{\op}$, which yields even stronger results.
 \MW{Can we give an indication of what `stronger' means?}
-Both can be related to the usual norms by $\norm{A - B}_F \leq \norm{B}_{\op} \, d_F(A\Vert B)$ and $\norm{A  - B}_{\op} \leq \norm{B}_{\op} \, d_{\op}(A \Vert B)$.
-Though we caution that $d_F$ and $d_{\op}$ are not truly metrics, we will call them distances because they are obey approximate symmetry and an approximate triangle inequality \CF{cite}.
-\MW{Alternatively just call it a `divergence'.}
+Both can be related to the usual norms by $\norm{A - B}_F \leq \norm{B}_{\op} \, D_F(A\Vert B)$ and $\norm{A  - B}_{\op} \leq \norm{B}_{\op} \, D_{\op}(A \Vert B)$.
+Though we caution that $D_F$ and $D_{\op}$ are not truly metrics, we will call them distances because they are obey approximate symmetry and an approximate triangle inequality \CF{cite}.
 
 Our theoretical contributions are as follows:
 \begin{enumerate}
-\item For the matrix normal model, if $n \geq C \max\{\frac{d_1}{d_2},\frac{d_2}{d_1}\} \log^2 \min\{d_1,d_2\}$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has MSE $O( \max\{ \frac{d_1}{nd_2}, \frac{d_2}{nd_1} \} )$ in $d_{\op}$.
+\item For the matrix normal model, if $n \geq C \max\{\frac{d_1}{d_2},\frac{d_2}{d_1}\} \log^2 \min\{d_1,d_2\}$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has MSE $O( \max\{ \frac{d_1}{nd_2}, \frac{d_2}{nd_1} \} )$ in $D_{\op}$.
 \MW{Define the acronym MSE when first used.}
-As a corollary the MSE in $d_F$ is $O( \max \{ \frac{d_1^2}{nd_2}, \frac{d_2^2}{nd_1} \} )$.
-% \item For the matrix normal model, if $n \geq C (\max\{d_1^2,d_2^2\}/d_1 d_2) \log^2 d_1$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has MSE $O( \max\{ d_1^2, d_2^2 \}/ (n d_1 d_2) )$ in $d_{\op}$.
-% As a corollary the MSE in $d_F$ is $O( \max \{ d_1^3, d_2^3 \} / (nd_1d_2) )$.
-\item For the tensor normal model, if $n \geq C \max\{d_i^3\}/ \prod_i d_i$, then the MLE for the precision matrices $\Theta_1, \dots, \Theta_k$ has MSE $O(\max \{ d_i^3 \} / (n \prod_i d_i ) )$ in $d_F$.
+As a corollary the MSE in $D_F$ is $O( \max \{ \frac{d_1^2}{nd_2}, \frac{d_2^2}{nd_1} \} )$.
+% \item For the matrix normal model, if $n \geq C (\max\{d_1^2,d_2^2\}/d_1 d_2) \log^2 d_1$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has MSE $O( \max\{ d_1^2, d_2^2 \}/ (n d_1 d_2) )$ in $D_{\op}$.
+% As a corollary the MSE in $D_F$ is $O( \max \{ d_1^3, d_2^3 \} / (nd_1d_2) )$.
+\item For the tensor normal model, if $n \geq C \max\{d_i^3\}/ \prod_i d_i$, then the MLE for the precision matrices $\Theta_1, \dots, \Theta_k$ has MSE $O(\max \{ d_i^3 \} / (n \prod_i d_i ) )$ in $D_F$.
 \item Under the same sample requirements as above in each case, the flip-flop algorithm converges exponentially quickly to the MLE with high probability. As a corollary, there is an algorithm to compute the MLE with expected runtime polynomial in the input size and~$\log\frac1\eps$.
 \MW{$\eps$ is not defined}
 \end{enumerate}
@@ -231,13 +229,12 @@ As a corollary the MSE in $d_F$ is $O( \max \{ \frac{d_1^2}{nd_2}, \frac{d_2^2}{
 
 The first result is tight up to logarithmic factors, and the second result is tight.
 Without the restriction on $n$ in the first result, no estimator can converge in spectral norm as the parameters grow, so we consider the restriction mild. Likewise for the second result no estimator can converge in Frobenius norm without the restriction on $n$.
-\MW{Maybe say that we show this.}
-\MW{When you say `in spectral/Frobenius norm' you mean `in $d_{\op}$/$d_F$'?}
+\MW{Maybe say we we show this (by reduction to known results). Clarify `spectral/Frobenius norm' vs `$D_{\op}$/$D_F$'.}
 \CF{I think I'd like to do a better job at gradually defining notation so its clear that these are the right numbers.}
 
 For interesting cases of the tensor normal model such as $d\times d \times d$ tensors we just require that $n$ is at least a large constant.
 For the matrix normal model, our first result removes the added constraint $n \geq C \max\{d_1,d_2\}$ in \cite{tsiligkaridis2013convergence}.
-For the tensor normal model we leave extending our MSE bounds for $d_{\op}$ as an open problem.
+For the tensor normal model we leave extending our MSE bounds for $D_{\op}$ as an open problem.
 
 To handle the undersampled case, we also introduce a regularized estimator that is much simpler to compute than the penalized regularizers introduced in \cite{tsiligkaridis2013convergence,sun2015nonconvex,zhou2014gemini}, and empirically has comparable to and sometimes better performance than existing regularizers.
 Our regularizer has a Bayesian interpretation as coming from a Wishart prior for the covariance, and is closer in spirit to the shrinkage estimators considered by \CF{cite Weisel, etc}.
@@ -256,8 +253,6 @@ Our regularizer has a Bayesian interpretation as coming from a Wishart prior for
 %-----------------------------------------------------------------------------
 For a matrix $A$, $\norm{A}_{\op}$ denotes the operator norm and $\norm{A}_F = (\tr A^T A)^{\frac12}$ the Frobenius norm.
 We write $\PD(d)$ for the space of $d\times d$ positive definite matrices; $\GL(d)$ denotes the group of invertible $d\times d$ matrices.
-We use the notation $x \lesssim y$ (or $x \gtrsim y$) if there exists a universal constant $C>0$ such that $x \leq C y$ (or $x \geq C y$).
-\MW{Do you like this instead of writing $x \leq C y$ with an undefined $C$? Also, when do we use this notation and when do we use big O?}
 
 %=============================================================================
 \section{Model and main results}\label{sec:main results}
@@ -312,33 +307,32 @@ The \emph{maximum likelihood estimator (MLE)} for $\Theta_a$ is then
 \subsection{Results on the MLE}
 %-----------------------------------------------------------------------------
 We may now state precisely our result for the tensor normal models.
-As mentioned in the introduction, we use the following natural dissimilarity measures.
-\MW{Say again how they compare with KL, TV, etc?}
+As mentioned in the introduction, we use the following natural distance measures.
 
 \begin{definition}
-For positive definite matrix $A, B$, define their \emph{Mahalanobis distance} as
+For positive definite matrix $A, B$, define their \emph{relative Frobenius error} (or \emph{Mahalanobis distance}) as
 \begin{align*}
-  d_{F}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_F
+  D_F(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_F.
 \end{align*}
-Similarly, define
+Similarly, define the \emph{relative spectral error} as
 \begin{align*}
-  d_{\op}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_{\op}.
+  D_{\op}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_{\op}.
 \end{align*}
 \end{definition}
 
-Without loss of generality, we assume that the dimensions $d_1 \leq \dots \leq d_k$ are sorted, and we set $D := \prod_{i=1}^k d_a$ as above.
-\MW{Could also use $d_{\min}$ and $d_{\max}$ instead of sorting.}
-\MW{`Frobenius error' in the theorem title vs `Mahalanobis error'? Similar for `spectral error'?}
+To state our results, and throughout this paper, we assume that $d_1 \leq \dots \leq d_k$.
+Recall also that $D = \prod_{i=1}^k d_a$.
 
 \begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius}
-Suppose $\eps \lesssim 1/\sqrt{d_k}$ and the number of samples satisfies $n \gtrsim \frac{k d_k^3}{D\eps^2}$.
+There are constants $C,c>0$ with the following property.
+Suppose $\eps \leq c/\sqrt{d_k}$ and the number of samples satisfies $n \geq C \frac{k d_k^3}{D\eps^2}$.
 Then the MLE $(\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) $ for $(\Theta_1, \dots, \Theta_k)$ from $n$ independent samples of the tensor normal model satisfies
 \begin{align*}
-  d_{F}(\widehat{\Theta}_a, \Theta_a) = O\left( \sqrt{\frac{d_a d_1}{n D/d_k}}\eps\right)
+  D_F(\widehat{\Theta}_a \Vert \Theta_a) = O\left( \sqrt{\frac{d_a d_{\min}}{n D/d_k}}\eps\right)
 \end{align*}
 for all $a \in [k]$, with probability at least
 \begin{align*}
-  1 - k^2 \left(\sqrt{nD} / kd_1 \right)^{ - \Omega(d_1)} - O(k e^{ - \eps^2 d_k / k}).
+  1 - k^2 \left(\sqrt{nD} / kd_{\min} \right)^{ - \Omega(d_{\min})} - O(k e^{ - \eps^2 d_k / k}).
 \end{align*}
 \end{theorem}
 
@@ -349,9 +343,12 @@ In the case of matrix normal models $(k=2)$, we obtain the following stronger re
 As before, we assume $d_1 \leq d_2$.
 
 \begin{theorem}[Matrix normal model spectral error]\label{thm:matrix-normal}
-Assume the number of samples sastisfies $n \gtrsim \frac{d_2}{d_1} \max \{\log \frac{d_2}{d_1},  \frac{\log^2 d_1}{\eps^2}\}$.
+There is a constant $C>0$ with the following property.
+Suppose the number of samples is $n \geq C \frac{d_2}{d_1} \max \{\log \frac{d_2}{d_1},  \frac{\log^2 d_1}{\eps^2}\}$.
 Then the MLE $(\widehat{\Theta}_1,\widehat{\Theta}_2) $ for $(\Theta_1, \Theta_2)$ from $n$ independent samples of the matrix normal model satisfies
-$$ d_{op}(\widehat{\Theta}_a, \Theta_a) = O\left(\eps \sqrt{\frac{d_a^2}{nD}} \log d_1\right) $$
+\begin{align*}
+  D_{\op}(\widehat{\Theta}_a \Vert \Theta_a) = O\left(\eps \sqrt{\frac{d_a^2}{nD}} \log d_1\right)
+\end{align*}
 for $a \in \{1,2\}$ with probability $1 - O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)})$.
 \end{theorem}
 \CF{I feel like we should be able to get $\tilde{O}\sqrt{\frac{d_1}{n d_2}}$ for the smaller marginal. Akshay and I discussed a lot in rocketchat. }
@@ -387,7 +384,7 @@ Suppose \TODO{}.
 Let $(\widehat{\Theta}_1,\dots,\widehat{\Theta}_k)$ denote the MLE for $(\Theta_1,\dots,\Theta_k)$.
 Then given $n$ samples of the tensor normal model, the flip-flop algorithm computes $(\overline{\Theta}_1,\dots,\overline{\Theta}_k)$ with
 \begin{align*}
-  d_F(\overline{\Theta}_a, \widehat{\Theta}_a) \leq \eps
+  D_F(\overline{\Theta}_a, \widehat{\Theta}_a) \leq \eps
 \end{align*}
 for all $a\in[k]$ in $O(\TODO{\log(1/\eps)})$ iterations, with probability at least \TODO{}.
 \end{theorem}
@@ -397,7 +394,7 @@ Suppose \TODO{}.
 Let $(\widehat{\Theta}_1,\widehat{\Theta}_2)$ denote the MLE for $(\Theta_1,\Theta_2)$.
 Then given $n$ samples of the matrix normal model, the flip-flop algorithm computes $(\overline{\Theta}_1,\overline{\Theta}_2)$ with
 \begin{align*}
-  d_F(\overline{\Theta}_a, \widehat{\Theta}_a) \leq \eps
+  D_F(\overline{\Theta}_a, \widehat{\Theta}_a) \leq \eps
 \end{align*}
 for $a\in\{1,2\}$ in $O(\TODO{\log(1/\eps)})$ iterations, with probability at least \TODO{}.
 \end{theorem}
@@ -422,21 +419,21 @@ Rather than simply considering the metric induced by the Euclidean metric on the
 Accordingly, the geodesic distance between $\Theta, \Theta'$ is given by $\norm{\log(\Theta^{-1/2} \Theta' \Theta^{-1/2})}_F$.
 This metric arises from the Hessian of the log-determinant \citep{bhatia2009positive} and also as the Fisher-Rao metric on centered Gaussians parametrized by their precision matrices \CF{cite}.
 
-\MW{I've been playing around with some new notation in this section; work in progress.}
 As observed by \cite{wiesel2012geodesic}, the negative log-likelihood of the tensor normal model is jointly convex in~$\Theta_1,\dots,\Theta_k$ along these geodesics.
 % , i.e., $-\log \ell(\Theta_1^{1/2} e^{H_1t} \Theta_1^{1/2}, \dots, \Theta_k^{1/2} e^{H_kt} \Theta_k^{1/2}|x)$ is convex in $t\in\R$ for any choice of $\Theta_1,\dots,\Theta_k$ and~$H_1,\dots,H_k$.
 However, it is not strongly convex.
 This directly related to the non-identifiability of the $\Theta_a$, which makes the MLE not unique.
-As above, we can fix this by working with tuples of precision matrices with equal determinant:
+\MW{blabla determinant 1 story and formula for $\lambda$}
+% As above, we can fix this by working with tuples of precision matrices with equal determinant:
 \begin{align*}
-  \P &= \{ (\Theta_1,\dots,\Theta_k) \in \PD(d_1) \times \dots \times \PD(d_k) \;:\; \det \Theta_1 = \dots = \det \Theta_k \}.
+  \P &= \{ (\Theta_1,\dots,\Theta_k) \in \PD(d_1) \times \dots \times \PD(d_k) \;:\; \det \Theta_1 = \dots = \det \Theta_k = 1 \}.
 % \end{align*}
 \intertext{The tangent space of this manifold is naturally identified with the real vector space}
 % \begin{align*}
-  \H &= \{ (H_1,\dots,H_k) \;:\; H_a \text{ symmetric $d_a \times d_a$ matrix}, \, \tr H_1 = \dots = \tr H_k \}.
+  \H &= \{ (H_1,\dots,H_k) \;:\; H_a \text{ symmetric $d_a \times d_a$ matrix}, \, \tr H_1 = \dots = \tr H_k = 0 \}.
 \end{align*}
-The embedding $(\Theta_1,\dots,\Theta_d) \mapsto \Theta_1 \ot \dots \ot \Theta_d$ identifies $\P$ with the separable covariance matrices, which form a totally geodesic submanifold of $\PD(D)$.
-This induces a Riemannian metric with the following geodesics. \MW{Sadly the `unit speed' condition is no longer fixed $\norm H_F$ if we don't demand $\tr H_a=0$. Should really think of $\{\tr=0\} \op I$ or $\{\det=1\} \times \R_+$. So maybe it's indeed easiest if we define $\P$, $\H$ as before.}
+The embedding $(\Theta_1,\dots,\Theta_d,\lambda) \mapsto \lambda \Theta_1 \ot \dots \ot \Theta_d$ identifies $\P$ with the separable covariance matrices of determinant one, which form a totally geodesic submanifold of $\PD(D)$.
+This induces a Riemannian metric with the following geodesics.
 
 \begin{definition}[Geodesics]
 Let $\Theta\in\P$.
@@ -444,10 +441,19 @@ The \emph{exponential map} $\exp_\Theta \colon \H \to \P$ at~$\Theta$ is defined
 \begin{align*}
   \exp_\Theta(H) = \exp_{(\Theta_1,\dots,\Theta_k)}(H_1,\dots,H_k) = \left( \Theta_1^{1/2} e^{\sqrt{d_1} H_1} \Theta_1^{1/2}, \dots, \Theta_k^{1/2} e^{\sqrt{d_k} H_k} \Theta_k^{1/2} \right).
 \end{align*}
-By definition, the \emph{geodesics} through $\Theta$ are the curves $t \mapsto \exp_\Theta(t H)$ for $t\in\R$ and $H\in\H$.
-
-\MW{I think these are unit speed if $\norm{H}_F^2=1/D$. Does anything become nicer if we incorporate this factor below, e.g.\ in the definition of strong convexity?}
+By definition, the \emph{geodesics} through $\Theta$ are the curves
+$t \mapsto \exp_\Theta(t H)$
+for $t\in\R$ and $H\in\H$.
+They are unit speed if $\sum_{a=1}^k \norm{H_a}_F^2 = \frac1D$.
+\MW{A bit sad, should we redefine the metric on $\PD(D)$ such that this becomes $=1$?}
 \end{definition}
+% Indeed,
+% \begin{align*}
+%   \norm{\sum_{a=1}^k \sqrt{d_a} H_a \ot I_{\frac{D}{d_a}}}_F^2
+% = \sum_{a=1}^k \norm{\sqrt{d_a} H_a \ot I_{\frac{D}{d_a}}}_F^2
+% = \sum_{a=1}^k d_a \norm{H_a \ot I_{\frac{D}{d_a}}}_F^2
+% = D \sum_{a=1}^k \norm{H_a}_F^2
+% \end{align*}
 
 Accordingly, we obtain the following notion of geodesic convexity.
 
@@ -456,16 +462,16 @@ A function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $\The
 Assuming $f$ is twice differentiable, this holds if $\partial^2_t f(\exp_\Theta(tH)) \geq 0$ for all~$H\in\H$.
 
 Similarly, $f$ is called \emph{$\lambda$-strongly geodesically convex} at $\Theta$ for some $\lambda>0$ if the same is true for the functions $t \mapsto f(\exp_\Theta(tH))$ for all~$H\in \H$.
-Assuming the function is twice differentiable, this holds if $\partial^2_t f(\exp_\Theta(tH)) \geq \lambda \norm{H}_F^2$ for all~$H\in\H$, where $\norm{H}_F^2 := \sum_{a=1}^k \norm{H_a}_F^2$.
+Assuming the function is twice differentiable, this holds if $\partial^2_t f(\exp_\Theta(tH)) \geq \lambda \sum_{a=1}^k \norm{H_a}_F^2$ for all~$H\in\H$.
 \end{definition}
 
 If $\Theta$ is positive definite and $A$ an invertible matrix then $A\Theta A^T$ is again in positive definite.
 The transformation $\Theta \mapsto A\Theta A^T$ is an isometry, i.e., it preserves the geodesic distance.
 Importantly, the statistical distances we use are also \emph{invariant} under such transformations:
 \begin{align*}
-  d_F(A \Theta A^T \Vert A \Theta' A^T) = d_F(\Theta \Vert \Theta')
+  D_F(A \Theta A^T \Vert A \Theta' A^T) = D_F(\Theta \Vert \Theta')
 \end{align*}
-and likewise for the distance~$d_{\op}$.
+and likewise for the distance~$D_{\op}$.
 This invariance is natural because changing a pair of precision matrices in this way does not change the statistical relationship between the corresponding Gaussians; in particular the total variation distance, Fisher-Rao, and Kullback-Leibler divergence are unchanged \CF{double check}.
 
 These properties are directly inherited for tuples of precision matrices.
@@ -474,7 +480,7 @@ The manifold $\P$ carries a natural action by the group
   \G = \{ (A_1,\dots,A_k) \in \GL(d_1) \times \dots \times \GL(d_k) \;:\: \det A_1 = \dots = \det A_k \};
 \end{align*}
 Namely, if $\Theta \in \P$ and $A \in \G$ then the tuple $A \Theta A^T := (A_1 \Theta_1 A_1^T, \dots, A_k \Theta_k A_k^T) \in \P$.
-Moreover, the mapping $\Theta \mapsto A\Theta A^T$ is an isometry and it preserves the statistical distances~$d_F$ and $d_{\op}$ between the individual precision matrices.
+Moreover, the mapping $\Theta \mapsto A\Theta A^T$ is an isometry and it preserves the statistical distances~$D_F$ and $D_{\op}$ between the individual precision matrices as well as the global precision matrices.
 
 We also note that the MLE obeys a certain \emph{equivariance} property under such transformations.
 For all $\Theta \in \P$, $A \in \G$, and samples $x=(x_1,\dots,x_n)$, the log-likelihood satisfies
@@ -486,8 +492,6 @@ Thus the MLE satisfies
 \begin{align}\label{eq:equivariance}
 \widehat\Theta_{\Theta^{-1/2} \samp} = \Theta^{1/2} \widehat\Theta_{\samp} \Theta^{1/2}\end{align}
 assuming either maximizer exists and is unique.
-
-%%% MICHAEL MARKER %55
 
 % %-----------------------------------------------------------------------------
 % \subsection{Notation}
@@ -526,21 +530,24 @@ assuming either maximizer exists and is unique.
 % %\item $I$ for an identity matrix, $I_a$ for the $d_a \times d_a$ identity matrix
 % \end{itemize}
 
-\subsection{Sketch of proof}
 
+%-----------------------------------------------------------------------------
+\subsection{Sketch of proof}
+%-----------------------------------------------------------------------------
+%%% MICHAEL MARKER %55
 With these definitions in place, we are able to state a proof plan, which is a Riemannian version of the standard approach using strong convexity. For simplicity we restrict to $\Theta \in \SPD$ \CF{I'm somewhat irritated because the below plan is simpler to see for $\PD_D$. Fix on later pass}.
 \MW{For $\PD_D$ the strong convexity is false, right?}
 
 \begin{enumerate}
 \item\label{it:reduce} \textbf{Reduce to identity:} We obtain $n$ samples from from $\cN(0, \Theta^{-1})$ as $\Theta^{-1/2} \rv$ where $\rv$ is distributed as $n$ independent samples from a standard Gaussian.
-By equivariance, the MLE $\widehat{\Theta}_{\Theta^{-1/2}\rv}$ is exactly $\Theta^{1/2} \widehat\Theta_{\rv} \Theta^{1/2}$. By invariance of the distance, $d_F(\widehat\Theta_{\Theta^{-1/2} \rv}; \Theta)
-= d_F(\widehat\Theta_\rv; I).$ This shows that to prove \cref{thm:tensor-frobenius} it is enough to consider the case that $\Theta = I$, i.e. $\rv$ is standard Gaussian.
+By equivariance, the MLE $\widehat{\Theta}_{\Theta^{-1/2}\rv}$ is exactly $\Theta^{1/2} \widehat\Theta_{\rv} \Theta^{1/2}$. By invariance of the distance, $D_F(\widehat\Theta_{\Theta^{-1/2} \rv}; \Theta)
+= D_F(\widehat\Theta_\rv; I).$ This shows that to prove \cref{thm:tensor-frobenius} it is enough to consider the case that $\Theta = I$, i.e. $\rv$ is standard Gaussian.
 \item\label{it:grad} \textbf{Bound the gradient:}
 Show that the gradient $\nabla \log \ell_{\rv}(I)$ (defined below) is small with high probability.
 \item\label{it:convexity} \textbf{Show strong convexity:}
 Show that, with high probability, $-\log\ell_{\rv}$ is $\Omega(1)$-strongly geodesically convex near $I$.
 \end{enumerate}
-These together imply the desired sample complexity bounds -- as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far. Note that we have used $f_\samp=-\log\ell_\samp$ rather than the negative log-likelihood. \MW{Isn't this exactly the negative log-likelihood function?} In fact, $f_\samp$ is also geodesically convex, and has additional nice properties such as Lipschitz continuity and a Lipschitz-continous gradient \cite{burgisser2019towards}. In particular various optimization algorithms applied to $f_\samp$ obey a descent lemma \cite{burgisser2017alternating}, and as such these algorithms must converge exponentially quickly by strong g-convexity of $f_\samp$. Using this we will show that the flip-flop algorithm converges exponentially quickly with high probability.
+These together imply the desired sample complexity bounds -- as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far. Note that we have used $f_\samp=-\log\ell_\samp$ rather than the negative log-likelihood. In fact, $f_\samp$ is also geodesically convex, and has additional nice properties such as Lipschitz continuity and a Lipschitz-continous gradient \cite{burgisser2019towards}. In particular various optimization algorithms applied to $f_\samp$ obey a descent lemma \cite{burgisser2017alternating}, and as such these algorithms must converge exponentially quickly by strong g-convexity of $f_\samp$. Using this we will show that the flip-flop algorithm converges exponentially quickly with high probability.
 
 To make this discussion more concrete, we now define the gradient formally and state the lemma that we will use to relate the gradient and strong convexity to the distance to the optimizer as in the plan above.
 
@@ -1054,9 +1061,9 @@ Next we must verify that $\|\nabla f\| < \kappa/2$. By \cref{it:grad-bd} we have
 
 %By \cref{thm:tensor-convexity}, with failure probability $\CF{1/poly(D)}$ we have that $f$ is $1-o_{d}(1)$ strongly convex at $I$. Because $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq \delta \leq c$, by \cref{convexRobustness} there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $\Theta$ such that $\sum_a \|\log \Theta_a\|_{op} \leq  c$ for all $a \in [k]$. \CF{end old}
 
-By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\sqrt{d_k}$, which holds by our definition of $\delta$ and our second assumption on $\eps$, there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$. We now use this bound on geodesic distance to bound error in $d_F$ for the individual Kronecker factors. By our choice of $\kappa$ and because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\log \widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) \leq \sqrt{d_a} d(I, \widehat{\Theta}) \leq 2\delta \sqrt{ k d_a}.$ Applying $\delta = \eps /\sqrt{k d_k}$ yields $\| I_a - \widehat{\Theta}_a\|_F \leq 2\eps \sqrt{ d_a/d_k}$.
+By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\sqrt{d_k}$, which holds by our definition of $\delta$ and our second assumption on $\eps$, there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$. We now use this bound on geodesic distance to bound error in $D_F$ for the individual Kronecker factors. By our choice of $\kappa$ and because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\log \widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) \leq \sqrt{d_a} d(I, \widehat{\Theta}) \leq 2\delta \sqrt{ k d_a}.$ Applying $\delta = \eps /\sqrt{k d_k}$ yields $\| I_a - \widehat{\Theta}_a\|_F \leq 2\eps \sqrt{ d_a/d_k}$.
 
-We have shown that the minimizer $\widehat{\Theta}$ of $f_\samp$ is close to $I$, but it remains to show that the minimizer $\Theta'$ of $\ell_\samp$ exists and is close to $I$. For this, recall that if $f_\samp$ has the unique minimizer $\widehat{\Theta} \in \SPD$, then $\ell_\samp$ is minimized at $\Theta':= \alpha^{1/k}  \widehat{\Theta}$ where $\alpha:= n D e^{ - f_\samp(\widehat{\Theta})}$. We now show that $\alpha$ is very close to $1$. By \cref{lem:convex-ball}, $f_\samp(\widehat{\Theta}) \geq f_\samp(0) - k\delta^2$. We have $f(0) \geq f_\samp(0) = \log\| \samp\|^2_F$, and by \cref{it:norm-bd} we have $\| \samp\|_F^2 \in (1 \pm t) nD$ with $t = k \eps/\sqrt{\delta_1}$. Thus we have $\alpha \in [(1-t),  (1+t) e^{k \delta^2}]$, or $\alpha^{1/k} \in [1 \pm  O(\eps/\sqrt{d_k})]$ by our choice of $t$. By the approximate triangle inequality for $d_F$ \CF{insert and cite}, $d_F( \Theta'_a; I_a) = O(d_F(\widehat{\Theta}_a; I_a) + d_F(\alpha^{1/k} I_a; I_a)) = O(\eps \sqrt{d_a/d_k})$. The reparametrization $\eps \leftarrow \eps \sqrt{d_k^{3/2}/ n D}$ completes the proof. \TODO{check reparametrization}
+We have shown that the minimizer $\widehat{\Theta}$ of $f_\samp$ is close to $I$, but it remains to show that the minimizer $\Theta'$ of $\ell_\samp$ exists and is close to $I$. For this, recall that if $f_\samp$ has the unique minimizer $\widehat{\Theta} \in \SPD$, then $\ell_\samp$ is minimized at $\Theta':= \alpha^{1/k}  \widehat{\Theta}$ where $\alpha:= n D e^{ - f_\samp(\widehat{\Theta})}$. We now show that $\alpha$ is very close to $1$. By \cref{lem:convex-ball}, $f_\samp(\widehat{\Theta}) \geq f_\samp(0) - k\delta^2$. We have $f(0) \geq f_\samp(0) = \log\| \samp\|^2_F$, and by \cref{it:norm-bd} we have $\| \samp\|_F^2 \in (1 \pm t) nD$ with $t = k \eps/\sqrt{\delta_1}$. Thus we have $\alpha \in [(1-t),  (1+t) e^{k \delta^2}]$, or $\alpha^{1/k} \in [1 \pm  O(\eps/\sqrt{d_k})]$ by our choice of $t$. By the approximate triangle inequality for $D_F$ \CF{insert and cite}, $D_F( \Theta'_a; I_a) = O(D_F(\widehat{\Theta}_a; I_a) + D_F(\alpha^{1/k} I_a; I_a)) = O(\eps \sqrt{d_a/d_k})$. The reparametrization $\eps \leftarrow \eps \sqrt{d_k^{3/2}/ n D}$ completes the proof. \TODO{check reparametrization}
 \end{proof}
 
 
@@ -1253,7 +1260,7 @@ In this section we prove that the flip-flop algorithms for the matrix and tensor
 \begin{Algorithm}
 \textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
 
-\textbf{Output}: $\otheta \in \SPD$ such that $d_F(\htheta_a; \otheta_a) < \eps$, for each $a \in [k]$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
+\textbf{Output}: $\otheta \in \SPD$ such that $D_F(\htheta_a; \otheta_a) < \eps$, for each $a \in [k]$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
 
 \textbf{Algorithm}:
 \begin{enumerate}
@@ -1396,15 +1403,15 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 \begin{lemma}[Distance to Optimum]\label{lem:tensor-distance-opt}
 	Let $\htheta$ be the MLE estimator for $\Theta$, $\delta \in \R_+$ be a parameter such that
 	$0 < \delta < \left(8 \sum_{a=1}^k \sqrt{d_a} \right)^{-1}$ and $\otheta$ be a scaling which satisfies $\delta = \norm{\nabla f_x(\otheta)}_F$. Then, we have
-	$$ d_F(\htheta; \otheta) \leq \left( 16 \delta D \cdot \sum_{a=1}^k \sqrt{d_a} \right)^{1/2} $$
+	$$ D_F(\htheta; \otheta) \leq \left( 16 \delta D \cdot \sum_{a=1}^k \sqrt{d_a} \right)^{1/2} $$
 	and for each component, we have
-	$$ d_F(\htheta_a, \otheta_a) \leq \left( 16 \delta d_a \cdot \sqrt{d_a} \right)^{1/2}. $$
+	$$ D_F(\htheta_a, \otheta_a) \leq \left( 16 \delta d_a \cdot \sqrt{d_a} \right)^{1/2}. $$
 \end{lemma}
 
 \begin{proof}
 	Let $Z \in \Sym$ be such that $\htheta = \otheta^{1/2} \cdot \exp(\sqrt{\vec d} \cdot Z) \cdot \otheta^{1/2}$, and $\oZ = Z / \norm{Z}_F$.
 	Since
-	$$ d_F(\htheta, \otheta) = \norm{I_D - \otheta^{-1/2} \htheta \otheta^{-1/2}}_F = \norm{I_D - \exp(\sqrt{\vec d} \cdot Z)}_F $$
+	$$ D_F(\htheta, \otheta) = \norm{I_D - \otheta^{-1/2} \htheta \otheta^{-1/2}}_F = \norm{I_D - \exp(\sqrt{\vec d} \cdot Z)}_F $$
 	to prove a good bound on the distance it is enough to show that $\norm{Z}_F$ is small.
 	We will achieve this by using the strong geodesic convexity of $f_x$.
 
@@ -1420,14 +1427,14 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 	$$ \exp(\sqrt{\vec d} Z) \preceq \exp(\sqrt{\vec d} \cdot 4\delta (I_1, \dots, I_k)) =
 	\exp\left(4 \delta \cdot \sum_{a=1}^k \sqrt{d_a} \right) \cdot I_D. $$
 	Thus, the conditions of \cref{lem:inequality} apply to the eigenvalues of $\exp(\sqrt{\vec d} Z)$ and our distance function becomes:
-	$$ d_F(\htheta, \otheta) =  \norm{\exp(\sqrt{\vec d} Z) - I_D}_F \leq \left( 16 \delta D \cdot \sum_{a=1}^k \sqrt{d_a} \right)^{1/2}. $$
+	$$ D_F(\htheta, \otheta) =  \norm{\exp(\sqrt{\vec d} Z) - I_D}_F \leq \left( 16 \delta D \cdot \sum_{a=1}^k \sqrt{d_a} \right)^{1/2}. $$
 	Analogously, since $\htheta_a = \otheta^{1/2}_a \exp(\sqrt{d_a} Z_a) \otheta^{1/2}_a$, we have that
-	$$ d_F(\htheta_a, \otheta_a) =  \norm{\exp(\sqrt{d_a} Z_a) - I_a}_F \leq \left( 16 \delta d_a \cdot \sqrt{d_a} \right)^{1/2}. $$
+	$$ D_F(\htheta_a, \otheta_a) =  \norm{\exp(\sqrt{d_a} Z_a) - I_a}_F \leq \left( 16 \delta d_a \cdot \sqrt{d_a} \right)^{1/2}. $$
 \end{proof}
 
 \begin{theorem}[Restatement of \cref{thm:tensor-flipflop}]
 	If $\htheta$ denotes the MLE estimator for $\Theta$, then provided $n = \Omega(k^2 \cdot d_1^2/D)$, the flip-flop algorithm computes $\otheta$ with
-	$$ d_F(\htheta_a, \otheta_a) \leq \eps $$
+	$$ D_F(\htheta_a, \otheta_a) \leq \eps $$
 	in $O(k d_k \log(d_k/\eps))$ iterations with probability at least
 	$$ 1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}.$$
 \end{theorem}
@@ -1441,7 +1448,7 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 	Thus, after $T = O( k d_k \log(d_k/\eps) )$ steps, \cref{lem:descent-sublevel-set} guarantees us that we will encounter a scaling $\otheta$ such that
 	$$ \norm{\nabla f_x(\otheta)}_F \leq \dfrac{\eps^2}{16 d_k^{3/2}}.$$
 	When we find such a gradient, \cref{lem:tensor-distance-opt} implies that for each $a \in [k]$, the component-wise distance from $\otheta$ to $\htheta$ is bounded by
-	$$ d_F(\htheta_a, \otheta_a) \leq \eps. $$
+	$$ D_F(\htheta_a, \otheta_a) \leq \eps. $$
 \end{proof}
 
 %-----------------------------------------------------------------------------
@@ -1450,7 +1457,7 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 \begin{Algorithm}
 \textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^{d_1 \times d_2}$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
 
-\textbf{Output}: $\otheta \in \SPD$ such that $d_{op}(\htheta_a; \otheta_a) < \eps$, for each $a \in \{1,2\}$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
+\textbf{Output}: $\otheta \in \SPD$ such that $D_{\op}(\htheta_a; \otheta_a) < \eps$, for each $a \in \{1,2\}$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
 
 \textbf{Algorithm}:
 \begin{enumerate}
@@ -1571,7 +1578,7 @@ The gradient should be... $\rho^{a} $
 %=============================================================================
 \section{Conclusion and open problems}
 %=============================================================================
-\TODO{$d_{op}$} for tensors??
+\TODO{$D_{op}$} for tensors??
 
 
 \begin{appendix}
