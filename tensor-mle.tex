@@ -173,7 +173,7 @@ In the latter work, the authors also showed that the MLE is consistent and asymp
 Here we will be interested in non-asymptotic rates.
 Standard estimation of the covariance matrix $\Sigma$ by the sample covariance matrix yields a mean-squared Frobenius norm error of $(d_1 d_2)^2/n$ assuming $n \geq C d_1 d_2$.
 The matrix normal model, however, has $\Theta(d_1^2 + d_2^2)$ parameters so it should be possible to do much better.
-Assuming that the covariance factors have constant condition number and that $n$ is at least $\tilde{\Omega}(\max\{d_1,d_2\})$, \cite{tsiligkaridis2013convergence} showed that the three-step flip-flop estimator has mean-squared Frobenius error of $O((d_1^2 + d_2^2)/n)$ for the full matrix $\Sigma$; they did not state a bound for the individual factors $\Sigma_1,\Sigma_2$.
+Assuming that the covariance factors have constant condition number and that $n$ is at least $\tilde{\Omega}(\max\{d_1,d_2\})$, \cite{tsiligkaridis2013convergence} showed that a three-step flip-flop estimator has mean-squared Frobenius error of $O((d_1^2 + d_2^2)/n)$ for the full matrix $\Sigma$; they did not state a bound for the individual factors $\Sigma_1,\Sigma_2$.
 The same authors showed tighter rates which hold even for~$n\ll d_i$ for a penalized estimator under the additional assumption that the precision matrices $\Sigma_i^{-1}$ are sparse.
 In the extremely undersampled regime, \cite{zhou2014gemini} demonstrated a single-step penalized estimator that converges even for a single matrix $(n=1)$ when the precision matrices have constant condition number, are highly sparse, and have bounded $\ell_1$ norm off the diagonal.
 Simply setting $\Sigma_2 = I_{d_2}$ or $\Sigma_1 = I_{d_1}$, in which case the matrix normal model reduces to standard covariance estimation with $d_1 n$ (resp. $d_2 n$) samples, shows the necessity of additional assumptions like sparsity or well-conditionedness if $n < \max\{d_1/d_2, d_2/d_1\}$.
@@ -186,7 +186,7 @@ In both the matrix and tensor case, no estimator for the Kronecker factors has b
 Even characterizing the existence of the MLE for the matrix and tensor normal model has remained elusive until recently.
 \cite{amendola2020invariant} recently noted that the matrix normal and tensor MLEs are equivalent to algebraic problems about a group action called the \emph{left-right action} and the \emph{tensor action}, respectively.
 In the computer science literature these two problems are called \emph{tensor} and \emph{operator scaling}, respectively.
-It was independently pointed out by \cite{FM20} that the Tyler's M estimator for elliptical distributions (which arises as the matrix normal problem under the additional promise that~$\Sigma_2$ is diagonal) is a special case of operator scaling.
+Independently from \cite{amendola2020invariant}, it was pointed out by \cite{FM20} that the Tyler's M estimator for elliptical distributions (which arises as the matrix normal problem under the additional promise that~$\Sigma_2$ is diagonal) is a special case of operator scaling.
 Using the connection to the left-right action, exact sample size thresholds for the existence of the MLE were recently determined in \cite{derksen2020matrix} for the matrix normal model and subsequently for the tensor normal model in \cite{derksen2020tensor}.
 In the context of operator scaling, \cite{gurvits2004classical} showed much earlier that the flip-flop algorithm converges to the matrix normal MLE whenever it exists.
 Recently it was shown that the number of flip-flop steps to obtain precision~$\eps$ for the tensor and matrix normal model is polynomial in the input size and~$1/\eps$ \citep{GGOW19,burgisser2017alternating,burgisser2019towards}.
@@ -214,8 +214,7 @@ Though we caution that $D_F$ and $D_{\op}$ are not truly metrics, we will call t
 
 Our theoretical contributions are as follows:
 \begin{enumerate}
-\item For the matrix normal model, if $n \geq C \max\{\frac{d_1}{d_2},\frac{d_2}{d_1}\} \log^2 \min\{d_1,d_2\}$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has MSE $O( \max\{ \frac{d_1}{nd_2}, \frac{d_2}{nd_1} \} )$ in $D_{\op}$.
-\MW{Define the acronym MSE when first used.}
+\item For the matrix normal model, if $n \geq C \max\{\frac{d_1}{d_2},\frac{d_2}{d_1}\} \log^2 \min\{d_1,d_2\}$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has mean square error (MSE) of $O( \max\{ \frac{d_1}{nd_2}, \frac{d_2}{nd_1} \} )$ in $D_{\op}$.
 As a corollary the MSE in $D_F$ is $O( \max \{ \frac{d_1^2}{nd_2}, \frac{d_2^2}{nd_1} \} )$.
 % \item For the matrix normal model, if $n \geq C (\max\{d_1^2,d_2^2\}/d_1 d_2) \log^2 d_1$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has MSE $O( \max\{ d_1^2, d_2^2 \}/ (n d_1 d_2) )$ in $D_{\op}$.
 % As a corollary the MSE in $D_F$ is $O( \max \{ d_1^3, d_2^3 \} / (nd_1d_2) )$.
@@ -1534,7 +1533,7 @@ If the mean of $Y$ is bounded then we have Markov's inequality. Let $\eps > 0$; 
 %=============================================================================
 \section{Numerics and regularization}\label{sec:numerics}
 %=============================================================================
-Here we show experimentally that, in some natural situations, the MLE performs better than regularized estimators. We also show that in the undersampled regime, a simpler regularizer can match and sometimes outperform the GLASSO-type estimators appearing in \CF{tsilig, zhou}. The estimator is closer to a shrinkage estimator as in \CF{cite goes, weisel, thresholding.} Instead of the MLE, we consider the following penalized log-likelihood:
+Here we show experimentally that, in some natural situations, the MLE performs better than regularized estimators. We also show that in the undersampled regime, a simpler regularizer can match and sometimes outperform the GLASSO-type estimators appearing in \CF{tsilig, zhou}. The estimator is closer to a shrinkage estimator as in \CF{cite goes, weisel, thresholding}, or to a rank penalty \CF{elaborate}, or to \CF{tang?}. Instead of the MLE, we consider the following penalized log-likelihood:
 
 \begin{align*}
   \ell_{\samp}^\alpha(\Theta_1, \dots, \Theta_k)
@@ -1548,13 +1547,13 @@ Observe the following:
 \item If $\alpha > 0$, then $\widehat{\Theta}^\alpha_x$ exists uniquely for every $x$.
 \item $\widehat{\Theta}^\alpha_x$ is equal to $\widehat{\Theta}_{y}$ where $y$ is the tuple of $n + D$ vectors given by
 $$(x_1, \dots, x_n, \alpha e_{1\dots 1}, \dots, \alpha e_{d_1d_2 \dots d_k}).$$ Here $e_{i_1 \dots i_k}$ denotes the standard basis vector in $\R^{d_1d_2 \dots d_k}$. Thus the flip-flop estimator applied to the tuple $y$ converges to $\widehat{\Theta}^\alpha_x$.
-
-\item $\widehat{\Theta}^\alpha_x$ is the maximum a posteriori probability (MAP) estimator for $\Theta$ assuming $\Theta$ is drawn from the Wishart prior with $D + 1$ degrees of freedom and $V = I/\alpha$. That is, $\Theta_1, \dots, \Theta_k$ are selected proportional to $e^{- \alpha \tr \Theta_1 \ot \dots \ot \Theta_k}.$ 
+\item The function $\ell^\alpha_\samp$ is \CF{$\alpha?$}-geodesically strongly convex at the identity, and shares the same robustness properties as $\ell$. Thus for $\alpha$ large enough, flip-slop is guaranteed to converge linearly.
+\item $\widehat{\Theta}^\alpha_\samp$ is the maximum a posteriori probability (MAP) estimator for $\Theta$ assuming $\Theta$ is drawn from the Wishart prior with $D + 1$ degrees of freedom and $V = I/\alpha$. That is, $\Theta_1, \dots, \Theta_k$ are selected proportional to $e^{- \alpha \tr \Theta_1 \ot \dots \ot \Theta_k}.$ 
 \end{enumerate}
 %As in the unpenalized case, we will often consider the scale-invariant function $f^\alpha_x$ given by
 
 
-The flip-flop algorithm for this regularized estimator is nearly as simple as the unregularized flip-flop algorithm: see \cref{alg:reg-flip-flop}. The only difference that a certain multiple of the identity is added in each flip-flop step.  \CF{I need to check the regularization term carefully - it probably comes with a normalization factor} 
+The flip-flop algorithm for this regularized estimator is nearly as simple as the unregularized flip-flop algorithm: see \cref{alg:reg-flip-flop}. Above we explained that it can be viewed as the flip-flop estimator for an augmented tuple of tensors $y$, but due to the special form of $y$ the iterations simplify significantly. The only modification is that a certain multiple of the identity is added in each flip-flop step.  \CF{I need to check all the normalizations carefully; may want to define $\rho \leftarrow \rho/nD$ and $\alpha \leftarrow \alpha/nD$.} 
 
 
 \begin{Algorithm}
@@ -1566,15 +1565,15 @@ The flip-flop algorithm for this regularized estimator is nearly as simple as th
 
 \textbf{Algorithm}:
 \begin{enumerate}
-\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$, and $\otheta:= \otimes_a \otheta_a$.
+\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$, and define $\otheta:= \otimes_a \otheta_a$.
 \item\label{it:flip-flop step 2} Repeat the following:
 %we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
 \begin{itemize}
 %\item Set $\otheta^1$
-\item Set $\sigma = \otheta^{1/2} \rho \; \otheta^{1/2}/ \tr \otheta \rho$. Let $$a = \arg\max_{i \in [k]} \sqrt{d_i}\| (\sigma_i - I_{d_i}/d_i)\|_F,$$ 
-i.e., the index $a$ for which $\|\nabla_a f(\otheta)\|_F$ is largest. If $\|\nabla_a f(\otheta)\|_F < \eps$, end loop and \textbf{return} $(\otheta_1, \dots, \otheta_a)$.  
-\item Define $\otheta^a:= \otheta_{(a)}^{-1} \otheta$, the tensor product in which the $i^{th}$ factor is $\otheta_i$ except for the $a^{th}$ which is $I_{d_a}$, and set 
-$$\otheta_a = \frac{n D}{d_a}\left(\tr_{[k] \setminus a} \otheta^a \rho + \alpha \left(\prod_{i \neq a} \tr \otheta_a\right) I_{d_a} \right)^{-1}.$$
+\item Define $\otheta^a:= \otheta_{(a)}^{-1} \otheta$, the tensor product in which the $i^{th}$ factor is $\otheta_i$ except for the $a^{th}$ which is $I_{d_a}$. Define $\Upsilon_a :=\tr_{[k] \setminus a} \otheta^a \rho$. Let $$a = \arg\max_{i \in [k]} d_i   \left\| \otheta_i^{1/2} \Upsilon_i \otheta_i^{1/2}  + \alpha (\prod_j \tr \Theta_j) \Theta_i - I_{d_i}/d_i\right\|_F^2,$$ 
+i.e., the index $a$ for which $\|\nabla_a \ell^\alpha_{\samp}(\otheta)\|_F$ is largest. If $\|\nabla_a \ell^\alpha_\samp(\otheta)\|_F < \eps$, end loop and \textbf{return} $(\otheta_1, \dots, \otheta_a)$.  
+\item Set 
+$$\otheta_a = \frac{n D}{d_a}\left(\Upsilon_i + \alpha \left(\prod_{i \neq a} \tr \otheta_a\right) I_{d_a} \right)^{-1}.$$
 % $Y_a := \tr_{[k] \setminus a} \otheta_1 \ot \dots \ot \otheta_{a-1} \ot I_{d_a} \ot \otheta_{a+1} \ot \dots \ot \otheta_{d},$ 
 %\item If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\left( \bigotimes_{a =1}^k \otheta_a \right)^{-1}$ and return.
 % S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
@@ -1584,7 +1583,11 @@ $$\otheta_a = \frac{n D}{d_a}\left(\tr_{[k] \setminus a} \otheta^a \rho + \alpha
 \caption{Regularized flip-flop algorithm}\label{alg:reg-flip-flop}
 \end{Algorithm}
 
-We compare the performance of the estimator with Zhou's single step estimator \CF{cite gemini} for the matrix normal model. We find that when both marginals are well-conditioned, 
+We compare the performance of the estimator with Zhou's single step estimator \CF{cite gemini} for the matrix normal model. We find that when $\Theta_1$ is sparse and $\Theta_2$ is well-conditioned, Zhou's estimator obtains modest gains over the regularized Sinkhorn algorithm in Frobenius error. However, when $\Theta_2$ can be ill-conditioned, we find that the shrinkage estimator outperforms the lasso-type estimators. Both estimators require parameter tuning, so we compare throughout a plausible range of parameters for both estimators. We leave determination of the appropriate regularization parameters by cross-validation to future work. \CF{actually include the figures; maybe include an extra tantalizing one in the intro?}.
+
+
+
+
 
 
 %=============================================================================
