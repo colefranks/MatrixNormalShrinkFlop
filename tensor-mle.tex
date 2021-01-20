@@ -457,29 +457,29 @@ Assuming the function is twice differentiable, it is geodesically convex if $\pa
 and $\lambda$-strongly geodesically convex if $\partial^2_t f(\exp_\Theta(tH)) \geq \lambda \norm{H}_F^2$ for all~$H\in\H$, where we define $\norm{H}_F^2 := \sum_{a=1}^k \norm{H_a}_F^2$.
 \end{definition}
 
-If $\Theta$ is positive definite and $C$ an invertible matrix then $C\Theta C^T$ is again in positive definite.
-The transformation $\Theta \mapsto C\Theta C^T$ is an isometry, i.e., it preserves the geodesic distance.
+If $\Theta$ is positive definite and $A$ an invertible matrix then $A\Theta A^T$ is again in positive definite.
+The transformation $\Theta \mapsto A\Theta A^T$ is an isometry, i.e., it preserves the geodesic distance.
 Importantly, the statistical distances we use are also \emph{invariant} under such transformations:
 \begin{align*}
-  d_F(C \Theta C^T \Vert C \Theta' C^T) = d_F(\Theta \Vert \Theta')
+  d_F(A \Theta A^T \Vert A \Theta' A^T) = d_F(\Theta \Vert \Theta')
 \end{align*}
 and likewise for the distance~$d_{\op}$.
-This invariance is natural because changing a pair of precision matrices in this way does not change the statistical relationship between the corresponding Gaussians; in particular the total variation distance, Fisher-Rao, and Kullback-Leibler divergence are unchanged \CF{double check}.
+This invariance is natural because changing a pair of precision matrices in this way does not change the statistical relationship between the corresponding Gaussians; in particular the total variation distance, Fisher-Rao, and Kullback-Leibler divergence are unchanged \MW{double check}.
 
 These properties are directly inherited for tuples of precision matrices.
 The manifold $\P$ carries a natural action by the group
 \begin{align*}
-  \G = \{ (C_1,\dots,C_k) \in \GL(d_1) \times \dots \times \GL(d_k) \;:\: \det C_1 = \dots = \det C_k \};
+  \G = \{ (A_1,\dots,A_k) \in \GL(d_1) \times \dots \times \GL(d_k) \;:\: \det A_1 = \dots = \det A_k \};
 \end{align*}
-Namely, if $\Theta \in \P$ and $C \in \G$ then the tuple $C \Theta C^T := (C_1 \Theta_1 C_1^T, \dots, C_k \Theta_k C_k^T) \in \P$.
-Moreover, the mapping $\Theta \mapsto C\Theta C^T$ is an isometry and it preserves the statistical distances~$d_F$ and $d_{\op}$ between the individual precision matrices.
+Namely, if $\Theta \in \P$ and $A \in \G$ then the tuple $A \Theta A^T := (A_1 \Theta_1 A_1^T, \dots, A_k \Theta_k A_k^T) \in \P$.
+Moreover, the mapping $\Theta \mapsto A\Theta A^T$ is an isometry and it preserves the statistical distances~$d_F$ and $d_{\op}$ between the individual precision matrices.
 
 We also note that the MLE obeys a certain \emph{``equivariance''} property under such transformations.
-For all $\Theta \in \P$, $C \in \G$, and $x=(x_1,\dots,x_n)$, the log-likelihood satisfies
+For all $\Theta \in \P$, $A \in \G$, and $x=(x_1,\dots,x_n)$, the log-likelihood satisfies
 \begin{align*}
-  \ell(\Theta | x) = \ell(C^T \Theta C | C^{-1} x),
+  \ell(\Theta | A x) = \ell(A^T \Theta A | x),
 \end{align*}
-where we write $C^{-1} x = ((C_1 \ot \dots C_k) x_1, \dots, (C_1 \ot \dots C_k) x_n)$.
+where we write $A x = ((A_1 \ot \dots \ot A_k) x_1, \dots, (A_1 \ot \dots \ot A_k) x_n)$.
 Thus the MLE satisfies
 \begin{align}\label{eq:equivariance}
 \widehat\Theta_{\Theta^{-1/2} \samp} = \Theta^{1/2} \widehat\Theta_{\samp} \Theta^{1/2}\end{align}
