@@ -298,9 +298,9 @@ Given a tuple $x$ of samples $\samp_1,\dots,\samp_n\in\R^D$, up to an additive c
 \end{align*}
 One notes that the $\Theta_a$ are not identifiable; we assume all $\Theta_a$ have the same determinant in order to ensure identifiability.
 The \emph{maximum likelihood estimator (MLE)} for $\Theta_a$ is then
-\begin{align*}
+\begin{align}\label{eq:mle}
   (\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) := \underset{\det \Theta_1 = \dots = \det \Theta_k}{ \arg\max} \ell(\Theta_1, \dots, \Theta_k|x).
-\end{align*}
+\end{align}
 
 %-----------------------------------------------------------------------------
 \subsection{Results on the MLE}
@@ -417,36 +417,51 @@ We start by introducing a Riemannian metric on the manifold $\PD(d)$ of positive
 Rather than simply considering the metric induced by the Euclidean metric on the symmetric matrices, we consider the metric whose unit-speed geodesics starting at a point $\Theta \in \PD(d)$ are of the form $\Theta^{1/2} e^{Ht} \Theta^{1/2}$ for $t \in \R$ and a symmetric matrix~$H$ with $\norm H_F=1$.
 Accordingly, the geodesic distance between $\Theta, \Theta'$ is given by $\norm{\log(\Theta^{-1/2} \Theta' \Theta^{-1/2})}_F$.
 This metric arises from the Hessian of the log-determinant \citep{bhatia2009positive} and also as the Fisher-Rao metric on centered Gaussians parametrized by their precision matrices \CF{cite}.
+If $P$ is positive definite and $A$ an invertible matrix then $AP A^T$ is again in positive definite.
+The transformation $P \mapsto AP A^T$ is an isometry, i.e., it preserves the geodesic distance.
+Importantly, the statistical distances we use are also \emph{invariant} under such transformations:
+\begin{align*}
+  D_F(A P A^T \Vert A P' A^T) = D_F(P \Vert P')
+\end{align*}
+and likewise for the distance~$D_{\op}$.
+This invariance is natural because changing a pair of precision matrices in this way does not change the statistical relationship between the corresponding Gaussians; in particular the total variation distance, Fisher-Rao, and Kullback-Leibler divergence are unchanged \CF{double check}.
 
 As observed by \cite{wiesel2012geodesic}, the negative log-likelihood of the tensor normal model is jointly convex in~$\Theta_1,\dots,\Theta_k$ along these geodesics.
 % , i.e., $-\log \ell(\Theta_1^{1/2} e^{H_1t} \Theta_1^{1/2}, \dots, \Theta_k^{1/2} e^{H_kt} \Theta_k^{1/2}|x)$ is convex in $t\in\R$ for any choice of $\Theta_1,\dots,\Theta_k$ and~$H_1,\dots,H_k$.
-However, it is not strongly convex.
+However, it is never strongly convex.
 This directly related to the non-identifiability of the $\Theta_a$, which makes the MLE not unique.
-\MW{Say that it will be convenient to write $\Theta = \lambda \Theta_1 \ot \dots \ot \Theta_k$ for $\lambda>0$ and all $\det\Theta_a=1$. The main challenge will be maximizing the log-likelihood funcion for $\lambda=1$. Indeed, one can then determine the right $\lambda$ as (formula from below).}
+To this end, we parameterize $\Theta_a = \lambda^{1/k} P_a$ for a scalar $\lambda>0$ and positive definite~$P_a$ of unit determinant, so that $\Theta_1 \ot \cdots \ot \Theta_k = \lambda \, P_1 \ot \cdots \ot P_k$ and all parameters are identifiable.
+In this parameterization, the log-likelihood function reads
+\begin{align}\label{eq:reparameterized log likelihood}
+  \ell(P_1,\dots,P_k,\lambda | x)
+% &= \frac n 2 \log \det \left( \lambda \textstyle\bigotimes_{a=1}^k P_a \right) - \frac\lambda2 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k P_a \right) x_i \\
+&= \frac {nD} 2 \log \lambda  - \frac\lambda2 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k P_a \right) x_i
+\end{align}
+Clearly, the difficulty in finding the MLE is in minimizing the right-hand side sum over $P_1,\dots,P_k$. Once this is achieved, the correct normalization can be determined by a simple one-dimensional optimization that has a closed form solution (see below).
 
-Thus we define
+Accordingly, we define
 % As above, we can fix this by working with tuples of precision matrices with equal determinant:
 \begin{align*}
-  \P &= \{ (\Theta_1,\dots,\Theta_k) \in \PD(d_1) \times \dots \times \PD(d_k) \;:\; \det \Theta_1 = \dots = \det \Theta_k = 1 \}.
+  \P &= \{ (P_1,\dots,P_k) \in \PD(d_1) \times \dots \times \PD(d_k) \;:\; \det P_1 = \dots = \det P_k = 1 \}.
 % \end{align*}
 \intertext{The tangent space of this manifold is naturally identified with the real vector space}
 % \begin{align*}
   \H &= \{ (H_1,\dots,H_k) \;:\; H_a \text{ symmetric $d_a \times d_a$ matrix}, \, \tr H_1 = \dots = \tr H_k = 0 \}.
 \end{align*}
-The embedding $(\Theta_1,\dots,\Theta_d,\lambda) \mapsto \lambda \Theta_1 \ot \dots \ot \Theta_d$ identifies $\P$ with the separable covariance matrices of determinant one, which form a totally geodesic submanifold of $\PD(D)$.
+The embedding $(P_1,\dots,P_d) \mapsto P_1 \ot \dots \ot P_d$ identifies $\P$ with the separable covariance matrices of determinant one, which form a totally geodesic submanifold of $\PD(D)$.
 This induces a Riemannian metric with the following geodesics.
 
 \begin{definition}[Geodesics]
-Let $\Theta\in\P$.
-The \emph{exponential map} $\exp_\Theta \colon \H \to \P$ at~$\Theta$ is defined by
+Let $P\in\P$.
+The \emph{exponential map} $\exp_P \colon \H \to \P$ at~$P$ is defined by
 \begin{align*}
-  \exp_\Theta(H) = \exp_{(\Theta_1,\dots,\Theta_k)}(H_1,\dots,H_k) = \left( \Theta_1^{1/2} e^{\sqrt{d_1} H_1} \Theta_1^{1/2}, \dots, \Theta_k^{1/2} e^{\sqrt{d_k} H_k} \Theta_k^{1/2} \right).
+  \exp_P(H) = \exp_{(P_1,\dots,P_k)}(H_1,\dots,H_k) = \left( P_1^{1/2} e^{\sqrt{d_1} H_1} P_1^{1/2}, \dots, P_k^{1/2} e^{\sqrt{d_k} H_k} P_k^{1/2} \right).
 \end{align*}
-By definition, the \emph{geodesics} through $\Theta$ are the curves
-$t \mapsto \exp_\Theta(t H)$
+By definition, the \emph{geodesics} through $P$ are the curves
+$t \mapsto \exp_P(t H)$
 for $t\in\R$ and $H\in\H$.
-They are unit speed if $\sum_{a=1}^k \norm{H_a}_F^2 = \frac1D$.
-\MW{A bit sad, should we redefine the metric on $\PD(D)$ such that this becomes $=1$?}
+They have unit speed if $\sum_{a=1}^k \norm{H_a}_F^2 = \frac1D$.
+\MW{A bit sad.}
 \end{definition}
 % Indeed,
 % \begin{align*}
@@ -459,40 +474,32 @@ They are unit speed if $\sum_{a=1}^k \norm{H_a}_F^2 = \frac1D$.
 Accordingly, we obtain the following notion of geodesic convexity.
 
 \begin{definition}[Geodesic convexity]
-A function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $\Theta\in\P$ if the functions $t \mapsto f(\exp_\Theta(tH))$ are convex in $t\in\R$ for all~$H \in \H$.
-Assuming $f$ is twice differentiable, this holds if $\partial^2_t f(\exp_\Theta(tH)) \geq 0$ for all~$H\in\H$.
+A function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $P\in\P$ if the functions $t \mapsto f(\exp_P(tH))$ are convex in $t\in\R$ for all~$H \in \H$.
+Assuming $f$ is twice differentiable, this holds if $\partial^2_t f(\exp_P(tH)) \geq 0$ for all~$H\in\H$.
 
-Similarly, $f$ is called \emph{$\lambda$-strongly geodesically convex} at $\Theta$ for some $\lambda>0$ if the same is true for the functions $t \mapsto f(\exp_\Theta(tH))$ for all~$H\in \H$.
-Assuming the function is twice differentiable, this holds if $\partial^2_t f(\exp_\Theta(tH)) \geq \lambda \sum_{a=1}^k \norm{H_a}_F^2$ for all~$H\in\H$.
+Similarly, $f$ is called \emph{$\lambda$-strongly geodesically convex} at $P$ for some $\lambda>0$ if the same is true for the functions $t \mapsto f(\exp_P(tH))$ for all~$H\in \H$.
+Assuming the function is twice differentiable, this holds if $\partial^2_t f(\exp_P(tH)) \geq \lambda \sum_{a=1}^k \norm{H_a}_F^2$ for all~$H\in\H$.
 \end{definition}
 
-If $\Theta$ is positive definite and $A$ an invertible matrix then $A\Theta A^T$ is again in positive definite.
-The transformation $\Theta \mapsto A\Theta A^T$ is an isometry, i.e., it preserves the geodesic distance.
-Importantly, the statistical distances we use are also \emph{invariant} under such transformations:
-\begin{align*}
-  D_F(A \Theta A^T \Vert A \Theta' A^T) = D_F(\Theta \Vert \Theta')
-\end{align*}
-and likewise for the distance~$D_{\op}$.
-This invariance is natural because changing a pair of precision matrices in this way does not change the statistical relationship between the corresponding Gaussians; in particular the total variation distance, Fisher-Rao, and Kullback-Leibler divergence are unchanged \CF{double check}.
-
-These properties are directly inherited for tuples of precision matrices.
+The invariance properties described above for $\PD(d)$ are directly inherited for tuples of precision matrices with determinant one.
 The manifold $\P$ carries a natural action by the group
 \begin{align*}
-  \G = \{ (A_1,\dots,A_k) \in \GL(d_1) \times \dots \times \GL(d_k) \;:\: \det A_1 = \dots = \det A_k = 1 \};
+  \G = \{ (G_1,\dots,G_k) \in \GL(d_1) \times \dots \times \GL(d_k) \;:\: \det G_1 = \dots = \det G_k = 1 \};
 \end{align*}
-Namely, if $\Theta \in \P$ and $A \in \G$ then the tuple $A \Theta A^T := (A_1 \Theta_1 A_1^T, \dots, A_k \Theta_k A_k^T) \in \P$.
-Moreover, the mapping $\Theta \mapsto A\Theta A^T$ is an isometry and it preserves the statistical distances~$D_F$ and $D_{\op}$ between the individual precision matrices as well as the global precision matrices.
+Namely, if $P \in \P$ and $A \in \G$ then the tuple $A P A^T := (G_1 P_1 G_1^T, \dots, G_k P_k G_k^T) \in \P$.
+Moreover, the mapping $P \mapsto AP A^T$ is an isometry, and it preserves the statistical distances~$D_F$ and $D_{\op}$ between the individual precision matrices as well as between their tensor product.
 
-We also note that the MLE obeys a certain \emph{equivariance} property under such transformations.
-For all $\Theta \in \P$, $A \in \G$, and samples $x=(x_1,\dots,x_n)$, the log-likelihood satisfies
-\begin{align*}
-  \ell(\Theta | A x) = \ell(A^T \Theta A | x),
-\end{align*}
-where we write $A x = ((A_1 \ot \dots \ot A_k) x_1, \dots, (A_1 \ot \dots \ot A_k) x_n)$.
-Thus the MLE satisfies
-\begin{align}\label{eq:equivariance}
-\widehat\Theta_{\Theta^{-1/2} \samp} = \Theta^{1/2} \widehat\Theta_{\samp} \Theta^{1/2}\end{align}
-assuming either maximizer exists and is unique.
+% We also note that \MW{It's not \dots} the MLE obeys a certain \emph{equivariance} property under such transformations.
+% For all $P \in \P$, $A \in \G$, and samples $x=(x_1,\dots,x_n)$, the log-likelihood satisfies
+% \begin{align*}
+%   \ell(P | A x) = \ell(A^T P A | x),
+% \end{align*}
+% where we write $A x = ((G_1 \ot \dots \ot G_k) x_1, \dots, (G_1 \ot \dots \ot G_k) x_n)$.
+% Thus the MLE $\widehat P=\widehat P(x)$ satisfies
+% \begin{align}\label{eq:equivariance}
+%   \widehat P(\samp) = P^{1/2} \widehat P(P^{1/2} \samp) P^{1/2}
+% \end{align}
+% assuming either MLE exists and is unique.
 
 % %-----------------------------------------------------------------------------
 % \subsection{Notation}
@@ -535,10 +542,34 @@ assuming either maximizer exists and is unique.
 %-----------------------------------------------------------------------------
 \subsection{Sketch of proof}
 %-----------------------------------------------------------------------------
-%%% MICHAEL MARKER %55
-With these definitions in place, we are able to state a proof plan, which is a Riemannian version of the standard approach using strong convexity. For simplicity we restrict to $\Theta \in \SPD$ \CF{I'm somewhat irritated because the below plan is simpler to see for $\PD_D$. Fix on later pass}.
-\MW{For $\PD_D$ the strong convexity is false, right?}
+As discussed above, the MLE problem reduces to minimizing $\sum_{i=1}^n x_i^T ( \bigotimes_{a=1}^k P_a ) x_i$ over $P \in \P$.
+We take as our objective its logarithm, which is the following geodesically convex function \citep{burgisser2019towards}:
 
+\begin{definition}[Objective function]\label{dfn:function}
+Given $n$ samples $x = (x_1,\dots,x_n)$ in $\R^D$, define the function $f_x \colon \P \to \R$ by
+\begin{align*}
+  f_x(P_1,\dots,P_k)
+= \log \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k P_a \right) \samp_i}.
+\end{align*}
+Let $\widehat P = (\widehat P_1,\dots,\widehat P_k)$ denote the minimizer of $f_x$ if it exists and is unique.
+Then the maximum likelihood estimator is given by $\widehat\Theta_a = {\hat\lambda}^{1/k} \widehat P_a$ and $\hat\lambda = nD e^{-f_x(\widehat P)}$, as follows directly by maximizing \cref{eq:reparameterized log likelihood} with respect to~$\lambda$.
+\end{definition}
+
+% We may extend $f_x$ to $\oplus_i \PD_{d_i}$ by writing
+% \begin{align}
+%   f_{\samp}(\Theta_1,\dots,\Theta_k) &=  \frac1D\log\det \Theta - \log \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i} \nonumber\\
+%   &= \sum_{i=1}^k \frac1{d_a} \log \det \Theta_a - \log \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i},\label{eq:f extension}
+% \end{align}
+
+%\begin{align}\label{eq:tilde ell}  \tilde\ell_{\samp}(\Theta) = \frac1D\log\det \Theta - \log \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i};\end{align}
+
+% One may think of \cref{eq:f extension} as proportional, up to an additive constant, to the log-likelihood of $[\samp_1, \dots, \samp_n]$ under the tensor normal model.
+% Here $[\samp_1, \dots, \samp_n]$ denotes the equivalence class of the tuple of samples $(x_1, \dots, x_n)$ in projective space.
+
+
+With these definitions in place, we are able to state a proof plan, which is a Riemannian version of the standard approach using strong convexity.
+
+%%% MICHAEL MARKER %55
 \begin{enumerate}
 \item\label{it:reduce} \textbf{Reduce to identity:} We obtain $n$ samples from from $\cN(0, \Theta^{-1})$ as $\Theta^{-1/2} \rv$ where $\rv$ is distributed as $n$ independent samples from a standard Gaussian.
 By equivariance, the MLE $\widehat{\Theta}_{\Theta^{-1/2}\rv}$ is exactly $\Theta^{1/2} \widehat\Theta_{\rv} \Theta^{1/2}$. By invariance of the distance, $D_F(\widehat\Theta_{\Theta^{-1/2} \rv}; \Theta)
@@ -624,29 +655,6 @@ Then the function $h(t)$ is convex, has a minimum at $t=0$, and satisfies $h''(0
 It follows that $h(t) > h(0)$ for any $t\neq0$.
 Since $Z$ was arbitrary, this shows that $f(\Theta') > f(\Theta^*)$ for any $\Theta'\neq\Theta^*$.
 \end{proof}
-
-As discussed in the proof plan above, the geodesically convex function we use to implement the plan is actually $f_x = - \log \ell_x$ restricted to the manifold $\SPD$. The expression we must minimize is thus
-\MW{I'd state this above (including of MLE to this).}
- \begin{definition}[Objective function]\label{dfn:function}
-Given $n$ samples $\rv = (\samp_1, \dots, \samp_n)$ in $\R^D$, define the function $f_{\samp}\colon \SPD \to \R$ by
-\begin{align}\label{eq:projective-likelihood}
-  f_{\samp}(\Theta_1,\dots,\Theta_k) = \log \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i}.
-\end{align}
-Let $(\widehat{\Theta}_{\samp,1}, \dots, \widehat{\Theta}_{\samp,k})$ denote the minimizer of $f_{\samp}$ if it exists and is unique. \CF{we need to resolve the notation clash between this $\widehat{\Theta}$ and the actual MLE}. \MW{Use stars?}
-\end{definition}
-
-The estimator $\widehat{\Theta}_{\samp} = \widehat{\Theta}_{\samp,1} \ot \cdots \ot \widehat{\Theta}_{\samp,k}$ is directly related to the maximum likelihood estimator for the tensor normal model by a multiplicative factor that can be computed once $\widehat{\Theta}_\samp$ is known. To see this, for any $\Theta \in \PD_D$ write $\Theta = \lambda \Theta'$ for $\lambda>0$ and $\Theta'\in\PD_D^1$ and maximize $\ell_\samp$ over~$\lambda$.
-The result is $\lambda = n D e^{- f_\samp(\Theta')}$. We may extend $f_x$ to $\oplus_i \PD_{d_i}$ by writing
-\begin{align}
-  f_{\samp}(\Theta_1,\dots,\Theta_k) &=  \frac1D\log\det \Theta - \log \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i} \nonumber\\
-  &= \sum_{i=1}^k \frac1{d_a} \log \det \Theta_a - \log \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i},\label{eq:f extension}
-\end{align}
-
-%\begin{align}\label{eq:tilde ell}  \tilde\ell_{\samp}(\Theta) = \frac1D\log\det \Theta - \log \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i};\end{align}
-
-One may think of \cref{eq:f extension} as proportional, up to an additive constant, to the log-likelihood of $[\samp_1, \dots, \samp_n]$ under the tensor normal model.
-\MW{I think we can discuss this without defining the `logarithmic extension' of $f$ above.}
-Here $[\samp_1, \dots, \samp_n]$ denotes the equivalence class of the tuple of samples $(x_1, \dots, x_n)$ in projective space.
 
 %-----------------------------------------------------------------------------
 \subsection{Bounding the gradient}
