@@ -597,7 +597,8 @@ Using this we will show that the flip-flop algorithm converges exponentially qui
 To make this discussion more concrete, we now define the gradient and Hessian formall, and state the lemma that we will use to relate the gradient and strong convexity to the distance to the optimizer as in the plan above.
 
 \begin{definition}[Gradient and Hessian]
-For $P \in \P$, the \emph{(Riemannian) gradient}~$\nabla f(P)$ is the unique element in $\H$ such that \MW{Need to define inner product.}
+Let $f\colon \P \to \R$ be a once or twice differentiable function and $P \in \P$.
+The \emph{(Riemannian) gradient}~$\nabla f(P)$ is the unique element in $\H$ such that \MW{Need to define inner product.}
 \begin{align*}
   \braket{\nabla f(P), H} = \partial_{t=0} f(\exp_P(tH))
 \end{align*}
