@@ -291,7 +291,7 @@ Let $\Theta$ denote the \emph{precision matrix}, i.e., $\Theta = \bigotimes_{a=1
 Given a tuple $x$ of samples $\samp_1,\dots,\samp_n\in\R^D$, up to an additive constant the log-likelihood of the tensor normal model is given by the following expression:
 % $\ell(\Theta|x) = \frac{n}2 \log \det \Theta - \frac12 \sum_{i=1}^n x_i^T \Theta x_i$, which we can rewrite as
 \begin{align*}
-  \ell(\Theta_1, \dots, \Theta_k|x)
+  \ell_x(\Theta_1, \dots, \Theta_k)
 % &= \frac{n}2 \log \det \Theta - \frac12 \sum_{i=1}^n x_i^T \Theta x_i \\
 &= \frac n 2 \log \det \left( \textstyle\bigotimes_{a=1}^k \Theta_a \right)  - \frac12 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k \Theta_a \right) x_i
 % &= \frac{n D}2 \sum_{a=1}^k \frac1{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k \Theta_a \right) x_i
@@ -299,7 +299,7 @@ Given a tuple $x$ of samples $\samp_1,\dots,\samp_n\in\R^D$, up to an additive c
 One notes that the $\Theta_a$ are not identifiable; we assume all $\Theta_a$ have the same determinant in order to ensure identifiability.
 The \emph{maximum likelihood estimator (MLE)} for $\Theta_a$ is then
 \begin{align}\label{eq:mle}
-  (\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) := \underset{\det \Theta_1 = \dots = \det \Theta_k}{ \arg\max} \ell(\Theta_1, \dots, \Theta_k|x).
+  (\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) := \underset{\det \Theta_1 = \dots = \det \Theta_k}{ \arg\max} \ell_x(\Theta_1, \dots, \Theta_k).
 \end{align}
 
 %-----------------------------------------------------------------------------
@@ -417,23 +417,23 @@ We start by introducing a Riemannian metric on the manifold $\PD(d)$ of positive
 Rather than simply considering the metric induced by the Euclidean metric on the symmetric matrices, we consider the metric whose unit-speed geodesics starting at a point $\Theta \in \PD(d)$ are of the form $\Theta^{1/2} e^{Ht} \Theta^{1/2}$ for $t \in \R$ and a symmetric matrix~$H$ with $\norm H_F=1$.
 Accordingly, the geodesic distance between $\Theta, \Theta'$ is given by $\norm{\log(\Theta^{-1/2} \Theta' \Theta^{-1/2})}_F$.
 This metric arises from the Hessian of the log-determinant \citep{bhatia2009positive} and also as the Fisher-Rao metric on centered Gaussians parametrized by their precision matrices \CF{cite}.
-If $P$ is positive definite and $A$ an invertible matrix then $AP A^T$ is again in positive definite.
-The transformation $P \mapsto AP A^T$ is an isometry, i.e., it preserves the geodesic distance.
+If $\Theta$ is positive definite and $A$ an invertible matrix then $A\Theta A^T$ is again in positive definite.
+The transformation $\Theta \mapsto A\Theta A^T$ is an isometry, i.e., it preserves the geodesic distance.
 Importantly, the statistical distances we use are also \emph{invariant} under such transformations:
 \begin{align*}
-  D_F(A P A^T \Vert A P' A^T) = D_F(P \Vert P')
+  D_F(A \Theta A^T \Vert A \Theta' A^T) = D_F(\Theta \Vert \Theta')
 \end{align*}
 and likewise for the distance~$D_{\op}$.
 This invariance is natural because changing a pair of precision matrices in this way does not change the statistical relationship between the corresponding Gaussians; in particular the total variation distance, Fisher-Rao, and Kullback-Leibler divergence are unchanged \CF{double check}.
 
 As observed by \cite{wiesel2012geodesic}, the negative log-likelihood of the tensor normal model is jointly convex in~$\Theta_1,\dots,\Theta_k$ along these geodesics.
-% , i.e., $-\log \ell(\Theta_1^{1/2} e^{H_1t} \Theta_1^{1/2}, \dots, \Theta_k^{1/2} e^{H_kt} \Theta_k^{1/2}|x)$ is convex in $t\in\R$ for any choice of $\Theta_1,\dots,\Theta_k$ and~$H_1,\dots,H_k$.
+% , i.e., $-\log \ell_x(\Theta_1^{1/2} e^{H_1t} \Theta_1^{1/2}, \dots, \Theta_k^{1/2} e^{H_kt} \Theta_k^{1/2})$ is convex in $t\in\R$ for any choice of $\Theta_1,\dots,\Theta_k$ and~$H_1,\dots,H_k$.
 However, it is never strongly convex.
 This directly related to the non-identifiability of the $\Theta_a$, which makes the MLE not unique.
 To this end, we parameterize $\Theta_a = \lambda^{1/k} P_a$ for a scalar $\lambda>0$ and positive definite~$P_a$ of unit determinant, so that $\Theta_1 \ot \cdots \ot \Theta_k = \lambda \, P_1 \ot \cdots \ot P_k$ and all parameters are identifiable.
 In this parameterization, the log-likelihood function reads
 \begin{align}\label{eq:reparameterized log likelihood}
-  \ell(P_1,\dots,P_k,\lambda | x)
+  \ell_x(P_1,\dots,P_k,\lambda)
 % &= \frac n 2 \log \det \left( \lambda \textstyle\bigotimes_{a=1}^k P_a \right) - \frac\lambda2 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k P_a \right) x_i \\
 &= \frac {nD} 2 \log \lambda  - \frac\lambda2 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k P_a \right) x_i
 \end{align}
@@ -442,11 +442,11 @@ Clearly, the difficulty in finding the MLE is in minimizing the right-hand side 
 Accordingly, we define
 % As above, we can fix this by working with tuples of precision matrices with equal determinant:
 \begin{align*}
-  \P &= \{ (P_1,\dots,P_k) \in \PD(d_1) \times \dots \times \PD(d_k) \;:\; \det P_1 = \dots = \det P_k = 1 \}.
+  \P &= \{ (P_1,\dots,P_k) \in \PD(d_1) \times \dots \times \PD(d_k) \;:\; \det P_a = 1 \; \forall a \}.
 % \end{align*}
 \intertext{The tangent space of this manifold is naturally identified with the real vector space}
 % \begin{align*}
-  \H &= \{ (H_1,\dots,H_k) \;:\; H_a \text{ symmetric $d_a \times d_a$ matrix}, \, \tr H_1 = \dots = \tr H_k = 0 \}.
+  \H &= \{ (H_1,\dots,H_k) \;:\; H_a \text{ symmetric $d_a \times d_a$ matrix}, \, \tr H_a = 0 \; \forall a \}.
 \end{align*}
 The embedding $(P_1,\dots,P_d) \mapsto P_1 \ot \dots \ot P_d$ identifies $\P$ with the separable covariance matrices of determinant one, which form a totally geodesic submanifold of $\PD(D)$.
 This induces a Riemannian metric with the following geodesics.
@@ -462,6 +462,12 @@ $t \mapsto \exp_P(t H)$
 for $t\in\R$ and $H\in\H$.
 They have unit speed if $\sum_{a=1}^k \norm{H_a}_F^2 = \frac1D$.
 \MW{A bit sad.}
+\MW{Should we write $\norm H_{\H}$ and $\braket{H,K}_{\H}$??}
+
+\MW{Also sad: The geodesic distance squared between $P,Q\in\P$ is given by
+\begin{align*}
+  \sum_{a=1}^k \frac D{d_a} \norm{\log(P_a^{-1/2} Q_a P_a^{-1/2})}_F^2.
+\end{align*}}
 \end{definition}
 % Indeed,
 % \begin{align*}
@@ -492,7 +498,7 @@ Moreover, the mapping $P \mapsto AP A^T$ is an isometry, and it preserves the st
 % We also note that \MW{It's not \dots} the MLE obeys a certain \emph{equivariance} property under such transformations.
 % For all $P \in \P$, $A \in \G$, and samples $x=(x_1,\dots,x_n)$, the log-likelihood satisfies
 % \begin{align*}
-%   \ell(P | A x) = \ell(A^T P A | x),
+%   \ell_{Ax}(P) = \ell_x(A^T P A),
 % \end{align*}
 % where we write $A x = ((G_1 \ot \dots \ot G_k) x_1, \dots, (G_1 \ot \dots \ot G_k) x_n)$.
 % Thus the MLE $\widehat P=\widehat P(x)$ satisfies
@@ -543,16 +549,17 @@ Moreover, the mapping $P \mapsto AP A^T$ is an isometry, and it preserves the st
 \subsection{Sketch of proof}
 %-----------------------------------------------------------------------------
 As discussed above, the MLE problem reduces to minimizing $\sum_{i=1}^n x_i^T ( \bigotimes_{a=1}^k P_a ) x_i$ over $P \in \P$.
-We take as our objective its logarithm, which is the following geodesically convex function \citep{burgisser2019towards}:
+We take as our objective its logarithm, which is also geodesically convex.
 
 \begin{definition}[Objective function]\label{dfn:function}
 Given $n$ samples $x = (x_1,\dots,x_n)$ in $\R^D$, define the function $f_x \colon \P \to \R$ by
 \begin{align*}
   f_x(P_1,\dots,P_k)
-= \log \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k P_a \right) \samp_i}.
+= \log \sum_{i=1}^n x_i^T \left( \textstyle \bigotimes_{a=1}^k P_a \right) \samp_i.
 \end{align*}
 Let $\widehat P = (\widehat P_1,\dots,\widehat P_k)$ denote the minimizer of $f_x$ if it exists and is unique.
 Then the maximum likelihood estimator is given by $\widehat\Theta_a = {\hat\lambda}^{1/k} \widehat P_a$ and $\hat\lambda = nD e^{-f_x(\widehat P)}$, as follows directly by maximizing \cref{eq:reparameterized log likelihood} with respect to~$\lambda$.
+We write $\widehat P = \widehat P(x)$ and $\widehat\Theta = \widehat\Theta(x)$ when we want to emphasize the depence of the MLE on the samples~$x$.
 \end{definition}
 
 % We may extend $f_x$ to $\oplus_i \PD_{d_i}$ by writing
@@ -569,31 +576,63 @@ Then the maximum likelihood estimator is given by $\widehat\Theta_a = {\hat\lamb
 
 With these definitions in place, we are able to state a proof plan, which is a Riemannian version of the standard approach using strong convexity.
 
-%%% MICHAEL MARKER %55
 \begin{enumerate}
-\item\label{it:reduce} \textbf{Reduce to identity:} We obtain $n$ samples from from $\cN(0, \Theta^{-1})$ as $\Theta^{-1/2} \rv$ where $\rv$ is distributed as $n$ independent samples from a standard Gaussian.
-By equivariance, the MLE $\widehat{\Theta}_{\Theta^{-1/2}\rv}$ is exactly $\Theta^{1/2} \widehat\Theta_{\rv} \Theta^{1/2}$. By invariance of the distance, $D_F(\widehat\Theta_{\Theta^{-1/2} \rv}; \Theta)
-= D_F(\widehat\Theta_\rv; I).$ This shows that to prove \cref{thm:tensor-frobenius} it is enough to consider the case that $\Theta = I$, i.e. $\rv$ is standard Gaussian.
+\item\label{it:reduce}
+\textbf{Reduce to identity:}
+We can obtain $n$ independent samples from $\cN(0, \Theta_1^{-1} \ot \cdots \ot \Theta_k^{-1})$ as $x'_i = ( \Theta_1^{-1/2} \ot \cdots \ot \Theta_k^{-1/2} ) x_i$, where $x_1,\dots,x_n$ are distributed as $n$ independent samples from a standard Gaussian.
+Then the MLE $\widehat{\Theta}(x')$ is exactly $\Theta^{1/2} \widehat{\Theta}(x) \Theta^{1/2}$, i.e., we have $\widehat\Theta_a(x') = \Theta_a^{1/2} \widehat\Theta(x) \Theta_a^{1/2}$ for $a\in[k]$.
+By invariance of the relative Frobenius error, $D_F(\widehat\Theta(x') \Vert \Theta) = D_F(\widehat\Theta(x) \Vert I)$ (the same is true for $D_{\op}$).
+This shows that to prove \cref{thm:tensor-frobenius} it is enough to consider the case that $\Theta = (I,\dots,I)$, i.e., to the standard Gaussian.
 \item\label{it:grad} \textbf{Bound the gradient:}
-Show that the gradient $\nabla \log \ell_{\rv}(I)$ (defined below) is small with high probability.
+Show that the gradient $\nabla f_x(I)$ (defined below) is small with high probability.
 \item\label{it:convexity} \textbf{Show strong convexity:}
-Show that, with high probability, $-\log\ell_{\rv}$ is $\Omega(1)$-strongly geodesically convex near $I$.
+Show that, with high probability, $f_x$ is $\Omega(1)$-strongly geodesically convex near $I$.
 \end{enumerate}
-These together imply the desired sample complexity bounds -- as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far. Note that we have used $f_\samp=-\log\ell_\samp$ rather than the negative log-likelihood. In fact, $f_\samp$ is also geodesically convex, and has additional nice properties such as Lipschitz continuity and a Lipschitz-continous gradient \cite{burgisser2019towards}. In particular various optimization algorithms applied to $f_\samp$ obey a descent lemma \cite{burgisser2017alternating}, and as such these algorithms must converge exponentially quickly by strong g-convexity of $f_\samp$. Using this we will show that the flip-flop algorithm converges exponentially quickly with high probability.
+These together imply the desired sample complexity bounds -- as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far.
 
-To make this discussion more concrete, we now define the gradient formally and state the lemma that we will use to relate the gradient and strong convexity to the distance to the optimizer as in the plan above.
+In fact, $f_x$ is not only geodesically convex but has additional nice properties such as Lipschitz continuity and a Lipschitz-continous gradient \citep{burgisser2019towards}.
+In particular various optimization algorithms applied to~$f_\samp$ obey a descent lemma \citep{burgisser2017alternating}, and as such these algorithms must converge exponentially quickly by the strong geodesic convexity of~$f_\samp$.
+Using this we will show that the flip-flop algorithm converges exponentially quickly with high probability.
 
-\begin{definition}[Riemannian gradient]
-For $\Theta \in \SPD$, the \emph{Riemannian gradient}~$\nabla f(\Theta)$ is the unique element in $\Sym$ such that
+To make this discussion more concrete, we now define the gradient and Hessian formall, and state the lemma that we will use to relate the gradient and strong convexity to the distance to the optimizer as in the plan above.
+
+\begin{definition}[Gradient and Hessian]
+For $P \in \P$, the \emph{(Riemannian) gradient}~$\nabla f(P)$ is the unique element in $\H$ such that \MW{Need to define inner product.}
 \begin{align*}
-  \braket{\nabla f(\Theta), Z} = \partial_{t=0} f(\exp_{\Theta}(Zt))
+  \braket{\nabla f(P), H} = \partial_{t=0} f(\exp_P(tH))
 \end{align*}
-for all $Z\in \Sym$.
-We often abbreviate $\nabla f = \nabla f(I)$ and write $\nabla f = (\nabla_1 f, \dots, \nabla_k f)$.
+for all $Z\in \H$.
+We often abbreviate $\nabla f = \nabla f(I,\dots,I)$ and write $\nabla_a f$ for its components, which are $d_a \times d_a$ traceless symmetric matrices.
+
+The \emph{(Riemannian) Hessian}~$\nabla^2 f(P)$ is the unique linear operator on~$\H$ such that
+\begin{align*}
+  \braket{H, \nabla^2 f(P) K} = \partial_{s=0} \partial_{t=0} f(\exp_{P}(sH + tK))
+\end{align*}
+for all $H,K \in \H$.
+We often abbreviate $\nabla^2 f = \nabla^2 f(I)$.
+As a block matrix,
+\begin{align*}
+  \nabla^2 f = \begin{bmatrix}
+  \nabla_{11}^2 f & \dots & \nabla_{1k}^2 f \\
+  \vdots & \ddots & \vdots \\
+  \nabla_{k1}^2 f & \dots & \nabla_{kk}^2 f \\
+  \end{bmatrix},
+\end{align*}
+where $\nabla_{ab}^2f$ is a linear operator from the space of traceless symmetric $d_b\times d_b$-matrices to the space of traceless symmetric  on $\R^{d_b}$ to the traceless $d_a \times d_a$-matrices.
+% $\smallSym_{d_b}^0$ to $\smallSym_{d_a}^0$.
 \end{definition}
 
-\noindent
-\CF{highlight or put in notation}Now say that $B_\kappa(\Theta) = \{ \exp_{\Theta}(Z) : \norm Z \leq \kappa \}$ is the ball of radius $\kappa>0$ about~$\Theta$.
+We note that the Hessian is symmetric with respect to the inner product~$\braket{\cdot,\cdot}$ on $\H$.
+Just like in the Euclidean case, the Hessian is convenient to characterize strong convexity.
+Indeed, $\braket{H, \nabla^2 f(P) H} = \partial^2_{t=0} f(\exp_{P}(tH))$ for all $H\in \H$.
+Thus, $f$~is geodesically convex if and only if the Riemannian Hessian is positive semidefinite, that is, $\nabla^2 f(P) \succeq 0$.
+Similarly, $f$ is $\lambda$-strongly geodesically convex at $P$ if and only if $\nabla^2 f(P) \succeq \lambda I$, i.e., the Hessian is positive definite with eigenvalues larger than or equal to~$\lambda$.
+
+%%% MICHAEL MARKER %55
+\MW{Michael continue here.}
+
+\CF{highlight or put in notation}Now say that $B_\kappa(P) = \{ \exp_{P}(Z) : \norm Z \leq \kappa \}$ is the ball of radius $\kappa>0$ about~$P$.
+\MW{Not a geodesic ball.}
 
 \begin{lemma}\label{lem:convex-ball}
 Let $f\colon \SPD\to \R$ be geodesically convex everywhere, and $\lambda$-strongly geodesically convex in a geodesic ball $B_\kappa$ of radius~$\kappa>0$ about~$I$.
@@ -801,37 +840,7 @@ We now prove our main strong convexity result, \cref{thm:ball-convexity}, in ord
 \end{theorem}
 
 
-%$O\left( \sum_a e^{ - \Omega(nD/d_a)}\right)\leq k e^{- \Omega(nD/d_1)}$
-
-Just like in the Euclidean case, the Hessian is convenient to characterize strong convexity, and we begin by defining it formally in the Riemannian context. \cref{thm:ball-convexity} follows straightforwardly from a bound on the convexity \emph{at} the origin,  \cref{thm:tensor-convexity} , and a bound on how the Hessian changes away from the origin, \cref{convexRobustness}. We assemble these results to prove \cref{thm:ball-convexity} at the end of this subsection. %\CF{Shall I actually prove theorem 9? yeah, I think so.}
-
-
-
-%We next show strong convexity \emph{at} the origin, and finally show strong convexity \emph{near} the origin.
-
-\begin{definition}[Riemannian Hessian]
-For $\Theta \in \SPD$, the \emph{Riemannian Hessian}~$\nabla^2 f(\Theta)$ is the unique linear operator on $\Sym$ such that
-\begin{align*}
-  \braket{Y, \nabla^2 f(\Theta) Z} = \partial_{s=0} \partial_{t=0} f(\exp_{\Theta}(sY + tZ))
-\end{align*}
-for all $Y, Z\in \Sym$.
-We often abbreviate $\nabla^2 f = \nabla^2 f(I)$.
-As a block matrix,
-\begin{align*}
-  \nabla^2 f = \begin{bmatrix}
-  \nabla_{11}^2 f & \dots & \nabla_{1k}^2 f \\
-  \vdots & \ddots & \vdots \\
-  \nabla_{k1}^2 f & \dots & \nabla_{kk}^2 f \\
-  \end{bmatrix},
-\end{align*}
-where $\nabla_{ab}^2f$ is an operator from $\smallSym_{d_b}^0$ to $\smallSym_{d_a}^0$.
-\end{definition}
-
-We note that the Riemannian Hessian is symmetric with respect to the inner product~$\braket{\cdot,\cdot}$ on $\Sym$.
-Furthermore, $\braket{Z, \nabla^2 f(\Theta) Z} = \partial^2_{t=0} f(\exp_{\Theta}(tZ))$ for all $Z\in \Sym$.
-Thus, $f$~is geodesically convex if and only if the Riemannian Hessian is positive semidefinite, that is, $\nabla^2 f(\Theta) \succeq 0$.
-Similarly, $f$ is $\lambda$-strongly geodesically convex at $\Theta$ if and only if $\nabla^2 f(\Theta) \succeq \lambda I$, i.e., the Hessian is positive definite with eigenvalues larger than or equal to~$\lambda$.
-%\MW{Here, $\succeq$ denotes the Loewner order with respect to $\braket{\cdot,\cdot}_{\vec d}$.}
+\cref{thm:ball-convexity} follows straightforwardly from a bound on the convexity \emph{at} the origin,  \cref{thm:tensor-convexity} , and a bound on how the Hessian changes away from the origin, \cref{convexRobustness}. We assemble these results to prove \cref{thm:ball-convexity} at the end of this subsection. %\CF{Shall I actually prove theorem 9? yeah, I think so.}
 
 Similarly as for the gradient, we can compute the components of the Hessian in terms of a partial trace, as in the following definition and lemma.
 
