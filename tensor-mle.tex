@@ -367,7 +367,7 @@ If $d( \Upsilon^{-1}; \overline{\Theta}_2) > \eps$, set $\overline{\Theta}_2 \le
 \item Output $\overline{\Theta}_1, \overline{\Theta}_2$.
 \end{enumerate}
 
-We can motivate this procedure by noting that if in the first step we have $\overline{\Theta}_2 = \Theta_2$, then $\overline{\Theta}_1^{-1} \leftarrow \frac{1}{n d_2} \sum_{i = 1}^n X_i \Theta_2 X_i^T$ is simply a sum of outer products of $nd_2$ many independent random vectors with covariance $\Sigma_1$; as such this is a good estimator for $\Sigma_1$.
+We can motivate this procedure by noting that if in the first step we have $\overline{\Theta}_2 = \Theta_2$, then $\frac{1}{n d_2} \sum_{i = 1}^n X_i \overline{\Theta}_2 X_i^T$ is simply a sum of outer products of $nd_2$ many independent random vectors with covariance $\Sigma_1 = \Theta_1^{-1}$; as such the inverse is a good estimator for $\Theta_1$.
 As we don't know $\Theta_2$, the flip-flop algorithm instead uses $\overline{\Theta}_2$ our current best guess.
 
 For the general tensor normal model, the flip flop algorithm cycles through the $k$~many dimensions, using the $a^\text{th}$ flattening of the samples~$x_i$ (which are just $X_i$ and $X_i^T$ in the matrix case) to update $\overline{\Theta}_a$ in the $a^\text{th}$ step.
