@@ -462,10 +462,11 @@ The \emph{exponential map} $\exp_P \colon \H \to \P$ at~$P$ is defined by
 \end{align*}
 The \emph{geodesics} through $P$ are the curves $t \mapsto \exp_P(t H)$ for $t\in\R$ and $H\in\H$.
 By convention, they have unit speed if $\norm{H}_F^2 = \sum_{a=1}^k \norm{H_a}_F^2 = 1$.
-Therefore, the \emph{(geodesic) ball} of radius~$r>0$ about~$P$ is given by
+Therefore, the closed \emph{(geodesic) ball} of radius~$r>0$ about~$P$ is given by
 \begin{align*}
   B_r(P) = \{ \exp_P(H) : \norm H_F \leq r \}.
 \end{align*}
+\MW{Balls are convex in nonpositive curvature, right?}
 % The geodesic distance squared between two points $P,Q\in\P$ is given by
 % \begin{align*}
 %   \sum_{a=1}^k \frac 1{d_a} \norm{\log(P_a^{-1/2} Q_a P_a^{-1/2})}_F^2.
@@ -473,13 +474,14 @@ Therefore, the \emph{(geodesic) ball} of radius~$r>0$ about~$P$ is given by
 \end{definition}
 
 Accordingly, we obtain the following notion of geodesic convexity.
+\MW{The following definitions are buggy; the zero'th order definition of convexity does not make sense pointwise. Define it in a convex set? Or take the differential definition as a pointwise one?}
 
 \begin{definition}[Geodesic convexity]
 A function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $P\in\P$ if the functions $t \mapsto f(\exp_P(tH))$ are convex in $t\in\R$ for all~$H \in \H$.
-Assuming $f$ is twice differentiable, this holds if $\partial^2_t f(\exp_P(tH)) \geq 0$ for all~$H\in\H$.
+Assuming $f$ is twice differentiable, this holds if, and only if, $\partial^2_t f(\exp_P(tH)) \geq 0$ for all~$H\in\H$.
 
 Similarly, $f$ is called \emph{$\lambda$-strongly geodesically convex} at $P$ for some $\lambda>0$ if the same is true for the functions $t \mapsto f(\exp_P(tH))$ for all~$H\in \H$.
-Assuming the function is twice differentiable, this holds if $\partial^2_t f(\exp_P(tH)) \geq \lambda \sum_{a=1}^k \norm{H_a}_F^2$ for all~$H\in\H$.
+Assuming the function is twice differentiable, this holds if, and only if, $\partial^2_t f(\exp_P(tH)) \geq \lambda \norm H_F^2$ for all~$H\in\H$.
 \end{definition}
 
 The invariance properties described above for $\PD(d)$ are directly inherited for tuples of precision matrices with determinant one.
@@ -579,7 +581,7 @@ Then the MLE $\widehat{\Theta}(x')$ is exactly $\Theta^{1/2} \widehat{\Theta}(x)
 By invariance of the relative Frobenius error, $D_F(\widehat\Theta(x') \Vert \Theta) = D_F(\widehat\Theta(x) \Vert I)$ (the same is true for $D_{\op}$).
 This shows that to prove \cref{thm:tensor-frobenius} it is enough to consider the case that $\Theta = (I,\dots,I)$, i.e., to the standard Gaussian.
 \item\label{it:grad} \textbf{Bound the gradient:}
-Show that the gradient $\nabla f_x(I)$ (defined below) is small with high probability.
+Show that the gradient $\nabla f_x(I,\dots,I)$ (defined below) is small with high probability.
 \item\label{it:convexity} \textbf{Show strong convexity:}
 Show that, with high probability, $f_x$ is $\Omega(1)$-strongly geodesically convex near $I$.
 \end{enumerate}
@@ -624,78 +626,75 @@ where the components $\nabla_{ab}^2f(P)$ of the Hessians are linear operators fr
 We note that the Hessian is symmetric with respect to the inner product~$\braket{\cdot,\cdot}$ on $\H$.
 Just like in the Euclidean case, the Hessian is convenient to characterize strong convexity.
 Indeed, $\braket{H, \nabla^2 f(P) H} = \partial^2_{t=0} f(\exp_{P}(tH))$ for all $H\in \H$.
-Thus, $f$~is geodesically convex if and only if the Riemannian Hessian is positive semidefinite, that is, $\nabla^2 f(P) \succeq 0$. % where$\succeq$ is the Loewner order.
-Similarly, $f$ is $\lambda$-strongly geodesically convex at $P$ if and only if~$\nabla^2 f(P) \succeq \lambda I$, i.e., the Hessian is positive definite with eigenvalues larger than or equal to~$\lambda$.
+Thus, $f$~is geodesically convex if and only if the Hessian is positive semidefinite, that is, $\nabla^2 f(P) \succeq 0$. % where$\succeq$ is the Loewner order.
+Similarly, $f$ is $\lambda$-strongly geodesically convex if and only if~$\nabla^2 f(P) \succeq \lambda I$, i.e., the Hessian is positive definite with eigenvalues larger than or equal to~$\lambda$.
 
 We can now state and prove the following lemma, which shows that strong convexity in a ball about a point where the gradient is sufficiently small implies the optimizer cannot be far.
 
-%%% MICHAEL MARKER %55
-\MW{Michael continue here.}
-
 \begin{lemma}\label{lem:convex-ball}
-Let $f\colon \SPD\to \R$ be geodesically convex everywhere, and $\lambda$-strongly geodesically convex in a geodesic ball $B_\kappa$ of radius~$\kappa>0$ about~$I$.
-Further assume the Riemannian gradient satisfies $\norm{\nabla f(I)} \leq \eps < \lambda \kappa / 2$.
-Then the sublevel set $\{\Theta:f(\Theta) \leq f(I)\}$ is contained in the ball $B_{\eps/\lambda} \subset B_\kappa$, and $f$ has a unique minimizer $\Theta^*$ which is contained in $B_{\eps/\lambda}$, and
-$$ f(\Theta^*) \geq f(I) - \eps^2/2 \lambda.$$
+Let $f\colon \P \to \R$ be geodesically convex everywhere, and $\lambda$-strongly geodesically convex in a ball $B_r(P)$ of radius~$r>0$.
+Further assume the gradient is bounded as $\norm{\nabla f(P)}_F \leq \eps < \lambda  r / 2$.
+Then the sublevel set $\{Q \in \P : f(Q) \leq f(P)\}$ is contained in the ball $B_{\eps/\lambda}(P) \subset B_r(P)$ \MW{It looks like we don't prove the smaller inclusion!}, $f$ has a unique minimizer $\cramped{\hat P}$ which is contained in $B_{\eps/\lambda}(P)$, and
+\begin{align}\label{eq:minimum lower bound}
+  f(\hat P) \geq f(P) - \frac{\eps^2}{2 \lambda}.
+\end{align}
 \end{lemma}
-
-%\RMO{We also need to add here that the sublevel set of $f(I)$ is contained in $B_{\kappa}(I)$, which we prove in the middle of the lemma anyways. Is that okay?}
-
 \begin{proof}
-We first show that $f$ has a minimum.
-Consider $g(t) := f(\exp_I(tZ))$, where $Z\in \Sym$ is an arbitrary vector of unit norm~$\norm Z = 1$.
+We first show that the sublevel set of~$f(P)$ is included in the ball of radius~$r$.
+Consider $g(t) := f(\exp_P(tH))$, where~$H\in\H$ is an arbitrary vector of unit norm~$\norm H_F = 1$.
 Then, using the assumption on the gradient,
 \begin{align}\label{eq:grad bound}
   g'(0)
-= \partial_{t=0} f(\exp_{I}(tZ))
-= \braket{\nabla f(I), Z}
-\geq -\norm{\nabla f(I)} \, \norm Z
+= \partial_{t=0} f(\exp_P(tH))
+= \braket{\nabla f(P), H}
+\geq -\norm{\nabla f(P)}_F \norm H_F
 \geq -\eps.
 \end{align}
-Since $f$ is $\lambda$-strongly geodesically convex on $B_\kappa(I)$, we have $g''(t) \geq \lambda$ for all $\abs t\leq\kappa$. It follows that
-for all $0 \leq t \leq \kappa$ we have $g(t) \geq g(0) - \eps t + \lambda t^2/2$; plugging in $t = \kappa$ yields
+Since $f$ is $\lambda$-strongly geodesically convex on $B_r(P)$, we have $g''(t) \geq \lambda$ for all $\abs t\leq r$.
+It follows that for all $0 \leq t \leq  r$ we have
+\begin{align}\label{eq:g convex lower}
+  g(t) \geq g(0) - \eps t + \frac12 \lambda t^2.
+\end{align}
+Plugging in $t = r$ yields
+$g(r) \geq  % g(0) - \eps  r + \frac12 \lambda r^2 =
+g(0) + \left( \frac{\lambda r}2 - \eps \right)  r
+> g(0)$.
+Since $g$ is convex due to the geodesic convexity of $f$, it follows that, for any~$t \geq  r$,
 \begin{align*}
-  g(\kappa)
-%\geq g(0) + g'(0) \kappa + \lambda \frac{\kappa^2}2
-\geq g(0) - \eps \kappa + \lambda \frac{\kappa^2}2
-= g(0) + \left( \frac{\lambda\kappa}2 - \eps \right) \kappa
-> g(0)
-\end{align*}
-Since $g$ is convex due to the geodesic convexity of $f$, it follows that, for any~$t \geq \kappa$,
-\begin{align*}
-  g(0) < g(\kappa) \leq \left( 1-\frac{\kappa}t \right) g(0) + \frac{\kappa}t g(t),
+  g(0) < g( r) \leq \left( 1-\frac{ r}t \right) g(0) + \frac{ r}t g(t),
 \end{align*}
 hence
 \begin{align*}
-  f(I) = g(0) < g(t) = f(\exp_{I}(tZ)).
+  f(P) = g(0) < g(t) = f(\exp_P(tH)).
 \end{align*}
-It follows that the sublevel set of~$f(I)$ is contained in the ball of radius~$\kappa$, which is a compact set.
-In particular, $f$ has a minimizer $\Theta^*$ in this ball. Moreover, the quantity $ g(0) - \eps t + \lambda t^2/2$ takes a minimum at $t = \eps/ \lambda$, and so $g(t) \geq g(0) - \eps^2/2\lambda$ for all $t \leq \kappa$. By definition of $g$, this tells us that $f(\Theta^*)$ is at least $f(I) - \eps^2/2\lambda$.
+It follows that the sublevel set of~$f(P)$ is contained in the ball of radius~$r$, which is compact.
+Thus, $f$ has a minimum and any minimizer~$\hat P$ is contained in this ball.
+Moreover, as the right-hand side of \cref{eq:g convex lower} takes a minimum at $t=\frac\eps\lambda$, we have $g(t) \geq g(0) - \frac{\eps^2}{2\lambda}$ for all~$0\leq t\leq r$.
+By definition of $g$, this implies \cref{eq:minimum lower bound}.
 
-Next, we prove that any minimizer of $f$ is necessarily contained in the (smaller) ball of radius~$\eps/\lambda$.
-To see this, take an arbitrary minimizer and write it in the form $\exp_I(TZ)$, where $Z\in \Sym$ is a unit vector and $T>0$.
-As before, we consider the function $g(t) = f(\exp_I(tZ))$.
-Then, using \cref{eq:grad bound}, the convexity of~$g(t)$ for all $t\in\R$ and the strong convexity of $g(t)$ for $\abs t \leq \kappa$, we have
+Next, we prove that any minimizer of~$f$ is necessarily contained in the (smaller) ball of radius~$\frac\eps\lambda$.
+To see this, take an arbitrary minimizer~$\hat P$ and write it in the form $\hat P = \exp_P(TH)$, where $H\in \H$ is a unit vector and~$T>0$.
+As before, we consider the function $g(t) = f(\exp_P(tH))$.
+Then, using \cref{eq:grad bound}, the convexity of~$g(t)$ for all $t\in\R$ and the $\lambda$-strong convexity of~$g(t)$ for $\abs t \leq  r$, we have
 \begin{align*}
-  0 = g'(T) = \int_0^T g''(t) \, dt + g'(0) \geq \lambda \min(T, \kappa) - \eps.
+  0 = g'(T) = g'(0) + \int_0^T g''(t) \, dt \geq \lambda \min(T,  r) - \eps.
 \end{align*}
-If $T>\kappa$ then we have a contradiction as $\lambda\kappa - \eps > \lambda\kappa/2 - \eps > 0$.
-Therefore, we must have $T\leq\kappa$ and hence $\lambda T - \eps \leq 0$, so $T \leq \eps/\lambda$.
-Thus we have proved that any minimizer of $f$ is contained in the ball of radius $\eps/\lambda$.
+If $T> r$ then we have a contradiction as $\lambda r - \eps > \lambda r/2 - \eps > 0$.
+Therefore we must have~$T\leq r$ and hence $\lambda T - \eps \leq 0$, so $T \leq \frac\eps\lambda$.
+Thus we have proved that any minimizer of $f$ is contained in the ball of radius~$\frac\eps\lambda$.
 
-%\CF{just track down some ref, or proceed as in commented text.}
-%To see that the minimimizer $\Theta$ is unique, we observe that geodesic strong convexity implies strong star convexity of the function $f \circ \exp_{\Theta}$, which has a unique global minimizer at $0$ if and only if $\Theta$ is the unique minimizer of $f$. It is easy to see that function that is strongly star convex in a neighborhood of the origin is uniquely minimized at the origin.
-
-We still need to show that the minimizer is unique; that this follows from strong convexity is convex optimization ``folklore,'' but we include a proof nonetheless. Indeed, suppose that $\Theta^*$ is a minimizer and let $Z\in \Sym$ be arbitrary.
-Consider $h(t) := f(\exp_{\Theta^*}(tZ))$.
-Then the function $h(t)$ is convex, has a minimum at $t=0$, and satisfies $h''(0) > 0$, since $f$ is $\lambda$-strongly geodesically convex at $\Theta^*$ by what we showed above.
-It follows that $h(t) > h(0)$ for any $t\neq0$.
-Since $Z$ was arbitrary, this shows that $f(\Theta') > f(\Theta^*)$ for any $\Theta'\neq\Theta^*$.
+We still need to show that the minimizer is unique; that this follows from strong convexity is convex optimization ``folklore,'' but we include a proof nonetheless.
+Indeed, suppose that $\hat P$ is a minimizer and let $H\in \H$ be arbitrary.
+Consider $h(t) := f(\exp_{\hat P}(tH))$.
+Then the function $h(t)$ is convex, has a minimum at $t=0$, and satisfies $h''(0) > 0$, since $f$ is $\lambda$-strongly geodesically convex near~$\hat P$, as $\hat P \in B_r(P)$ by what we showed above.
+It follows that $h(t) > h(0)$ for any~$t\neq0$.
+Since $H$ was arbitrary, this shows that $f(Q) > f(\hat P)$ for any $Q\neq P'$.
 \end{proof}
 
 %-----------------------------------------------------------------------------
 \subsection{Bounding the gradient}
 %-----------------------------------------------------------------------------
+\MW{MICHAEL MARKER}
 Proceeding according the plan from the previous section, we now compute the gradient of $f_{\samp}$ and bound it using basic matrix concentration results.
 
 To calculate the gradient, we need a definition from linear algebra. Recall that our data comes as an $n$-tuple of $D$-dimensional vectors. We think of such a sample $\samp$ as a $D \times n$ matrix, so that $\samp^T$ denotes its $n \times D$ transpose. We can compute the gradient from the ``sample covariance matrix" $\rho = \samp \samp^T$.
