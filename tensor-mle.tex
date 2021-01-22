@@ -490,7 +490,7 @@ Assuming the function is twice differentiable, this holds if $\partial^2_t f(\ex
 The invariance properties described above for $\PD(d)$ are directly inherited for tuples of precision matrices with determinant one.
 The manifold $\P$ carries a natural action by the group
 \begin{align*}
-  \G = \{ (G_1,\dots,G_k) \in \GL(d_1) \times \dots \times \GL(d_k) \;:\: \det G_1 = \dots = \det G_k = 1 \};
+  \G = \{ (G_1,\dots,G_k) \in \GL(d_1) \times \dots \times \GL(d_k) \;:\: \det G_a = 1 \; \forall \};
 \end{align*}
 Namely, if $P \in \P$ and $A \in \G$ then the tuple $A P A^T := (G_1 P_1 G_1^T, \dots, G_k P_k G_k^T) \in \P$.
 Moreover, the mapping $P \mapsto AP A^T$ is an isometry, and it preserves the statistical distances~$D_F$ and $D_{\op}$ between the individual precision matrices as well as between their tensor product.
@@ -610,7 +610,7 @@ The \emph{(Riemannian) Hessian}~$\nabla^2 f(P)$ is the unique linear operator on
   \braket{H, \nabla^2 f(P) K} = \partial_{s=0} \partial_{t=0} f(\exp_{P}(sH + tK))
 \end{align*}
 for all $H,K \in \H$.
-We often abbreviate $\nabla^2 f = \nabla^2 f(I)$.
+We often abbreviate $\nabla^2 f = \nabla^2 f(I,\dots,I)$.
 As a block matrix,
 \begin{align*}
   \nabla^2 f = \begin{bmatrix}
