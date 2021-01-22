@@ -413,7 +413,7 @@ Our improved result for the matrix normal model, \cref{thm:matrix-normal}, requi
 be proved later in \cref{sec:matrix-normal}.
 
 %-----------------------------------------------------------------------------
-\subsection{Geometry of precision matrices and geodesic convexity}
+\subsection{Geometry of precision matrices and geodesic convexity}\label{subsec:geom}
 %-----------------------------------------------------------------------------
 We now discuss the geodesic convexity used here and outline the strategy for our proof.
 We start by introducing a Riemannian metric on the manifold $\PD(d)$ of positive-definite $d\times d$ matrices.
@@ -467,6 +467,7 @@ Therefore, the closed \emph{(geodesic) ball} of radius~$r>0$ about~$P$ is given 
   B_r(P) = \{ \exp_P(H) : \norm H_F \leq r \}.
 \end{align*}
 Such balls are geodesically convex, that is, if $\gamma(t)$ is a geodesic such that $\gamma(0),\gamma(1) \in B_r(P)$ then $\gamma(t) \in B_r(P)$ for all $r\in[0,1]$.
+
 % The geodesic distance squared between two points $P,Q\in\P$ is given by
 % \begin{align*}
 %   \sum_{a=1}^k \frac 1{d_a} \norm{\log(P_a^{-1/2} Q_a P_a^{-1/2})}_F^2.
@@ -548,7 +549,7 @@ Moreover, the mapping $P \mapsto AP A^T$ is an isometry, and it preserves the st
 
 
 %-----------------------------------------------------------------------------
-\subsection{Sketch of proof}
+\subsection{Sketch of proof}\label{subsec:proof-sketch}
 %-----------------------------------------------------------------------------
 As discussed above, the MLE problem reduces to minimizing $\sum_{i=1}^n x_i^T ( \bigotimes_{a=1}^k P_a ) x_i$ over $P \in \P$.
 We take as our objective its logarithm, which is also geodesically convex.
@@ -832,14 +833,14 @@ $$ (1 - t) nD \leq \|X\|_F^2 \leq (1 + t)nD$$ with probability $2e^{-t^2 nD/8}$.
 
 
 %-----------------------------------------------------------------------------
-\subsection{Strong convexity}
+\subsection{Strong convexity}\label{subsec:strong-convex}
 %-----------------------------------------------------------------------------
 We now prove our main strong convexity result, \cref{thm:ball-convexity}, in order to carry out step~\cref{it:convexity} of the plan from \cref{subsec:outline}. The theorem states that, with high probability, $f_X$ is strongly convex for $Z$ sufficiently close to the identity.
 
 %\begin{theorem}\label{thm:ball-convexity}There is $c> 0$ such that the following holds: with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, the function $f_{\rv}$ is $1/2$-strongly convex at all points $Z\in \PD$ with $\sum_{i = 1}^n \|\log Z_a\|_{op} < c/k.$\end{theorem}
 
 
-\begin{theorem}\label{thm:ball-convexity} There are constants $C,c>0$ such that the following holds. For $n \geq C k^2 d_1^2/D$, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, $f$ is $1/2$ strongly convex at any point $Z \in \SPD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$.
+\begin{theorem}\label{thm:ball-convexity} There are constants $C,c>0$ such that the following holds. For $n \geq C k^2 d_1^2/D$, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, $f$ is $1/2$-strongly convex at any point $Z \in \SPD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$.
 \end{theorem}
 
 
@@ -932,22 +933,21 @@ $$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq 1/4.$$
 In particular, $f_{\rv}$ is $3/4$-strongly convex at the identity.
 \end{theorem}
 
-\CF{Reprove using intermediate deterministic lemma so better bounds on failure probability or quantum expansion can be plugged in.}
 
 
-The most interesting part of the Hessian is the quadratic form $Y,Z \mapsto \tr \rho^{(ab)} \left( Y \ot Z \right) = \langle Y, \tr_b \rho^{(ab)} \left(I \ot Z\right) \rangle$ appearing in the off-diagonal blocks. For a general state $\rho \in \PD(d_1, d_2)$, the linear map $T:\mat(d_2) \to \mat(d_1)$ corresponding to the bilinear form above, or
-$$T: Z \mapsto \tr_2 \rho \left(I \ot Z\right),$$
- is known as a \emph{quantum channel}. If $\rho = \sum_{i = 1}^N x_i x_i^T$ for $x_i \in \R^{d_1 \ot d_2}$, then we have the following two equivalent ways to write $T$:
-$$ T(Z) = \sum_{i = 1}^N x_i Z x_i^\dagger = \left(\sum_{i = 1}^N x_i \ot x_i\right) Z.$$
-Here $x_i$ are viewed as $d_1 \times d_2$ matrices and $x_i^\dagger$ is the matrix transpose. In our proof of strong convexity, we will show that for $\rho = \rho^{(a,b)}$ this quantum channel has a spectral gap, or rather that $T$ has a small operator norm on the traceless symmetric matrices.
+The most interesting part of the Hessian is the quadratic form $Y,Z \mapsto \tr \rho^{(ab)} \left( Y \ot Z \right) = \langle Y, \tr_b \rho^{(ab)} \left(I \ot Z\right) \rangle$ appearing in the off-diagonal blocks. For a general state $\rho \in \PD(d_1, d_2)$, the linear map $\Phi:\mat(d_2) \to \mat(d_1)$ corresponding to the bilinear form above, or
+$$\Phi: Z \mapsto \tr_2 \rho \left(I \ot Z\right),$$
+ is known as a \emph{quantum channel}. If $\rho = \sum_{i = 1}^N x_i x_i^T$ for $x_i \in \R^{d_1 \ot d_2}$, then we have the following two equivalent ways to write the corresponding channel, which we call $\Phi_{\samp}$:
+\begin{align} \Phi_{\samp}(Z) = \sum_{i = 1}^N x_i Z x_i^\dagger = \left(\sum_{i = 1}^N x_i \ot x_i\right) Z.\label{eq:quantum-channel}\end{align}
+Here $x_i$ are viewed as $d_1 \times d_2$ matrices and $x_i^\dagger$ is the matrix transpose. In our proof of strong convexity, we will show that for $\rho = \rho^{(a,b)}$ this quantum channel has a spectral gap, or rather that $\Phi_{\samp}$ has a small operator norm on the traceless symmetric matrices.
 
 
 Quantum channels with this spectral gap condition are called \emph{quantum expanders}, and play an important role in quantum information theory and quantum computation. Analogously to random graphs, it is known that random quantum channels, namely those obtained by choosing $x_i$ from various distributions, yield good quantum expanders. Pisier studied the case when $x_i$ are chosen from a standard Gaussian, which applies in our setting. He showed the following result.
 
 %We show that, restricted to the traceless matrices, this quadratic form is small. More precisely, we bound the operator norm of the map $T: Z \mapsto \tr_2 \rho^{(ab)} \left(I \ot Z\right)$ restricted to the traceless symmetric matrices. Such maps are called \emph{quantum channels}, and we will revisit their properties later \CF{where? or earlier?}. The operator norm condition we desire for $T_{\rho}$ is equivalent to $T_{\rho}$ being a good \emph{quantum expander} - this led Pisier to bound the operator norm of $T_{\rho}$ for random $\rho$. \CF{one-sentence motivation of quantum expanders?}
 
-\begin{theorem}\label{thm:hess-pisier} Let $X = (X_1, \dots, X_N)$ be a tuple of standard Gaussians on $(\R^{d_1}\ot \R^{d_2})^n$. Then $\forall t \geq 1$ with failure probability at most $t^{-\Omega(d_{1} + d_{2})}$, the random quantum channel
-$$\Phi: Z \mapsto \frac{1}{nD}\sum_{i = 1}^N X_i Z X_i^\dagger$$
+\begin{theorem}\label{thm:hess-pisier} Let $X = (X_1, \dots, X_N)$ be a tuple of standard Gaussians on $(\R^{d_1}\ot \R^{d_2})^n$. Then $\forall t \geq 1$ with failure probability at most $t^{-\Omega(d_{1} + d_{2})}$, the random quantum channel $\frac{1}{nD}\Phi_{X}$
+%$$\Phi: Z \mapsto \frac{1}{nD}\sum_{i = 1}^N X_i Z X_i^\dagger$$
 has operator norm
 $O \left( t^{2} \frac{d_{1}+d_{2}}{\sqrt{d_{1} d_{2} nD}} \right)$ on traceless symmetric matrices. \end{theorem}
 
@@ -1000,8 +1000,8 @@ $$1 - 2k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}.$$ we have $\|\
 First prove \cref{eq:off-diag-hess} by bounding the operator norm of $\nabla^2_{ab} f: \smallSym^0_{d_b} \to \smallSym^0_{d_a}$ for $a \neq b$. Recall from \cref{lem:hessian} that the off-diagonal blocks of the Hessian are defined by
 \begin{align}\frac1{\sqrt{d_a d_b}} \langle Y,  \left( \nabla^2_{ab} f_{\rv} \right) Z \rangle
 = \tr \rho^{(ab)} \left( Y \ot Z \right) - \bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr).\label{eq:grad-off-diag}\end{align}
-As a linear map, define the first term to be $T:Z \mapsto \sqrt{d_a d_b} \tr_b \rho^{(a,b)} (I \ot Z)$. The state $\rho^{(a,b)} = \tr_{\overline{\{a,b\}}} \rho$ is given by $\rho^{{a,b}} =  X X^\dagger/\|X\|^2$ where $X$ is viewed as an $n D/{d_a d_b} \times d_a d_b$ matrix. Equivalently, $\rho^{(a,b)}$ is distributed as
-$$\frac{1}{\sum_{i} \|Y_i\|^2} Y_i Y_i^T$$ where $Y_i$ are $n D/{d_a d_b}$ i.i.d standard Gaussians on $\R^{d_a} \ot \R^{d_b}$. By \cref{thm:hess-pisier} with $2t^2 = \frac {s \sqrt{nD}}{d_a + d_b}$, the operator norm of $T$ restricted to $\smallSym^0_{d_b}$ is $O(s n D /2 \sum_i \|Y_i\|^2 )$
+As a linear map, define the first term to be $\Phi:Z \mapsto \sqrt{d_a d_b} \tr_b \rho^{(a,b)} (I \ot Z)$. The state $\rho^{(a,b)} = \tr_{\overline{\{a,b\}}} \rho$ is given by $\rho^{{a,b}} =  X X^\dagger/\|X\|^2$ where $X$ is viewed as an $n D/{d_a d_b} \times d_a d_b$ matrix. Equivalently, $\rho^{(a,b)}$ is distributed as
+$$\frac{1}{\sum_{i} \|Y_i\|^2} Y_i Y_i^T$$ where $Y_i$ are $n D/{d_a d_b}$ i.i.d standard Gaussians on $\R^{d_a} \ot \R^{d_b}$. By \cref{thm:hess-pisier} with $2t^2 = \frac {s \sqrt{nD}}{d_a + d_b}$, the operator norm of $\Phi$ restricted to $\smallSym^0_{d_b}$ is $O(s n D /2 \sum_i \|Y_i\|^2 )$
 with probability $(s \sqrt{nD}/(d_a + d_b))^{ - \Omega(d_a + d_b)} \leq (s \sqrt{nD} /d_b)^{ - \Omega(d_a)}$. The denominator is $\Theta(nD)$ with failure probability $e^{ -\Omega(nD)} $ by \cref{prp:xnorm} so finally we have that the operator norm of $T$ restricted to $\smallSym^0_{d_b}$ is $O \left( s/2\right)$.
 %By \cref{eq:expansion-thing} (\CF{which needs to actually be proved}), with probability $\CF{good}$, the map $Z \to \tr_2 \rho^{(a,b)} (I \ot Z)$ has operator norm at most $\lambda/\sqrt{d_a d_b}$ restricted to traceless $Z$.
 The second term of \cref{eq:grad-off-diag} defines the quadratic form
@@ -1019,7 +1019,7 @@ Recall again that $\norm{\nabla_a f_{\rv}}_{\op} = \|\sqrt{d_a} \rho^{(a)} - I_a
  Because it will prove useful later on, we prove \cref{thm:tensor-convexity} using an intermediate lemma about semidefiniteness of block matrices.
 
 \begin{lemma}\label{lem:block-matrix}
-Let $M$ be a square, symmetric block matrix with blocks $M_{ab}$ of dimension $d_a \times d_b$ for $a,b \in [k]$. Suppose that for all $a < b \in [k]$, $\|M_{ab}\|_{op} \leq \lambda/2k$ and for all $a \in [k]$ $\|M_{aa} - I_{d_a}\|_{op} \leq \lambda/2$. Then $\|M - I\|_{op} \leq \lambda$.%, and in particular $f$ is $(1 - \lambda)$-geodesically convex at the identity.
+Let $M$ be a square, symmetric block matrix with blocks $M_{ab}$ of dimension $d_a \times d_b$ for $a,b \in [k]$. Suppose that for all $a < b \in [k]$, $\|M_{ab}\|_{op} \leq \lambda/2k$ and for all $a \in [k]$ $\|M_{aa} - I\|_{op} \leq \lambda/2$. Then $\|M - I\|_{op} \leq \lambda$.%, and in particular $f$ is $(1 - \lambda)$-geodesically convex at the identity.
 \end{lemma}
 \begin{proof}
 We use the inequality for block matrices
@@ -1027,16 +1027,16 @@ $$\begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix} \succeq - \begin{bmatrix} A &
 %By the final bound in \cref{cor:off-diag-hess} with $c = 1/25$, with probability $1 - 2k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$ we have $\|\nabla^2_{ab} f_{\rv}\|_0 \leq 1/25k$ for all $a,b \in [k]$ and $\|\nabla^2_{aa}f - I\|_0 \leq \sqrt{1/25k}$ for all $a \in [k]$. 
 
 We first apply the inequality to the upper-left block two-by-two matrix. By our bound on $\|M_{12}\|_{op}$, we may take
-   $A = (\lambda/2k) I_{d_1}$, $B = (\lambda/2k) I_{d_2}$ to find that
+   $A = (\lambda/2k) I_{d_1\times d_1}$, $B = (\lambda/2k) I_{d_2\times d_2}$ to find that
    \begin{align*}
 M \succeq \begin{bmatrix}
-M_{11}-  (\lambda/2k) I_{d_1} & 0 & \hdots &  M_{1k} \\
-0 & M_{11} - (\lambda/2k) I_{d_2} & \ddots & \vdots \\
+M_{11}-  (\lambda/2k) I & 0 & \hdots &  M_{1k} \\
+0 & M_{11} - (\lambda/2k) I & \ddots & \vdots \\
 \vdots & \ddots & \ddots & \vdots\\
 M_{k1} & \hdots &  \hdots & M_{kk}\\
   \end{bmatrix}.\end{align*}
  Applying this for all $a < b$ we find that
- $$M \succeq \bigoplus_{a \in [k]} M_{aa} -  \lambda I_{d_a}/2 \succeq (1 -\lambda) I, $$
+ $$M \succeq \bigoplus_{a \in [k]} (M_{aa} -  \lambda I/2) \succeq (1 -\lambda) I, $$
  where the last inequality follows form our bound on $M_{aa}.$ Reversing the inequalities in all the steps also yields $M_a \preceq 5/4 I$. \end{proof}
 
 We now have the bounds we need to prove \cref{thm:tensor-convexity}. \CF{we need to decide whether to use $\|\|_0$ or $\| \|_{op}$}
@@ -1087,12 +1087,57 @@ By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\sqrt{d_k}$, which h
 We have shown that the minimizer $\widehat{\Theta}$ of $f_\samp$ is close to $I$, but it remains to show that the minimizer $\Theta'$ of $\ell_\samp$ exists and is close to $I$. For this, recall that if $f_\samp$ has the unique minimizer $\widehat{\Theta} \in \SPD$, then $\ell_\samp$ is minimized at $\Theta':= \alpha^{1/k}  \widehat{\Theta}$ where $\alpha:= n D e^{ - f_\samp(\widehat{\Theta})}$. We now show that $\alpha$ is very close to $1$. By \cref{lem:convex-ball}, $f_\samp(\widehat{\Theta}) \geq f_\samp(0) - k\delta^2$. We have $f(0) \geq f_\samp(0) = \log\| \samp\|^2_F$, and by \cref{it:norm-bd} we have $\| \samp\|_F^2 \in (1 \pm t) nD$ with $t = k \eps/\sqrt{\delta_1}$. Thus we have $\alpha \in [(1-t),  (1+t) e^{k \delta^2}]$, or $\alpha^{1/k} \in [1 \pm  O(\eps/\sqrt{d_k})]$ by our choice of $t$. By the approximate triangle inequality for $D_F$ \CF{insert and cite}, $D_F( \Theta'_a; I_a) = O(D_F(\widehat{\Theta}_a; I_a) + D_F(\alpha^{1/k} I_a; I_a)) = O(\eps \sqrt{d_a/d_k})$. The reparametrization $\eps \leftarrow \eps \sqrt{d_k^{3/2}/ n D}$ completes the proof. \TODO{check reparametrization}
 \end{proof}
 
-\section{Improvements for the matrix normal model}\label{sec:matrix-normal-ii}
-$ $
-
-\CF{I want to just rewrite the section using the new concentration results.}
+\section{Improvements for the matrix normal model \CF{NEW}}\label{sec:matrix-normal-ii}
 
 
+
+We now prove \cref{thm:matrix-normal}, an improvement to \cref{thm:tensor-frobenius} in the case $k=2$. The results for $k = 2$ are stronger in that \CF{ergh} the MLE can be shown to be close to the truth in operator norm rather than the looser Frobenius norm, the errors are tight for the individual factors, and that the failure probability is inverse exponential in the number of samples rather than inverse polynomial.
+
+The proof plan is similar to that in \cref{subsec:proof-sketch}, but with the virtually equivalent notion of quantum expansion substituted for strong convexity. As mentioned in \cref{subsec:strong-convex}, the strong convexity of $f_\samp$ is closely related to quantum expansion. We make this relationship more precise here. First we need a definition.
+
+\begin{definition}[Quantum expansion] Let $\Phi:\mat(d_1) \to \mat(d_2)$ be a quantum channel (c.f. \cref{eq:quantum-channel}).
+\begin{enumerate}
+\item Say $\Phi$ is \emph{$\eps$-doubly balanced} if
+\begin{align*}
+\|d_2 \Phi(I_{d_1})/\tr \Phi(I_{d_1})  - I_{d_2} \|_{op}& \leq \eps\\
+\textrm{and }\|d_1 \Phi^*(I_{d_2})/\tr \Phi(I_{d_1})  - I_{d_1}  \|_{op} & \leq \eps,
+\end{align*}
+\item $\Phi$ is an \emph{$(\eps, 1 - \lambda)$-quantum expander} if $\Phi$ is $\eps$-doubly balanced and
+$$\|\Phi\|_0 \leq \frac{(1 - \lambda)}{\sqrt{d_1d_2}} \tr \Phi(I_{d_2}).$$
+\end{enumerate}
+A $(0, 1 - \lambda)$-quantum expander is called a $(1-\lambda)$-quantum expander.
+\end{definition}
+By \cref{thm:tensor-convexity}, the $(\eps, 1 - \lambda)$-quantum expansion of the channel $\Phi_\samp$ implies that $\nabla^2 f_x \geq (\lambda - O(\eps)) I.$ It is desirable to work with $(\eps, 1 - \lambda)$-quantum expanders $\Phi$ because they have a \emph{spectral gap,} i.e. $\Phi$ satisfies the condition 
+\begin{align}\sigma_2(\Phi) \leq \frac{(1 - \lambda)}{\sqrt{d_1d_2}} \tr \Phi(I_{d_2}).\label{eq:spectral-gap}
+\end{align}
+It is known that $(\eps, 1 - \lambda)$-quantum expansion implies spectral gap $(1 - \lambda - O(\eps))$. Our main tool is the following:
+
+
+
+
+%$\sigma_1(\Phi) = \langle I_{d_1}/\sqrt{d_1}, \Phi(I_{d_1}/\sqrt{d_2}) \rangle$
+
+
+\begin{theorem}[\CF{KLR}]\label{thm:klr}
+If $\Phi$ is $\eps$-doubly balanced and has spectral gap $(1 - \lambda)$ for $\eps \leq c \lambda^2/\log d_1$, then the maximum likelihood estimator $(\widehat{\Theta}_1, \widehat{\Theta}_2) \in \SL_{d_1}\times \SL_{d_2}$ is unique and satisfies
+$$\| \widehat{\Theta}_1 - I_{d_1}\|_{op}, \| \widehat{\Theta}_2 - I_{d_2}\|_{op} \leq \frac{\eps \log d_1}{\lambda}.$$
+\end{theorem}
+
+We prove in this section is that $\Phi$ is with high probability a good quantum expander, which allows us to apply the previous theorem.
+
+\begin{theorem}\label{thm:operator-cheeger}
+There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is $\eps \sqrt{d_2/n d_1}$-balanced and is an $(\eps \sqrt{d_2/n d_1}, 1 - c)$-quantum expander, with failure probability $O(e^{ - \Omega( d_2 \eps^2)}).$
+\end{theorem}
+%The above theorem follows from a slightly different result, which is identical to the above theorem except the condition ``$(1-c)$-quantum expander" is replaced by $\|\Phi\|_0 \leq 1 - c$. Applying \cref{lem:block-matrix} to $\nabla^2 f$ with this bound on $\|\Phi\|_0 = \|\nabla^2_{12} f\|_{0}$ improves \cref{thm:tensor-convexity}, and consequently also \cref{thm:ball-convexity}, as follows. 
+By \cref{thm:tensor-convexity}, and the consequent improvement to \cref{thm:ball-convexity} \CF{actually make it like this}, we have the following.
+\begin{corollary}\label{cor:matrix-convexity} There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then with failure probability $O(e^{ - \Omega( d_2 \eps^2)}),$ $f$ is $c$-strongly convex at any point $Z \in \SPD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$.
+\end{corollary}
+
+We will prove \cref{thm:operator-cheeger} in the appendix using techniques similar to \cite{FM20} using Cheeger's inequality. As a preliminary result we can already prove that the MLE is accurate in operator norm, but with slightly worse failure probability using the tools for the tensor case:
+
+\begin{prop} \label{thm: operator-Pisier}
+There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is an $(\eps \sqrt{d_2/n d_1}, 1 - c)$ quantum expander with failure probability $O \left(\frac {\sqrt{nD}}{d_1}\right)^{ - \Omega(d_1)}$.
+\end{prop}
 
 
 
@@ -1101,45 +1146,6 @@ $ $
 %=============================================================================
 \section{Improvements for the matrix normal model}\label{sec:matrix-normal}
 %=============================================================================
-We now prove \cref{thm:matrix-normal}, an improvement to \cref{thm:tensor-frobenius} in the case $k=2$. The results for $k = 2$ are stronger in that the MLE can be shown to be close to the truth in operator norm rather than the looser Frobenius norm, and that the failure probability is inverse exponential in the number of samples rather than inverse polynomial.
-
-
-
-
-The proof plan is similar to that in \cref{subsec:outline}, but rather than strong convexity we use the similar notion of quantum expansion. Quantum expansion has been used in \CF{cite klr, etc} to obtain bounds on the distance to the optimizer from bounds on the \emph{operator norm} on the gradient rather than the Frobenius norm.
-\CF{move the above to appropriate place?}
-\CF{reiterate that $\Phi$ is what appears in the gradient}
-
-\begin{definition}[Quantum expansion]
-$ $
-\begin{enumerate}
-\item Let $\Phi:\mat(d_1) \to \mat(d_2)$ be the operator defined by $\Phi(Y) = \tr_{\{1,3\}} ( Y \ot I_{d_2} \ot I_{n}) \samp \samp^T$. Equivalently,
-$$\Phi(Y) = \sum_{i = 1}^n \samp_i^T Y \samp_i.$$
-$\Phi$ is known as the \emph{completely positive map} with Kraus operators $\samp_1, \dots, \samp_n$.
-\item $\Phi$ is said to be a \emph{$(1 - \lambda)$-quantum expander} if the second singular value $\sigma_2(\Phi)$ satisfies the following bound:
-$$\sigma_2(\Phi) \leq \frac{(1 - \lambda)}{\sqrt{d_1d_2}} \tr \Phi(I_{d_2}).$$
-\item Say $\Phi$ is \emph{$\eps$-doubly balanced} if
-\begin{align*}
-\|d_2 \Phi(I_{d_1})/\tr \Phi(I_{d_1})  - I_{d_2} \|_{op}& \leq \eps\\
-\textrm{and }\|d_1 \Phi^*(I_{d_2})/\tr \Phi(I_{d_1})  - I_{d_1}  \|_{op} & \leq \eps,
-\end{align*}
-\end{enumerate}
-\end{definition}
-
-The rationale for the above definition is that $\Phi$ is doubly balanced when $(I_{d_1}/\sqrt{d_1}, I_{d_2}/\sqrt{d_2})$ is a singular pair for $\Phi$. The conclusion of \cref{prop:gradient-bound} is exactly that $\Phi$ is $\eps$-doubly balanced, so $(I_{d_1}/\sqrt{d_1}, I_{d_2}/\sqrt{d_2})$ is an approximate singular pair and $\sigma_1(\Phi) \leq (1+\eps)  \tr \Phi(I_{d_1})/\sqrt{d_1 d_2}$. Thus $(1-\lambda - \eps)$ is the spectral gap.
-%$\sigma_1(\Phi) = \langle I_{d_1}/\sqrt{d_1}, \Phi(I_{d_1}/\sqrt{d_2}) \rangle$
-Our main tool is the following:
-
-
-\begin{theorem}[\CF{cite klr, comment about how to assume in SL?}]\label{thm:klr}
-If $\Phi$ is an $\eps$-balanced, $(1 - \lambda)$-quantum expander, and $\eps \leq c \lambda^2/\log d_1$, then the maximum likelihood estimator $(\widehat{\Theta}_1, \widehat{\Theta}_2) \in \SL_{d_1}\times \SL_{d_2}$ is unique and satisfies
-$$\| \widehat{\Theta}_1 - I_{d_1}\|_{op}, \| \widehat{\Theta}_2 - I_{d_2}\|_{op} \leq \frac{\eps \log d_1}{\lambda}.$$
-\end{theorem}
-Our main result for this section is that $\Phi$ is with high probability a good quantum expander, which allows us to apply the previous theorem.
-
-\begin{theorem}\label{thm:operator-cheeger}
-There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is $\eps \sqrt{d_2/n d_1}$-balanced and is a $(1 - c)$-quantum expander, with failure probability $O(e^{ - \Omega( d_2 \eps^2)}).$
-\end{theorem}
 The above theorem follows from a slightly different result, which is identical to the above theorem except the condition ``$(1-c)$-quantum expander" is replaced by $\|\Phi\|_0 \leq 1 - c$. Applying \cref{lem:block-matrix} to $\nabla^2 f$ with this bound on $\|\Phi\|_0 = \|\nabla^2_{12} f\|_{0}$ improves \cref{thm:tensor-convexity}, and consequently also \cref{thm:ball-convexity}, as follows. 
 
 \begin{corollary}\label{cor:matrix-convexity} There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then with failure probability $O(e^{ - \Omega( d_2 \eps^2)}),$ $f$ is $c$-strongly convex at any point $Z \in \SPD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$.
@@ -1631,23 +1637,23 @@ We restate the theorem in language closer to Pisier's original:
 % Theorem 16.6 - \url{https://arxiv.org/pdf/1101.4195.pdf}
 %\CF{at some point include a sentence about the setting of $\alpha_i$, maybe in the main body}
 %\CF{choose different letter for $n$}
-\begin{theorem} \label{thm:Pisier-expansion}
+\begin{theorem}\label{thm:Pisier-expansion}
 Let $\Pi: \mat(m) \to \mat(m)$ denote the projection onto the traceless matrices, and $Y$ a tuple of i.i.d. standard Gaussians in $\mat(n,m)$. There are constants $c,C > 0$ such that for all $m \leq n$ we have
 \[ \left\| \left(\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i}\right) \circ \Pi \right\|_{op} \leq C t^{2} \|\alpha\|_{2} \left( \E \|Y\|_{op} \right)^{2} \]
 with probability at least $ 1- t^{-c(m+n)}$.
 \end{theorem}
 
-The relation to our desired expansion result follows from the following: for $Y \in \R^{n \times m}$ we have $Y \otimes Y : \R^{m \times m} \to \R^{n \times n}$, and so for $Z \in \mat(m)$:  \CF{some bad latex thing happening below}
+The relation to our desired expansion result follows from the following: for $Y \in \R^{n \times m}$ we have $Y \otimes Y : \R^{m \times m} \to \R^{n \times n}$, and so for $Z \in \mat(m)$: 
 \[ Y \otimes Y (\text{vec}(Z)) = \text{vec}( Y^{*} Z Y)      \]
 \cref{thm:hess-pisier} then follows as a corollary by choosing $\alpha \propto \vec{1}$ and standard results from Gaussian concentration. The proof of \cref{thm:Pisier-expansion} proceeds by a symmetrization trick, followed by the trace method. We will first state the necessary concentration results and then give the proof. Our setting required the result on rectangular matrices with strong error bounds, but we claim no originality.
 
-\begin{theorem} \cite{P86}
+\begin{theorem}[\cite{P86}]
 We denote a random Gaussian matrix $Y \in \R^{m \times n}$ (for $m < n$) with $Y_{ij} \sim \mathcal{N}(0,1)$, we have the following bound
 \[ \E \|Y\|_{op} \leq \sqrt{m} + \sqrt{n} \]
 \end{theorem}
 
 
-\begin{theorem} \cite{P86}
+\begin{theorem}[\cite{P86}]
 Let $Y$ be a standard Gaussian in a separable Banach space with norm $\|\cdot\|$. Then $\|Y\|$ is subGaussian with parameter $\sigma^{2} := \sup \{ \E \langle Y, \xi \rangle^{2} \mid \|\xi\|_{*} \leq 1 \}; $ that is
 \[ \Pr [ | \|Y\| - \E \|Y\| | \geq t ] \leq \exp \left( - \frac{\Omega(t^{2})}{\sigma^{2}} \right).   \]
 Another equivalent definition of sub-Gaussianity is
