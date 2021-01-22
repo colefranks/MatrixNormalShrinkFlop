@@ -474,14 +474,19 @@ Such balls are geodesically convex, that is, if $\gamma(t)$ is a geodesic such t
 \end{definition}
 
 Using our definition of geodesics, we obtain the following notion of geodesic convexity.
-\MW{The following definitions are buggy; the zero'th order definition of convexity does not make sense pointwise. Define it in a convex set? Or take the differential definition as a pointwise one?}
+\MW{I did the quick fix, someone else can improve to their liking.}
 
 \begin{definition}[Geodesic convexity]
-A function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $P\in\P$ if the functions $t \mapsto f(\exp_P(tH))$ are convex in $t\in\R$ for all~$H \in \H$.
-Assuming $f$ is twice differentiable, this holds if, and only if, $\partial^2_t f(\exp_P(tH)) \geq 0$ for all~$H\in\H$.
+A twice differentiable function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $P\in\P$ if $\partial^2_{t=0} f(\exp_P(tH)) \geq 0$ for all~$H\in\H$.
+It is called \emph{$\lambda$-strongly geodesically convex} at $P$ for some $\lambda>0$ if $\partial^2_{t=0} f(\exp_P(tH)) \geq \lambda \norm H_F^2$ for all~$H\in\H$.
 
-Similarly, $f$ is called \emph{$\lambda$-strongly geodesically convex} at $P$ for some $\lambda>0$ if the same is true for the functions $t \mapsto f(\exp_P(tH))$ for all~$H\in \H$.
-Assuming the function is twice differentiable, this holds if, and only if, $\partial^2_t f(\exp_P(tH)) \geq \lambda \norm H_F^2$ for all~$H\in\H$.
+We note that for a geodesically convex domain $D \subseteq \P$, a function $f$ is (strongly) geodesically convex on~$D$ if, and only if, the function $t \mapsto f(\gamma(t))$ is (strongly) convex on~$[0,1]$ for any geodesic $\gamma(t)$ with $\gamma(0),\gamma(1)\in D$.
+In other words, geodesic convexity simply means convexity in the ordinary Euclidean sense when restricted to geodesics.
+% A function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $P\in\P$ if the functions $t \mapsto f(\exp_P(tH))$ are convex in $t\in\R$ for all~$H \in \H$.
+% Assuming $f$ is twice differentiable, this holds if, and only if, $\partial^2_t f(\exp_P(tH)) \geq 0$ for all~$H\in\H$.
+
+% Similarly, $f$ is called \emph{$\lambda$-strongly geodesically convex} at $P$ for some $\lambda>0$ if the same is true for the functions $t \mapsto f(\exp_P(tH))$ for all~$H\in \H$.
+% Assuming the function is twice differentiable, this holds if, and only if, $\partial^2_t f(\exp_P(tH)) \geq \lambda \norm H_F^2$ for all~$H\in\H$.
 \end{definition}
 
 The invariance properties described above for $\PD(d)$ are directly inherited for tuples of precision matrices with determinant one.
