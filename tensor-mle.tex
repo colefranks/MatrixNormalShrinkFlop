@@ -1281,7 +1281,7 @@ In this section we prove that the flip-flop algorithms for the matrix and tensor
 \item
 If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\left( \bigotimes_{a =1}^k \otheta_a \right)^{-1}$ and return.
 % S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
-\item Otherwise, set $\otheta_a \leftarrow \det(\rho^{(a)})^{1/d_a} (\rho^{(a)})^{-1} \cdot \otheta_a$.
+\item Otherwise, set $\otheta_a \leftarrow \otheta_a^{1/2} (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$.
 \end{itemize}
 \end{enumerate}
 \caption{Tensor flip-flop algorithm}\label{alg:flip-flop}
@@ -1357,9 +1357,9 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 
 \begin{proof}
 	Let
-	$$\rho := \dfrac{\left( \bigotimes_{j=1}^k \Theta_j \right) \cdot \sum_{i=1}^n x_i x_i^\dagger}{\exp(f_x(\Theta))}.$$
+	$$\rho := \dfrac{\left( \bigotimes_{j=1}^k \Theta_j \right)^{1/2} \cdot \sum_{i=1}^n x_i x_i^\dagger \cdot \left( \bigotimes_{j=1}^k \Theta_j \right)^{1/2}}{\exp(f_x(\Theta))}.$$
 	Additionally, let $a \in [k]$ be such that $\nabla_a := \nabla_a f_x(\Theta)$ is largest. As $\Upsilon$ is the successive scaling, we have that $\Upsilon_b = \Theta_b$ when $b \neq a$ and
-	$$ \Upsilon_a = \det(\rho^{(a)})^{1/d_a} \cdot (\rho^{(a)})^{-1} \cdot \Theta_a = \det(d_a \cdot \rho^{(a)})^{1/d_a} \cdot (d_a \cdot \rho^{(a)})^{-1} \cdot \Theta_a. $$
+	$$ \Upsilon_a = \det(\rho^{(a)})^{1/d_a} \cdot \Theta_a^{1/2} \cdot  (\rho^{(a)})^{-1} \cdot \Theta_a^{1/2} = \det(d_a \cdot \rho^{(a)})^{1/d_a} \cdot \Theta_a^{1/2} \cdot (d_a \cdot \rho^{(a)})^{-1} \cdot \Theta_a^{1/2}. $$
 	In particular, the above means that we can write $\bigotimes_{j=1}^k \Upsilon_j$ in the following way:
 	$$ \bigotimes_{j=1}^k \Upsilon_j = \det(d_a \cdot \rho^{(a)})^{1/d_a} \cdot E_{(a)} \cdot \bigotimes_{j=1}^k \Theta_j $$
 	where $E_{(a)} = I_1 \otimes \cdots \otimes I_{a-1} \otimes (d_a \cdot \rho^{(a)})^{-1} \otimes I_{a+1} \otimes \cdots \otimes I_k$.
@@ -1470,15 +1470,15 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 
 \textbf{Algorithm}:
 \begin{enumerate}
-\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in \{1,2\}$, and $\delta = \dfrac{\eps^2}{16 d_k^{3/2}}$.
-\item\label{it:flip-flop step 2} For $t=1,\dots,T = 12 k d_k \cdot \log(k/\delta^2)$, repeat the following:
+\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in \{1,2\}$, and $\delta = \dfrac{\eps^2}{16 d_2^{3/2}}$.
+\item\label{it:flip-flop step 2} For $t=1,\dots,T = 24 d_2 \cdot \log(2/\delta^2)$, repeat the following:
 %we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
 \begin{itemize}
-\item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \otheta_2)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \otheta_2)$, and find the index $a \in \{1,2\}$ for which $\norm{\nabla_a}_{op}$ is largest.
+\item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \otheta_2)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \otheta_2)$, and find the index $a \in \{1,2\}$ for which $\norm{\nabla_a}_{op}$ is non-zero.
 \item
-If $\norm{\nabla_a}_{op}^2 < \delta^2$, output $\left( \bigotimes_{a =1}^k \otheta_a \right)^{-1}$ and return.
+If $\norm{\nabla_a}_{op}^2 < \delta^2$, output $\left( \otheta_1 \otimes \otheta_2 \right)^{-1}$ and return.
 % S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
-\item Otherwise, set $\otheta_a \leftarrow \det(\rho^{(a)})^{1/d_a} (\rho^{(a)})^{-1} \cdot \otheta_a$.
+\item Otherwise, set $\otheta_a \leftarrow \det(\rho^{(a)})^{1/d_a} \cdot \otheta_a^{1/2} \cdot (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$.
 \end{itemize}
 \end{enumerate}
 \caption{Matrix flip-flop algorithm}\label{alg:flip-flop}
