@@ -1107,103 +1107,60 @@ We have shown that the minimizer $\widehat{\Theta}$ of $f_\samp$ is close to $I$
 
 
 
-We now prove \cref{thm:matrix-normal}, an improvement to \cref{thm:tensor-frobenius} in the case $k=2$. The results for $k = 2$ are stronger in that \CF{ergh} the MLE can be shown to be close to the truth in operator norm rather than the looser Frobenius norm, the errors are tight for the individual factors, and that the failure probability is inverse exponential in the number of samples rather than inverse polynomial.
+We now prove \cref{thm:matrix-normal}, an improvement to \cref{thm:tensor-frobenius} in the case $k=2$. The results for $k = 2$ are stronger in that \CF{enumerate or emph} the MLE can be shown to be close to the truth in operator norm rather than the looser Frobenius norm, the errors are tight for the individual factors, and that the failure probability is inverse exponential in the number of samples rather than inverse polynomial.
 
-The proof plan is similar to that in \cref{subsec:proof-sketch}, but with the virtually equivalent notion of quantum expansion substituted for strong convexity. As mentioned in \cref{subsec:strong-convex}, the strong convexity of $f_\samp$ is closely related to quantum expansion. We make this relationship more precise here. First we need a definition.
+The proof plan is similar to that in \cref{subsec:proof-sketch}, but to work directly with quantum expansion instead of strong convexity. In particular, the quantum expansion of the operators $\Phi^{ab}$ defined in \cref{lem:expansion-convexity}. Because $k = 2$ there is only one operator $\Phi^{12}$ to consider, which we call $\Phi$. 
 
-\begin{definition}[Quantum expansion] Let $\Phi:\mat(d_1) \to \mat(d_2)$ be a quantum channel (c.f. \cref{eq:quantum-channel}).
-\begin{enumerate}
-\item Say $\Phi$ is \emph{$\eps$-doubly balanced} if
-\begin{align*}
-\|d_2 \Phi(I_{d_1})/\tr \Phi(I_{d_1})  - I_{d_2} \|_{op}& \leq \eps\\
-\textrm{and }\|d_1 \Phi^*(I_{d_2})/\tr \Phi(I_{d_1})  - I_{d_1}  \|_{op} & \leq \eps,
-\end{align*}
-\item $\Phi$ is an \emph{$(\eps, 1 - \lambda)$-quantum expander} if $\Phi$ is $\eps$-doubly balanced and
-$$\|\Phi\|_0 \leq \frac{(1 - \lambda)}{\sqrt{d_1d_2}} \tr \Phi(I_{d_2}).$$
-\end{enumerate}
-A $(0, 1 - \lambda)$-quantum expander is called a $(1-\lambda)$-quantum expander.
-\end{definition}
-By \cref{thm:tensor-convexity}, the $(\eps, 1 - \lambda)$-quantum expansion of the channel $\Phi_\samp$ implies that $\nabla^2 f_x \geq (\lambda - O(\eps)) I.$ It is desirable to work with $(\eps, 1 - \lambda)$-quantum expanders $\Phi$ because they have a \emph{spectral gap,} i.e. $\Phi$ satisfies the condition 
+Our main tool is a bound by \CF{KLR} using a very similar notion as \emph{spectral gap}. $\Phi$ has spectral gap $\lambda$ if it satisfies the condition 
 \begin{align}\sigma_2(\Phi) \leq \frac{(1 - \lambda)}{\sqrt{d_1d_2}} \tr \Phi(I_{d_2}).\label{eq:spectral-gap}
 \end{align}
-It is known that $(\eps, 1 - \lambda)$-quantum expansion implies spectral gap $(1 - \lambda - O(\eps))$. Our main tool is the following:
-
-
-
+It is known (Lemma A.3 in \cite{FM20}) that $(\eps, \lambda)$-quantum expansion implies spectral gap $(\lambda - O(\eps))$ , so the notions are equivalent for our purposes. 
 
 %$\sigma_1(\Phi) = \langle I_{d_1}/\sqrt{d_1}, \Phi(I_{d_1}/\sqrt{d_2}) \rangle$
 
 
-\begin{theorem}[\CF{KLR}]\label{thm:klr}
+\begin{theorem}[\CF{KLR}]\label{thm:klr} Let $d_1 \leq d_2$.
 If $\Phi$ is $\eps$-doubly balanced and has spectral gap $(1 - \lambda)$ for $\eps \leq c \lambda^2/\log d_1$, then the maximum likelihood estimator $(\widehat{\Theta}_1, \widehat{\Theta}_2) \in \SL_{d_1}\times \SL_{d_2}$ is unique and satisfies
 $$\| \widehat{\Theta}_1 - I_{d_1}\|_{op}, \| \widehat{\Theta}_2 - I_{d_2}\|_{op} \leq \frac{\eps \log d_1}{\lambda}.$$
 \end{theorem}
 
-We prove in this section is that $\Phi$ is with high probability a good quantum expander, which allows us to apply the previous theorem.
+\cref{thm:klr}, along with what we've shown so far, already implies a preliminary version. In the proof of \cref{thm:tensor-convexity}, we've already shown that $\Phi$ is an $(\eps \sqrt{d_2/n d_1}, 1 - c)$-quantum expander with failure probability 
+$$O(e^{ - \Omega( d_2 \eps^2)}) + (\sqrt{nD}/{d_1})^{ - \Omega(d_1)}.$$ 
+
+This immediately implies that the above failure probability holds for \cref{thm:matrix-normal} with the bound replaced by
+\begin{align*}
+  D_{\op}(\widehat{\Theta}_a \Vert \Theta_a) = O\left(\eps \sqrt{\frac{d_{2}}{n d_1}} \log d_1\right).
+\end{align*}
+One of the results of this section is the following theorem, which shows that the expansion constant $\lambda$ of $\Phi$ can be made constant with inverse exponential failure probability, albeit with a worse constant. 
 
 \begin{theorem}\label{thm:operator-cheeger}
 There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is $\eps \sqrt{d_2/n d_1}$-balanced and is an $(\eps \sqrt{d_2/n d_1}, 1 - c)$-quantum expander, with failure probability $O(e^{ - \Omega( d_2 \eps^2)}).$
 \end{theorem}
 %The above theorem follows from a slightly different result, which is identical to the above theorem except the condition ``$(1-c)$-quantum expander" is replaced by $\|\Phi\|_0 \leq 1 - c$. Applying \cref{lem:block-matrix} to $\nabla^2 f$ with this bound on $\|\Phi\|_0 = \|\nabla^2_{12} f\|_{0}$ improves \cref{thm:tensor-convexity}, and consequently also \cref{thm:ball-convexity}, as follows. 
-By \cref{thm:tensor-convexity}, and the consequent improvement to \cref{thm:ball-convexity} \CF{actually make it like this}, we have the following.
+This also improves our result on strong convexity. By \cref{lem:expansion-convexity}, and the consequent improvement to \cref{thm:ball-convexity}, we have the following.
 \begin{corollary}\label{cor:matrix-convexity} There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then with failure probability $O(e^{ - \Omega( d_2 \eps^2)}),$ $f$ is $c$-strongly convex at any point $Z \in \SPD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$.
 \end{corollary}
 
-We will prove \cref{thm:operator-cheeger} in the appendix using techniques similar to \cite{FM20} using Cheeger's inequality. As a preliminary result we can already prove that the MLE is accurate in operator norm, but with slightly worse failure probability using the tools for the tensor case:
+We will prove \cref{thm:operator-cheeger} in the appendix using techniques similar to \cite{FM20} using Cheeger's inequality. 
 
-\begin{prop} \label{thm: operator-Pisier}
-There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is an $(\eps \sqrt{d_2/n d_1}, 1 - c)$ quantum expander with failure probability $O \left(\frac {\sqrt{nD}}{d_1}\right)^{ - \Omega(d_1)}$.
-\end{prop}
-
-
-
-%\CF{I think right now this doesn't use our convention in \cref{dfn:g-convexity} which leads to the Hessian in \cref{lem:hessian} }
-
-%=============================================================================
-\section{Improvements for the matrix normal model}\label{sec:matrix-normal}
-%=============================================================================
-The above theorem follows from a slightly different result, which is identical to the above theorem except the condition ``$(1-c)$-quantum expander" is replaced by $\|\Phi\|_0 \leq 1 - c$. Applying \cref{lem:block-matrix} to $\nabla^2 f$ with this bound on $\|\Phi\|_0 = \|\nabla^2_{12} f\|_{0}$ improves \cref{thm:tensor-convexity}, and consequently also \cref{thm:ball-convexity}, as follows. 
-
-\begin{corollary}\label{cor:matrix-convexity} There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then with failure probability $O(e^{ - \Omega( d_2 \eps^2)}),$ $f$ is $c$-strongly convex at any point $Z \in \SPD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$.
-\end{corollary}
-
-
-We will prove the above result in the appendix using techniques similar to \cite{FM20} on Cheeger's inequality. As a preliminary result we can already prove that the MLE is accurate in operator norm, but with slightly worse failure probability using the tools for the tensor case:
-
-\begin{prop} \label{thm: operator-Pisier}
-There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is $\eps \sqrt{d_2/n d_1}$-balanced and a $1 - c$ quantum expander with failure probability $O \left(\frac {\sqrt{nD}}{d_1}\right)^{ - \Omega(d_1)}$.
-\end{prop}
-
-\begin{proof}
-We have the following translation by \cref{lem:gradient}:
-\[ \sqrt{d_{1}} \nabla_{1} f_{x} = d_{1} \rho^{(1)} - I_{1} = d_{1} \Phi(I_{2})/ \tr[\Phi(I_{2})] - I_{1}  \]
-Therefore by \cref{prop:gradient-bound}, we have that our operator is $\eps$-doubly balanced with failure probability $\leq e^{-n d_{1} \eps^2/2C} + e^{-n d_{2} \eps^2/2C}$. As mentioned above, this is equivalent to $(I_{d_1}/\sqrt{d_1}, I_{d_2}/\sqrt{d_2})$ being an approximate singular pair, and by Lemma 3.6 in \cite{KLR19} we have $\sigma_1(\Phi) \leq (1+\eps)  \tr \Phi(I_{d_1})/\sqrt{d_1 d_2}$.
-
-To prove a bound on $\sigma_{2}(\Phi)$ we
-%again use the following translation by \cref{lem:hessian}
-%\[ \frac{1}{\sqrt{d_{1} d_{2}}} \langle Y, (\nabla_{12}^{2} F) Z \rangle = \langle Y, \Phi(Z) \rangle     \]
-note \cref{thm:Pisier-expansion} gives the following with failure probability $\leq O \left(\frac {\sqrt{nD}}{d_1}\right)^{ - \Omega(d_1)}$:
-\[ \sup_{\langle Z, I_{2} \rangle = 0} \frac{\langle Y, \Phi(Z) \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq \frac{\tr[\Phi(I_{2})]}{4 \sqrt{d_{1} d_{2}}}       \]
-Note by the Courant-Fischer variational characterization of singular values, this is sufficient to show $\Phi$ is a $(1-3/4)$-quantum expander. We remark that if we examine the proof of \cref{thm:klr} it turns out that they eventually translate the balancedness and expansion conditions to strong convexity.
-\end{proof}
-
-%-----------------------------------------------------------------------------
 \subsection{Proof of \cref{thm:matrix-normal}}
-%-----------------------------------------------------------------------------
-Modulo the proof of \cref{thm:operator-cheeger} in the appendix, we have all the tools in place for \cref{thm:matrix-normal}. Note that if we used \cref{thm: operator-Pisier} instead, we would get the result of \cref{thm:matrix-normal} albeit with worse failure probability.
+We now use \cref{thm:operator-cheeger} as well as some slightly more refined concentration inequalities to prove \cref{thm:matrix-normal}. The additional concentration is required to obtain the tighter bounds on the lower-dimensional factor $\Theta_1$. 
+\CF{cite the better concentration bounds and use them to prove the theorem!}
 
+\CF{OLD PROOF WHICH NEEDS TO BE UPDATED ACCORDINGLY: 
 \begin{proof}[Proof of \cref{thm:matrix-normal}] As discussed in \cref{subsec:outline}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. By \cref{thm:operator-cheeger}, provided 
 $$n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps_0^{-2}\} $$
  with probability $1 - O(e^{ - \Omega( d_2 \eps_0^2)})$ the operator $\Phi$ is $\delta:=\eps_0  \sqrt{\frac{d_2}{n d_1}}$-balanced and is a $(1 - c)$-quantum expander. Condition on this event. By our choice of $n$, we have $\delta \leq \lambda^2/\log d_1$ if we take $\eps_0 = \eps/\log(d_1)$ for $\eps \leq c$. By \cref{thm:klr},
 \begin{gather*} \| \widehat{\Theta}_1 - I_{d_1}\|_{op}, \| \widehat{\Theta}_2 - I_{d_2}\|_{op} \leq C \eps_0 \sqrt{\frac{d_2}{n d_1}} \log d_1 = O\left(\eps \sqrt{\frac{d_2}{n d_1}}\right).\end{gather*}
 The failure probability becomes $O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)})$.
 \end{proof}
+}
 
 
 %-----------------------------------------------------------------------------
 \subsection{Further improvements for matrix normal model}
 %-----------------------------------------------------------------------------
-
+\CF{what follows will be condensed to cite-able results to prove \cref{thm:matrix-normal}}
 \subsubsection{Gaussian Version}
 We will eventually compare all our bounds to gaussian inputs, so we will analyze marginal error for gaussians first.
 
