@@ -352,7 +352,7 @@ Then the MLE $(\widehat{\Theta}_1,\widehat{\Theta}_2) $ for $(\Theta_1, \Theta_2
 \begin{align*}
   D_{\op}(\widehat{\Theta}_a \Vert \Theta_a) = O\left(\eps \sqrt{\frac{d_a^2}{nD}} \log d_1\right)
 \end{align*}
-for $a \in \{1,2\}$ with probability $1 - O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)})$.
+for $a \in \{1,2\}$ with probability $1 - O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)})$ \CF{I think the $d_2$ should actually be a $d_1$}
 \end{theorem}
 %\CF{I feel like we should be able to get $\tilde{O}\sqrt{\frac{d_1}{n d_2}}$ for the smaller marginal. Akshay and I discussed a lot in rocketchat. }
 %\CF{we can! based on michael's calc}
@@ -367,7 +367,7 @@ Initialize $\overline{\Theta}_1 = I_{d_1}$, $\overline{\Theta}_2 = I_{d_2}$, and
 \begin{enumerate}
 \item Set $\overline{\Theta}_1 \leftarrow (\frac{1}{n d_2} \sum_{i = 1}^n X_i \overline{\Theta}_2 X_i^T)^{-1}.$
 \item Set $\Upsilon = \frac{1}{n d_1} \sum_{i = 1}^n X_i^T \overline{\Theta}_1 X_i$.
-If $d( \Upsilon^{-1}; \overline{\Theta}_2) > \eps$, set $\overline{\Theta}_2 \leftarrow \Upsilon^{-1}$ and return to Step 1.
+If $d_F( \Upsilon^{-1}|| \overline{\Theta}_2) > \eps$, set $\overline{\Theta}_2 \leftarrow \Upsilon^{-1}$ and return to Step 1.
 \item Output $\overline{\Theta}_1, \overline{\Theta}_2$.
 \end{enumerate}
 
@@ -566,11 +566,7 @@ Then the maximum likelihood estimator is given by $\widehat\Theta_a = {\hat\lamb
 We write $\widehat P = \widehat P(x)$ and $\widehat\Theta = \widehat\Theta(x)$ when we want to emphasize the depence of the MLE on the samples~$x$.
 \end{definition}
 
-% We may extend $f_x$ to $\oplus_i \PD_{d_i}$ by writing
-% \begin{align}
-%   f_{\samp}(\Theta_1,\dots,\Theta_k) &=  \frac1D\log\det \Theta - \log \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i} \nonumber\\
-%   &= \sum_{i=1}^k \frac1{d_a} \log \det \Theta_a - \log \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i},\label{eq:f extension}
-% \end{align}
+
 
 %\begin{align}\label{eq:tilde ell}  \tilde\ell_{\samp}(\Theta) = \frac1D\log\det \Theta - \log \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i};\end{align}
 
@@ -755,7 +751,12 @@ Then the components of the Riemannian gradient $\nabla f_{\samp}$ at the identit
   using that $F_{\samp}(I) = \tr \rho = 1$.
 \end{proof}
 
-Having calculated the gradient, we are ready to state our bound:
+ Sometimes it is convenient to extend $f_{\samp}$ to $\oplus_i \PD(d_i)$ by writing
+ \begin{align}
+   f_{\samp}(\Theta_1,\dots,\Theta_k) &=   \log \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i} - \sum_{i=1}^k \frac1{d_a} \log \det \Theta_a,\label{eq:f extension}
+ \end{align}
+The extension agrees on $\P$, and the expression for the gradient is the same. \CF{I am doing this in case Rafael wants to use it for flip-flop which isn't normalized, but it's mildly wrong since we haven't defined the geometry except on $\P$.} 
+Having calculated the gradient of $f_\samp$, we are ready to state our bound:
 %\MW{Please check updated proof. Can we assume $\eps<1$ and simply take~$C=16$?}
 \MW{Make pretty by manipulating $C$}
 \begin{prop}\label{prop:gradient-bound}
@@ -1103,13 +1104,15 @@ By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\sqrt{d_k}$, which h
 We have shown that the minimizer $\widehat{\Theta}$ of $f_\samp$ is close to $I$, but it remains to show that the minimizer $\Theta'$ of $\ell_\samp$ exists and is close to $I$. For this, recall that if $f_\samp$ has the unique minimizer $\widehat{\Theta} \in \SPD$, then $\ell_\samp$ is minimized at $\Theta':= \alpha^{1/k}  \widehat{\Theta}$ where $\alpha:= n D e^{ - f_\samp(\widehat{\Theta})}$. We now show that $\alpha$ is very close to $1$. By \cref{lem:convex-ball}, $f_\samp(\widehat{\Theta}) \geq f_\samp(0) - k\delta^2$. We have $f(0) \geq f_\samp(0) = \log\| \samp\|^2_F$, and by \cref{it:norm-bd} we have $\| \samp\|_F^2 \in (1 \pm t) nD$ with $t = k \eps/\sqrt{\delta_1}$. Thus we have $\alpha \in [(1-t),  (1+t) e^{k \delta^2}]$, or $\alpha^{1/k} \in [1 \pm  O(\eps/\sqrt{d_k})]$ by our choice of $t$. By the approximate triangle inequality for $D_F$ \CF{insert and cite}, $D_F( \Theta'_a; I_a) = O(D_F(\widehat{\Theta}_a; I_a) + D_F(\alpha^{1/k} I_a; I_a)) = O(\eps \sqrt{d_a/d_k})$. The reparametrization $\eps \leftarrow \eps \sqrt{d_k^{3/2}/ n D}$ completes the proof. \TODO{check reparametrization}
 \end{proof}
 
-\section{Improvements for the matrix normal model \CF{NEW}}\label{sec:matrix-normal-ii}
+\section{Improvements for the matrix normal model}\label{sec:matrix-normal-ii}
 
 
 
 We now prove \cref{thm:matrix-normal}, an improvement to \cref{thm:tensor-frobenius} in the case $k=2$. The results for $k = 2$ are stronger in that \CF{enumerate or emph} the MLE can be shown to be close to the truth in operator norm rather than the looser Frobenius norm, the errors are tight for the individual factors, and that the failure probability is inverse exponential in the number of samples rather than inverse polynomial.
 
-The proof plan is similar to that in \cref{subsec:proof-sketch}, but to work directly with quantum expansion instead of strong convexity. In particular, the quantum expansion of the operators $\Phi^{ab}$ defined in \cref{lem:expansion-convexity}. Because $k = 2$ there is only one operator $\Phi^{12}$ to consider, which we call $\Phi$. 
+The proof plan is similar to that in \cref{subsec:proof-sketch}, but to work directly with quantum expansion instead of strong convexity. In particular, the quantum expansion of the operators $\Phi^{ab}$ defined in \cref{lem:expansion-convexity}. Because $k = 2$ there is only one operator $\Phi^{12}$ to consider, which we call $\Phi$. In the matrix normal model $X$ is a sample of $n$ i.i.d. Gaussian vectors in $\R^{d_1} \ot \R^{d_2}$, and $\Phi$ is the random operator
+\begin{align}\Phi:Z \mapsto \frac{1}{\|X\|_F^2} \sum_{i = 1}^n X_i Z X_i^\dagger,\label{eq:matrix-normal-operator}\end{align}
+where $X_i^\dagger$ denotes the transpose of $X_i$ viewed as a $d_1\times d_2$ matrix. 
 
 Our main tool is a bound by \CF{KLR} using a very similar notion as \emph{spectral gap}. $\Phi$ has spectral gap $\lambda$ if it satisfies the condition 
 \begin{align}\sigma_2(\Phi) \leq \frac{(1 - \lambda)}{\sqrt{d_1d_2}} \tr \Phi(I_{d_2}).\label{eq:spectral-gap}
@@ -1144,10 +1147,22 @@ This also improves our result on strong convexity. By \cref{lem:expansion-convex
 We will prove \cref{thm:operator-cheeger} in the appendix using techniques similar to \cite{FM20} using Cheeger's inequality. 
 
 \subsection{Proof of \cref{thm:matrix-normal}}
-We now use \cref{thm:operator-cheeger} as well as some slightly more refined concentration inequalities to prove \cref{thm:matrix-normal}. The additional concentration is required to obtain the tighter bounds on the lower-dimensional factor $\Theta_1$. 
-\CF{cite the better concentration bounds and use them to prove the theorem!}
+We now use \cref{thm:operator-cheeger} as well as some more refined concentration inequalities to prove \cref{thm:matrix-normal}. The additional concentration is required to obtain the tighter bounds on the lower-dimensional factor $\Theta_1$, where $d_1 \leq d_2$.
 
-\CF{OLD PROOF WHICH NEEDS TO BE UPDATED ACCORDINGLY: 
+We first sketch the proof of the implied Frobenius error bound. The idea of the proof is to apply one step of flip-flop algorithm, a step which normalizes the larger marginal of $\rho$. This has the effect of making the second component of $\nabla f_\samp$ equal to zero, and we will show that the first component enjoys the same concentration exploited in \cref{prop:gradient-bound} even with the step of flip-flop - thus the total gradient has become smaller. Using \cref{convexRobustness} to control the change induced in the minimal eigenvalue of the Hessian by the first step of the flip-flop and applying \cref{lem:convex-ball} results in an error bound proportional to the new gradient after flip-flop, which gives us the tighter bound. To obtain the relative spectral error bound, we employ a similar strategy but with \cref{thm:klr} instead of \cref{lem:convex-ball}. 
+
+We now discuss the concentration bound. For $\Phi$ as in \cref{eq:matrix-normal-operator}, we can right-multiply $X_i$ by the result of one step of the flip-flop algorithm on the larger factor $\Theta_2$; the result gives rise to a new operator $\tilde{\Phi}$ which satisfies 
+\begin{align} \tilde{\Phi}(I_{d_2}) = \frac{1}{d_2}\sum_{i} X_{i} \left( \sum_{j}  X_{i}^{\dagger} X_{i}\right)^{-1} X_{i}^\dagger \textrm{ and } \tilde{\Phi}^*(I_{d_1}) = \frac{1}{d_2} I_{d_2}.   \label{eq:one-step}\end{align}
+where again $\dagger$ denotes $d_1\times d_2$ matrix transpose.
+\begin{corollary}[Akshay corollary]
+If $X$ is an $n$-tuple of i.i.d. standard Gaussians on $\R^{d_1}\ot \R^{d_2}$, then for $\tilde{\Phi}$ as in \cref{eq:one-step} we have
+$$\|d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op} \leq \eps \sqrt{ \frac{d_1}{nd_2}},$$
+ with probability $1 - \exp(- \Omega( \eps^2 d_{1})).$ In particular, the condition above implies $\tilde{\Phi}$ is $\eps \sqrt{ \frac{d_1}{nd_2}}$-balanced.
+\end{corollary}
+The proof of this lemma uses a result of \CF{cite} on the inner product of two random projections, combined with a standard net argument. With this bound in hand, we may now prove \cref{thm:matrix-normal}.
+
+
+\CF{UPDATE OLD PROOF TO USE NEW CONCENTRATION BOUND
 \begin{proof}[Proof of \cref{thm:matrix-normal}] As discussed in \cref{subsec:outline}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. By \cref{thm:operator-cheeger}, provided 
 $$n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps_0^{-2}\} $$
  with probability $1 - O(e^{ - \Omega( d_2 \eps_0^2)})$ the operator $\Phi$ is $\delta:=\eps_0  \sqrt{\frac{d_2}{n d_1}}$-balanced and is a $(1 - c)$-quantum expander. Condition on this event. By our choice of $n$, we have $\delta \leq \lambda^2/\log d_1$ if we take $\eps_0 = \eps/\log(d_1)$ for $\eps \leq c$. By \cref{thm:klr},
@@ -1160,6 +1175,7 @@ The failure probability becomes $O(e^{ - \Omega( d_2 \eps^2/\log^2 d_1)})$.
 %-----------------------------------------------------------------------------
 \subsection{Further improvements for matrix normal model}
 %-----------------------------------------------------------------------------
+$ $
 \CF{what follows will be condensed to cite-able results to prove \cref{thm:matrix-normal}}
 \subsubsection{Gaussian Version}
 We will eventually compare all our bounds to gaussian inputs, so we will analyze marginal error for gaussians first.
@@ -1890,7 +1906,6 @@ By \cref{thm:tensor-convexity}, with failure probability $k^2 ({\sqrt{nD}}/{kd_1
 \section{The Cheeger constant of a random operator}
 %=============================================================================
 
-\CF{STATE THIS IN TERMS OF $(\eps, \delta)$-quantum expansion to be consistent with sec 4!!!!}
 To prove \cref{thm:operator-cheeger}, we first define the Cheeger constant of an operator $\Phi:\mat(d_1) \to \mat(d_2)$. This is similar to a concept defined in \cite{H07}.
 \begin{definition}
 Let $\Phi : \mat(d_1) \to \mat(d_2)$ be a completely positive map. The Cheeger constant $\ch(\Phi)$ of the weighted bipartite graph associated to $B$ is given by
@@ -1904,14 +1919,12 @@ $$ \vol(\Pi_1,\Pi_2):=
 and $$ \cut(\Pi_1, \Pi_2):= \tr \Pi_2 \Phi(I_{d_1} - \Pi_1) + \tr (I_{d_2} - \Pi_2) \Phi(\Pi_1).$$
 \end{definition}
 
-We now cite a slight generalization of \cite{FM20}. In that work only the bound on $\|\Phi\|_0$ is shown explicitly, but the paper also shows that the second bound follows from the first.
+We now cite bound on expansion in terms of the Cheeger constant. 
+%In that work only the bound on $\|\Phi\|_0$ is shown explicitly, but the paper also shows that the second bound follows from the first.
 %Recall the function $$f^{\Phi}:\samp \mapsto \frac{d_1}{d_2} \log\det(\Phi(\samp)) - \log\det (\samp).$$
 
-\begin{lemma} [\cite{FM20}, Remark 5.5]\label{lem:op-cheeger} There exist absolute constants $c, C$ such if $\eps < c \ch(\Phi)^2$ and $\Phi$ is $\eps$-balanced, then $\Phi$ satisfies 
-$$\| \Phi\|_0 \leq \max\left\{1/2, 1 -  \ch(\Phi)^2 + C \frac{\eps}{\ch(\Phi)^2} \right\}$$ 
-and so is a
-$$ \max\left\{1/2, 1 -  \ch(\Phi)^2 + C \frac{\eps}{\ch(\Phi)^2} \right\}$$
-quantum expander.
+\begin{lemma} [\cite{FM20}, Remark 5.5]\label{lem:op-cheeger} There exist absolute constants $c, C$ such if $\eps < c \ch(\Phi)^2$ and $\Phi$ is $\eps$-balanced, then $\Phi$ is an
+$$ \left(\eps, \max\left\{1/2, 1 -  \ch(\Phi)^2 + C \frac{\eps}{\ch(\Phi)^2} \right\} \right)-\text{quantum expander}.$$
 \end{lemma}
 We proceed to bound the Cheeger constant of a random operator. The Cheeger constant of an operator is scale-invariant, so for convenience we let $\Phi$ have Kraus operators $\samp_1, \dots, \samp_n$, each drawn from $\cN(0,  I_{d_1} \ot I_{d_2}).$ Our main observation is the following.
 
