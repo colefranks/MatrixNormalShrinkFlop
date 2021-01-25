@@ -1218,12 +1218,19 @@ The normalization for the Identity term comes from comparing traces. Now if we c
 \[ Y := \left[ \left( \sum_{i=1}^{n} X_{i} X_{i}^{*} \right)^{-1/2} X_{1}, ..., \left( \sum_{i=1}^{n} X_{i} X_{i}^{*} \right)^{-1/2} X_{n}     \right]   \]
 as a matrix in $\R^{d_{a} \times nd_{b}}$, then by our claim above its rows come from orthonormal bases of a uniformly random $d_{a}$ dimensional subspace of $\R^{n d_{b}}$. Therefore we can rewrite the variable we will consider a net over:
 \[ \langle \xi \xi^{*}, \sum_{i} X_{i}^{*} \left( \sum_{i} X_{i} X_{i}^{*}  \right)^{-1} X_{i} \rangle = \langle Y^{*} Y, \xi \xi^{*} \otimes I_{n}   \rangle     \]
-By the discussion above, $Y^{*} Y$ is distributed as a uniformly random orthogonal projection on $\R^{n d_{b}}$ of rank $d_{a}$. Since $\xi \xi^{*} \otimes I_{n}$ is unitarily equivalent to any rank $n$ orthogonal projection on $\R^{n d_{b}}$, we are left with calculating the MGF for the "overlaps" of two projections. This has already been done for us in the links commented below (thanks Michael!).
-% https://arxiv.org/pdf/quant-ph/0407049.pdf
-% https://arxiv.org/pdf/quant-ph/0307104.pdf
-Because I like the vocabulary used in \url{https://arxiv.org/abs/2006.14009}, I will rewrite the proof for completeness using ideas of "spreading". I claim no originality, this is merely a translation of terms to fit in this theory.
+By the discussion above, $Y^{*} Y$ is distributed as a uniformly random orthogonal projection on $\R^{n d_{b}}$ of rank $d_{a}$. Since $\xi \xi^{*} \otimes I_{n}$ is unitarily equivalent to any rank $n$ orthogonal projection on $\R^{n d_{b}}$, we are left with calculating the MGF for the "overlaps" of two projections. This has already been done for us in the links commented below: specifically Lemma III.5 in \url{https://arxiv.org/pdf/quant-ph/0407049.pdf}, which cites Lemma II.3 in \url{https://arxiv.org/pdf/quant-ph/0307104.pdf} (thanks Michael!).
+
+\begin{theorem} [Lemma III.5 in \url{https://arxiv.org/pdf/quant-ph/0407049.pdf}]
+Our ambient space is $\R^{N}$, and we consider a fixed $n$ dimensional orthogonal projector $Q$. If $P$ is a uniformly random orthogonal projector of rank $a$, then we have
+\[ Pr [ \langle P, Q \rangle \not\in (1 \pm \eps) \frac{an}{N} ] \leq \exp( - \Omega( an \eps^{2} ) )     \]
+\end{theorem}
+
+So in our case we have ambient space $\R^{n d_{b}}$ and set $Q = \xi \xi^{*} \otimes I_{n}$ for any $\xi \in \R^{d_{b}}$. 
+
 
 \subsubsection{Spreading}
+Because I like the vocabulary used in \url{https://arxiv.org/abs/2006.14009}, I will rewrite the proof for completeness using ideas of "spreading". I claim no originality, this is merely a translation of terms to fit in this theory.
+
 \CF{Perhaps we can give some references for where spreading comes up to justify using the terminology instead of just citing.}
 
 \begin{definition} [Def 2.1]
