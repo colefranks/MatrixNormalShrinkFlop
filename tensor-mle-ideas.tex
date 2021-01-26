@@ -757,6 +757,112 @@ The same sequence of inequalities can be reversed to show a lower bound. So in f
 \end{proof}
 
 
+\subsection{Steifel concentration bound}
+\subsubsection{Gaussian Version}
+We will eventually compare all our bounds to gaussian inputs, so we will analyze marginal error for gaussians first.
+
+\begin{lemma}
+Let $X_{1}, ..., X_{n}$ be iid from $N(0,I_{d})$, then we have the following with failure probability $\leq \exp(-d/2)$
+\[ \left\| \sum_{i} X_{i} X_{i}^{*} - n I_{d} \right\|_{op} \leq     3 \sqrt{\frac{d}{n}}  \]
+\end{lemma}
+\begin{proof}
+The proof goes by a simple net argument. For an arbitrary $\xi \in S^{d-1}$ consider the MGF:
+\[ \log \E \exp t \langle \xi \xi^{*}, \sum_{i} X_{i} X_{i}^{*} \rangle = \sum_{i} \log \E \exp t \langle \xi, X_{i} \rangle^{2} = \frac{-n}{2} \log (1 - 2t)     \]
+The last line is because $\langle \xi, X \rangle^{2}$ is distributed as a chi-squared with one degree of freedom. For small $|t| < \frac{1}{4}$, we can approximate this by the second order term:
+\[ \frac{-n}{2} \log (1 - 2t) = \frac{n}{2} \sum_{k \geq 1} \frac{(2t)^{k}}{k} \leq n t + 2 n t^{2}    \]
+If we define $Z_{\xi} := \langle \xi \xi^{*}, \sum_{i} X_{i} X_{i}^{*} - n I_{d} \rangle$, then we have shown this random variable is $(4n, 4)$-subexponential. Using standard results on sub-exponential variables (i.e. Bernstein bound), we get
+\[ Pr \left[ |\langle \xi \xi^{*}, \sum_{i} X_{i} X_{i}^{*}  - n I_{d} \rangle | \geq c \sqrt{n}  \right] \leq \exp( - c^{2} n / 8)     \]
+So we can simultaneously ask for this bound for $\exp(O(n))$ many unit vectors. To lift this to a result on operator norm, for a fixed instantiation of $X$ we consider
+\[ \nu := \left\| \sum_{i} X_{i} X_{i}^{*} - n I_{d} \right\|_{op} = \sup_{\xi \in S^{d-1}} |\langle \xi \xi^{*}, \sum_{i} X_{i} X_{i}^{*} - n I_{d} \rangle|    \]
+Let $\xi'$ be the optimizer, and let $N$ be our $\eta$-net over $S^{d}$, i.e. every element of $S^{d}$ is $\eta$-close to some element in $N$. In particular $\xi' = \xi + \delta$ where $\xi \in N, \|\delta\|_{2} \leq \eta$.
+\[ \nu = |\langle (\xi') (\xi')^{*}, \sum_{i} X_{i} X_{i}^{*} - n I_{d} \rangle| = |\langle (\xi + \delta) (\xi + \delta)^{*}, \sum_{i} X_{i} X_{i}^{*} - n I_{d} \rangle|      \]
+\[ \leq |\langle \xi \xi^{*}, \sum_{i} X_{i} X_{i}^{*} - n I_{d} \rangle| + (2 \|\delta\|_{2} + \|\delta\|_{2}^{2}) \nu    \]
+Rearranging terms, we see that for $\eta < \frac{1}{5}$, the $\sup$ over $N$ gives a 2-approximation for the $\sup$ over $S^{d-1}$. Therefore we can choose $|N| \leq \exp( d \log 10)$:
+\[ Pr \left[ \left\| \sum_{i} X_{i} X_{i}^{*} - n I_{d} \right\|_{op} \geq c \sqrt{n}  \right] \leq Pr \left[ \sup_{\xi \in N} Z_{\xi} \geq 2 c \sqrt{n}  \right] \leq |N| \exp( - c^{2} n / 2)    \]
+So choosing $c = 3 \sqrt{d/n}$ gives the result.
+\end{proof}
+
+\subsubsection{Stiefel Version}
+
+Note if $d_{a} > d_{b}$, the error of the $a$ marginal will be much larger than that of the $b$ marginal. So we could try to analyze what happens after one iteration of flip-flop where we normalize the $a$ to identity. We claim our input if our input is $X_{1}, ..., X_{n} \subseteq \R^{d_{a} \times d_{b}}$ iid from $N(0,I_{a \times b})$, and we normalize so that the rows of $X$ form an orthogonal basis for $\R^{d_{a}}$, our new input $Y$ will be uniform from the Stiefel manifold of bases for $d_{a}$ dimensional subspaces of $\R^{nd_{b}}$. Given this we can try to run a net argument to bound the $b$ marginal and compare it to the gaussian case above:
+\[ \mu_{b}(Y) = \sum_{i} X_{i}^{*} \left( \sum_{j} X_{i} X_{i}^{*} \right)^{-1} X_{i} - \frac{d_{a}}{d_{b}} I_{b}      \]
+The normalization for the Identity term comes from comparing traces. Now if we consider
+\[ Y := \left[ \left( \sum_{i=1}^{n} X_{i} X_{i}^{*} \right)^{-1/2} X_{1}, ..., \left( \sum_{i=1}^{n} X_{i} X_{i}^{*} \right)^{-1/2} X_{n}     \right]   \]
+as a matrix in $\R^{d_{a} \times nd_{b}}$, then by our claim above its rows come from orthonormal bases of a uniformly random $d_{a}$ dimensional subspace of $\R^{n d_{b}}$. Therefore we can rewrite the variable we will consider a net over:
+\[ \langle \xi \xi^{*}, \sum_{i} X_{i}^{*} \left( \sum_{i} X_{i} X_{i}^{*}  \right)^{-1} X_{i} \rangle = \langle Y^{*} Y, \xi \xi^{*} \otimes I_{n}   \rangle     \]
+By the discussion above, $Y^{*} Y$ is distributed as a uniformly random orthogonal projection on $\R^{n d_{b}}$ of rank $d_{a}$. Since $\xi \xi^{*} \otimes I_{n}$ is unitarily equivalent to any rank $n$ orthogonal projection on $\R^{n d_{b}}$, we are left with calculating the MGF for the "overlaps" of two projections. This has already been done for us in the links commented below: specifically Lemma III.5 in \url{https://arxiv.org/pdf/quant-ph/0407049.pdf}, which cites Lemma II.3 in \url{https://arxiv.org/pdf/quant-ph/0307104.pdf} (thanks Michael!).
+
+\begin{theorem} [Lemma III.5 in \url{https://arxiv.org/pdf/quant-ph/0407049.pdf}]
+Our ambient space is $\R^{N}$, and we consider a fixed $n$ dimensional orthogonal projector $Q$. If $P$ is a uniformly random orthogonal projector of rank $a$, then we have
+\[ Pr [ \langle P, Q \rangle \not\in (1 \pm \eps) \frac{an}{N} ] \leq \exp( - \Omega( an \eps^{2} ) )     \]
+\end{theorem}
+
+So in our case we have ambient space $\R^{n d_{b}}$ and set $Q = \xi \xi^{*} \otimes I_{n}$ for any $\xi \in \R^{d_{b}}$. 
+
+
+\subsubsection{Spreading}
+Because I like the vocabulary used in \url{https://arxiv.org/abs/2006.14009}, I will rewrite the proof for completeness using ideas of "spreading". I claim no originality, this is merely a translation of terms to fit in this theory.
+
+\CF{Perhaps we can give some references for where spreading comes up to justify using the terminology instead of just putting it out there.}
+
+\begin{definition} [Def 2.1]
+We say that random variable $Y \in \R^{d}$ is a spread of random variable $X \in \R^{d}$ if
+there exists a coupling such that $\E[Y |X] = X$.
+\end{definition}
+
+Another way to say this is if we can sample $Y$ by first sampling $X$, then sampling a martingale.
+
+\begin{lemma} [Lemma 2.2]
+If $Y$ is a spread of $X$, then for any convex $\phi : \R^{d} \to \R$ we have (by Jensen's inequality)
+\[ \E_{Y} \phi(Y) = \E_{X} \E [ \phi(Y) \mid X ] \geq \E_{X} \phi(\E[Y \mid X]) = \E_{X} \phi(X)      \]
+\end{lemma}
+
+With this we can already compare the MGF's for gaussians vs the sphere:
+\begin{corollary}
+If $v \sim S^{N-1}$ and $g \sim N(0,I_{N})$ then for any $X \succeq 0$ we have
+\[ \E_{S^{N-1}} \exp \langle X, v v^{*} \rangle \leq \E_{N(0,I_{N})} \exp \langle X, g g^{*} \rangle     \]
+\end{corollary}
+\begin{proof}
+We just have to notice $g g^{*} = \|g\|_{2}^{2} \frac{g g^{*}}{\|g\|_{2}^{2}}$, so there is a coupling where we first sample a random direction $v$, and then sample the magitude of the gaussian. The MGF comparison follows since $\phi(Z) := \exp \langle Z, X \rangle$ is convex for $X \succeq 0$.
+\end{proof}
+
+The above corollary is the content of Lemma 2.3 of \url{https://arxiv.org/pdf/quant-ph/0307104.pdf}, and the proof strategy is exactly the same, I just added the spreading vocabulary. Similarly, since we want to compare MGFs of higher rank projections, there is a trick in Lemma 3.5 of \url{https://arxiv.org/pdf/quant-ph/0407049.pdf} that we can copy here with slightly different notation.
+\begin{definition}
+As a weakening, for $K \subseteq \R^{d}$ we say $Y \in \R^{d}$ is a spread of $X \in \R^{d}$ wrt $K$ if
+there exists a coupling of $X,Y$ such that
+\[ \forall \xi \in K:  \langle \xi, \E[Y |X] \rangle = \langle \xi, X  \rangle   \]
+Note for $K = \R^{d}$, the definitions are the same.
+\end{definition}
+\CF{I would state the next lemma like "$Tr_{n}[u u^{*}]$ is a spread of $V V^{*}$ wrt $L(\R^{d})$, therefore (insert inequality)". This better motivates the additional terminology of spreading.}
+
+\begin{corollary}
+Let our vector space be $\R^{d} \otimes \R^{n}$, and consider $V \in \R^{d \times a}$ distributed an a uniformly random rank $a < n$ isometry on $\R^{d}$, and consider $u$ a uniformly random unit vector on $\R^{d} \otimes \R^{n}$. Then for any $L(\R^{d}) \ni X \succeq 0$:
+\[ \E \exp \langle X, \frac{1}{a} V V^{*} \rangle \leq \exp \langle X, Tr_{n}[u u^{*}] \rangle      \]
+\end{corollary}
+\begin{proof}
+We first exhibit the coupling between $V,u$. Let $v_{1}, ..., v_{a}$ be the columns of $V$, then lift to
+\[ V' := \{v_{1} \otimes e_{1}, ..., v_{a} \otimes e_{a} \} \subseteq \R^{d} \otimes \R^{n}     \]
+\[ u := V' 1_{a} = \sum_{i} v_{i} \otimes e_{i} \in \R^{d} \otimes \R^{n}      \]
+Choosing $\{e_{i}\}$ as any orthonormal vectors does not change the partial trace  \CF{use $\tr$ not $Tr$} $V V^{*} = Tr_{n} [V' V'^{*}] = Tr_{n}[ u u^{*} ]$. As $V$ runs over all possible bases, and $\{e_{i}\}$ runs over all possible bases, we recover $u$ uniformly random over the sphere in $\R^{d} \otimes \R^{n}$. Finally since the partial traces are equal, we get that $u u^{*}$ is a spread of $V' V'^{*}$ wrt $\{X \otimes I_{n} \mid X \in L(\R^{d}) \}$; equivalently $Tr_{n}[u u^{*}]$ is a spread of $V V^{*}$ wrt $L(\R^{d})$. The comparison of MGFs then follows by Jensen's inequality.
+\end{proof}
+
+So we have the following sequence of inequalities for MGFs:
+\[ \E \exp \langle Y^{*} Y, \xi \xi^{*} \otimes I_{n} \rangle \]
+\[ \leq \E_{u \sim S^{d_{a} \times d_{a} \times n d_{b}}} \exp d_{a} \langle u u^{*}, \xi \xi^{*} \otimes I_{n} \otimes I_{d_{a}} \rangle \]
+\[ \leq \E _{g \sim N(0,I_{d_{a} \times d_{a} \times n d_{b}})} d_{a}  \langle g g^{*}, \xi \xi^{*} \otimes I_{n} \otimes I_{d_{a}} \rangle       \]
+The desired bound then follows from the gaussian part. We use the correct normalization to be consistent with the rest of the paper below.
+
+\begin{corollary}
+If $X_{1}, ..., X_{n}$ are iid from $N(0, \frac{1}{n d_{a} d_{b}} I_{d_{a} \times d_{b}})$, then let $Y$ be the output after one iteration of flip-flop, so $Y$ is uniformly distributed as $\frac{1}{d_{a}}$ times the $d_{a}$-dimensional Stiefel manifold on $\R^{n d_{b}}$. By definition $\mu_{a}(Y) = 0$. We have the following bound on $\mu_{b}(Y)$ with failure probability $\leq \exp(- \Omega(d_{b}))$:
+\[ \left\| \sum_{i} Y_{i}^{*} Y_{i} - \frac{1}{d_{b}} I_{b}    \right\|_{op} \leq O(1) \frac{1}{d_{b}} \sqrt{ \frac{d_{b}}{n d_{a}}}   \]
+\end{corollary}
+
+%-----------------------------------------------------------------------------
+\subsubsection{Net and union bound}
+%-----------------------------------------------------------------------------
+\TODO{do the net bound like in the vershynin survey}
+
+
 
 
 

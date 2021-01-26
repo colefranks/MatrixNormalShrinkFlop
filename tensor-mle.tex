@@ -1154,20 +1154,20 @@ We first sketch the proof of the implied Frobenius error bound. The idea of the 
 We now discuss the concentration bound. For $\Phi$ as in \cref{eq:matrix-normal-operator}, we can right-multiply $X_i$ by the result of one step of the flip-flop algorithm on the larger factor $\Theta_2$. Explicitly, the new random variable $Y$ is given by
 $Y_i = \frac{1}{\sqrt{d_i}} X_i \Phi^*(I_{d_1})^{-1/2} = \frac{1}{\sqrt{d_i}}  X_i (\sum_{i = 1}^n X_i^\dagger X_i)^{-1/2}.$ \CF{argh, this is mildly wrong, because $\Phi$ was already normalized to be tracial.}
 
- the result gives rise to a new operator $\tilde{\Phi}$ which satisfies 
+The result gives rise to a new operator $\tilde{\Phi}$ which satisfies 
 \begin{align} \tilde{\Phi}(I_{d_2}) = \frac{1}{d_2}\sum_{i} X_{i} \left( \sum_{j}  X_{i}^{\dagger} X_{i}\right)^{-1} X_{i}^\dagger \textrm{ and } \tilde{\Phi}^*(I_{d_1}) = \frac{1}{d_2} I_{d_2}.   \label{eq:one-step}\end{align}
 where again $\dagger$ denotes $d_1\times d_2$ matrix transpose.
-\begin{corollary}[Akshay corollary]\label{cor:flipflop-concentration}
-If $X$ is an $n$-tuple of i.i.d. standard Gaussians on $\R^{d_1}\ot \R^{d_2}$ and $n \geq d_2/d_1$, then for $\tilde{\Phi}$ as in \cref{eq:one-step} we have
+\begin{lemma}[Concentration after flip-flop]\label{lem:flipflop-concentration}
+If $X$ is an $n$-tuple of i.i.d. standard Gaussians on $\R^{d_1}\ot \R^{d_2}$, $n \geq d_2/d_1$ and $\eps> 0$ is at least a large enough absolute constant $C$, then for $\tilde{\Phi}$ as in \cref{eq:one-step} we have
 $$\|d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op} \leq \eps \sqrt{ \frac{d_1}{nd_2}},$$
  with probability $1 - \exp(- \Omega( \eps^2 d_{1})).$ In particular, the condition above implies $\tilde{\Phi}$ is $\eps \sqrt{ \frac{d_1}{nd_2}}$-balanced.
-\end{corollary}
-The proof of this lemma uses a result of \CF{cite} on the inner product of two random projections, combined with a standard net argument. With this bound in hand, we may now prove \cref{thm:matrix-normal}.
+\end{lemma}
+The proof of this lemma uses a result of \cite{hayden2006aspects} on the inner product of two random projections, combined with a standard net argument. The details can be found in \cref{sec:flipflop-concentration}. With this bound in hand, we may now prove \cref{thm:matrix-normal}.
 
 \CF{still need to make this work for the actual MLE, not the $\SL$ one...; maybe just say the argument is analogous to avoid tedium?}
 \begin{proof}[Proof of \cref{thm:matrix-normal}] As discussed in \cref{subsec:proof-sketch}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. By \cref{thm:operator-cheeger}, provided 
 $$n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps_0^{-2}\} $$
- with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)})$ the operator $\Phi$ is a $(\eps_0  \sqrt{{d_2}/{n d_1}},1-\lambda)$-quantum expander. By \cref{cor:flipflop-concentration}, $\tilde{\Phi}$ is $\eps_0 \sqrt{{d_1}/{n d_2}}$-balanced with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)});$ by the union bound both events occur with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)});$ condition on both events.
+ with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)})$ the operator $\Phi$ is a $(\eps_0  \sqrt{{d_2}/{n d_1}},1-\lambda)$-quantum expander. By \cref{lem:flipflop-concentration}, $\tilde{\Phi}$ is $\eps_0 \sqrt{{d_1}/{n d_2}}$-balanced with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)});$ by the union bound both events occur with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)});$ condition on both events.
  
 We now use a lemma relating the quantum expansion of $\tilde{\Phi}$ and $\Phi$; this is analogous to \cref{convexRobustness} guaranteeing the strong convexity of $f$ in a neighborhood of the origin. The operator $\tilde{\Phi}$ is a \emph{scaling} of $\Phi$, that is $\tilde{\Phi}(X) = g^\dagger \Phi( h X h^\dagger) g$ for some $g \in \GL(d_1), h \in \GL(d_2)$. In our case case $h = \frac{1}{\sqrt{d_2}}\Phi^*(I_{d_2})^{-1/2}$ and $g = I_{d_1}$. By Lemma 4.4 in \cite{FM20}, if $\|h^\dagger h - I_{d_1}\|_{op} \leq \delta$,  then $\tilde{\Phi}$ is an $(\eps \sqrt{d_2/n d_1} + O(\delta), 1 - \lambda + O(\delta))$-quantum expander. Fortunately, $h^\dagger h$ is bounded by the balancedness of $\Phi$: $h^\dagger h - I = (d_2 \Phi^*(I_{d_1}))^{-1} - I_{d_2}$. By the balancedness of $\Phi$ we already know that $\|d_2 \Phi^*(I_{d_1}) - I_{d_2}\|_{op} \leq \eps_0 \sqrt{d_2/n d_1}$; provided $\eps_0 \sqrt{d_2/nd_1} \leq 1/2$ we have $\|(d_2 \Phi^*(I_{d_1}))^{-1} - I_{d_2}\|_{op} = O( \eps_0 \sqrt{d_2/n d_1})$. Thus $\tilde{\Phi}$ is an $(\eps_0 \sqrt{d_1 / n d_2}, 1 - \lambda/2)$-quantum expander provided $c'$ is small enough compared to $c$.
  
@@ -1181,114 +1181,8 @@ By the equivariance discussed in \cref{it:reduce}, the MLE $\htheta_1 = \Theta'_
 
 
 
-%-----------------------------------------------------------------------------
-\subsection{Further improvements for matrix normal model}
-%-----------------------------------------------------------------------------
-$ $
-\CF{what follows will be condensed to cite-able results to prove \cref{thm:matrix-normal}}
-\subsubsection{Gaussian Version}
-We will eventually compare all our bounds to gaussian inputs, so we will analyze marginal error for gaussians first.
-
-\begin{lemma}
-Let $X_{1}, ..., X_{n}$ be iid from $N(0,I_{d})$, then we have the following with failure probability $\leq \exp(-d/2)$
-\[ \left\| \sum_{i} X_{i} X_{i}^{*} - n I_{d} \right\|_{op} \leq     3 \sqrt{\frac{d}{n}}  \]
-\end{lemma}
-\begin{proof}
-The proof goes by a simple net argument. For an arbitrary $\xi \in S^{d-1}$ consider the MGF:
-\[ \log \E \exp t \langle \xi \xi^{*}, \sum_{i} X_{i} X_{i}^{*} \rangle = \sum_{i} \log \E \exp t \langle \xi, X_{i} \rangle^{2} = \frac{-n}{2} \log (1 - 2t)     \]
-The last line is because $\langle \xi, X \rangle^{2}$ is distributed as a chi-squared with one degree of freedom. For small $|t| < \frac{1}{4}$, we can approximate this by the second order term:
-\[ \frac{-n}{2} \log (1 - 2t) = \frac{n}{2} \sum_{k \geq 1} \frac{(2t)^{k}}{k} \leq n t + 2 n t^{2}    \]
-If we define $Z_{\xi} := \langle \xi \xi^{*}, \sum_{i} X_{i} X_{i}^{*} - n I_{d} \rangle$, then we have shown this random variable is $(4n, 4)$-subexponential. Using standard results on sub-exponential variables (i.e. Bernstein bound), we get
-\[ Pr \left[ |\langle \xi \xi^{*}, \sum_{i} X_{i} X_{i}^{*}  - n I_{d} \rangle | \geq c \sqrt{n}  \right] \leq \exp( - c^{2} n / 8)     \]
-So we can simultaneously ask for this bound for $\exp(O(n))$ many unit vectors. To lift this to a result on operator norm, for a fixed instantiation of $X$ we consider
-\[ \nu := \left\| \sum_{i} X_{i} X_{i}^{*} - n I_{d} \right\|_{op} = \sup_{\xi \in S^{d-1}} |\langle \xi \xi^{*}, \sum_{i} X_{i} X_{i}^{*} - n I_{d} \rangle|    \]
-Let $\xi'$ be the optimizer, and let $N$ be our $\eta$-net over $S^{d}$, i.e. every element of $S^{d}$ is $\eta$-close to some element in $N$. In particular $\xi' = \xi + \delta$ where $\xi \in N, \|\delta\|_{2} \leq \eta$.
-\[ \nu = |\langle (\xi') (\xi')^{*}, \sum_{i} X_{i} X_{i}^{*} - n I_{d} \rangle| = |\langle (\xi + \delta) (\xi + \delta)^{*}, \sum_{i} X_{i} X_{i}^{*} - n I_{d} \rangle|      \]
-\[ \leq |\langle \xi \xi^{*}, \sum_{i} X_{i} X_{i}^{*} - n I_{d} \rangle| + (2 \|\delta\|_{2} + \|\delta\|_{2}^{2}) \nu    \]
-Rearranging terms, we see that for $\eta < \frac{1}{5}$, the $\sup$ over $N$ gives a 2-approximation for the $\sup$ over $S^{d-1}$. Therefore we can choose $|N| \leq \exp( d \log 10)$:
-\[ Pr \left[ \left\| \sum_{i} X_{i} X_{i}^{*} - n I_{d} \right\|_{op} \geq c \sqrt{n}  \right] \leq Pr \left[ \sup_{\xi \in N} Z_{\xi} \geq 2 c \sqrt{n}  \right] \leq |N| \exp( - c^{2} n / 2)    \]
-So choosing $c = 3 \sqrt{d/n}$ gives the result.
-\end{proof}
-
-\subsubsection{Stiefel Version}
-
-Note if $d_{a} > d_{b}$, the error of the $a$ marginal will be much larger than that of the $b$ marginal. So we could try to analyze what happens after one iteration of flip-flop where we normalize the $a$ to identity. We claim our input if our input is $X_{1}, ..., X_{n} \subseteq \R^{d_{a} \times d_{b}}$ iid from $N(0,I_{a \times b})$, and we normalize so that the rows of $X$ form an orthogonal basis for $\R^{d_{a}}$, our new input $Y$ will be uniform from the Stiefel manifold of bases for $d_{a}$ dimensional subspaces of $\R^{nd_{b}}$. Given this we can try to run a net argument to bound the $b$ marginal and compare it to the gaussian case above:
-\[ \mu_{b}(Y) = \sum_{i} X_{i}^{*} \left( \sum_{j} X_{i} X_{i}^{*} \right)^{-1} X_{i} - \frac{d_{a}}{d_{b}} I_{b}      \]
-The normalization for the Identity term comes from comparing traces. Now if we consider
-\[ Y := \left[ \left( \sum_{i=1}^{n} X_{i} X_{i}^{*} \right)^{-1/2} X_{1}, ..., \left( \sum_{i=1}^{n} X_{i} X_{i}^{*} \right)^{-1/2} X_{n}     \right]   \]
-as a matrix in $\R^{d_{a} \times nd_{b}}$, then by our claim above its rows come from orthonormal bases of a uniformly random $d_{a}$ dimensional subspace of $\R^{n d_{b}}$. Therefore we can rewrite the variable we will consider a net over:
-\[ \langle \xi \xi^{*}, \sum_{i} X_{i}^{*} \left( \sum_{i} X_{i} X_{i}^{*}  \right)^{-1} X_{i} \rangle = \langle Y^{*} Y, \xi \xi^{*} \otimes I_{n}   \rangle     \]
-By the discussion above, $Y^{*} Y$ is distributed as a uniformly random orthogonal projection on $\R^{n d_{b}}$ of rank $d_{a}$. Since $\xi \xi^{*} \otimes I_{n}$ is unitarily equivalent to any rank $n$ orthogonal projection on $\R^{n d_{b}}$, we are left with calculating the MGF for the "overlaps" of two projections. This has already been done for us in the links commented below: specifically Lemma III.5 in \url{https://arxiv.org/pdf/quant-ph/0407049.pdf}, which cites Lemma II.3 in \url{https://arxiv.org/pdf/quant-ph/0307104.pdf} (thanks Michael!).
-
-\begin{theorem} [Lemma III.5 in \url{https://arxiv.org/pdf/quant-ph/0407049.pdf}]
-Our ambient space is $\R^{N}$, and we consider a fixed $n$ dimensional orthogonal projector $Q$. If $P$ is a uniformly random orthogonal projector of rank $a$, then we have
-\[ Pr [ \langle P, Q \rangle \not\in (1 \pm \eps) \frac{an}{N} ] \leq \exp( - \Omega( an \eps^{2} ) )     \]
-\end{theorem}
-
-So in our case we have ambient space $\R^{n d_{b}}$ and set $Q = \xi \xi^{*} \otimes I_{n}$ for any $\xi \in \R^{d_{b}}$. 
 
 
-\subsubsection{Spreading}
-Because I like the vocabulary used in \url{https://arxiv.org/abs/2006.14009}, I will rewrite the proof for completeness using ideas of "spreading". I claim no originality, this is merely a translation of terms to fit in this theory.
-
-\CF{Perhaps we can give some references for where spreading comes up to justify using the terminology instead of just citing.}
-
-\begin{definition} [Def 2.1]
-We say that random variable $Y \in \R^{d}$ is a spread of random variable $X \in \R^{d}$ if
-there exists a coupling such that $\E[Y |X] = X$.
-\end{definition}
-
-Another way to say this is if we can sample $Y$ by first sampling $X$, then sampling a martingale.
-
-\begin{lemma} [Lemma 2.2]
-If $Y$ is a spread of $X$, then for any convex $\phi : \R^{d} \to \R$ we have (by Jensen's inequality)
-\[ \E_{Y} \phi(Y) = \E_{X} \E [ \phi(Y) \mid X ] \geq \E_{X} \phi(\E[Y \mid X]) = \E_{X} \phi(X)      \]
-\end{lemma}
-
-With this we can already compare the MGF's for gaussians vs the sphere:
-\begin{corollary}
-If $v \sim S^{N-1}$ and $g \sim N(0,I_{N})$ then for any $X \succeq 0$ we have
-\[ \E_{S^{N-1}} \exp \langle X, v v^{*} \rangle \leq \E_{N(0,I_{N})} \exp \langle X, g g^{*} \rangle     \]
-\end{corollary}
-\begin{proof}
-We just have to notice $g g^{*} = \|g\|_{2}^{2} \frac{g g^{*}}{\|g\|_{2}^{2}}$, so there is a coupling where we first sample a random direction $v$, and then sample the magitude of the gaussian. The MGF comparison follows since $\phi(Z) := \exp \langle Z, X \rangle$ is convex for $X \succeq 0$.
-\end{proof}
-
-The above corollary is the content of Lemma 2.3 of \url{https://arxiv.org/pdf/quant-ph/0307104.pdf}, and the proof strategy is exactly the same, I just added the spreading vocabulary. Similarly, since we want to compare MGFs of higher rank projections, there is a trick in Lemma 3.5 of \url{https://arxiv.org/pdf/quant-ph/0407049.pdf} that we can copy here with slightly different notation.
-\begin{definition}
-As a weakening, for $K \subseteq \R^{d}$ we say $Y \in \R^{d}$ is a spread of $X \in \R^{d}$ wrt $K$ if
-there exists a coupling of $X,Y$ such that
-\[ \forall \xi \in K:  \langle \xi, \E[Y |X] \rangle = \langle \xi, X  \rangle   \]
-Note for $K = \R^{d}$, the definitions are the same.
-\end{definition}
-\CF{I would state the next lemma like "$Tr_{n}[u u^{*}]$ is a spread of $V V^{*}$ wrt $L(\R^{d})$, therefore (insert inequality)". This better motivates the additional terminology of spreading.}
-
-\begin{corollary}
-Let our vector space be $\R^{d} \otimes \R^{n}$, and consider $V \in \R^{d \times a}$ distributed an a uniformly random rank $a < n$ isometry on $\R^{d}$, and consider $u$ a uniformly random unit vector on $\R^{d} \otimes \R^{n}$. Then for any $L(\R^{d}) \ni X \succeq 0$:
-\[ \E \exp \langle X, \frac{1}{a} V V^{*} \rangle \leq \exp \langle X, Tr_{n}[u u^{*}] \rangle      \]
-\end{corollary}
-\begin{proof}
-We first exhibit the coupling between $V,u$. Let $v_{1}, ..., v_{a}$ be the columns of $V$, then lift to
-\[ V' := \{v_{1} \otimes e_{1}, ..., v_{a} \otimes e_{a} \} \subseteq \R^{d} \otimes \R^{n}     \]
-\[ u := V' 1_{a} = \sum_{i} v_{i} \otimes e_{i} \in \R^{d} \otimes \R^{n}      \]
-Choosing $\{e_{i}\}$ as any orthonormal vectors does not change the partial trace  \CF{use $\tr$ not $Tr$} $V V^{*} = Tr_{n} [V' V'^{*}] = Tr_{n}[ u u^{*} ]$. As $V$ runs over all possible bases, and $\{e_{i}\}$ runs over all possible bases, we recover $u$ uniformly random over the sphere in $\R^{d} \otimes \R^{n}$. Finally since the partial traces are equal, we get that $u u^{*}$ is a spread of $V' V'^{*}$ wrt $\{X \otimes I_{n} \mid X \in L(\R^{d}) \}$; equivalently $Tr_{n}[u u^{*}]$ is a spread of $V V^{*}$ wrt $L(\R^{d})$. The comparison of MGFs then follows by Jensen's inequality.
-\end{proof}
-
-So we have the following sequence of inequalities for MGFs:
-\[ \E \exp \langle Y^{*} Y, \xi \xi^{*} \otimes I_{n} \rangle \]
-\[ \leq \E_{u \sim S^{d_{a} \times d_{a} \times n d_{b}}} \exp d_{a} \langle u u^{*}, \xi \xi^{*} \otimes I_{n} \otimes I_{d_{a}} \rangle \]
-\[ \leq \E _{g \sim N(0,I_{d_{a} \times d_{a} \times n d_{b}})} d_{a}  \langle g g^{*}, \xi \xi^{*} \otimes I_{n} \otimes I_{d_{a}} \rangle       \]
-The desired bound then follows from the gaussian part. We use the correct normalization to be consistent with the rest of the paper below.
-
-\begin{corollary}
-If $X_{1}, ..., X_{n}$ are iid from $N(0, \frac{1}{n d_{a} d_{b}} I_{d_{a} \times d_{b}})$, then let $Y$ be the output after one iteration of flip-flop, so $Y$ is uniformly distributed as $\frac{1}{d_{a}}$ times the $d_{a}$-dimensional Stiefel manifold on $\R^{n d_{b}}$. By definition $\mu_{a}(Y) = 0$. We have the following bound on $\mu_{b}(Y)$ with failure probability $\leq \exp(- \Omega(d_{b}))$:
-\[ \left\| \sum_{i} Y_{i}^{*} Y_{i} - \frac{1}{d_{b}} I_{b}    \right\|_{op} \leq O(1) \frac{1}{d_{b}} \sqrt{ \frac{d_{b}}{n d_{a}}}   \]
-\end{corollary}
-
-%-----------------------------------------------------------------------------
-\subsubsection{Net and union bound}
-%-----------------------------------------------------------------------------
-\TODO{do the net bound like in the vershynin survey}
 
 
 
@@ -2063,7 +1957,41 @@ The third item holds with probability $1 - e^{-\Omega(n (r_1d_2 + r_2 d_1))}$ by
 To prove \cref{thm:operator-cheeger}, we apply \cref{lem:op-cheeger} using \cref{prop:gradient-bound} to bound the balancedness of $\Phi$ and \cref{lem:union} to bound $\ch(\Phi)$. Indeed, $\|\nabla_a f\|_{op} \leq \eps_0$ for $a \in \{1,2\}$ if and only if $\Phi$ is $\eps_0$-balanced, so by \cref{prop:gradient-bound} the operator $\Phi$ is $\eps_0$-balanced with probability $1 -  e^{-\Omega(n d_1 \eps_0^2)} - e^{-\Omega(n d_2 \eps_0^2)} \geq 1 - 2e^{-\Omega(n d_1 \eps_0^2)}$ provided $n \geq C\eps_0^{-2} d_2/d_1 $. Setting $\eps_0 = \eps \sqrt{{d_2 }/{n d_1}}$ proves the balancedness claim. For the expansion, \cref{lem:union} shows $\ch(\Phi) = \Omega(1)$ with failure probability $O(e^{- \Omega(n d_1)}) = O(e^{- \Omega(d_2 \eps^2)})$. By \cref{lem:op-cheeger}, $\Phi$ is an $(\eps \sqrt{{d_2 }/{n d_1}}, 1 - \lambda)$-quantum expander for some absolute constant $\lambda$.
 \end{proof}
 
+
+
+%-----------------------------------------------------------------------------
+\section{Proof of concentration for matrix normal model}\label{sec:flipflop-concentration}
+%-----------------------------------------------------------------------------
+
+\begin{proof}[Proof of \cref{lem:flipflop-concentration}]
+For convenience we normalize slightly differently so that after applying one step of flip-flop to $X$ the new random variable $Y$ is given by
+$Y_i = X_i \Phi^*(I_{d_1})^{-1/2} =  X_i (\sum_{i = 1}^n X_i^\dagger X_i)^{-1/2}.$ Thus we need to bound the random matrix
+\begin{align} \sum_{i = 1}^n Y_i Y_i^{\dagger} - \frac{d_2}{d_1} I_{d_1} = \sum_{i = 1}^n X_{i} \left( \sum_{j}  X_{i}^{\dagger} X_{i}\right)^{-1} X_{i}^\dagger - \frac{d_2}{d_1} I_{d_1}.\label{eq:1marg}
+\end{align}
+Since we are interested in the spectral norm of \cref{eq:1marg}, we will consider the random variable $\langle \xi,  \sum_{i = 1}^n Y_i Y_i^{\dagger} \xi \rangle$ for a fixed unit vector $\xi \in \R^{d_1}$. We will show that this variable $\xi$ is highly concentrated, and apply a union bound over a net of the unit vectors. To show the concentration, we first cast $\langle \xi,  \sum_{i = 1}^n Y_i Y_i^{\dagger} \xi \rangle$ as the inner product between a random orthogonal projection and a fixed one.
+
+ Considering $Y_i$ as a $d_1 \times d_2$ matrix, we can consider $Y$ as an $n d_1 \times d_2$ matrix by vertically concatenating the $Y_i$. By definition of the flip-flop step, $Y^\dagger Y = \sum Y_i^\dagger Y = I_{d_2}$, so the columns of $Y$ are an orthonormal basis of $\R^{n d_1}$. Here $\dagger$ denotes transpose for $nd_1 \times d_2$ matrices. In fact, the columns of $Y$ are a \emph{uniformly random} orthonormal basis of a $d_2$ dimensional subspace $\R^{n d_1}$; that is, they are a uniformly random element of the Steifel manifold. Thus, $Y Y^\dagger$ is a uniformly random rank $d_2$ orthonormal projection on $\R^{n d_1}$. We can now write 
+ $$ \langle \xi,  \sum_{i = 1}^n Y_i Y_i^{\dagger} \xi \rangle = \langle YY^\dagger,  \xi \xi^\dagger \ot I_{n} \rangle.$$
+The matrix $\xi \xi^{*} \otimes I_{n}$ is a rank $n$ projection on $\R^{n d_1}$. We use the following result on the inner product of random projections.
+
+\begin{theorem} [Lemma III.5 in \cite{hayden2006aspects}] Let $P$ be a uniformly random orthogonal projection of rank $a$ on $\R^{m}$ and let $Q$ be a fixed orthogonal projection of rank $b$ on $\R^{m}$. Then
+\[ \Pr \left[ \langle P, Q \rangle \not\in (1 \pm \eps) \frac{ab}{m} \right] = e^{ - \Omega( ab \eps^{2} ) }.  \]
+\end{theorem}
+We may apply the above theorem with $Q = \xi \xi^{*} \otimes I_{n}$, $m = n d_1$, $a = d_2$, and $b = n$ to obtain
+\begin{gather}\Pr\left[ \langle \xi,  \sum_{i = 1}^n Y_i Y_i^{\dagger} \xi \rangle \not\in (1 \pm \eps_0) \frac{d_2}{ d_1} \right] = e^{ - \Omega( n d_2 \eps_0^{2} ) }. \label{eq:fixed-concentration} \end{gather}
+Next we apply a standard net argument for the unit vectors over $\R^{nd_1}$. We use the following lemma. 
+\begin{lemma}[Lemma 5.4 \cite{vershynin2010introduction}]\label{lem:versh-net} Let $A$ be a symmetric $d\times d$ matrix, and let $\mathcal{N}_\delta$ be an $\delta$-net of $\S^{d-1}$ for some $\delta \in [0,1)$. Then 
+$$\|A\|_{op} \leq (1 - 2 \delta)^{-1} \sup_{\xi \in \mathcal{N}_\delta} | \langle \xi, A \xi \rangle|.$$ 
+\end{lemma}
+We apply the above lemma with $A = \sum_{i = 1}^n Y_i Y_i^{\dagger} - \frac{d_2}{d_1} I_{d_1}$ and $d = d_1$.
+Fix a net $\mathcal{N} = \mathcal{N}_\delta$ for $\delta = 1/4$; by standard packing bounds (e.g. Lemma 4.2 in \cite{vershynin2010introduction}) we may take $|\mathcal{N}| \leq 9^{d_1}$. By \cref{eq:fixed-concentration} and the union bound, with failure probability $9^{d_1} e^{- \Omega (n d_2 \eps_0^2)}$ we have that $|\langle \xi , A \xi \rangle| \leq \frac{d_2}{d_1} \eps_0$ for all $\xi \in \mathcal{N}$, and by \cref{lem:versh-net} this event implies $\|A\|_{op} \leq 2  \frac{d_2}{d_1} \eps_0$. 
+
+It remains to translate our bound on $A$ to our desired bound on $\tilde{\Phi}$. Recall that $A = \frac{d_2}{d_1} (d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}),$ so we have that $\|d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op} \leq 2 \eps_0$. Setting $\eps_0 = \eps \sqrt{\frac{d_1}{4n d_2}}$ yields the desired bound on $\|d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op}$, and provided $\eps$ is a large enough constant, the failure probability is $e^{ - \Omega(d_1) \eps^2}$.\end{proof}
+
+
 \end{appendix}
+
+
 
 %=============================================================================
 \section*{Acknowledgements}
