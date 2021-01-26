@@ -115,7 +115,10 @@
 \end{aug}
 %=============================================================================
 \begin{abstract}
-\MW{We need an abstract.}
+The matrix normal model, the family of Gaussian matrix-variate distributions whose covariance matrix is the Kronecker product of two lower dimensional factors, is frequently used to model matrix-variate data. The tensor normal model generalizes this family to Kronecker products of three or more factors. We study the estimation of the Kronecker factors of the covariance matrix in the matrix and tensor models. We show nonasymptotic bounds for the maximum likelihood estimator (MLE) for the factors in several natural metrics. In contrast to existing bounds, our results do not depend on the factors being well-conditioned. For the matrix normal model, all our bounds are minimax optimal up to logarithmic factors, and for the tensor normal model our bound for the largest factor and overall covariance matrix are minimax optimal provided there are enough samples for any estimator to obtain better than constant Frobenius error. In the same regimes as our sample complexity bounds, we show that an iterative procedure to compute the MLE known as the flip-flop algorithm converges linearly with high probability. We also provide numerical evidence that a simple regularizer can improve performance in the undersampled regime.
+
+
+
 \end{abstract}
 %=============================================================================
 \begin{keyword}[class=MSC2020]
@@ -181,7 +184,7 @@ The same authors showed tighter rates which hold even for~$n\ll d_i$ for a penal
 In the extremely undersampled regime, \cite{zhou2014gemini} demonstrated a single-step penalized estimator that converges even for a single matrix $(n=1)$ when the precision matrices have constant condition number, are highly sparse, and have bounded $\ell_1$ norm off the diagonal.
 Simply setting $\Sigma_2 = I_{d_2}$ or $\Sigma_1 = I_{d_1}$, in which case the matrix normal model reduces to standard covariance estimation with $d_1 n$ (resp. $d_2 n$) samples, shows the necessity of additional assumptions like sparsity or well-conditionedness if $n < \max\{d_1/d_2, d_2/d_1\}$.
 \cite{allen2010transposable} also considered penalized estimators for the purpose of missing data imputation.
-For the tensor normal model, a natural generalization of the flip-flop algorithm has been proposed to compute the MLE but was not known to converge \citep{mardia1993spatial,manceur2013maximum}.
+For the tensor normal model, a natural generalization of the flip-flop algorithm has been proposed to compute the MLE \citep{mardia1993spatial,manceur2013maximum}, but its convergence was not proven.
 Assuming bounded constant condition number of the true covariances and knowledge of initializers within constant Frobenius distance of the true precision matrices, \cite{sun2015nonconvex} propose an estimator with tight rates.
 In both the matrix and tensor case, no estimator for the Kronecker factors has been proven to have tight rates without additional assumptions on the factors' structure.
 \CF{The sparse folks should not feel bad because it's considered possible that estimating sparse GGMs without condition number bounds or irrepresentability conditions is NP hard.}
@@ -1141,7 +1144,7 @@ There are absolute constants $ C > 0, 1 > \lambda > 0$ such that the following h
 \end{theorem}
 %The above theorem follows from a slightly different result, which is identical to the above theorem except the condition ``$(1-c)$-quantum expander" is replaced by $\|\Phi\|_0 \leq 1 - c$. Applying \cref{lem:block-matrix} to $\nabla^2 f$ with this bound on $\|\Phi\|_0 = \|\nabla^2_{12} f\|_{0}$ improves \cref{thm:tensor-convexity}, and consequently also \cref{thm:ball-convexity}, as follows. 
 This also improves our result on strong convexity, which will be useful in the analysis of the flip-flop algorithm. By \cref{lem:expansion-convexity}, and the consequent improvement to \cref{thm:ball-convexity}, we have the following.
-\begin{corollary}\label{cor:matrix-convexity} There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then with failure probability $O(e^{ - \Omega( d_2 \eps^2)}),$ $f$ is $c$-strongly convex at any point $Z \in \SPD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$.
+\begin{corollary}\label{cor:matrix-convexity} There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then with failure probability $O(e^{ - \Omega( d_1 \eps^2)}),$ $f$ is $c$-strongly convex at any point $Z \in \SPD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$.
 \end{corollary}
 
 We will prove \cref{thm:operator-cheeger} in the appendix using techniques similar to \cite{FM20} using Cheeger's inequality. 
