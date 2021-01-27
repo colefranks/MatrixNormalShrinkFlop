@@ -1033,7 +1033,7 @@ There is a constant $c>0$ such that if
 \item $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$ for every $a \in [k]$, 
 \item and $\sum_{a} \|\delta_{a}\|_{op} \leq c$,
 \end{itemize}
- then $f$ at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$ is $(\lambda - O( \|\delta\|_{op}))$-strongly convex.
+ then $f$ is $(\lambda - O( \|\delta\|_{op}))$-strongly convex at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$.
 \end{lemma}
 
 %-----------------------------------------------------------------------------
@@ -1041,14 +1041,14 @@ There is a constant $c>0$ such that if
 %-----------------------------------------------------------------------------
 We are now ready to prove the main result of this section according to the plan outlined in \cref{subsec:proof-sketch}.
 \TODO{restate it here?}
-\begin{proof}[Proof of \cref{thm:tensor-frobenius}]By \cref{it:reduce} in \cref{subsec:proof-sketch}, it is enough to prove the theorem assuming $\Theta = I$. We first show that the minimizer of $f_\rv$ exists and is close to $I$ with high probability, and then use this to show that the minimizer of $\ell_\rv$ is also close.  Set $\delta = \eps/\sqrt{k d_k}$ and let $c$ be a constant. Consider the following three events.
+\begin{proof}[Proof of \cref{thm:tensor-frobenius}]By \cref{it:reduce} in \cref{subsec:proof-sketch}, it is enough to prove the theorem assuming $\Theta = I$. Assuming this, we now show that the minimizer of $f_\rv$ exists and is close to $\Theta = I$ with high probability.  Set $\delta = \eps/\sqrt{k d_k}$ and let $c$ be a constant. Consider the following two events.
 \begin{enumerate}
 \item\label{it:grad-bd} $\|(\nabla f_\rv)_{a}\|_{op} \leq \frac{\delta}{\sqrt{d_{a}}}$ for all $a \in [k]$,
-\item\label{it:sc-ball} $f_\rv$ is $1/2$ strongly convex at any point $\Theta$ such that $\sum_a \|\log \Theta_a\|_{op} \leq  c.$
-\item\label{it:norm-bd} $\| \rv\|_F^2 \in (1 \pm k \eps/\sqrt{d_k}) nD.$
+\item\label{it:sc-ball} $f_\rv$ is $1/2$-strongly convex at any point $\Theta$ such that $\sum_a \|\log \Theta_a\|_{op} \leq  c.$
 \end{enumerate}
 We now show that these events occur with failure probability $$k^2 \left(\sqrt{nD} / kd_1 \right)^{ - \Omega(d_1)} + O(k e^{ - nD \eps^2 / k d_k^2}).$$ Indeed, by our first assumption on $\eps$, we have $N_a \geq C d_a/\delta^2$ for all $a \in [k]$, we so we may apply \cref{prop:gradient-bound} to conclude \cref{it:grad-bd} occurs with failure probability $O\left( \sum_a \exp ( - N_a \delta^2)\right)$.
-By \cref{thm:ball-convexity}, if $c$ is a small enough absolute constant then \cref{it:sc-ball} occurs with failure probability at most $k^2 \left(\sqrt{nD} / kd_1 \right)^{ - \Omega(d_1)}$. By \cref{prp:xnorm} with $t = k \eps/\sqrt{d_k}$, \cref{it:norm-bd} occurs with failure probability $2e^{- k nD \eps^2/8 d_k},$ which is dominated by the failure probability for \cref{it:grad-bd}. By the union bound, all three items hold with the desired failure probability. Let $\samp$ be a sample satisfying all three items.
+By \cref{thm:ball-convexity}, if $c$ is a small enough absolute constant then \cref{it:sc-ball} occurs with failure probability at most $k^2 \left(\sqrt{nD} / kd_{\min} \right)^{ - \Omega(d_{\min})}$. %By \cref{prp:xnorm} with $t = k \eps/\sqrt{d_k}$, \cref{it:norm-bd} occurs with failure probability $2e^{- k nD \eps^2/8 d_k},$ which is dominated by the failure probability for \cref{it:grad-bd}. 
+By the union bound, both items hold with the desired failure probability. Let $\samp$ be a sample satisfying both items.
 
 
 We seek to apply \cref{lem:convex-ball} with $\lambda = 1/2$, so we must find the radius of the largest geodesic ball in the region of $1/2$-strong convexity of $f_\samp$. Thus if we set $\kappa = c/\sqrt{d_1}$ we will have that $f_\samp$ is $1/2$-strongly convex on the $\kappa$-ball by \cref{it:sc-ball}, because for $\Theta \in B_\kappa(I)$ we have
@@ -1059,9 +1059,7 @@ Next we must verify that $\|\nabla f\| < \kappa/2$. By \cref{it:grad-bd} we have
 
 %By \cref{thm:tensor-convexity}, with failure probability $\CF{1/poly(D)}$ we have that $f$ is $1-o_{d}(1)$ strongly convex at $I$. Because $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq \delta \leq c$, by \cref{convexRobustness} there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $\Theta$ such that $\sum_a \|\log \Theta_a\|_{op} \leq  c$ for all $a \in [k]$. \CF{end old}
 
-By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\sqrt{d_k}$, which holds by our definition of $\delta$ and our second assumption on $\eps$, there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$. We now use this bound on geodesic distance to bound error in $D_F$ for the individual Kronecker factors. By our choice of $\kappa$ and because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\log \widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) \leq \sqrt{d_a} d(I, \widehat{\Theta}) \leq 2\delta \sqrt{ k d_a}.$ Applying $\delta = \eps /\sqrt{k d_k}$ yields $\| I_a - \widehat{\Theta}_a\|_F \leq 2\eps \sqrt{ d_a/d_k}$.
-
-We have shown that the minimizer $\widehat{\Theta}$ of $f_\samp$ is close to $I$, but it remains to show that the minimizer $\Theta'$ of $\ell_\samp$ exists and is close to $I$. For this, recall that if $f_\samp$ has the unique minimizer $\widehat{\Theta} \in \SPD$, then $\ell_\samp$ is minimized at $\Theta':= \alpha^{1/k}  \widehat{\Theta}$ where $\alpha:= n D e^{ - f_\samp(\widehat{\Theta})}$. We now show that $\alpha$ is very close to $1$. By \cref{lem:convex-ball}, $f_\samp(\widehat{\Theta}) \geq f_\samp(0) - k\delta^2$. We have $f(0) \geq f_\samp(0) = \log\| \samp\|^2_F$, and by \cref{it:norm-bd} we have $\| \samp\|_F^2 \in (1 \pm t) nD$ with $t = k \eps/\sqrt{\delta_1}$. Thus we have $\alpha \in [(1-t),  (1+t) e^{k \delta^2}]$, or $\alpha^{1/k} \in [1 \pm  O(\eps/\sqrt{d_k})]$ by our choice of $t$. By the approximate triangle inequality for $D_F$ \CF{insert and cite}, $D_F( \Theta'_a; I_a) = O(D_F(\widehat{\Theta}_a; I_a) + D_F(\alpha^{1/k} I_a; I_a)) = O(\eps \sqrt{d_a/d_k})$. The reparametrization $\eps \leftarrow \eps \sqrt{d_k^{3/2}/ n D}$ completes the proof. \TODO{check reparametrization}
+By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\sqrt{d_k}$, which holds by our definition of $\delta$ and our second assumption on $\eps$, there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$. We now use this bound on geodesic distance to bound error in $D_F$ for the individual Kronecker factors. By our choice of $\kappa$ and because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\log \widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) \leq \sqrt{d_a} d(I, \widehat{\Theta}) \leq 2\delta \sqrt{ k d_a}.$ Applying $\delta = \eps /\sqrt{k d_k}$ yields $\| I_a - \widehat{\Theta}_a\|_F \leq 2\eps \sqrt{ d_a/d_k}$. The reparametrization $\eps \leftarrow \eps \sqrt{d_k^{3/2}/ n D}$ completes the proof. \TODO{check reparametrization}
 \end{proof}
 
 \section{Improvements for the matrix normal model}\label{sec:matrix-normal}
@@ -1070,9 +1068,8 @@ We have shown that the minimizer $\widehat{\Theta}$ of $f_\samp$ is close to $I$
 
 We now prove \cref{thm:matrix-normal}, an improvement to \cref{thm:tensor-frobenius} in the case $k=2$. The results for $k = 2$ are stronger in that \CF{enumerate or emph} the MLE can be shown to be close to the truth in operator norm rather than the looser Frobenius norm, the errors are tight for the individual factors, and that the failure probability is inverse exponential in the number of samples rather than inverse polynomial.
 
-The proof plan is similar to that in \cref{subsec:proof-sketch}, but to work directly with quantum expansion instead of strong convexity. In particular, the quantum expansion of the operators $\Phi^{ab}$ defined in \cref{lem:expansion-convexity}. Because $k = 2$ there is only one operator $\Phi^{12}$ to consider, which we call $\Phi$. In the matrix normal model $X$ is a sample of $n$ i.i.d. Gaussian vectors in $\R^{d_1} \ot \R^{d_2}$, and $\Phi$ is the random operator
-\begin{align}\Phi:Z \mapsto \frac{1}{\|X\|_F^2} \sum_{i = 1}^n X_i Z X_i^\dagger,\label{eq:matrix-normal-operator}\end{align}
-where $X_i^\dagger$ denotes the transpose of $X_i$ viewed as a $d_1\times d_2$ matrix. 
+The proof plan is similar to that in \cref{subsec:proof-sketch}, but to work directly with quantum expansion instead of strong convexity. In particular, the quantum expansion of the operators $\Phi^{ab}$ defined in \cref{lem:expansion-convexity}. Because $k = 2$ there is only one operator $\Phi^{12}$ to consider, which is proportional to $\Phi_X$ for $X$ a tuple of $n$ i.i.d. Gaussian vectors in $\R^{d_1} \ot \R^{d_2}$.
+%\begin{align}\Phi:Z \mapsto \frac{1}{nD} \sum_{i = 1}^n X_i Z X_i^\dagger,\label{eq:matrix-normal-operator}\end{align} where $X_i^\dagger$ denotes the transpose of $X_i$ viewed as a $d_1\times d_2$ matrix. 
 
 Our main tool is a bound by \CF{KLR} using a very similar notion as \emph{spectral gap}. $\Phi$ has spectral gap $ \lambda$ if it satisfies the condition 
 \begin{align}\sigma_2(\Phi) \leq \frac{(1 - \lambda)}{\sqrt{d_1d_2}} \tr \Phi(I_{d_2}).\label{eq:spectral-gap}
@@ -1082,19 +1079,18 @@ It is known (Lemma A.3 in \cite{FM20}) that $(\eps, 1 - \lambda)$-quantum expans
 %$\sigma_1(\Phi) = \langle I_{d_1}/\sqrt{d_1}, \Phi(I_{d_1}/\sqrt{d_2}) \rangle$
 
 
-\begin{theorem}[\CF{KLR}]\label{thm:klr} There is a constant $c > 0$ such that the following holds for all $d_1 \leq d_2$.
-If $\Phi$ is $\eps$-doubly balanced and has spectral gap $\lambda$ for $\eps \leq c \lambda^2/\log d_1$, then the maximum likelihood estimator $(\widehat{\Theta}_1, \widehat{\Theta}_2) \in \SL_{d_1}\times \SL_{d_2}$ is unique and satisfies
-$$\| \widehat{\Theta}_1 - I_{d_1}\|_{op}, \| \widehat{\Theta}_2 - I_{d_2}\|_{op} \leq \frac{\eps \log d_1}{\lambda}.$$
+\begin{theorem}[\CF{KLR}]\label{thm:klr} There is a constant $c > 0$ such that the following holds for all $d_1 \leq d_2$. Let $\samp$ be a tuple of vectors in $\R^{d_1} \ot \R^{d_2}$ with $\|x\| = 1$.
+If $\Phi_{\samp}$ is $\eps$-doubly balanced and has spectral gap $\lambda$ for $\eps \leq c \lambda^2/\log d_1$, then the maximum likelihood estimator $(\widehat{\Theta}_1(\samp), \widehat{\Theta}_2(\samp))$ is unique and satisfies
+$$\left\| \frac{\|x\|_F}{\sqrt{nD}}\;\widehat{\Theta}_1(\samp) - I_{d_1}\right\|_{op}, \left\|\frac{\|x\|_F}{\sqrt{nD}}\;\widehat{\Theta}_2(\samp) - I_{d_2}\right\|_{op} \leq \frac{\eps \log d_1}{\lambda}.$$
 \end{theorem}
-
-\cref{thm:klr}, along with what we've shown so far, already implies a preliminary version of \cref{thm:matrix-normal}. In the proof of \cref{thm:tensor-convexity}, we've already shown that $\Phi$ is an $(\eps \sqrt{d_2/n d_1}, 1 - c)$-quantum expander with failure probability 
+By \cref{prp:xnorm}, $|\frac{\|X\|_F}{\sqrt{nD}} - 1 | \leq \eps$ with probability $e^{- \Omega(\eps^2 nD)}$, so this additional factor will be negligible in our case. \cref{thm:klr}, along with what we've shown so far, already implies a preliminary version of \cref{thm:matrix-normal}. In the proof of \cref{thm:tensor-convexity}, we've already shown that $\Phi$ is an $(\eps \sqrt{d_2/n d_1}, 1 - c)$-quantum expander with failure probability 
 $$O(e^{ - \Omega( d_2 \eps^2)}) + (\sqrt{nD}/{d_1})^{ - \Omega(d_1)}.$$ 
 
 This immediately implies that the above failure probability holds for \cref{thm:matrix-normal} with the bound replaced by
 \begin{align*}
-  D_{\op}(\widehat{\Theta}_a \Vert \Theta_a) = O\left(\eps \sqrt{\frac{d_{2}}{n d_1}} \log d_1\right).
+  D_{\op}(\widehat{\Theta}_a \Vert \Theta_a) = O\left(\eps \sqrt{\frac{d_{2}}{n d_1}} \log d_1\right),
 \end{align*}
-One of the results of this section is the following theorem, which shows that the expansion constant $\lambda$ of $\Phi$ can be made constant with inverse exponential failure probability, albeit with a worse constant. 
+which matches \cref{thm:matrix-normal} for the larger matrix $\Theta_2$ but is worse for $\Theta_1$. One of the main results of this section is the following theorem, which shows that the expansion constant $\lambda$ of $\Phi$ can be made constant with inverse exponential failure probability, albeit with a worse constant. 
 
 \begin{theorem}\label{thm:operator-cheeger}
 There are absolute constants $ C > 0, 1 > \lambda > 0$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is an $(\eps \sqrt{d_2/n d_1}, 1 - \lambda)$-quantum expander, with failure probability $O(e^{ - \Omega( d_1 \eps^2)}).$ 
@@ -1111,9 +1107,8 @@ We now use \cref{thm:operator-cheeger} as well as some more refined concentratio
 
 We first sketch the proof of the implied Frobenius error bound. The idea of the proof is to apply one step of flip-flop algorithm, a step which normalizes the larger marginal of $\rho$. This has the effect of making the second component of $\nabla f_\samp$ equal to zero, and we will show that the first component enjoys the same concentration exploited in \cref{prop:gradient-bound} even with the step of flip-flop - thus the total gradient has become smaller. Using \cref{convexRobustness} to control the change induced in the minimal eigenvalue of the Hessian by the first step of the flip-flop and applying \cref{lem:convex-ball} results in an error bound proportional to the new gradient after flip-flop, which gives us the tighter bound. To obtain the relative spectral error bound, we employ a similar strategy but with \cref{thm:klr} instead of \cref{lem:convex-ball}. 
 
-We now discuss the concentration bound. For $\Phi$ as in \cref{eq:matrix-normal-operator}, we can right-multiply $X_i$ by the result of one step of the flip-flop algorithm on the larger factor $\Theta_2$. Explicitly, the new random variable $Y$ is given by
-$Y_i = \frac{1}{\sqrt{d_i}} X_i \Phi^*(I_{d_1})^{-1/2} = \frac{1}{\sqrt{d_i}}  X_i (\sum_{i = 1}^n X_i^\dagger X_i)^{-1/2}.$ \CF{argh, this is mildly wrong, because $\Phi$ was already normalized to be tracial.}
-
+We now discuss the concentration bound. Consider the new random variable $Y_i$ obtained by right-multiplying $X_i$ by the result of one step of the flip-flop algorithm on the larger factor $\Theta_2$. Explicitly, the new random variable $Y$ is given by
+$Y_i = \frac{1}{\sqrt{d_i}} X_i \Phi_X^*(I_{d_1})^{-1/2} = \frac{1}{\sqrt{d_i}}  X_i (\sum_{i = 1}^n X_i^\dagger X_i)^{-1/2}.$ 
 The result gives rise to a new operator $\tilde{\Phi}$ which satisfies 
 \begin{align} \tilde{\Phi}(I_{d_2}) = \frac{1}{d_2}\sum_{i} X_{i} \left( \sum_{j}  X_{i}^{\dagger} X_{i}\right)^{-1} X_{i}^\dagger \textrm{ and } \tilde{\Phi}^*(I_{d_1}) = \frac{1}{d_2} I_{d_2}.   \label{eq:one-step}\end{align}
 where again $\dagger$ denotes $d_1\times d_2$ matrix transpose.
@@ -1124,14 +1119,22 @@ $$\|d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op} \leq \eps \sqrt{ \frac{d_1}{nd_2}
 \end{lemma}
 The proof of this lemma uses a result of \cite{hayden2006aspects} on the inner product of two random projections, combined with a standard net argument. The details can be found in \cref{sec:flipflop-concentration}. With this bound in hand, we may now prove \cref{thm:matrix-normal}.
 
-\CF{still need to make this work for the actual MLE, not the $\SL$ one...; maybe just say the argument is analogous to avoid tedium?}
-\begin{proof}[Proof of \cref{thm:matrix-normal}] As discussed in \cref{subsec:proof-sketch}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. By \cref{thm:operator-cheeger}, provided 
+\begin{proof}[Proof of \cref{thm:matrix-normal}] As discussed in \cref{subsec:proof-sketch}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. Consider the following events.
+\begin{enumerate}
+\item\label{it:expander} The operator $\Phi_{\rv}$ is a $(\eps_0  \sqrt{{d_2}/{n d_1}},1-\lambda)$-quantum expander.
+\item\label{it:flop-balanced} The operator $\tilde{\Phi}$ is $\eps_0 \sqrt{{d_1}/{n d_2}}$-balanced.
+\item \label{it:norm} $|1 - \frac{\|X\|_F}{\sqrt{nD}}| \leq \frac{\eps_0}{\sqrt{d_2}}. $ 
+\end{enumerate}
+These events occur with failure probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)}).$ Indeed, by the assumption
 $$n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps_0^{-2}\} $$
- with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)})$ the operator $\Phi$ is a $(\eps_0  \sqrt{{d_2}/{n d_1}},1-\lambda)$-quantum expander. By \cref{lem:flipflop-concentration}, $\tilde{\Phi}$ is $\eps_0 \sqrt{{d_1}/{n d_2}}$-balanced with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)});$ by the union bound both events occur with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)});$ condition on both events.
+\cref{it:expander} occurs with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)})$ by \cref{thm:operator-cheeger}. By \cref{lem:flipflop-concentration}, \cref{it:flop-balanced} occurs with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)}).$ Finally, \cref{it:norm} occurs with probability $1 - e^{- \Omega(n d_1 \eps^2)}$ by \cref{prp:xnorm}. By the union bound all the events occur with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)})$. Let $\samp$ satisfy all three properties.
  
-We now use a lemma relating the quantum expansion of $\tilde{\Phi}$ and $\Phi$; this is analogous to \cref{convexRobustness} guaranteeing the strong convexity of $f$ in a neighborhood of the origin. The operator $\tilde{\Phi}$ is a \emph{scaling} of $\Phi$, that is $\tilde{\Phi}(X) = g^\dagger \Phi( h X h^\dagger) g$ for some $g \in \GL(d_1), h \in \GL(d_2)$. In our case case $h = \frac{1}{\sqrt{d_2}}\Phi^*(I_{d_2})^{-1/2}$ and $g = I_{d_1}$. By Lemma 4.4 in \cite{FM20}, if $\|h^\dagger h - I_{d_1}\|_{op} \leq \delta$,  then $\tilde{\Phi}$ is an $(\eps \sqrt{d_2/n d_1} + O(\delta), 1 - \lambda + O(\delta))$-quantum expander. Fortunately, $h^\dagger h$ is bounded by the balancedness of $\Phi$: $h^\dagger h - I = (d_2 \Phi^*(I_{d_1}))^{-1} - I_{d_2}$. By the balancedness of $\Phi$ we already know that $\|d_2 \Phi^*(I_{d_1}) - I_{d_2}\|_{op} \leq \eps_0 \sqrt{d_2/n d_1}$; provided $\eps_0 \sqrt{d_2/nd_1} \leq 1/2$ we have $\|(d_2 \Phi^*(I_{d_1}))^{-1} - I_{d_2}\|_{op} = O( \eps_0 \sqrt{d_2/n d_1})$. Thus $\tilde{\Phi}$ is an $(\eps_0 \sqrt{d_1 / n d_2}, 1 - \lambda/2)$-quantum expander provided $c'$ is small enough compared to $c$.
+We now use a lemma relating the quantum expansion of $\tilde{\Phi}$ and $\Phi_\samp$; this is analogous to \cref{convexRobustness} guaranteeing the strong convexity of $f$ in a neighborhood of the origin. The operator $\tilde{\Phi}$ is a \emph{scaling} of $\Phi_\samp$, that is for some ``scalings'' $g \in \GL(d_1), h \in \GL(d_2)$ for all $Z$ we have $\tilde{\Phi}(Z) = g^\dagger \Phi_\samp( h Z h^\dagger) g$. In our case we may take $h = \frac{\|x\|_F}{\sqrt{d_2}}\Phi_\samp^*(I_{d_2})^{-1/2}$ and $g = \frac{1}{\|x\|_F} I_{d_1}$. By Lemma 4.4 in \cite{FM20}, if $\| h^\dagger h - I_{d_1}\|_{op} \leq \delta$,  then $\tilde{\Phi}$ is an $(\eps \sqrt{d_2/n d_1} + O(\delta), 1 - \lambda + O(\delta))$-quantum expander. Fortunately, $h^\dagger h$ is bounded by the balancedness of $\Phi_\samp$: $h^\dagger h - I = \frac{\|x\|_F^2}{d_2} ( \Phi^*(I_{d_1}))^{-1} - I_{d_2}$. By the balancedness of $\Phi_\samp$ we already know that 
+$$\|\frac{d_2}{\|x\|_F^2}\Phi_\samp^*(I_{d_1}) - I_{d_2}\|_{op} \leq \eps_0 \sqrt{d_2/n d_1};$$
+by \cref{prp:xnorm}, $\|x\|_F^2$ 
+ provided $\eps_0 \sqrt{d_2/nd_1} \leq 1/2$ we have $\|h^\dagger h - I\|_{op} = O( \eps_0 \sqrt{d_2/n d_1})$. Thus $\tilde{\Phi}$ is an $(\eps_0 \sqrt{d_1 / n d_2}, 1 - \lambda/2)$-quantum expander provided $c'$ is small enough compared to $c$.
  
-By our choice of $n$, we have $\eps \sqrt{d_1/nd_2} \leq c\lambda^2\log d_1$ if we take $\eps_0 = \eps/\log(d_1)$ for $\eps \leq c\lambda^2$. By \cref{thm:klr}, the MLE $\Theta'_1, \Theta'_2$ for the tuple $y_i =  x_i \Phi^*(I_{d_1})^{-1/2}/\sqrt{d_1}$ satisfies 
+By our choice of $n$, we have $\eps \sqrt{d_1/nd_2} \leq c\lambda^2\log d_1$ if we take $\eps_0 = \eps/\log(d_1)$ for $\eps \leq c\lambda^2$. By \cref{thm:klr}, the MLE $\Theta'_1(y), \Theta'_2(y)$ for the tuple $y_i =  x_i \Phi^*(I_{d_1})^{-1/2}/\sqrt{d_1}$ satisfies 
 \begin{gather*} \| \Theta'_1 - I_{d_1}\|_{op}, \| \Theta'_2 - I_{d_2}\|_{op} \leq C \eps_0 \sqrt{\frac{d_1}{n d_2}} \log d_1 = O\left(\eps \sqrt{\frac{d_1}{n d_2}}\right).\end{gather*}
 By the equivariance discussed in \cref{it:reduce}, the MLE $\htheta_1 = \Theta'_1$ and $\htheta_2 = \frac{1}{d_2}\Phi^*(I_{d_2})^{-1/2}\Theta'_2\Phi^*(I_{d_2})^{-1/2}.$ The bound on $D_{op}(\htheta_1||I_{d_1})$ follows immediately. For $\htheta_2$, by invariance of the relative spectral error we have 
 \begin{align*}D_{op}(\htheta_2|| I_{d_2}) = D_{op} (\Theta_2 || d_2\Phi^*(I_{d_2})) &= O( D_{op}(\Theta_2 || I_{d_2}) + D_{op}(d_2\Phi^*(I_{d_2})|| I_{d_2}))\\
