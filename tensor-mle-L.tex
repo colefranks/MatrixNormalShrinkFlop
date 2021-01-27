@@ -465,7 +465,7 @@ Let $P\in\P$.
 The \emph{exponential map} $\exp_P \colon \H \to \P$ at~$P$ is defined by
 \begin{align*}
   \exp_P(H) &= \exp_{(P_1,\dots,P_k)}(h, H_1,\dots,H_k)\\
-  & = e^{\frac{1}{\sqrt{D}} h t} \left( P_1^{1/2} e^{\sqrt{\frac{d_1}{D}} H_1} P_1^{1/2}, \dots, P_k^{1/2} e^{\sqrt{\frac{d_k}{D}} H_k} P_k^{1/2} \right).
+  & = e^{\frac{h}{k} t} \left( P_1^{1/2} e^{\sqrt{d_1} H_1} P_1^{1/2}, \dots, P_k^{1/2} e^{\sqrt{d_k} H_k} P_k^{1/2} \right).
 \end{align*}
 The \emph{geodesics} through $P$ are the curves $t \mapsto \exp_P(t H)$ for $t\in\R$ and $H\in\H$.
 By convention, they have unit speed if $\norm{H}_F^2 = \sum_{a=1}^k \norm{H_a}_F^2 = 1$.
@@ -560,12 +560,12 @@ Moreover, the mapping $P \mapsto AP A^T$ is an isometry, and it preserves the st
 %-----------------------------------------------------------------------------
 %As discussed above, the MLE problem reduces to minimizing $\sum_{i=1}^n x_i^T ( \bigotimes_{a=1}^k P_a ) x_i$ over $P \in \P$.
 %We take as our objective its logarithm, which is also geodesically convex.
-For notational convenience we minimize the function $\ef_\samp = - 2 \ell_x$. We write it explicitly below.
+For notational convenience we minimize the function $\ef_\samp = - \frac{2}{nD} \ell_x$. We write it explicitly below.
 \begin{definition}[Objective function]\label{dfn:function}
 Given $n$ samples $x = (x_1,\dots,x_n)$ in $\R^D$, define the function $f_x \colon \P \to \R$ by
 \begin{align*}
   \ef_\samp(P_1,\dots,P_k)
-=  \samp_i^T \left( \textstyle \bigotimes_{a=1}^k P_a \right) \samp_i - \sum_{a = 1}^k \frac{D}{d_a} \log \det(P_a).
+=  \frac{1}{nD}\samp_i^T \left( \textstyle \bigotimes_{a=1}^k P_a \right) \samp_i - \sum_{a = 1}^k \frac{1}{d_a} \log \det(P_a).
 \end{align*}
 Let $\widehat P = (\widehat P_1,\dots,\widehat P_k)$ denote the minimizer of $f_x$ if it exists and is unique.
 Then the maximum likelihood estimator is given by $\widehat\Theta_a = {\hat\lambda}^{1/k} \widehat P_a$ and $\hat\lambda = nD e^{-f_x(\widehat P)}$, as follows directly by maximizing \cref{eq:reparameterized log likelihood} with respect to~$\lambda$.
@@ -629,7 +629,7 @@ As a block matrix,
   \nabla_{k1}^2 f & \dots & \nabla_{kk}^2 f \\
   \end{bmatrix},
 \end{align*}
-where the components $\nabla_{ab}^2f(P)$ of the Hessians are linear operators from the space of traceless symmetric $d_b\times d_b$-matrices to the space of traceless symmetric $d_a \times d_a$-matrices.
+where the components $\nabla_{ab}^2f(P)$ of the Hessians are linear operators from the space of traceless symmetric $d_b\times d_b$-matrices to the space of traceless symmetric $d_a \times d_a$-matrices for $a, b \in [k]$, $\nabla^2_{00} f(P)$ is a real number, and $\nabla_{0a}f$ is a linear operator from $\R$ to the space of traceless symmetric $d_1\times d_a$ matrices. Thus $\nabla_{0a}f$ itself can be viewed as a matrix.
 \end{definition}
 
 We note that the Hessian is symmetric with respect to the inner product~$\braket{\cdot,\cdot}$ on $\H$.
@@ -727,34 +727,34 @@ If the definition above seems abstract, one can compute the partial trace of $\r
 Let $\rho = \sum_{i=1}^n \samp_i \samp_i^T $.
 Then the components of the Riemannian gradient $\nabla \ef_{\samp}$ at the identity are given by
 \begin{align*}
- \nabla_a \ef_{\samp} = \sqrt{\frac{d_a}{D}}\left(  \rho^{(a)} - \tr(\rho^{(a)})\frac{ I_a}{d_a}\right)
+ \nabla_a \ef_{\samp} = \frac{\sqrt{d_a}}{nD}\left( \rho^{(a)} - \frac{\tr\rho^{(a)}}{d_a} I_a\right)
   \qquad \text{ for } a \in [k],
 \end{align*}
-and $\nabla_0 \ef_\samp = \tr \rho = \|X\|_F^2.$ 
+and $\nabla_0 \ef_\samp = \frac{1}{nD}\tr \rho - 1 = \frac{1}{nD}\|X\|_F^2 - 1.$ 
 \end{lemma}
 \begin{proof}
-First note that $\nabla_a \log \det \Theta_a$ is zero because each component $H_a$ of the tangent vector is traceless for $a \in [k]$. Thus for all $a\in[k]$, we have
+First note that $\nabla_a \log \det \Theta_a$ is zero because each component $H_a$ of the tangent vector is traceless for $a \in [k]$. Thus for all $a\in[k]$ the component $\nabla_a f_\samp$ is the same as $\nabla_a F$ where $F:\Theta \mapsto \frac{1}{nD}\tr \rho \ot_{a = 1}^k \Theta_a$.
   \begin{align*}
    \langle \nabla_a f_{\samp} , Z \rangle
   % = \partial_{t=0} F_{\samp}(I_1,\dots,I_{a-1}, e^{tZ}, I_{a+1},\dots,I_n)
-  = \partial_{t=0} \tr \rho \, e^{t \sqrt{\frac{d_a}{D}} Z_a}
-  = \sqrt{\frac{d_a}{D}} \tr \rho Z_a
-  = \sqrt{\frac{d_a}{D}} \tr \rho^{(a)} Z
+  = \frac{1}{nD} \partial_{t=0} \tr \rho \, e^{t \sqrt{\frac{d_a}{D}} Z_a}
+  = \frac{\sqrt{d_a}}{nD} \tr \rho Z_a
+  = \frac{\sqrt{d_a}}{nD} \tr \rho^{(a)} Z
   \end{align*}
   for all traceless symmetric $d_a \times d_a$ matrices $Z$.
   Since $\nabla_a f_{\samp}$ is traceless and symmetric by definition, this implies
   \begin{align*}
     \nabla_a f_{\samp}
-  = \sqrt{\frac{d_a}{D}}\left(  \rho^{(a)} - \tr(\rho^{(a)})\frac{ I_a}{d_a}\right)
+  = \frac{\sqrt{d_a}}{nD}\left( \rho^{(a)} - \frac{\tr\rho^{(a)}}{d_a} I_a\right).
  % = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}.
   \end{align*}
- Finally $\nabla_0 \ell_\samp = \partial_t \tr e^{t} \rho - \log (e^{t}) = \tr \rho.$
+ Finally $\nabla_0 \ell_\samp = \partial_t (\frac{1}{nD}\tr e^{t} \rho - t) = \frac{1}{nD} \tr \rho - 1.$
 \end{proof}
 
 Having calculated the gradient of $f_\samp$, we are ready to state our bound:
 %\MW{Please check updated proof. Can we assume $\eps<1$ and simply take~$C=16$?}
 \MW{Make pretty by manipulating $C$} 
-\begin{prop}\label{prop:gradient-bound}\CF{won't change; update proof.}
+\begin{prop}\label{prop:gradient-bound}\CF{won't change with good normalization; update proof.}
 Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where $D=d_1\cdots{}d_k$.
 Let $\eps>0$ and $C = 16^2\max\{\eps^2,1\}$.
 Suppose that, for all $a \in [k]$,
@@ -859,38 +859,38 @@ This definition is consistent with \cref{def:single marginal} in the sense that 
 \begin{lemma}[Riemmanian Hessian]\label{lem:hessian} Let $\rho = \sum_{i=1}^n \samp_i \samp_i^T$. Then the Riemannian Hessian $\nabla^2 \ell_{\samp}$ at the identity is given by 
 \begin{align*}
  \langle Y,  \left( \nabla^2_{aa} \ef_{\samp} \right) Y \rangle
-&=  \frac{d_a}{D} \tr \rho^{(a)} Y^2 \\
+&=  \frac{d_a}{nD} \tr \rho^{(a)} Y^2 \\
   \langle Y,  \left( \nabla^2_{ab} \ef_{\samp} \right) Z \rangle
-&= \frac{\sqrt{d_a d_b}}{D} \tr \rho^{(ab)} \left( Y \ot Z \right)
+&= \frac{\sqrt{d_a d_b}}{nD} \tr \rho^{(ab)} \left( Y \ot Z \right)
 \end{align*}
 for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d_b\times d_b$ matrices~$Z$, and
 \begin{align*}
-\nabla^2_{00} \ell_\samp &= \tr \rho = \|X\|_F^2 \\
-\nabla^2_{a0} \ell_\samp &= \rho_a
+\nabla^2_{00} \ell_\samp &= \frac{1}{nD}\tr \rho =\frac{1}{nD} \|X\|_F^2 \\
+\nabla^2_{a0} \ell_\samp &= \frac{\sqrt{d_a}}{nD}\rho_a
 \end{align*}
 for all $a \in [k]$. 
 \end{lemma}
 \begin{proof}
-  Let $F_{\samp}(\Theta) = \tr \rho \, \Theta$ as in the proof of \cref{lem:gradient}, and note that the Hessian of $F_\samp$ and $\ell_\samp$ are the same.
+Note that for $a,b \in \{0,\dots, k\}$, $\nabla^2_{ab} f_\samp = \nabla^2_{ab} F$ where $F:\Theta \mapsto \frac{1}{nD}\tr \rho \ot_{a = 1}^k \Theta_a$. 
   Then for $a \in [k]$, and $Y, Z$ Hermitian we have
   \begin{align*}
    \langle Y,  \left( \nabla^2_{aa} F_{\samp} \right) Y \rangle
-  &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{(s+t)\sqrt{\frac{d_a}{D}}  Y_{(a)}} \\
-  &= \partial_{s=0} \partial_{t=0} \tr \rho^{(a)} e^{(s+t)  \sqrt{\frac{d_a}{D}}Y}
-  = d_a \tr \rho^{(a)} Y^2,
+  &= \frac{1}{nD}\partial_{s=0} \partial_{t=0} \tr \rho \, e^{(s+t)\sqrt{d_a}  Y_{(a)}} \\
+  &= \frac{1}{nD}\partial_{s=0} \partial_{t=0} \tr \rho^{(a)} e^{(s+t)  \sqrt{d_a}Y}
+  = \frac{d_a}{nD} \tr \rho^{(a)} Y^2,
   \end{align*}
   while for $a\neq b \in [k]$ we have
   \begin{align*}
     \langle Y,  \left( \nabla^2_{ab} F_{\samp} \right) Z \rangle
-  &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s \sqrt{d_a}Y_{(a)} + t \sqrt{d_b} Z_{(b)}} \\
-  &= \partial_{s=0} \partial_{t=0} \tr \rho^{(ab)} \left( e^{s \sqrt{d_a}  Y} \ot e^{t \sqrt{d_b} Z} \right)\\
-  &= \sqrt{d_a d_b} \tr \rho^{(ab)} \left( Y \ot Z \right).
+  &= \frac{1}{nD}\partial_{s=0} \partial_{t=0} \tr \rho \, e^{s \sqrt{d_a}Y_{(a)} + t \sqrt{d_b} Z_{(b)}} \\
+  &= \frac{1}{nD}\partial_{s=0} \partial_{t=0} \tr \rho^{(ab)} \left( e^{s \sqrt{d_a}  Y} \ot e^{t \sqrt{d_b} Z} \right)\\
+  &= \frac{\sqrt{d_a d_b}}{nD} \tr \rho^{(ab)} \left( Y \ot Z \right).
   \end{align*}
- Also $\nabla^2_{00} F_{\samp} = \partial^2_{t=0} \tr \rho  e^{t} = \tr \rho$, and for all $a \in [k],$ 
+ Also $\nabla^2_{00} F_{\samp} = \partial^2_{t=0} \tr \rho  e^{t} = \frac{1}{nD}\tr \rho$, and for all $a \in [k],$ 
  \begin{align*}
 \langle Z, \nabla^2_{a0} F_{\samp} \lambda \rangle 
-  &=  \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s\sqrt{d_a} Z_{(a)}}e^{t\lambda} \\
-  &= \lambda \tr \rho_a Z.
+  &= \frac{1}{nD} \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s\sqrt{d_a} Z_{(a)}}e^{t\lambda} \\
+  &= \frac{\sqrt{d_a}}{nD} \lambda \tr \rho_a Z.
   \end{align*}
   for all $\lambda \in \R$ and Hermitian $Z$.
 \end{proof}
