@@ -460,9 +460,9 @@ The \emph{geodesics} through $\Theta$ are the curves $t \mapsto \exp_P(t H)$ for
 By convention, they have unit speed if $\norm{H}_F^2 = \sum_{a=0}^k \norm{H_a}_F^2 = 1$.
 Therefore, the closed \emph{(geodesic) ball} of radius~$r>0$ about~$\Theta$ is given by
 \begin{align*}
-  B_r(P) = \{ \exp_\Theta(H) : \norm H_F \leq r \}.
+  B_r(\Theta) = \{ \exp_\Theta(H) : \norm H_F \leq r \}.
 \end{align*}
-Such balls are geodesically convex, that is, if $\gamma(t)$ is a geodesic such that $\gamma(0),\gamma(1) \in B_r(P)$ then $\gamma(t) \in B_r(P)$ for all $r\in[0,1]$.
+Such balls are geodesically convex, that is, if $\gamma(t)$ is a geodesic such that $\gamma(0),\gamma(1) \in B_r(\Theta)$ then $\gamma(t) \in B_r(\Theta)$ for all $r\in[0,1]$.
 
 % The geodesic distance squared between two points $P,Q\in\P$ is given by
 % \begin{align*}
@@ -490,7 +490,7 @@ The manifold $\P$ carries a natural action by the group
 \begin{align*}
   \G = \{ (G_1,\dots,G_k) \in  \GL(d_1) \times \dots \times \GL(d_k): \det G_1= \dots = \det G_k \}
 \end{align*}
-Namely, if $P \in \P$ and $A \in \G$ then the tuple $A P A^T := (A_1 P_1 A_1^T, \dots, A_k P_k A_k^T)$ is in $\P$. Moreover, the mapping $P \mapsto AP A^T$ is an isometry, and it preserves the statistical distances~$D_F$ and $D_{\op}$ between the individual precision matrices as well as between their tensor product.
+Namely, if $\Theta \in \P$ and $A \in \G$ then the tuple $A \Theta A^T := (A_1 \Theta_1 A_1^T, \dots, A_k \Theta_k A_k^T)$ is in $\P$. Moreover, the mapping $P \mapsto AP A^T$ is an isometry, and it preserves the statistical distances~$D_F$ and $D_{\op}$ between the individual precision matrices as well as between their tensor product.
 
 % We also note that \MW{It's not \dots} the MLE obeys a certain \emph{equivariance} property under such transformations.
 % For all $P \in \P$, $A \in \G$, and samples $x=(x_1,\dots,x_n)$, the log-likelihood satisfies
@@ -708,31 +708,31 @@ If the definition above seems abstract, one can compute the partial trace of $\r
 %\MW{Explain how to compute in terms of $\samp$. Ref above \cref{cor:vershynin}.}
 
 \begin{lemma}[Riemannian gradient]\label{lem:gradient}
-Let $\rho = \sum_{i=1}^n \samp_i \samp_i^T $.
+Let $\rho = \frac{1}{nD} \sum_{i=1}^n \samp_i \samp_i^T $.
 Then the components of the Riemannian gradient $\nabla \ef_{\samp}$ at the identity are given by
 \begin{align*}
- \nabla_a \ef_{\samp} = \frac{\sqrt{d_a}}{nD}\left( \rho^{(a)} - \frac{\tr\rho^{(a)}}{d_a} I_a\right)
+ \nabla_a \ef_{\samp} = \sqrt{d_a}\left( \rho^{(a)} - \frac{\tr\rho^{(a)}}{d_a} I_a\right)
   \qquad \text{ for } a \in [k],
 \end{align*}
-and $\nabla_0 \ef_\samp = \frac{1}{nD}\tr \rho - 1 = \frac{1}{nD}\|X\|_F^2 - 1.$ 
+and $\nabla_0 \ef_\samp = \tr \rho - 1 = \|X\|_F^2 - 1.$ 
 \end{lemma}
 \begin{proof}
 First note that $\nabla_a \log \det \Theta_1$ is zero because each component $H_a$ of the tangent vector is traceless for $a \in [k]$. Thus for all $a\in[k]$ the component $\nabla_a f_\samp$ is the same as $\nabla_a F$ where $F:\Theta \mapsto \tr \rho \ot_{a = 1}^k \Theta_a$. Thus
   \begin{align*}
    \langle \nabla_a f_{\samp} , Z \rangle
   % = \partial_{t=0} F_{\samp}(I_1,\dots,I_{a-1}, e^{tZ}, I_{a+1},\dots,I_n)
-  = \frac{1}{nD} \partial_{t=0} \tr \rho \, e^{t \sqrt{\frac{d_a}{D}} Z_a}
-  = \frac{\sqrt{d_a}}{nD} \tr \rho Z_a
-  = \frac{\sqrt{d_a}}{nD} \tr \rho^{(a)} Z
+  =  \partial_{t=0} \tr \rho \, e^{t \sqrt{\frac{d_a}{D}} Z_a}
+  = \sqrt{d_a} \tr \rho Z_a
+  = \sqrt{d_a} \tr \rho^{(a)} Z
   \end{align*}
   for all traceless symmetric $d_a \times d_a$ matrices $Z$.
   Since $\nabla_a f_{\samp}$ is traceless and symmetric by definition, this implies
   \begin{align*}
     \nabla_a f_{\samp}
-  = \frac{\sqrt{d_a}}{nD}\left( \rho^{(a)} - \frac{\tr\rho^{(a)}}{d_a} I_a\right).
+  = \sqrt{d_a}\left( \rho^{(a)} - \frac{\tr\rho^{(a)}}{d_a} I_a\right).
  % = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}.
   \end{align*}
- Finally $\nabla_0 \ell_\samp = \partial_t (\frac{1}{nD}\tr e^{t} \rho - t) = \frac{1}{nD} \tr \rho - 1.$
+ Finally $\nabla_0 \ell_\samp = \partial_t (\tr e^{t} \rho - t) = \tr \rho - 1.$
 \end{proof}
 
 Having calculated the gradient of $f_\samp$, we are ready to state our bound:
@@ -851,8 +851,8 @@ This definition is consistent with \cref{def:single marginal} in the sense that 
 \end{align*}
 for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d_b\times d_b$ matrices~$Z$, and
 \begin{align*}
-\nabla^2_{00} \ell_\samp &=\tr \rho =\frac{1}{nD} \|X\|_F^2 \\
-\nabla^2_{a0} \ell_\samp &= \sqrt{d_a}\rho_a
+\nabla^2_{00} \ef_\samp &=\tr \rho = \|X\|_F^2 \\
+\nabla^2_{a0} \ef_\samp &= \sqrt{d_a}\rho_a
 \end{align*}
 for all $a \in [k]$. 
 \end{lemma}
@@ -861,7 +861,7 @@ Note that for $a,b \in \{0,\dots, k\}$, $\nabla^2_{ab} f_\samp = \nabla^2_{ab} F
   Then for $a \in [k]$, and $Y, Z$ Hermitian we have
   \begin{align*}
    \langle Y,  \left( \nabla^2_{aa} F_{\samp} \right) Y \rangle
-  &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{(s+t)\sqrt{d_a}  Y_{(a)}} \\
+  &=  \partial_{s=0} \partial_{t=0} \tr \rho \, e^{(s+t)\sqrt{d_a}  Y_{(a)}} \\
   &= \partial_{s=0} \partial_{t=0} \tr \rho^{(a)} e^{(s+t)  \sqrt{d_a}Y}
   = d_a \tr \rho^{(a)} Y^2,
   \end{align*}
@@ -870,9 +870,9 @@ Note that for $a,b \in \{0,\dots, k\}$, $\nabla^2_{ab} f_\samp = \nabla^2_{ab} F
     \langle Y,  \left( \nabla^2_{ab} F_{\samp} \right) Z \rangle
   &=\partial_{s=0} \partial_{t=0} \tr \rho \, e^{s \sqrt{d_a}Y_{(a)} + t \sqrt{d_b} Z_{(b)}} \\
   &= \partial_{s=0} \partial_{t=0} \tr \rho^{(ab)} \left( e^{s \sqrt{d_a}  Y} \ot e^{t \sqrt{d_b} Z} \right)\\
-  &= \sqrt{d_a d_b} \tr \rho^{(ab)} \left( Y \ot Z \right).
+  &= \sqrt{d_a d_b}  \tr \rho^{(ab)} \left( Y \ot Z \right).
   \end{align*}
- Also $\nabla^2_{00} F_{\samp} = \partial^2_{t=0} \tr \rho  e^{t} = \tr \rho$, and for all $a \in [k],$ 
+ Also $\nabla^2_{00} F_{\samp} =\partial^2_{t=0} \tr \rho  e^{t} = \tr \rho$, and for all $a \in [k],$ 
  \begin{align*}
 \langle Z, \nabla^2_{a0} F_{\samp} H_0 \rangle 
   &=  \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s\sqrt{d_a} Z_{(a)}}e^{tH_0} \\
