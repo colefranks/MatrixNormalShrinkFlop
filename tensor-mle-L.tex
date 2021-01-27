@@ -936,7 +936,8 @@ Here $x_i$ are viewed as $d_1 \times d_2$ matrices and $x_i^\dagger$ is the matr
 \textrm{and }\|d_1 \Phi^*(I_{d_2})/\tr \Phi(I_{d_1})  - I_{d_1}  \|_{op} & \leq \eps,
 \end{align*}
 \item $\Phi$ is an \emph{$(\eps, \lambda)$-quantum expander} if $\Phi$ is $\eps$-doubly balanced and
-$$\|\Phi\|_0 \leq \frac{1-\lambda}{\sqrt{d_1d_2}} \tr \Phi(I_{d_2}).$$
+$$\|\Phi\|_{op} \leq \frac{1-\lambda}{\sqrt{d_1d_2}} \tr \Phi(I_{d_2})$$
+when restricted to the traceless Hermitian matrices.
 \end{enumerate}
 A $(0, \lambda)$-quantum expander is called a $\lambda$-quantum expander.
 \end{definition}
@@ -946,20 +947,14 @@ A $(0, \lambda)$-quantum expander is called a $\lambda$-quantum expander.
 
 
 
-Quantum expanders play an important role in quantum information theory and quantum computation \TODO{cite}. For us, their purpose will be the following lemma allowing us to translate quantum expansion properties into strong convexity.
+Quantum expanders play an important role in quantum information theory and quantum computation \TODO{cite}. For us, their purpose will be the following lemma allowing us to translate quantum expansion properties into strong convexity. \CF{maybe we don't need to define $\Phi^{ab}$ explicitly, now that the blocks of the hessian really are CPMs?}
 
 \begin{lemma}\label{lem:expansion-convexity} Let $\samp \in (\R^{d_1} \ot \dots \ot \R^{d_k})^n$, and $\rho = \frac{1}{nD} \sum_{i = 1}^n \samp_i \samp_i^T$. Define $\Phi^{ab}:\mat (d_b) \to \mat(d_a)$ by 
 $$ \Phi^{ab}: Z \mapsto \tr_b \rho^{(a,b)} \left(I \ot Z\right).$$
 If $\Phi^{ab}$ is an $(\eps, \lambda)$-quantum expander for every $a < b \in [k]$, then 
-$$ \|\nabla^2 f_\samp - I\| \leq (k-1)( \lambda + \eps^2) + \eps + \eps^2.$$
+$$ \|\nabla^2 f_\samp - (\tr \rho) I\| \leq ((k-1)\lambda + 2\eps) \tr \rho.$$
 \end{lemma}
-Before proving this lemma, it is helpful to observe the following, which follows immediately from \cref{lem:gradient} and the fact that $\Phi^{ab}(I_{d_b}) = \rho^{(a)}$ and $(\Phi^{ab})^*(I_{d_a}) = \rho^{(b)}$. 
-\begin{obs}\label{obs:doubly-gradient}
-$\Phi^{ab}(I_{d_b})$ is doubly balanced for all $a<b \in [k]$ if and only if 
-$$\sqrt{d_a} \| \nabla_a f\| \leq \eps.$$
-for all $a \in [k]$.
-\end{obs}
-The proof of \cref{lem:expansion-convexity} also uses a basic bound on the semidefiniteness of matrices.
+The proof of \cref{lem:expansion-convexity} uses a basic bound on the semidefiniteness of matrices.
 \begin{lemma}\label{lem:block-matrix}
 Let $M$ be a square, symmetric block matrix with blocks $M_{ab}$ of dimension $d_a \times d_b$ for $a,b \in [k]$. Then 
 $$ \bigoplus_{a \in [k]} \left(M_{aa} - I \cdot \sum_{b \neq a} \|M_{ab}\|_{op}\right) \preceq M \preceq \bigoplus_{a \in [k]} \left(M_{aa} + I \cdot \sum_{b \neq a} \|M_{ab}\|_{op}\right) .$$
@@ -979,21 +974,19 @@ M_{11}-  \|M_{12}\|_{op} I & 0 & \hdots &  M_{1k} \\
 M_{k1} & \hdots &  \hdots & M_{kk}\\
   \end{bmatrix}.\end{align*}
  Applying this for all $a < b$ yields the result. The inequality \cref{eq:psd-bound} also applies with the signs and inequalities reversed; applying this inequality for all $a < b$ yields the upper bound on $M$. \end{proof}
- 
- \begin{proof}[Proof of \cref{lem:expansion-convexity}]  We apply \cref{lem:block-matrix} with $M = \nabla^2_f$. By a change of basis, \cref{lem:block-matrix} also applies with $\| \cdot \|_{op}$ replaced by $\|\cdot \|_0$ and $\preceq$ with respect to the inner product on $\H$. We will need to supply bounds on $\|\nabla_{ab}^2 f\|_{0}$ and $\| \nabla_{aa}^2 f - I \|_{0}$ for $a \neq b$. First we bound the off-diagonal terms. 
-
-Recall from \cref{lem:hessian} that the off-diagonal blocks of the Hessian are defined by
-\begin{align}\frac1{\sqrt{d_a d_b}} \langle Y,  \left( \nabla^2_{ab} f_{\samp} \right) Z \rangle
-= \tr \rho^{(ab)} \left( Y \ot Z \right) - \bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr).\label{eq:grad-off-diag}\end{align}
-thus $\nabla^2_{ab} f_{\samp} = \sqrt{d_a d_b} \Phi^{ab} - T$, where $T:Z \mapsto \sqrt{d_a d_b} \rho^{(a)} \tr \rho^{(b)} Z.$ We have $\|\Phi^{ab}\|_{0} \leq \lambda,$ and noting that 
-$\rho^{(a)} = \Phi^{ab}(I_{d_b})$, we have $d_a \rho^{(a)} - I_{d_a} \leq \eps, $ so for all traceless $Y,Z$ we have
-\begin{align} \sqrt{d_a d_b} |(\tr Y  \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr)| \leq \left( \frac{\eps \|Y\|_{1}}{\sqrt{d_{a}}} \right) \left( \frac{\eps \|Z\|_{1}}{\sqrt{d_{b}}} \right) \leq \eps^2 \|Z\|_F\|Y\|_F \label{eq:second-term-hess}\end{align}
-and so $\|T\|_0 \leq \eps^2$. Thus $\|\nabla^2_{ab} f_{\samp}\| \leq \lambda + \eps^2$. 
+  %By a change of basis, \cref{lem:block-matrix} also applies with $\| \cdot \|_{op}$ replaced by $\|\cdot \|_0$ and $\preceq$ with respect to the inner product on $\H$. We will need to supply bounds on $\|\nabla_{ab}^2 f\|_{op}$ and $\| \nabla_{aa}^2 f - I \|_{0}$ for $a \neq b$. First we bound the off-diagonal terms. 
+ \begin{proof}[Proof of \cref{lem:expansion-convexity}]  We apply \cref{lem:block-matrix} with $M = \nabla^2 f_\samp$. Recall from \cref{lem:hessian} that the off-diagonal blocks of the Hessian are defined by
+\begin{align} \langle Y,  \left( \nabla^2_{ab} f_{\samp} \right) Z \rangle
+= \sqrt{d_a d_b} \tr \rho^{(ab)} \left( Y \ot Z \right) \label{eq:grad-off-diag}\end{align}
+for $a, b \in [k]$. Thus $\nabla^2_{ab} f_{\samp} = \sqrt{d_a d_b} \Phi^{ab}.$ By quantum expansion of $\Phi^{ab}$, we have $\|\Phi^{ab}\|_{op} \leq \lambda \frac{1}{\sqrt{d_a d_b}} \tr \rho$. 
+Next we bound $\|\nabla_{a0} f\|_{op}$. However, this is simply $\sqrt{d_a}\sup_{\|Z\|_F = 1} |\tr Z \rho^{(a)}|$ where $Z$ ranges over traceless Hermitians. Using that $\rho^{(a)} = \Phi^{ab}(I_{d_b})$, we have $\|d_a \rho^{(a)} - (\tr \rho) I_{d_a}\|_{op} \leq \eps \tr \rho $ by quantum expansion. For traceless $Z$ we have 
+\begin{align}\tr Z \rho^{(a)} = \frac{1}{d_a} \tr Z (d_a \rho^{(a)} - (\tr \rho) I_{d_a}) \leq \frac{\tr \rho}{d_a} \eps \|Z\|_1 \leq \frac{\tr \rho}{\sqrt{d_a}} \eps \|Z\|_F,\label{eq:second-term-hess}\end{align}
+thus $\|\nabla_{a0} f\|_{op} \leq \eps \tr \rho$.
 
 We next bound $\nabla_{aa}^2 f_\samp$. Recall again from \cref{lem:hessian} that the diagonal blocks of the Hessian are given by \begin{align}
- \langle Y,  \left( \nabla^2_{aa} f_{\samp} \right) Y \rangle=  d_a \tr \rho^{(a)} Y^2 - d_a \bigl(\tr Y \rho^{(a)}\bigr)^2.\label{eq:on-diag-hess-ii}
+ \langle Y,  \left( \nabla^2_{aa} f_{\samp} \right) Y \rangle=  d_a \tr \rho^{(a)} Y^2 .\label{eq:on-diag-hess-ii}
 \end{align}
-Reusing the calculation in \cref{eq:second-term-hess} shows that the second term of the right-hand-side of \cref{eq:on-diag-hess-ii} is at most $\eps^2\|Y\|_F^2.$ Similarly, the $\eps$-balancedness of $\Phi^{ab}$ implies $ |\tr (d_a \rho^{(a)}  - I_a)Y^2| \leq \eps \tr Y^2$, or that the first term of \cref{eq:on-diag-hess-ii} is in $(1 \pm \eps) \|Y\|_F^2$. Hence $\|\nabla_{aa}^2 f_\samp - I\|_0 \leq \eps^2 + \eps$. The bound follows from \cref{lem:block-matrix}. 
+Again, the $\eps$-balancedness of $\Phi^{ab}$ implies $ |\tr (d_a \rho^{(a)}  - (\tr \rho) I_a)Y^2| \leq \eps (\tr \rho) \tr Y^2$, or that the first term of \cref{eq:on-diag-hess-ii} is in $(1 \pm \eps) \|Y\|_F^2 (\tr \rho)$. Hence $\|\nabla_{aa}^2 f_\samp - (\tr \rho) I\|_{op} \leq \eps^2 + \eps$. Finally, $\nabla_{00}^2 f_\samp$ is exactly $\tr \rho$. \cref{lem:block-matrix} tells us that $\nabla^2 f$ dominates the block matrix where each block is at least $(1 - \eps) (\tr \rho) I - (k-1) \lambda (\tr \rho) I - \eps (\tr \rho) I$, and also shows the analogous upper bound.
  \end{proof}
 
 
@@ -1009,6 +1002,14 @@ $$\frac{1}{nD}\|\Phi_{X}\|_0 \leq t^{2} \frac{d_{1}+d_{2}}{\sqrt{d_{1} d_{2} nD}
 Pisier's actual result is slightly different; \cref{thm:hess-pisier} is essentially Theorem~16.6 in~\cite{pisier2012grothendieck}, together with a standard symmetrization trick (e.g., Proof of Lemma~4.1 in~\cite{P14}). We present the details in \cref{sec:pisier}. 
 
 The operator $\Phi^{ab}$ is nearly of the form of $\Phi_{\rv}$ in \cref{thm:hess-pisier}, but it is normalized differently. Indeed, we can compute that $\Phi^{(a,b)}$ is distributed as $\frac{1}{\|X\|_F^2}\Phi_{X}$ for $X$ a tuple of $n D/d_a d_b$ many i.i.d. $d_b \times d_a $ standard Gaussian matrices. As $\|X\|_F^2$ is a sum of $\chi$-square random variables and can easily be controlled by standard concentration bounds, \cref{thm:tensor-convexity} follows easily.
+
+Before proving \cref{thm:tensor-convexity}, it is helpful to observe the following, which follows immediately from \cref{lem:gradient} and the fact that $\Phi^{ab}(I_{d_b}) = \rho^{(a)}$, $(\Phi^{ab})^*(I_{d_a}) = \rho^{(b)}$, and $\tr \Phi^{ab}(I_{d_b}) = \tr \rho$.
+\begin{obs}\label{obs:doubly-gradient}
+$\Phi^{ab}(I_{d_b})$ is doubly balanced for all $a<b \in [k]$ if and only if 
+$$\sqrt{d_a} \| \nabla_a f\| \leq \eps \tr \rho.$$
+for all $a \in [k]$.
+\end{obs}
+
 
 \begin{proof}[Proof of \cref{thm:tensor-convexity}] By \cref{lem:expansion-convexity}, it is enough to prove that $\Phi^{ab}$ is a $(1/\sqrt{20k}, 1/20k)$-quantum expander for all $a < b \in [k]$ with the desired failure probability. 
 
