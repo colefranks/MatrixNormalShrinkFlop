@@ -741,7 +741,8 @@ First note that $\nabla_a \log \det \Theta_1$ is zero because each component $H_
 Having calculated the gradient of $f_\samp$, we are ready to state our bound:
 %\MW{Please check updated proof. Can we assume $\eps<1$ and simply take~$C=16$?}
 \MW{Make pretty by manipulating $C$} 
-\begin{prop}\label{prop:gradient-bound}\CF{won't change with good normalization; update proof.}
+\CF{BEGIN not changed to using log likelihood yet}
+\begin{prop}\label{prop:gradient-bound}
 Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where $D=d_1\cdots{}d_k$.
 Let $\eps>0$ and $C = 16^2\max\{\eps^2,1\}$.
 Suppose that, for all $a \in [k]$,
@@ -798,6 +799,7 @@ Applying the union bound over $[k]$ completes the proof of the proposition.
   % $$\lambda_1(\rho^{\{a\}}), \lambda_2(\rho^{\{a\}}) \in  \cN(1 \pm c \cdot \eps)/ Nd(1 \pm c \cdot \eps) \in \frac{1}{d}(1 \pm \eps)$$
 % with probability $1 - 2 e^{- c N \eps^2}- 2 e^{- c Nd \eps^2} = 1 - 4 e^{- N\eps^2},$ provided $c$ is small enough.
 \end{proof}
+\CF{END not changed to log likelihood yet}
 
 It will also be convenient to have bounds on the norm of $X$; because $\|X\|_F^2$ is simply a sum of $\chi$-square random variables, the next proposition follows from standard concentration bounds (e.g. \cite{W19}).
 \begin{prop}[Norm of $X$]\label{prp:xnorm}
@@ -934,7 +936,7 @@ A $(0, \lambda)$-quantum expander is called a $\lambda$-quantum expander.
 
 
 
-Quantum expanders play an important role in quantum information theory and quantum computation \TODO{cite}. For us, their purpose will be the following lemma allowing us to translate quantum expansion properties into strong convexity. \CF{maybe we don't need to define $\Phi^{ab}$ explicitly, now that the blocks of the hessian really are CPMs?}
+Quantum expanders play an important role in quantum information theory and quantum computation \TODO{cite}. For us, their purpose will be the following lemma allowing us to translate quantum expansion properties into strong convexity. \CF{maybe we don't need to define $\Phi^{ab}$ explicitly, now that the blocks of the hessian really are channels?}
 
 \begin{lemma}\label{lem:expansion-convexity} Let $\samp \in (\R^{d_1} \ot \dots \ot \R^{d_k})^n$, and $\rho = \frac{1}{nD} \sum_{i = 1}^n \samp_i \samp_i^T$. Define $\Phi^{ab}:\mat (d_b) \to \mat(d_a)$ by 
 $$ \Phi^{ab}: Z \mapsto \tr_b \rho^{(a,b)} \left(I \ot Z\right).$$
@@ -1052,7 +1054,7 @@ There is a constant $c>0$ such that if
 %-----------------------------------------------------------------------------
 We are now ready to prove the main result of this section according to the plan outlined in \cref{subsec:proof-sketch}.
 \TODO{restate it here?}
-
+\CF{BEGIN not changed to log likelihood yet; this is as far as I got last night.}
 \begin{proof}[Proof of \cref{thm:tensor-frobenius}]By \cref{it:reduce} in \cref{subsec:proof-sketch}, it is enough to prove the theorem assuming $\Theta = I$. We first show that the minimizer of $f_\rv$ exists and is close to $I$ with high probability, and then use this to show that the minimizer of $\ell_\rv$ is also close.  Set $\delta = \eps/\sqrt{k d_k}$ and let $c$ be a constant. Consider the following three events.
 \begin{enumerate}
 \item\label{it:grad-bd} $\|(\nabla f_\rv)_{a}\|_{op} \leq \frac{\delta}{\sqrt{d_{a}}}$ for all $a \in [k]$,
