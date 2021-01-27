@@ -596,13 +596,14 @@ for all $H,K \in \H$.
 We often abbreviate $\nabla^2 f = \nabla^2 f(I,\dots,I)$ and write $\nabla^2_{ab}f$ for its components.
 As a block matrix,
 \begin{align*}
-  \nabla^2 f = \begin{bmatrix}
-  \nabla_{00}^2 f & \dots & \nabla_{0k}^2 f \\
-  \vdots & \ddots & \vdots \\
-  \nabla_{k0}^2 f & \dots & \nabla_{kk}^2 f \\
-  \end{bmatrix},
+  \nabla^2 f = \left[\begin{array}{c|ccc}
+  \nabla_{00}^2 f & \nabla_{01}^2 f \dots & \nabla_{0k}^2 f \\
+    \hline\nabla_{10}^2 f & \nabla_{11}^2 f \dots & \nabla_{1k}^2 f \\
+  \vdots  & \vdots & \ddots & \vdots \\
+  \nabla_{k0}^2 f & \nabla_{k1}^2 f \dots & \nabla_{kk}^2 f \\
+  \end{array}\right],
 \end{align*}
-where the components $\nabla_{ab}^2f(\Theta)$ of the Hessians are linear operators from the space of traceless symmetric $d_b\times d_b$-matrices to the space of traceless symmetric $d_a \times d_a$-matrices for $a, b \in [k]$, $\nabla^2_{00} f(\Theta)$ is a real number, and $\nabla_{0a}f$ is a linear operator from $\R$ to the space of traceless symmetric $d_1\times d_a$ matrices. Thus $\nabla_{0a}f$ itself can be viewed as a matrix.
+where for $a, b \in [k]$ (i.e. the submarix to the lower-right of the lines) the components $\nabla_{ab}^2f(\Theta)$ of the Hessian are linear operators from the space of traceless symmetric $d_b\times d_b$-matrices to the space of traceless symmetric $d_a \times d_a$-matrices. The $00$ block, $\nabla^2_{00} f(\Theta),$ is a real number, and $\nabla_{0a}f$ is a linear operator from $\R$ to the space of traceless symmetric $d_1\times d_a$ matrices. Thus $\nabla_{0a}f$ itself can be viewed as a matrix.
 \end{definition}
 
 We note that the Hessian is symmetric with respect to the inner product~$\braket{\cdot,\cdot}$ on $\H$.
@@ -1040,7 +1041,6 @@ There is a constant $c>0$ such that if
 %-----------------------------------------------------------------------------
 We are now ready to prove the main result of this section according to the plan outlined in \cref{subsec:proof-sketch}.
 \TODO{restate it here?}
-\CF{BEGIN not changed to log likelihood yet; this is as far as I got last night.}
 \begin{proof}[Proof of \cref{thm:tensor-frobenius}]By \cref{it:reduce} in \cref{subsec:proof-sketch}, it is enough to prove the theorem assuming $\Theta = I$. We first show that the minimizer of $f_\rv$ exists and is close to $I$ with high probability, and then use this to show that the minimizer of $\ell_\rv$ is also close.  Set $\delta = \eps/\sqrt{k d_k}$ and let $c$ be a constant. Consider the following three events.
 \begin{enumerate}
 \item\label{it:grad-bd} $\|(\nabla f_\rv)_{a}\|_{op} \leq \frac{\delta}{\sqrt{d_{a}}}$ for all $a \in [k]$,
