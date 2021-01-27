@@ -856,17 +856,17 @@ for all $d_a \times d_a$ matrices $Y$ and $d_b \times d_b$ matrices $Z$, where, 
 \noindent
 This definition is consistent with \cref{def:single marginal} in the sense that $\tr \rho^{(ab)} (Y \ot I) = \tr \rho^{(a)} Y$ and $\tr \rho^{(ab)} (I \ot Z) = \tr \rho^{(b)} Z$ for all $\rho$, $Y$, $Z$.
 
-\begin{lemma}[Riemmanian Hessian]\label{lem:hessian} Let $\rho = \sum_{i=1}^n \samp_i \samp_i^T$. Then the Riemannian Hessian $\nabla^2 \ell_{\samp}$ at the identity is given by 
+\begin{lemma}[Riemmanian Hessian]\label{lem:hessian} Let $\rho = \frac{1}{nD}\sum_{i=1}^n \samp_i \samp_i^T$. Then the Riemannian Hessian $\nabla^2 \ell_{\samp}$ at the identity is given by 
 \begin{align*}
  \langle Y,  \left( \nabla^2_{aa} \ef_{\samp} \right) Y \rangle
-&=  \frac{d_a}{nD} \tr \rho^{(a)} Y^2 \\
+&=  d_a \tr \rho^{(a)} Y^2 \\
   \langle Y,  \left( \nabla^2_{ab} \ef_{\samp} \right) Z \rangle
-&= \frac{\sqrt{d_a d_b}}{nD} \tr \rho^{(ab)} \left( Y \ot Z \right)
+&= \sqrt{d_a d_b} \tr \rho^{(ab)} \left( Y \ot Z \right)
 \end{align*}
 for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d_b\times d_b$ matrices~$Z$, and
 \begin{align*}
-\nabla^2_{00} \ell_\samp &= \frac{1}{nD}\tr \rho =\frac{1}{nD} \|X\|_F^2 \\
-\nabla^2_{a0} \ell_\samp &= \frac{\sqrt{d_a}}{nD}\rho_a
+\nabla^2_{00} \ell_\samp &=\tr \rho =\frac{1}{nD} \|X\|_F^2 \\
+\nabla^2_{a0} \ell_\samp &= \sqrt{d_a}\rho_a
 \end{align*}
 for all $a \in [k]$. 
 \end{lemma}
@@ -875,22 +875,22 @@ Note that for $a,b \in \{0,\dots, k\}$, $\nabla^2_{ab} f_\samp = \nabla^2_{ab} F
   Then for $a \in [k]$, and $Y, Z$ Hermitian we have
   \begin{align*}
    \langle Y,  \left( \nabla^2_{aa} F_{\samp} \right) Y \rangle
-  &= \frac{1}{nD}\partial_{s=0} \partial_{t=0} \tr \rho \, e^{(s+t)\sqrt{d_a}  Y_{(a)}} \\
-  &= \frac{1}{nD}\partial_{s=0} \partial_{t=0} \tr \rho^{(a)} e^{(s+t)  \sqrt{d_a}Y}
-  = \frac{d_a}{nD} \tr \rho^{(a)} Y^2,
+  &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{(s+t)\sqrt{d_a}  Y_{(a)}} \\
+  &= \partial_{s=0} \partial_{t=0} \tr \rho^{(a)} e^{(s+t)  \sqrt{d_a}Y}
+  = d_a \tr \rho^{(a)} Y^2,
   \end{align*}
   while for $a\neq b \in [k]$ we have
   \begin{align*}
     \langle Y,  \left( \nabla^2_{ab} F_{\samp} \right) Z \rangle
-  &= \frac{1}{nD}\partial_{s=0} \partial_{t=0} \tr \rho \, e^{s \sqrt{d_a}Y_{(a)} + t \sqrt{d_b} Z_{(b)}} \\
-  &= \frac{1}{nD}\partial_{s=0} \partial_{t=0} \tr \rho^{(ab)} \left( e^{s \sqrt{d_a}  Y} \ot e^{t \sqrt{d_b} Z} \right)\\
-  &= \frac{\sqrt{d_a d_b}}{nD} \tr \rho^{(ab)} \left( Y \ot Z \right).
+  &=\partial_{s=0} \partial_{t=0} \tr \rho \, e^{s \sqrt{d_a}Y_{(a)} + t \sqrt{d_b} Z_{(b)}} \\
+  &= \partial_{s=0} \partial_{t=0} \tr \rho^{(ab)} \left( e^{s \sqrt{d_a}  Y} \ot e^{t \sqrt{d_b} Z} \right)\\
+  &= \sqrt{d_a d_b} \tr \rho^{(ab)} \left( Y \ot Z \right).
   \end{align*}
- Also $\nabla^2_{00} F_{\samp} = \partial^2_{t=0} \tr \rho  e^{t} = \frac{1}{nD}\tr \rho$, and for all $a \in [k],$ 
+ Also $\nabla^2_{00} F_{\samp} = \partial^2_{t=0} \tr \rho  e^{t} = \tr \rho$, and for all $a \in [k],$ 
  \begin{align*}
 \langle Z, \nabla^2_{a0} F_{\samp} \lambda \rangle 
-  &= \frac{1}{nD} \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s\sqrt{d_a} Z_{(a)}}e^{t\lambda} \\
-  &= \frac{\sqrt{d_a}}{nD} \lambda \tr \rho_a Z.
+  &=  \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s\sqrt{d_a} Z_{(a)}}e^{t\lambda} \\
+  &= \sqrt{d_a} \lambda \tr \rho_a Z.
   \end{align*}
   for all $\lambda \in \R$ and Hermitian $Z$.
 \end{proof}
@@ -925,7 +925,7 @@ $$\Phi: Z \mapsto \tr_2 \rho \left(I \ot Z\right),$$
  
  If $\rho = \sum_{i = 1}^N x_i x_i^T$ for $x_i \in \R^{d_1 \ot d_2}$, then we have the following two equivalent ways to write the corresponding completely positive map, which we call $\Phi_{\samp}$:
 \begin{align} \Phi_{\samp}(Z) = \sum_{i = 1}^N x_i Z x_i^\dagger = \left(\sum_{i = 1}^N x_i \ot x_i\right) Z.\label{eq:quantum-channel}\end{align}
-Here $x_i$ are viewed as $d_1 \times d_2$ matrices and $x_i^\dagger$ is the matrix transpose. In our proof of strong convexity, we will show that strong convexity follows if all the completely positive maps $\Phi$ arising from the partial traces $\rho^{(a,b)}$ are good \emph{quantum expanders}. 
+Here $x_i$ are viewed as $d_1 \times d_2$ matrices and $x_i^\dagger$ is the matrix transpose. In our proof of strong convexity, we will show that strong convexity follows if all the completely positive maps $\Phi^{ab}$ arising from the partial traces $\rho^{(a,b)}$ are good \emph{quantum expanders}. 
 %The quantum expansion we need will then follow from a result of Pisier. 
 
 \begin{definition}[Quantum expansion] Let $\Phi:\mat(d_1) \to \mat(d_2)$ be a completely positive map (c.f. \cref{eq:quantum-channel}).
@@ -948,7 +948,7 @@ A $(0, \lambda)$-quantum expander is called a $\lambda$-quantum expander.
 
 Quantum expanders play an important role in quantum information theory and quantum computation \TODO{cite}. For us, their purpose will be the following lemma allowing us to translate quantum expansion properties into strong convexity.
 
-\begin{lemma}\label{lem:expansion-convexity} Let $\samp \in (\R^{d_1} \ot \dots \ot \R^{d_k})^n$, and $\rho = \frac{1}{\|x\|^2} \sum_{i = 1}^n \samp_i \samp_i^T$. Define $\Phi^{ab}:\mat (d_b) \to \mat(d_a)$ by 
+\begin{lemma}\label{lem:expansion-convexity} Let $\samp \in (\R^{d_1} \ot \dots \ot \R^{d_k})^n$, and $\rho = \frac{1}{nD} \sum_{i = 1}^n \samp_i \samp_i^T$. Define $\Phi^{ab}:\mat (d_b) \to \mat(d_a)$ by 
 $$ \Phi^{ab}: Z \mapsto \tr_b \rho^{(a,b)} \left(I \ot Z\right).$$
 If $\Phi^{ab}$ is an $(\eps, \lambda)$-quantum expander for every $a < b \in [k]$, then 
 $$ \|\nabla^2 f_\samp - I\| \leq (k-1)( \lambda + \eps^2) + \eps + \eps^2.$$
