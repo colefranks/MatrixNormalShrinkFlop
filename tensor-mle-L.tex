@@ -370,7 +370,7 @@ Initialize $\overline{\Theta}_1 = I_{d_1}$, $\overline{\Theta}_2 = I_{d_2}$, and
 \item Set $\overline{\Theta}_1 \leftarrow (\frac{1}{n d_2} \sum_{i = 1}^n X_i \overline{\Theta}_2 X_i^T)^{-1}.$
 \item Set $\Upsilon = \frac{1}{n d_1} \sum_{i = 1}^n X_i^T \overline{\Theta}_1 X_i$.
 If $d_F( \Upsilon^{-1}|| \overline{\Theta}_2) > \eps$, set $\overline{\Theta}_2 \leftarrow \Upsilon^{-1}$ and return to Step 1.
-\item Output $\overline{\Theta}_1, \overline{\Theta}_2$.
+\item Output $\overline{\Theta}_1, \overline{\Theta}_2$, rescaled to have the same determinant.
 \end{enumerate}
 
 We can motivate this procedure by noting that if in the first step we already $\overline{\Theta}_2 = \Theta_2$, then $\frac{1}{n d_2} \sum_{i = 1}^n X_i \overline{\Theta}_2 X_i^T$ is simply a sum of outer products of $nd_2$ many independent random vectors with covariance $\Sigma_1 = \Theta_1^{-1}$; as such the inverse is a good estimator for $\Theta_1$.
@@ -435,10 +435,7 @@ This invariance is natural because changing a pair of precision matrices in this
 As observed by \cite{wiesel2012geodesic}, the negative log-likelihood of the tensor normal model is jointly convex in~$\Theta_1,\dots,\Theta_k$ along these geodesics.
 % , i.e., $-\log \ell_x(\Theta_1^{1/2} e^{H_1t} \Theta_1^{1/2}, \dots, \Theta_k^{1/2} e^{H_kt} \Theta_k^{1/2})$ is convex in $t\in\R$ for any choice of $\Theta_1,\dots,\Theta_k$ and~$H_1,\dots,H_k$.
 However, it is never strongly convex. This directly related to the non-identifiability of the $\Theta_a$, which makes the MLE not unique. To this end, we restrict to the submanifold $\det\Theta_1= \dots = \det \Theta_k$ so that all parameters are identifiable.
-
 %With this restriction, the log-likelihood function reads \begin{align}\label{eq:reparameterized log likelihood}  \ell_x(\Theta_1, \dots, \Theta_k)&= \frac {nD} 2 k \log \det \Theta_1  - \frac{1}2 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k \Theta_a \right) x_i.\end{align}
-
-
 % As above, we can fix this by working with tuples of precision matrices with equal determinant:
 Accordingly, we define
 % As above, we can fix this by working with tuples of precision matrices with equal determinant:
@@ -555,7 +552,7 @@ For notational convenience we minimize the function $\ef_\samp = - \frac{2}{nD} 
 Given $n$ samples $x = (x_1,\dots,x_n)$ in $\R^D$, define the function $f_x \colon \P \to \R$ by
 \begin{align*}
   \ef_\samp(\Theta)
-=  \frac{1}{nD}\samp_i^T \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i - k \log \Theta_1
+=  \frac{1}{nD}\samp_i^T \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i - k \log\det \Theta_1
 \end{align*}
 Let $\widehat \Theta = (\widehat \Theta_0, \widehat \Theta_1,\dots,\widehat \Theta_k)$ denote the minimizer of $f_x$ if it exists and is unique. We write $\widehat\Theta = \widehat\Theta(x)$ when we want to emphasize the dependence of the MLE on the samples~$x$.
 
@@ -720,7 +717,7 @@ Then the components of the Riemannian gradient $\nabla \ef_{\samp}$ at the ident
 and $\nabla_0 \ef_\samp = \frac{1}{nD}\tr \rho - 1 = \frac{1}{nD}\|X\|_F^2 - 1.$ 
 \end{lemma}
 \begin{proof}
-First note that $\nabla_a \log \det \Theta_1$ is zero because each component $H_a$ of the tangent vector is traceless for $a \in [k]$. Thus for all $a\in[k]$ the component $\nabla_a f_\samp$ is the same as $\nabla_a F$ where $F:\Theta \mapsto \frac{1}{nD}\tr \rho \ot_{a = 1}^k \Theta_a$. Thus
+First note that $\nabla_a \log \det \Theta_1$ is zero because each component $H_a$ of the tangent vector is traceless for $a \in [k]$. Thus for all $a\in[k]$ the component $\nabla_a f_\samp$ is the same as $\nabla_a F$ where $F:\Theta \mapsto \tr \rho \ot_{a = 1}^k \Theta_a$. Thus
   \begin{align*}
    \langle \nabla_a f_{\samp} , Z \rangle
   % = \partial_{t=0} F_{\samp}(I_1,\dots,I_{a-1}, e^{tZ}, I_{a+1},\dots,I_n)
@@ -860,7 +857,7 @@ for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d
 for all $a \in [k]$. 
 \end{lemma}
 \begin{proof}
-Note that for $a,b \in \{0,\dots, k\}$, $\nabla^2_{ab} f_\samp = \nabla^2_{ab} F$ where $F:\Theta \mapsto \frac{1}{nD}\tr \rho \ot_{a = 1}^k \Theta_a$. 
+Note that for $a,b \in \{0,\dots, k\}$, $\nabla^2_{ab} f_\samp = \nabla^2_{ab} F$ where $F:\Theta \mapsto \tr \rho \ot_{a = 1}^k \Theta_a$. 
   Then for $a \in [k]$, and $Y, Z$ Hermitian we have
   \begin{align*}
    \langle Y,  \left( \nabla^2_{aa} F_{\samp} \right) Y \rangle
@@ -877,9 +874,9 @@ Note that for $a,b \in \{0,\dots, k\}$, $\nabla^2_{ab} f_\samp = \nabla^2_{ab} F
   \end{align*}
  Also $\nabla^2_{00} F_{\samp} = \partial^2_{t=0} \tr \rho  e^{t} = \tr \rho$, and for all $a \in [k],$ 
  \begin{align*}
-\langle Z, \nabla^2_{a0} F_{\samp} \lambda \rangle 
-  &=  \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s\sqrt{d_a} Z_{(a)}}e^{t\lambda} \\
-  &= \sqrt{d_a} \lambda \tr \rho_a Z.
+\langle Z, \nabla^2_{a0} F_{\samp} H_0 \rangle 
+  &=  \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s\sqrt{d_a} Z_{(a)}}e^{tH_0} \\
+  &= \sqrt{d_a} H_0 \tr \rho_a Z.
   \end{align*}
   for all $\lambda \in \R$ and Hermitian $Z$.
 \end{proof}
