@@ -591,20 +591,20 @@ These together imply the desired sample complexity bounds -- as in the Euclidean
 To make this discussion more concrete, we now define the gradient and Hessian formally, and state the lemma that we will use to relate the gradient and strong convexity to the distance to the optimizer as in the plan above.
 
 \begin{definition}[Gradient and Hessian]
-Let $f\colon \P \to \R$ be a once or twice differentiable function and $P \in \P$.
-The \emph{(Riemannian) gradient}~$\nabla f(P)$ is the unique element in $\H$ such that
+Let $f\colon \P \to \R$ be a once or twice differentiable function and $\Theta \in \P$.
+The \emph{(Riemannian) gradient}~$\nabla f(\Theta)$ is the unique element in $\H$ such that
 \begin{align*}
-  \braket{\nabla f(P), H} = \sum_{a=1}^k \braket{\nabla_a f(P), H_a} = \partial_{t=0} f(\exp_P(tH))
+  \braket{\nabla f(\Theta), H} = \sum_{a=1}^k \braket{\nabla_a f(\Theta), H_a} = \partial_{t=0} f(\exp_\Theta(tH))
 \end{align*}
 for all $Z\in \H$.
-The components $\nabla_a f(P)$ of the gradient are $d_a \times d_a$ traceless symmetric matrices.
+The components $\nabla_a f(\Theta)$ of the gradient are $d_a \times d_a$ traceless symmetric matrices.
 We often abbreviate $\nabla f = \nabla f(I,\dots,I)$ and write $\nabla_a f$ for its components.
 
-The \emph{(Riemannian) Hessian}~$\nabla^2 f(P)$ is the unique linear operator on~$\H$ such that
+The \emph{(Riemannian) Hessian}~$\nabla^2 f(\Theta)$ is the unique linear operator on~$\H$ such that
 \begin{align*}
-  \braket{H, \nabla^2 f(P) K}
+  \braket{H, \nabla^2 f(\Theta) K}
 % = \sum_{a=1}^k \sum_{b=1}^k \braket{H_a, \nabla^2_{ab} f(P) K_b}
-= \partial_{s=0} \partial_{t=0} f(\exp_{P}(sH + tK))
+= \partial_{s=0} \partial_{t=0} f(\exp_{\Theta}(sH + tK))
 \end{align*}
 for all $H,K \in \H$.
 We often abbreviate $\nabla^2 f = \nabla^2 f(I,\dots,I)$ and write $\nabla^2_{ab}f$ for its components.
@@ -616,38 +616,38 @@ As a block matrix,
   \nabla_{k1}^2 f & \dots & \nabla_{kk}^2 f \\
   \end{bmatrix},
 \end{align*}
-where the components $\nabla_{ab}^2f(P)$ of the Hessians are linear operators from the space of traceless symmetric $d_b\times d_b$-matrices to the space of traceless symmetric $d_a \times d_a$-matrices for $a, b \in [k]$, $\nabla^2_{00} f(P)$ is a real number, and $\nabla_{0a}f$ is a linear operator from $\R$ to the space of traceless symmetric $d_1\times d_a$ matrices. Thus $\nabla_{0a}f$ itself can be viewed as a matrix.
+where the components $\nabla_{ab}^2f(\Theta)$ of the Hessians are linear operators from the space of traceless symmetric $d_b\times d_b$-matrices to the space of traceless symmetric $d_a \times d_a$-matrices for $a, b \in [k]$, $\nabla^2_{00} f(\Theta)$ is a real number, and $\nabla_{0a}f$ is a linear operator from $\R$ to the space of traceless symmetric $d_1\times d_a$ matrices. Thus $\nabla_{0a}f$ itself can be viewed as a matrix.
 \end{definition}
 
 We note that the Hessian is symmetric with respect to the inner product~$\braket{\cdot,\cdot}$ on $\H$.
 Just like in the Euclidean case, the Hessian is convenient to characterize strong convexity.
-Indeed, $\braket{H, \nabla^2 f(P) H} = \partial^2_{t=0} f(\exp_{P}(tH))$ for all $H\in \H$.
-Thus, $f$~is geodesically convex if and only if the Hessian is positive semidefinite, that is, $\nabla^2 f(P) \succeq 0$. % where$\succeq$ is the Loewner order.
-Similarly, $f$ is $\lambda$-strongly geodesically convex if and only if~$\nabla^2 f(P) \succeq \lambda I$, i.e., the Hessian is positive definite with eigenvalues larger than or equal to~$\lambda$.
+Indeed, $\braket{H, \nabla^2 f(\Theta) H} = \partial^2_{t=0} f(\exp_{\Theta}(tH))$ for all $H\in \H$.
+Thus, $f$~is geodesically convex if and only if the Hessian is positive semidefinite, that is, $\nabla^2 f(\Theta) \succeq 0$. % where$\succeq$ is the Loewner order.
+Similarly, $f$ is $\lambda$-strongly geodesically convex if and only if~$\nabla^2 f(\Theta) \succeq \lambda I$, i.e., the Hessian is positive definite with eigenvalues larger than or equal to~$\lambda$.
 
 We can now state and prove the following lemma, which shows that strong convexity in a ball about a point where the gradient is sufficiently small implies the optimizer cannot be far.
 
 \begin{lemma}\label{lem:convex-ball}
-Let $f\colon \P \to \R$ be geodesically convex everywhere, and $\lambda$-strongly geodesically convex in a ball $B_r(P)$ of radius~$r>0$.
-Further assume the gradient is bounded as $\norm{\nabla f(P)}_F \leq \eps < \frac{\lambda r} 2$.
-Then the sublevel set $\{Q \in \P : f(Q) \leq f(P)\}$ is contained in the ball $B_{2\eps/\lambda}(P) \subset B_r(P)$, $f$ has a unique minimizer $\cramped{\hat P}$ which is contained in $B_{\eps/\lambda}(P)$, and
+Let $f\colon \P \to \R$ be geodesically convex everywhere, and $\lambda$-strongly geodesically convex in a ball $B_r(\Theta)$ of radius~$r>0$.
+Further assume the gradient is bounded as $\norm{\nabla f(\Theta)}_F \leq \eps < \frac{\lambda r} 2$.
+Then the sublevel set $\{\Upsilon \in \P : f(\Upsilon) \leq f(\Theta)\}$ is contained in the ball $B_{2\eps/\lambda}(\Theta) \subset B_r(\Theta)$, $f$ has a unique minimizer $\cramped{\htheta}$ which is contained in $B_{\eps/\lambda}(P)$, and
 \begin{align}\label{eq:minimum lower bound}
-  f(\hat P) \geq f(P) - \frac{\eps^2}{2 \lambda}.
+  f(\htheta) \geq f(\Theta) - \frac{\eps^2}{2 \lambda}.
 \end{align}
-\MW{Just state the lemma for $r=2\eps/\lambda$.}
+\MW{Just state the lemma for $r=2\eps/\lambda$.}\CF{actually it's sort of hard to write it that way}
 \end{lemma}
 \begin{proof}
-We first show that the sublevel set of~$f(P)$ is included in the ball of radius~$r$.
-Consider $g(t) := f(\exp_P(tH))$, where~$H\in\H$ is an arbitrary vector of unit norm~$\norm H_F = 1$.
+We first show that the sublevel set of~$f(\Theta)$ is included in the ball of radius~$r$.
+Consider $g(t) := f(\exp_\Theta(tH))$, where~$H\in\H$ is an arbitrary vector of unit norm~$\norm H_F = 1$.
 Then, using the assumption on the gradient,
 \begin{align}\label{eq:grad bound}
   g'(0)
-= \partial_{t=0} f(\exp_P(tH))
-= \braket{\nabla f(P), H}
-\geq -\norm{\nabla f(P)}_F \norm H_F
+= \partial_{t=0} f(\exp_\Theta(tH))
+= \braket{\nabla f(\Theta), H}
+\geq -\norm{\nabla f(\Theta)}_F \norm H_F
 \geq -\eps.
 \end{align}
-Since $f$ is $\lambda$-strongly geodesically convex on $B_r(P)$, we have $g''(t) \geq \lambda$ for all $\abs t\leq r$.
+Since $f$ is $\lambda$-strongly geodesically convex on $B_r(\Theta)$, we have $g''(t) \geq \lambda$ for all $\abs t\leq r$.
 It follows that for all $0 \leq t \leq  r$ we have
 \begin{align}\label{eq:g convex lower}
   g(t) \geq g(0) - \eps t + \frac12 \lambda t^2.
@@ -662,16 +662,16 @@ Since $g$ is convex due to the geodesic convexity of $f$, it follows that, for a
 \end{align*}
 hence
 \begin{align*}
-  f(P) = g(0) < g(t) = f(\exp_P(tH)).
+  f(P) = g(0) < g(t) = f(\exp_\Theta(tH)).
 \end{align*}
-It follows that the sublevel set of~$f(P)$ is contained in the ball of radius~$r$, which is compact.
+It follows that the sublevel set of~$f(\Theta)$ is contained in the ball of radius~$r$, which is compact.
 Thus, $f$ has a minimum and any minimizer~$\hat P$ is contained in this ball.
 Moreover, as the right-hand side of \cref{eq:g convex lower} takes a minimum at $t=\frac\eps\lambda$, we have $g(t) \geq g(0) - \frac{\eps^2}{2\lambda}$ for all~$0\leq t\leq r$.
 By definition of $g$, this implies \cref{eq:minimum lower bound}.
 
 Next, we prove that any minimizer of~$f$ is necessarily contained in the (smaller) ball of radius~$\frac\eps\lambda$.
-To see this, take an arbitrary minimizer~$\hat P$ and write it in the form $\hat P = \exp_P(TH)$, where $H\in \H$ is a unit vector and~$T>0$.
-As before, we consider the function $g(t) = f(\exp_P(tH))$.
+To see this, take an arbitrary minimizer~$\htheta$ and write it in the form $\htheta = \exp_\Theta(TH)$, where $H\in \H$ is a unit vector and~$T>0$.
+As before, we consider the function $g(t) = f(\exp_\Theta(tH))$.
 Then, using \cref{eq:grad bound}, the convexity of~$g(t)$ for all $t\in\R$ and the $\lambda$-strong convexity of~$g(t)$ for $\abs t \leq  r$, we have
 \begin{align*}
   0 = g'(T) = g'(0) + \int_0^T g''(t) \, dt \geq \lambda \min(T,  r) - \eps.
@@ -681,11 +681,11 @@ Therefore we must have~$T\leq r$ and hence $\lambda T - \eps \leq 0$, so $T \leq
 Thus we have proved that any minimizer of $f$ is contained in the ball of radius~$\frac\eps\lambda$.
 
 We still need to show that the minimizer is unique; that this follows from strong convexity is convex optimization ``folklore,'' but we include a proof nonetheless.
-Indeed, suppose that $\hat P$ is a minimizer and let $H\in \H$ be arbitrary.
-Consider $h(t) := f(\exp_{\hat P}(tH))$.
-Then the function $h(t)$ is convex, has a minimum at $t=0$, and satisfies $h''(0) > 0$, since $f$ is $\lambda$-strongly geodesically convex near~$\hat P$, as $\hat P \in B_r(P)$ by what we showed above.
+Indeed, suppose that $\htheta$ is a minimizer and let $H\in \H$ be arbitrary.
+Consider $h(t) := f(\exp_{\htheta}(tH))$.
+Then the function $h(t)$ is convex, has a minimum at $t=0$, and satisfies $h''(0) > 0$, since $f$ is $\lambda$-strongly geodesically convex near~$\htheta$, as $\htheta \in B_r(\Theta)$ by what we showed above.
 It follows that $h(t) > h(0)$ for any~$t\neq0$.
-Since $H$ was arbitrary, this shows that $f(Q) > f(\hat P)$ for any $Q\neq P'$.
+Since $H$ was arbitrary, this shows that $f(\Upsilon) > f(\htheta)$ for any $\Upsilon\neq \htheta$.
 \end{proof}
 
 %-----------------------------------------------------------------------------
@@ -720,7 +720,7 @@ Then the components of the Riemannian gradient $\nabla \ef_{\samp}$ at the ident
 and $\nabla_0 \ef_\samp = \frac{1}{nD}\tr \rho - 1 = \frac{1}{nD}\|X\|_F^2 - 1.$ 
 \end{lemma}
 \begin{proof}
-First note that $\nabla_a \log \det \Theta_a$ is zero because each component $H_a$ of the tangent vector is traceless for $a \in [k]$. Thus for all $a\in[k]$ the component $\nabla_a f_\samp$ is the same as $\nabla_a F$ where $F:\Theta \mapsto \frac{1}{nD}\tr \rho \ot_{a = 1}^k \Theta_a$.
+First note that $\nabla_a \log \det \Theta_1$ is zero because each component $H_a$ of the tangent vector is traceless for $a \in [k]$. Thus for all $a\in[k]$ the component $\nabla_a f_\samp$ is the same as $\nabla_a F$ where $F:\Theta \mapsto \frac{1}{nD}\tr \rho \ot_{a = 1}^k \Theta_a$. Thus
   \begin{align*}
    \langle \nabla_a f_{\samp} , Z \rangle
   % = \partial_{t=0} F_{\samp}(I_1,\dots,I_{a-1}, e^{tZ}, I_{a+1},\dots,I_n)
