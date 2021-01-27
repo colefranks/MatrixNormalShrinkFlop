@@ -434,42 +434,32 @@ This invariance is natural because changing a pair of precision matrices in this
 
 As observed by \cite{wiesel2012geodesic}, the negative log-likelihood of the tensor normal model is jointly convex in~$\Theta_1,\dots,\Theta_k$ along these geodesics.
 % , i.e., $-\log \ell_x(\Theta_1^{1/2} e^{H_1t} \Theta_1^{1/2}, \dots, \Theta_k^{1/2} e^{H_kt} \Theta_k^{1/2})$ is convex in $t\in\R$ for any choice of $\Theta_1,\dots,\Theta_k$ and~$H_1,\dots,H_k$.
-However, it is never strongly convex. This directly related to the non-identifiability of the $\Theta_a$, which makes the MLE not unique. 
-To this end, we parameterize $\Theta_a = P_0^{1/k} P_a$ for a scalar $P_0>0$ and positive definite~$P_a$ of unit determinant, so that $\Theta_1 \ot \cdots \ot \Theta_k = P_0 \cdot P_1 \ot \cdots \ot P_k$ and all parameters are identifiable.
-In this parameterization, the log-likelihood function reads
-\begin{align}\label{eq:reparameterized log likelihood}
-  \ell_x(P_0, P_1,\dots,P_k)
-% &= \frac n 2 \log \det \left( \lambda \textstyle\bigotimes_{a=1}^k P_a \right) - \frac\lambda2 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k P_a \right) x_i \\
-&= \frac {nD} 2 \log P_0  - \frac{P_0}2 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k P_a \right) x_i.
-\end{align}
-%Clearly, the difficulty in finding the MLE is in minimizing the second term over $P_1,\dots,P_k$. 
-%Once this is achieved, the correct normalization can be determined by a simple one-dimensional optimization that has a closed form solution. 
-%However, 
-%Once this is achieved, the correct normalization can be determined by a simple one-dimensional optimization that has a closed form solution (see below).
-%Clearly, the difficulty in finding the MLE is in minimizing the right-hand side sum over $P_1,\dots,P_k$. Once this is achieved, the correct normalization can be determined by a simple one-dimensional optimization that has a closed form solution (see below). 
+However, it is never strongly convex. This directly related to the non-identifiability of the $\Theta_a$, which makes the MLE not unique. To this end, we restrict to the submanifold $\det\Theta_1= \dots = \det \Theta_k$ so that all parameters are identifiable.
+
+%With this restriction, the log-likelihood function reads \begin{align}\label{eq:reparameterized log likelihood}  \ell_x(\Theta_1, \dots, \Theta_k)&= \frac {nD} 2 k \log \det \Theta_1  - \frac{1}2 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k \Theta_a \right) x_i.\end{align}
+
 
 % As above, we can fix this by working with tuples of precision matrices with equal determinant:
 Accordingly, we define
 % As above, we can fix this by working with tuples of precision matrices with equal determinant:
 \begin{align*}
-  \P &= \{ (P_0, P_1,\dots,P_k) \in \R\times \PD(d_1) \times \dots \times \PD(d_k) \;:\; \det P_a = 1 \; \forall a \in [k] \}.
+  \P &= \{ (\Theta_1,\dots,\Theta_k) \in \PD(d_1) \times \dots \times \PD(d_k) \;:\; \det \Theta_1 = \dots = \det \Theta_k \; \forall a \in [k] \}.
  \end{align*}
 %\intertext{The tangent space of this manifold is naturally identified with the real vector space}
-The tangent space of this manifold is naturally identified with the real vector space
+ The tangent space of this manifold is can be identified with the real vector space
 \begin{align*}
   \H &= \{ (H_0, H_1,\dots,H_k) \;:\; H_0 \in \R \text{ and }H_a \text{ a symmetric $d_a \times d_a$ matrix}, \; \tr H_a = 0\; \forall a \in [k]  \}.
 \end{align*}
-%$H_0$ is the tangent direction that changes the determinant, and the symmetric traceless matrices are the directions that change in the matrices while keeping the determinant fixed.
-The embedding $(P_0, P_1,\dots,P_d) \mapsto P_0 \cdot P_1 \ot \dots \ot P_d$ identifies $\P$ with the set of Kronecker products $\Theta_1 \ot \dots \ot \Theta_k$ in $\PD(D)$, a totally geodesic submanifold. This induces a Riemannian metric with the following geodesics.
+The $0^{th}$ component is the tangent direction that changes each determinant by the same amount, and the $a^{th}$ component for $a > 1$ are the directions that change the $a^{th}$ matrix subject to its determinant staying fixed. The embedding $(\Theta_1,\dots,\Theta_d) \mapsto  \Theta_1 \ot \dots \ot \Theta_d$ identifies $\P$ with a totally geodesic submanifold of $\PD(D)$. This induces a Riemannian metric with the following geodesics.
 
 \begin{definition}[Geodesics and balls]
 Let $P\in\P$.
-The \emph{exponential map} $\exp_\Theta \colon \H \to \P$ at~$P$ is defined by
+The \emph{exponential map} $\exp_\Theta \colon \H \to \P$ at~$\Theta$ is defined by
 \begin{align*}
-  \exp_\Theta(H) &= \exp_{(P_0, P_1,\dots,P_k)}(H_0, H_1,\dots,H_k)\\
-  & =  \left(P_0 e^{H_0 t},  P_1^{1/2} e^{\sqrt{d_1} H_1} P_1^{1/2}, \dots, P_k^{1/2} e^{\sqrt{d_k} H_k} P_k^{1/2} \right).
+  \exp_\Theta(H) &= \exp_{(\Theta_1, \dots, \Theta_k)}(H_0, H_1,\dots,H_k)\\
+  & =  e^{\frac{1}{k}H_0}\left( \Theta_1^{1/2} e^{\sqrt{d_1} H_1} \Theta_1^{1/2}, \dots, \Theta_k^{1/2} e^{\sqrt{d_k} H_k} \Theta_k^{1/2} \right).
 \end{align*}
-The \emph{geodesics} through $P$ are the curves $t \mapsto \exp_P(t H)$ for $t\in\R$ and $H\in\H$.
+The \emph{geodesics} through $\Theta$ are the curves $t \mapsto \exp_P(t H)$ for $t\in\R$ and $H\in\H$.
 By convention, they have unit speed if $\norm{H}_F^2 = \sum_{a=0}^k \norm{H_a}_F^2 = 1$.
 Therefore, the closed \emph{(geodesic) ball} of radius~$r>0$ about~$\Theta$ is given by
 \begin{align*}
@@ -486,7 +476,7 @@ Such balls are geodesically convex, that is, if $\gamma(t)$ is a geodesic such t
 Using our definition of geodesics, we obtain the following notion of geodesic convexity.
 
 \begin{definition}[Geodesic convexity]
-A twice differentiable function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $\Theta\in\P$ if $\partial^2_{t=0} f(\exp_P(tH)) \geq 0$ for all~$H\in\H$.
+A twice differentiable function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $\Theta\in\P$ if $\partial^2_{t=0} f(\exp_\Theta(tH)) \geq 0$ for all~$H\in\H$.
 It is called \emph{$\lambda$-strongly geodesically convex} at $\Theta$ for some $\lambda>0$ if $\partial^2_{t=0} f(\exp_P(tH)) \geq \lambda \norm H_F^2$ for all~$H\in\H$.
 
 We note that for a geodesically convex domain $D \subseteq \P$, a function $f$ is (strongly) geodesically convex on~$D$ if, and only if, the function $t \mapsto f(\gamma(t))$ is (strongly) convex on~$[0,1]$ for any geodesic $\gamma(t)$ with $\gamma(0),\gamma(1)\in D$.
@@ -501,10 +491,9 @@ In other words, geodesic convexity simply means convexity in the ordinary Euclid
 The invariance properties described above for $\PD(d)$ are directly inherited for tuples of precision matrices with determinant one.
 The manifold $\P$ carries a natural action by the group
 \begin{align*}
-  \G = \{ (G_0, G_1,\dots,G_k) \in \R_x\times \SL(d_1) \times \dots \times \SL(d_k) \}
+  \G = \{ (G_1,\dots,G_k) \in  \GL(d_1) \times \dots \times \GL(d_k): \det G_1= \dots = \det G_k \}
 \end{align*}
-where $\SL(d)$ denotes the matrices of determinant $1$. Namely, if $P \in \P$ and $A \in \G$ then the tuple $A P A^T := (|G_0|^2 P_0,  G_1 P_1 G_1^T, \dots, G_k P_k G_k^T)$ is in $\P$. \CF{use either $A$ or $G$ but not both?}
-Moreover, the mapping $P \mapsto AP A^T$ is an isometry, and it preserves the statistical distances~$D_F$ and $D_{\op}$ between the individual precision matrices as well as between their tensor product.
+Namely, if $P \in \P$ and $A \in \G$ then the tuple $A P A^T := (A_1 P_1 A_1^T, \dots, A_k P_k A_k^T)$ is in $\P$. Moreover, the mapping $P \mapsto AP A^T$ is an isometry, and it preserves the statistical distances~$D_F$ and $D_{\op}$ between the individual precision matrices as well as between their tensor product.
 
 % We also note that \MW{It's not \dots} the MLE obeys a certain \emph{equivariance} property under such transformations.
 % For all $P \in \P$, $A \in \G$, and samples $x=(x_1,\dots,x_n)$, the log-likelihood satisfies
@@ -565,11 +554,13 @@ For notational convenience we minimize the function $\ef_\samp = - \frac{2}{nD} 
 \begin{definition}[Objective function]\label{dfn:function}
 Given $n$ samples $x = (x_1,\dots,x_n)$ in $\R^D$, define the function $f_x \colon \P \to \R$ by
 \begin{align*}
-  \ef_\samp(P)
-=  \frac{P_0}{nD}\samp_i^T \left( \textstyle \bigotimes_{a=1}^k P_a \right) \samp_i - \log P_0
+  \ef_\samp(\Theta)
+=  \frac{1}{nD}\samp_i^T \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i - k \log \Theta_1
 \end{align*}
-Let $\widehat P = (\widehat P_0, \widehat P_1,\dots,\widehat P_k)$ denote the minimizer of $f_x$ if it exists and is unique.
-Then the maximum likelihood estimator is given by $\widehat\Theta_a = {\widehat P_0}^{1/k} \widehat P_a$. We write $\widehat P = \widehat P(x)$ and $\widehat\Theta = \widehat\Theta(x)$ when we want to emphasize the dependence of the MLE on the samples~$x$.
+Let $\widehat \Theta = (\widehat \Theta_0, \widehat \Theta_1,\dots,\widehat \Theta_k)$ denote the minimizer of $f_x$ if it exists and is unique. We write $\widehat\Theta = \widehat\Theta(x)$ when we want to emphasize the dependence of the MLE on the samples~$x$.
+
+
+%Then the maximum likelihood estimator is given by $\widehat\Theta_a = {\widehat P_0}^{1/k} \widehat P_a$. We write $\widehat P = \widehat P(x)$ and $\widehat\Theta = \widehat\Theta(x)$ when we want to emphasize the dependence of the MLE on the samples~$x$.
 \end{definition}
 
 
@@ -586,20 +577,16 @@ With these definitions in place, we are able to state a proof plan, which is a R
 \item\label{it:reduce}
 \textbf{Reduce to identity:}
 We can obtain $n$ independent samples from $\cN(0, \Theta_1^{-1} \ot \cdots \ot \Theta_k^{-1})$ as $x'_i = ( \Theta_1^{-1/2} \ot \cdots \ot \Theta_k^{-1/2} ) x_i$, where $x_1,\dots,x_n$ are distributed as $n$ independent samples from a standard Gaussian.
-Then the MLE $\widehat{\Theta}(x')$ is exactly $\Theta^{1/2} \widehat{\Theta}(x) \Theta^{1/2}$, i.e., we have $\widehat\Theta_a(x') = \Theta_a^{1/2} \widehat\Theta(x) \Theta_a^{1/2}$ for $a\in[k]$.
+For $\Theta \in \P$, the MLE $\widehat{\Theta}(x')$ is exactly $\Theta^{1/2} \widehat{\Theta}(x) \Theta^{1/2}$, i.e., we have $\widehat\Theta_a(x') = \Theta_a^{1/2} \widehat\Theta(x) \Theta_a^{1/2}$ for $a\in[k]$.
 By invariance of the relative Frobenius error, $D_F(\widehat\Theta(x') \Vert \Theta) = D_F(\widehat\Theta(x) \Vert I)$ (the same is true for $D_{\op}$).
 This shows that to prove \cref{thm:tensor-frobenius} it is enough to consider the case that $\Theta = (I_{d_1},\dots,I_{d_k})$, i.e., the standard Gaussian.
 \item\label{it:grad} \textbf{Bound the gradient:}
-Show that the gradient $\nabla f_x(1, I_{d_1},\dots,I_{d_k})$ (defined below) is small with high probability.
+Show that the gradient $\nabla f_x(I_{d_1},\dots,I_{d_k})$ (defined below) is small with high probability.
 \item\label{it:convexity} \textbf{Show strong convexity:}
 Show that, with high probability, $f_x$ is $\Omega(1)$-strongly geodesically convex near $I$.
 \end{enumerate}
 
-These together imply the desired sample complexity bounds -- as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far.
-
-In fact, $f_x$ is not only geodesically convex but has additional nice properties such as Lipschitz continuity and a Lipschitz-continous gradient \citep{burgisser2019towards}.
-In particular various optimization algorithms applied to~$f_\samp$ obey a descent lemma \citep{burgisser2017alternating}, and as such these algorithms must converge exponentially quickly by the strong geodesic convexity of~$f_\samp$.
-Using this we will show that the flip-flop algorithm converges exponentially quickly with high probability.
+These together imply the desired sample complexity bounds -- as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far. Moreover, it happens that under alternating minimization $f_\samp$ obeys a descent lemma (similar to what is shown in \cite{burgisser2017alternating}); as such the flip-flop algorithm must converge exponentially quickly by the strong geodesic convexity of~$f_\samp$.
 
 To make this discussion more concrete, we now define the gradient and Hessian formally, and state the lemma that we will use to relate the gradient and strong convexity to the distance to the optimizer as in the plan above.
 
