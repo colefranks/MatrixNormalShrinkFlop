@@ -294,24 +294,23 @@ The MLE decorrelates the columns to obtain rates like those one would obtain if 
 
 The MLE is easier to describe in terms of the precision matrices, the inverses of the covariance matrices.
 Let $\Theta$ denote the \emph{precision matrix}, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$, where $\Theta_a = \Sigma_a^{-1}$.
-Given a tuple $x$ of samples $\samp_1,\dots,\samp_n\in\R^D$, up to an additive constant the log-likelihood of the tensor normal model is given by the following expression:
+Given a tuple $x$ of samples $\samp_1,\dots,\samp_n\in\R^D$, the following function is proportional to the negative log-likelihood:
 % $\ell(\Theta|x) = \frac{n}2 \log \det \Theta - \frac12 \sum_{i=1}^n x_i^T \Theta x_i$, which we can rewrite as
 \begin{align*}
-  \ell_x(\Theta_1, \dots, \Theta_k)
-% &= \frac{n}2 \log \det \Theta - \frac12 \sum_{i=1}^n x_i^T \Theta x_i \\
-&= \frac n 2 \log \det \left( \textstyle\bigotimes_{a=1}^k \Theta_a \right)  - \frac12 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k \Theta_a \right) x_i
-% &= \frac{n D}2 \sum_{a=1}^k \frac1{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k \Theta_a \right) x_i
+  \ef_\samp(\Theta_1, \dots, \Theta_k)
+=  \frac{1}{nD}\samp_i^T \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i -  \sum_{a = 1}^k \frac{1}{d_a}\log\det \Theta_a.
 \end{align*}
 One notes that the $\Theta_a$ are not identifiable; we assume all $\Theta_a$ have the same determinant in order to ensure identifiability.
 The \emph{maximum likelihood estimator (MLE)} for $\Theta_a$ is then
 \begin{align}\label{eq:mle}
-  (\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) := \underset{\det \Theta_1 = \dots = \det \Theta_k}{ \arg\max} \ell_x(\Theta_1, \dots, \Theta_k).
+  (\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) := \underset{\det \Theta_1 = \dots = \det \Theta_k}{ \arg\min} f_x(\Theta_1, \dots, \Theta_k)
 \end{align}
+whenever the minimizer exists and is unique. We write $\widehat\Theta = \widehat\Theta(x)$ when we want to emphasize the dependence of the MLE on the samples~$x$.
 
 %-----------------------------------------------------------------------------
 \subsection{Results on the MLE}
 %-----------------------------------------------------------------------------
-We may now state precisely our result for the tensor normal models.
+We may now state our result for the tensor normal models precisely.
 As mentioned in the introduction, we use the following natural distance measures.
 
 \begin{definition}
@@ -547,18 +546,8 @@ Namely, if $\Theta \in \P$ and $A \in \G$ then the tuple $A \Theta A^T := (A_1 \
 %-----------------------------------------------------------------------------
 %As discussed above, the MLE problem reduces to minimizing $\sum_{i=1}^n x_i^T ( \bigotimes_{a=1}^k P_a ) x_i$ over $P \in \P$.
 %We take as our objective its logarithm, which is also geodesically convex.
-For notational convenience we minimize the function $\ef_\samp = - \frac{2}{nD} \ell_x$, which we write explicitly below.
-\begin{definition}[Objective function]\label{dfn:function}
-Given $n$ samples $x = (x_1,\dots,x_n)$ in $\R^D$, define the function $f_x \colon \P \to \R$ by
-\begin{align*}
-  \ef_\samp(\Theta)
-=  \frac{1}{nD}\samp_i^T \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i - k \log\det \Theta_1
-\end{align*}
-Let $\widehat \Theta = (\widehat \Theta_0, \widehat \Theta_1,\dots,\widehat \Theta_k)$ denote the minimizer of $f_x$ if it exists and is unique. We write $\widehat\Theta = \widehat\Theta(x)$ when we want to emphasize the dependence of the MLE on the samples~$x$.
-
 
 %Then the maximum likelihood estimator is given by $\widehat\Theta_a = {\widehat P_0}^{1/k} \widehat P_a$. We write $\widehat P = \widehat P(x)$ and $\widehat\Theta = \widehat\Theta(x)$ when we want to emphasize the dependence of the MLE on the samples~$x$.
-\end{definition}
 
 
 
