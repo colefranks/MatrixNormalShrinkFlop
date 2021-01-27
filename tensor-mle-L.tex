@@ -908,7 +908,7 @@ We now state our strong convexity result at the identity:
 
 %\begin{theorem}\label{thm:tensor-convexity-old}Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples is $N \geq k^2 \max_{a=1}^k d_a^2 / D$. Then, with probability at least $1 - 1/{\color{red}\poly(D)}$ \TODO{propagate from \cref{cor:off-diag-hess}} ,$$ (1 - (k - 1) \lambda - k \eps^2 - \eps) I \preceq \nabla^2 f_{\rv} \preceq (1 + (k - 1) \lambda + k \eps^2 + \eps) I.$$ $$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq (k - 1) \lambda + k \eps^2 + \eps $$ In particular, $f_{\rv}$ is $\Omega(1)$ strongly convex with probability \TODO{propagate from \cref{cor:off-diag-hess}} \end{theorem}
 
-\begin{theorem}[Strong convexity]\label{thm:tensor-convexity} There is an absolute constant $C$ such that the following holds. Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples $n$ is at least $C k d_{\max}^2/D$ for $k \geq 2$. Then we have
+\begin{theorem}[Strong convexity]\label{thm:tensor-convexity} There is an absolute constant $C$ such that the following holds. Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples $n$ is at least $C k^2 d_{\max}^2/D$ for $k \geq 2$. Then we have
 %$$ I/2 \preceq  \nabla^2 f_{\rv} \preceq 2I.$$
 $$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq 1/4$$
 with probability $1 - k^2 \left(\frac {kd_{\min}}{\sqrt{nD}}\right)^{ \Omega(d_{\min})}.$
@@ -952,7 +952,7 @@ Quantum expanders play an important role in quantum information theory and quant
 \begin{lemma}\label{lem:expansion-convexity} Let $\samp \in (\R^{d_1} \ot \dots \ot \R^{d_k})^n$, and $\rho = \frac{1}{nD} \sum_{i = 1}^n \samp_i \samp_i^T$. Define $\Phi^{ab}:\mat (d_b) \to \mat(d_a)$ by 
 $$ \Phi^{ab}: Z \mapsto \tr_b \rho^{(a,b)} \left(I \ot Z\right).$$
 If $\Phi^{ab}$ is an $(\eps, \lambda)$-quantum expander for every $a < b \in [k]$, then 
-$$ \|\nabla^2 f_\samp - (\tr \rho) I\| \leq ((k-1)\lambda + 2\eps) \tr \rho.$$
+$$ \|\nabla^2 f_\samp - (\tr \rho) I\| \leq ((k-1)\lambda + (\sqrt{k} + 1) \eps)\tr \rho.$$
 \end{lemma}
 The proof of \cref{lem:expansion-convexity} uses a basic bound on the semidefiniteness of matrices.
 \begin{lemma}\label{lem:block-matrix}
@@ -979,14 +979,15 @@ M_{k1} & \hdots &  \hdots & M_{kk}\\
 \begin{align} \langle Y,  \left( \nabla^2_{ab} f_{\samp} \right) Z \rangle
 = \sqrt{d_a d_b} \tr \rho^{(ab)} \left( Y \ot Z \right) \label{eq:grad-off-diag}\end{align}
 for $a, b \in [k]$. Thus $\nabla^2_{ab} f_{\samp} = \sqrt{d_a d_b} \Phi^{ab}.$ By quantum expansion of $\Phi^{ab}$, we have $\|\Phi^{ab}\|_{op} \leq \lambda \frac{1}{\sqrt{d_a d_b}} \tr \rho$. 
-Next we bound $\|\nabla_{a0} f\|_{op}$. However, this is simply $\sqrt{d_a}\sup_{\|Z\|_F = 1} |\tr Z \rho^{(a)}|$ where $Z$ ranges over traceless Hermitians. Using that $\rho^{(a)} = \Phi^{ab}(I_{d_b})$, we have $\|d_a \rho^{(a)} - (\tr \rho) I_{d_a}\|_{op} \leq \eps \tr \rho $ by quantum expansion. For traceless $Z$ we have 
-\begin{align}\tr Z \rho^{(a)} = \frac{1}{d_a} \tr Z (d_a \rho^{(a)} - (\tr \rho) I_{d_a}) \leq \frac{\tr \rho}{d_a} \eps \|Z\|_1 \leq \frac{\tr \rho}{\sqrt{d_a}} \eps \|Z\|_F,\label{eq:second-term-hess}\end{align}
-thus $\|\nabla_{a0} f\|_{op} \leq \eps \tr \rho$.
 
 We next bound $\nabla_{aa}^2 f_\samp$. Recall again from \cref{lem:hessian} that the diagonal blocks of the Hessian are given by \begin{align}
  \langle Y,  \left( \nabla^2_{aa} f_{\samp} \right) Y \rangle=  d_a \tr \rho^{(a)} Y^2 .\label{eq:on-diag-hess-ii}
 \end{align}
-Again, the $\eps$-balancedness of $\Phi^{ab}$ implies $ |\tr (d_a \rho^{(a)}  - (\tr \rho) I_a)Y^2| \leq \eps (\tr \rho) \tr Y^2$, or that the first term of \cref{eq:on-diag-hess-ii} is in $(1 \pm \eps) \|Y\|_F^2 (\tr \rho)$. Hence $\|\nabla_{aa}^2 f_\samp - (\tr \rho) I\|_{op} \leq \eps^2 + \eps$. Finally, $\nabla_{00}^2 f_\samp$ is exactly $\tr \rho$. \cref{lem:block-matrix} tells us that $\nabla^2 f$ dominates the block matrix where each block is at least $(1 - \eps) (\tr \rho) I - (k-1) \lambda (\tr \rho) I - \eps (\tr \rho) I$, and also shows the analogous upper bound.
+Again, the $\eps$-balancedness of $\Phi^{ab}$ implies $ |\tr (d_a \rho^{(a)}  - (\tr \rho) I_a)Y^2| \leq \eps (\tr \rho) \tr Y^2$, or that the first term of \cref{eq:on-diag-hess-ii} is in $(1 \pm \eps) \|Y\|_F^2 (\tr \rho)$. Hence $\|\nabla_{aa}^2 f_\samp - (\tr \rho) I\|_{op} \leq \eps^2 + \eps$. Finally, $\nabla_{00}^2 f_\samp$ is exactly $\tr \rho$. Using \cref{lem:block-matrix}, we find that the submatrix of $\nabla^2 f$ excluding the $0$ row and column tells us that dominates the block diagonal matrix where the $aa$ block is at least $(1 - \eps) (\tr \rho) I - (k-1) \lambda (\tr \rho) I $ for $a \in [k]$. Furthermore, the 00 block is exactly $ \tr \rho$. The analogous upper bound on $\nabla^2 f_\samp$ follows similarly. We now wish to apply \cref{lem:block-matrix} one more time, this time with only two diagonal blocks, one of which is the 00 block. It remains to bound the operator norm of the off diagonal block of this matrix, which we call $M_{\text{off}}$, consisting of $\nabla_{a 0}^2 f$ vertically concatenated together for $a \in [k]$. 
+
+First we bound $\|\nabla_{a0} f\|_{op}$. However, this is simply $\sqrt{d_a}\sup_{\|Z\|_F = 1} |\tr Z \rho^{(a)}|$ where $Z$ ranges over traceless Hermitians. Using that $\rho^{(a)} = \Phi^{ab}(I_{d_b})$, we have $\|d_a \rho^{(a)} - (\tr \rho) I_{d_a}\|_{op} \leq \eps \tr \rho $ by quantum expansion. For traceless $Z$ we have 
+\begin{align}\tr Z \rho^{(a)} = \frac{1}{d_a} \tr Z (d_a \rho^{(a)} - (\tr \rho) I_{d_a}) \leq \frac{\tr \rho}{d_a} \eps \|Z\|_1 \leq \frac{\tr \rho}{\sqrt{d_a}} \eps \|Z\|_F,\label{eq:second-term-hess}\end{align}
+thus $\|\nabla_{a0} f\|_{op} \leq \eps \tr \rho$. It follows that $\|M_{\text{off}}\|_{op} \leq \sqrt{k} \eps \tr \rho$. Applying \cref{lem:block-matrix} to these two blocks shows $\nabla^2 f_\samp$ dominates a block diagonal matrix where each block is dominates $(1 - \eps) (\tr \rho) I - (k-1) \lambda (\tr \rho) I  - \sqrt{k} \eps (\tr \rho) I.$ 
  \end{proof}
 
 
@@ -1011,12 +1012,12 @@ for all $a \in [k]$.
 \end{obs}
 
 
-\begin{proof}[Proof of \cref{thm:tensor-convexity}] By \cref{lem:expansion-convexity}, it is enough to prove that $\Phi^{ab}$ is a $(1/\sqrt{20k}, 1/20k)$-quantum expander for all $a < b \in [k]$ with the desired failure probability. 
+\begin{proof}[Proof of \cref{thm:tensor-convexity}] By \cref{lem:expansion-convexity}, it is enough to prove that $\Phi^{ab}$ is a $(\eps, \lambda):=(1/40 \sqrt{ k}, 1/20k)$-quantum expander for all $a < b \in [k]$ and that $\tr \rho \in (7/8, 9/8)$ with the desired failure probability. Firstly, $\tr \rho = \frac{1}{nD} \|X\|_F^2$ is in $(7/8, 9/8)$ with failure probability $e^{ -\Omega(nD)} $ by \cref{prp:xnorm}. 
 
-Firstly, we describe an event that implies $\Phi^{ab}$ are $\eps:=1/\sqrt{20k}$-balanced. By \cref{obs:doubly-gradient}, this is equivalent to the condition $\sqrt{d_a} \norm{\nabla_a f_{\rv}}_{\op} \leq \eps$ for all $a \in [k]$. By \cref{prop:gradient-bound}, this occurs with failure probability at most $k e^{-D n \eps^2/2Cd_{\max}} = k e^{ - c D n / k d_{\max}}$ provided $n \geq C  d_{\max}^2 k/n D$. 
+Firstly, we describe an event that implies $\Phi^{ab}$ are $\eps$-balanced. By \cref{obs:doubly-gradient}, this is equivalent to the condition $\sqrt{d_a} \norm{\nabla_a f_{\rv}}_{\op} \leq \eps \tr \rho$ for all $a \in [k]$. By \cref{prop:gradient-bound}, this occurs with failure probability at most $k e^{-D n \eps^2/2Cd_{\max}} = k e^{ - c D n / k d_{\max}}$ provided $n \geq C  d_{\max}^2 k/n D$. 
 
-Secondly, we describe events that imply $\sqrt{d_a d_b} \|\Phi^{ab}\|_0 \leq 1/20k:=\lambda$, the other condition needed for $(\eps, \lambda)$-quantum expansion. Recall from above that $\Phi^{ab}$ is distributed as $\frac{1}{\|X\|_F^2}\Phi_{X}$ for $X$ a tuple of $n D/d_a d_b$ many i.i.d. $d_b \times d_a $ standard Gaussian matrices. By \cref{thm:hess-pisier} with $t^2 = \frac {\lambda \sqrt{nD}}{d_a + d_b}$, the operator norm of $\sqrt{d_a d_b} \Phi$ restricted to $\smallSym^0_{d_b}$ is $O(\lambda n D /\|X\|_F^2 )$
-with probability $(\lambda \sqrt{nD}/(d_a + d_b))^{ - \Omega(d_a + d_b)} \leq (\lambda \sqrt{nD} /d_{\min})^{ - \Omega(d_{\min})}$. $\|X\|_F^2$ is $\Theta(nD)$ with failure probability $e^{ -\Omega(nD)} $ by \cref{prp:xnorm}.
+Secondly, we describe events that imply $\sqrt{d_a d_b} \|\Phi^{ab}\|_0 \leq \lambda \tr \rho$, the other condition needed for $(\eps, \lambda)$-quantum expansion. Recall from above that $\Phi^{ab}$ is distributed as $\frac{1}{nD}\Phi_{X}$ for $X$ a tuple of $n D/d_a d_b$ many i.i.d. $d_b \times d_a $ standard Gaussian matrices. By \cref{thm:hess-pisier} with $t^2 = \frac {\lambda \sqrt{nD}}{d_a + d_b}$, the operator norm of $\sqrt{d_a d_b} \Phi^{ab}$ restricted to $\smallSym^0_{d_b}$ is $8\lambda/9$
+with probability $(\lambda \sqrt{nD}/(d_a + d_b))^{ - \Omega(d_a + d_b)} \leq (\lambda \sqrt{nD} /d_{\min})^{ - \Omega(d_{\min})}$. Conditioned on the bound $\tr \rho \leq 9/8$ from above, $\sqrt{d_a d_b} \|\Phi^{ab}\|_0 \leq \lambda \tr \rho$.
 
 By the union bound, $\Phi^{ab}$ is an $(\eps, \lambda)$-quantum expander with failure probability $$O\left(k e^{ - c D n / k d_{\max}} + e^{ -\Omega(nD)} + k^2 ( \sqrt{nD} /2k d_{\min})^{ - \Omega(d_{\min})}\right); $$
 due to our assumption on $n$ the final term dominates and so the failure probability is $k^2 (  k d_{\min}/\sqrt{nD})^{\Omega(d_{\min})}$.
@@ -1052,7 +1053,7 @@ We now show our second strong convexity result, namely that if our function is s
 %\CF{Akshay: $\sum_{a} \|\delta_{a}\|_{op} = \|\delta\|_{op}.$}
 %\CF{say stronger condition}
 \begin{theorem} \label{convexRobustness}
-There is a constant $c>0$ such that the following holds. If $f_{\samp}$ is $\alpha$-strongly convex at $I$; and for every $a \in [k]$ we have $\|d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a}\|_{op} = \|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$; and $\sum_{a} \|\delta_{a}\|_{op} \leq c$: then $f$ at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$ is $\geq (\alpha - k C \|\delta\|_{op})$-strongly convex for some universal constant $C$.
+There is a constant $c>0$ such that the following holds. If $f_{\samp}$ is $\alpha$-strongly convex at $I$; and for every $a \in [k]$ we have $\|d_{a} \rho_{\samp}^{(a)} - (\tr\rho_{\samp}) I_{a}\|_{op} = \|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$; and $\sum_{a} \|\delta_{a}\|_{op} \leq c$: then $f$ at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$ is $\geq (\alpha - k C \|\delta\|_{op})$-strongly convex for some universal constant $C$.
 \end{theorem}
 
 %-----------------------------------------------------------------------------
@@ -1231,7 +1232,7 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 %-----------------------------------------------------------------------------
 \begin{lemma}[Initial Conditions]\label{lem:tensor-initial-conditions}
 	There exist absolute constants $\Gamma, \gamma > 0$ such that the following holds.
-	When the number of samples $n \geq \Gamma \cdot k^2 \cdot d_1^2/D$, with probability at least $1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}$ we have that the following conditions hold:
+	When the number of samples $n \geq \Gamma \cdot k^2 \cdot d_1^2/D$, with probability at least \CF{I think it may be $\sqrt{nD}$ in the numerator now} $1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}$ we have that the following conditions hold:
 	\begin{enumerate}
 		\item $\norm{\nabla f_x(I)}_F \leq \dfrac{\gamma \cdot k}{8}$ % \dfrac{\lambda^2}{4 k}$
 		%\item $f_x$ is $\lambda$-strongly geodesically convex at a ball of radius $\lambda/k$ around $I$, that is: $B_{\lambda/k}(I) := \{ Z \in \smallSym \ \mid \ \norm{Z}_F \leq \lambda/k \}$.
