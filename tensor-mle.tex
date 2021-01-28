@@ -293,19 +293,23 @@ In fact they may be so highly correlated that they effectively constitute only o
 The MLE decorrelates the columns to obtain rates like those one would obtain if the columns were independent.
 
 The MLE is easier to describe in terms of the precision matrices, the inverses of the covariance matrices.
-Let $\Theta$ denote the \emph{precision matrix}, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$, where $\Theta_a = \Sigma_a^{-1}$.
-Given a tuple $x$ of samples $\samp_1,\dots,\samp_n\in\R^D$, the following function is proportional to the negative log-likelihood:
+Let $\Theta$ denote the \emph{precision matrix}, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$, where $\Theta_a = \Sigma_a^{-1}$. Let $\P$ denote the manifold of all such $\Theta$, i.e.
+% As above, we can fix this by working with tuples of precision matrices with equal determinant:
+\begin{align*}
+  \P &= \{ \Theta_1 \ot \dots \ot \Theta_k \in \PD(d_1) \times \dots \times \PD(d_k) \}.
+ \end{align*}
+Given a tuple $x$ of samples $\samp_1,\dots,\samp_n\in\R^D$, the following function is proportional to the negative log-likelihood: \CF{should I now use $1/n$ instead of $1/nD$?}
 % $\ell(\Theta|x) = \frac{n}2 \log \det \Theta - \frac12 \sum_{i=1}^n x_i^T \Theta x_i$, which we can rewrite as
 \begin{align*}
-  \ef_\samp(\Theta_1, \dots, \Theta_k)
-=  \frac{1}{nD}\sum_{i = 1}^n \samp_i^T \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i -  \sum_{a = 1}^k \frac{1}{d_a}\log\det \Theta_a.
+  \ef_\samp(\Theta)
+=  \frac{1}{n}\sum_{i = 1}^n \samp_i^T \Theta \samp_i -  \log\det\Theta.
 \end{align*}
-One notes that the $\Theta_a$ are not identifiable; we assume all $\Theta_a$ have the same determinant in order to ensure identifiability.
-The \emph{maximum likelihood estimator (MLE)} for $\Theta_a$ is then
+Though $\Theta_a$ are not identifiable, the above expression is nonetheless well-defined.
+The \emph{maximum likelihood estimator (MLE)} for $\Theta$ is then
 \begin{align}\label{eq:mle}
-  (\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) := \underset{\det \Theta_1 = \dots = \det \Theta_k}{ \arg\min} f_x(\Theta_1, \dots, \Theta_k)
+  \widehat{\Theta} := \underset{\Theta \in \P}{ \arg\min} f_x(\Theta)
 \end{align}
-whenever the minimizer exists and is unique. We write $\widehat\Theta = \widehat\Theta(x)$ when we want to emphasize the dependence of the MLE on the samples~$x$.
+whenever the minimizer exists and is unique. We write $\widehat\Theta = \widehat\Theta(x)$ when we want to emphasize the dependence of the MLE on the samples~$x$, and we we say $(\htheta_1, \dots, \htheta_k)$ is \emph{an} MLE for $(\Theta_1, \dots, \Theta_k)$ if $\otimes_{a = 1}^k \htheta_a = \htheta$. Note that $\P$ is not a convex domain under the Euclidean geometry on the $D\times D$ matrices.
 
 %-----------------------------------------------------------------------------
 \subsection{Results on the MLE}
@@ -325,31 +329,32 @@ Similarly, define the \emph{relative spectral error} as
 \end{definition}
 
 To state our results, and throughout this paper, we assume that $d_1 \leq \dots \leq d_k$.
-Recall also that $D = \prod_{i=1}^k d_a$.
-
+Recall also that $D = \prod_{i=1}^k d_a$. \CF{definitely double check these bounds; esp if we need $n \geq k^2...$ or also a lower bound on $\eps$}
 \begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius}
 There are constants $C,c>0$ with the following property.
-Suppose $\eps \leq c/\sqrt{d_k}$ and the number of samples satisfies $n \geq C \frac{k d_k^3}{D\eps^2}$.
-Then the MLE $(\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) $ for $(\Theta_1, \dots, \Theta_k)$ from $n$ independent samples of the tensor normal model satisfies
+Suppose $\eps \leq c/\sqrt{d_{\max}}$ and the number of samples satisfies $n \geq C \frac{k^2 d_k^3}{D\eps^2}$.
+Then the MLE $\htheta $ for $\Theta$ from $n$ independent samples of the tensor normal model satisfies
 \begin{align*}
-  D_F(\widehat{\Theta}_a \Vert \Theta_a) = O\left( \sqrt{\frac{d_a d_{\min}}{n D/d_k}}\eps\right)
+  D_F(\widehat{\Theta} \Vert \Theta) = O\left( \sqrt{\frac{d_{\min}d_{\max}}{n }}\eps\right);
 \end{align*}
 for all $a \in [k]$, with probability at least
 \begin{align*}
   1 - k^2 \left(\sqrt{nD} / kd_{\min} \right)^{ - \Omega(d_{\min})} - O(k e^{ - \eps^2 d_k / k}).
 \end{align*}
 \end{theorem}
-
+The bound in the above theorem implies there is an MLE $(\htheta_1, \dots, \htheta_k)$ and Kronecker factors $\Theta_1, \dots, \Theta_k$ of $\Theta$ such that 
+\begin{align*}
+  D_F(\widehat{\Theta}_a \Vert \Theta_a) = O\left( \sqrt{\frac{d_a d_{\min}}{n D/d_k}}\eps\right);
+\end{align*}
 \noindent
-For the largest precision matrix $\Theta_k$, this rate matches that of \TODO{XXX}.
+for the largest precision matrix $\Theta_k$, this rate matches that of \TODO{XXX} \CF{actually it looks wrong to me.}
 
 In the case of matrix normal models $(k=2)$, we obtain the following stronger result.
-As before, we assume $d_1 \leq d_2$.
-
+\CF{$\eps$ at least some fixed constant?}
 \begin{theorem}[Matrix normal model spectral error]\label{thm:matrix-normal}
 There is a constant $C>0$ with the following property.
-Suppose the number of samples is $n \geq C \frac{d_2}{d_1} \max \{\log \frac{d_2}{d_1},  \frac{\log^2 d_1}{\eps^2}\}$.
-Then the MLE $(\widehat{\Theta}_1,\widehat{\Theta}_2) $ for $(\Theta_1, \Theta_2)$ from $n$ independent samples of the matrix normal model satisfies
+Suppose $d_1 \leq d_2$ and the number $n$ of samples satisfies $n \geq C \frac{d_2}{d_1} \max \{\log \frac{d_2}{d_1},  \frac{\log^2 d_1}{\eps^2}\}$.
+Then there are MLEs $\widehat{\Theta}_1,\widehat{\Theta}_2$ for factors $\Theta_1, \Theta_2$ of $\Theta$ that satisfy
 \begin{align*}
   D_{\op}(\widehat{\Theta}_a \Vert \Theta_a) = O\left(\eps \sqrt{\frac{d_a^2}{nD}} \log d_1\right)
 \end{align*}
@@ -369,7 +374,7 @@ Initialize $\overline{\Theta}_1 = I_{d_1}$, $\overline{\Theta}_2 = I_{d_2}$, and
 \item Set $\overline{\Theta}_1 \leftarrow (\frac{1}{n d_2} \sum_{i = 1}^n X_i \overline{\Theta}_2 X_i^T)^{-1}.$
 \item Set $\Upsilon = \frac{1}{n d_1} \sum_{i = 1}^n X_i^T \overline{\Theta}_1 X_i$.
 If $d_F( \Upsilon^{-1}|| \overline{\Theta}_2) > \eps$, set $\overline{\Theta}_2 \leftarrow \Upsilon^{-1}$ and return to Step 1.
-\item Output $\overline{\Theta}_1, \overline{\Theta}_2$, rescaled to have the same determinant.
+\item Output $\overline{\Theta}_1, \overline{\Theta}_2$.
 \end{enumerate}
 
 We can motivate this procedure by noting that if in the first step we already $\overline{\Theta}_2 = \Theta_2$, then $\frac{1}{n d_2} \sum_{i = 1}^n X_i \overline{\Theta}_2 X_i^T$ is simply a sum of outer products of $nd_2$ many independent random vectors with covariance $\Sigma_1 = \Theta_1^{-1}$; as such the inverse is a good estimator for $\Theta_1$.
@@ -385,10 +390,10 @@ We first state our result for the general tensor normal model and then give an i
 
 \begin{theorem}[Tensor flip-flop]\label{thm:tensor-flipflop}
 Suppose \TODO{}.
-Let $(\widehat{\Theta}_1,\dots,\widehat{\Theta}_k)$ denote the MLE for $(\Theta_1,\dots,\Theta_k)$.
-Then given $n$ samples of the tensor normal model, the flip-flop algorithm computes $(\overline{\Theta}_1,\dots,\overline{\Theta}_k)$ with
+Let $\htheta$ denote the MLE for $\Theta$.
+Then given $n$ samples of the tensor normal model, the flip-flop algorithm computes $\otheta$ with
 \begin{align*}
-  D_F(\overline{\Theta}_a, \widehat{\Theta}_a) \leq \eps
+  D_F(\otheta \rVert \htheta) \leq \eps
 \end{align*}
 for all $a\in[k]$ in $O(\TODO{\log(1/\eps)})$ iterations, with probability at least \TODO{}.
 \end{theorem}
@@ -431,32 +436,19 @@ Importantly, the statistical distances we use are also \emph{invariant} under su
 and likewise for the distance~$D_{\op}$.
 This invariance is natural because changing a pair of precision matrices in this way does not change the statistical relationship between the corresponding Gaussians; in particular the total variation distance, Fisher-Rao, and Kullback-Leibler divergence are unchanged \CF{double check}.
 
-As observed by \cite{wiesel2012geodesic}, the negative log-likelihood of the tensor normal model is jointly convex in~$\Theta_1,\dots,\Theta_k$ along these geodesics.
-% , i.e., $-\log \ell_x(\Theta_1^{1/2} e^{H_1t} \Theta_1^{1/2}, \dots, \Theta_k^{1/2} e^{H_kt} \Theta_k^{1/2})$ is convex in $t\in\R$ for any choice of $\Theta_1,\dots,\Theta_k$ and~$H_1,\dots,H_k$.
-However, it is never strongly convex. This directly related to the non-identifiability of the $\Theta_a$, which makes the MLE not unique. To this end, we restrict to the submanifold $\det\Theta_1= \dots = \det \Theta_k$ so that all parameters are identifiable.
-%With this restriction, the log-likelihood function reads \begin{align}\label{eq:reparameterized log likelihood}  \ell_x(\Theta_1, \dots, \Theta_k)&= \frac {nD} 2 k \log \det \Theta_1  - \frac{1}2 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k \Theta_a \right) x_i.\end{align}
-% As above, we can fix this by working with tuples of precision matrices with equal determinant:
-Accordingly, we define
-% As above, we can fix this by working with tuples of precision matrices with equal determinant:
-\begin{align*}
-  \P &= \{ (\Theta_1,\dots,\Theta_k) \in \PD(d_1) \times \dots \times \PD(d_k) \;:\; \det \Theta_1 = \dots = \det \Theta_k \; \forall a \in [k] \}.
- \end{align*}
-%\intertext{The tangent space of this manifold is naturally identified with the real vector space}
- The tangent space of this manifold is can be identified with the real vector space
+As observed by \cite{wiesel2012geodesic}, the negative log-likelihood is convex as the precision matrix moves along these geodesics, and in particular for the tensor normal model it is convex along geodesics in $\P = \{ \Theta_1 \ot \dots \ot \Theta_k \in \PD(d_1) \times \dots \times \PD(d_k) \}$. This is because the geodesics in $\PD(D)$ between elements of the manifold $\P = \{ \Theta_1 \ot \dots \ot \Theta_k \in \PD(d_1) \times \dots \times \PD(d_k) \}$ remain in $\P$. That is, $\P$ is a \emph{totally geodesic submanifold} of $\PD(D)$.  The tangent space of $\P$ can be identified with the real vector space
 \begin{align*}
   \H &= \{ (H_0, H_1,\dots,H_k) \;:\; H_0 \in \R \text{ and }H_a \text{ a symmetric $d_a \times d_a$ matrix}, \; \tr H_a = 0\; \forall a \in [k]  \}.
 \end{align*}
-The $0^{th}$ component is the tangent direction that changes each determinant by the same amount, and the $a^{th}$ component for $a > 1$ are the directions that change the $a^{th}$ matrix subject to its determinant staying fixed. The embedding $(\Theta_1,\dots,\Theta_d) \mapsto  \Theta_1 \ot \dots \ot \Theta_d$ identifies $\P$ with a totally geodesic submanifold of $\PD(D)$. This induces a Riemannian metric with the following geodesics.
+The direction $(1, 0, \dots, 0)$ changes $\Theta$ by an overall scalar, and tangent directions with supported only in the $a^{th}$ component for $a > 1$ change $\Theta_a$ subject to its determinant staying fixed. We now define the geodesics precisely.
 
 \begin{definition}[Geodesics and balls]
 Let $P\in\P$.
 The \emph{exponential map} $\exp_\Theta \colon \H \to \P$ at~$\Theta$ is defined by
 \begin{align*}
-  \exp_\Theta(H) &= \exp_{(\Theta_1, \dots, \Theta_k)}(H_0, H_1,\dots,H_k)\\
-  & =  e^{\frac{1}{k}H_0}\left( \Theta_1^{1/2} e^{\sqrt{d_1} H_1} \Theta_1^{1/2}, \dots, \Theta_k^{1/2} e^{\sqrt{d_k} H_k} \Theta_k^{1/2} \right).
+  \exp_\Theta(H) &=   e^{\frac{H_0}{k \sqrt{D}}}\cdot ( \Theta_1^{1/2} e^{\sqrt{\frac{d_1}{D}} H_1} \Theta_1^{1/2}) \ot  \dots \ot (\Theta_k^{1/2} e^{\sqrt{\frac{d_k}{D}} H_k} \Theta_k^{1/2}).
 \end{align*}
-The \emph{geodesics} through $\Theta$ are the curves $t \mapsto \exp_P(t H)$ for $t\in\R$ and $H\in\H$.
-By convention, they have unit speed if $\norm{H}_F^2 = \sum_{a=0}^k \norm{H_a}_F^2 = 1$.
+The \emph{geodesics} through $\Theta$ are the curves $t \mapsto \exp_\Theta(t H)$ for $t\in\R$ and $H\in\H$. They have unit speed if $\norm{H}_F^2 = \sum_{a=0}^k \norm{H_a}_F^2 = 1$.
 Therefore, the closed \emph{(geodesic) ball} of radius~$r>0$ about~$\Theta$ is given by
 \begin{align*}
   B_r(\Theta) = \{ \exp_\Theta(H) : \norm H_F \leq r \}.
@@ -487,9 +479,9 @@ In other words, geodesic convexity simply means convexity in the ordinary Euclid
 The invariance properties described above for $\PD(d)$ are directly inherited for tuples of precision matrices with determinant one.
 The manifold $\P$ carries a natural action by the group
 \begin{align*}
-  \G = \{ (G_1,\dots,G_k) \in  \GL(d_1) \times \dots \times \GL(d_k): \det G_1= \dots = \det G_k \}
+  \G =  \{G_1 \ot \dots \ot G_1: \GL(d_1)\ot \times \dots \times \ot \GL(d_k)\}
 \end{align*}
-Namely, if $\Theta \in \P$ and $A \in \G$ then the tuple $A \Theta A^T := (A_1 \Theta_1 A_1^T, \dots, A_k \Theta_k A_k^T)$ is in $\P$. Moreover, the mapping $P \mapsto AP A^T$ is an isometry, and it preserves the statistical distances~$D_F$ and $D_{\op}$ between the individual precision matrices as well as between their tensor product.
+Namely, if $\Theta \in \P$ and $A \in \G$ then the $A \Theta A^T$ is in $\P$. Moreover, the mapping $\Theta \mapsto A\Theta A^T$ is an isometry of the Riemannian manifold $P$. As discussed above, it and preserves the statistical distances~$D_F$ and $D_{\op}$.
 
 % We also note that \MW{It's not \dots} the MLE obeys a certain \emph{equivariance} property under such transformations.
 % For all $P \in \P$, $A \in \G$, and samples $x=(x_1,\dots,x_n)$, the log-likelihood satisfies
@@ -563,11 +555,11 @@ With these definitions in place, we are able to state a proof plan, which is a R
 \item\label{it:reduce}
 \textbf{Reduce to identity:}
 We can obtain $n$ independent samples from $\cN(0, \Theta_1^{-1} \ot \cdots \ot \Theta_k^{-1})$ as $x'_i = ( \Theta_1^{-1/2} \ot \cdots \ot \Theta_k^{-1/2} ) x_i$, where $x_1,\dots,x_n$ are distributed as $n$ independent samples from a standard Gaussian.
-For $\Theta \in \P$, the MLE $\widehat{\Theta}(x')$ is exactly $\Theta^{1/2} \widehat{\Theta}(x) \Theta^{1/2}$, i.e., we have $\widehat\Theta_a(x') = \Theta_a^{1/2} \widehat\Theta(x) \Theta_a^{1/2}$ for $a\in[k]$.
+For $\Theta \in \P$, the MLE $\widehat{\Theta}(x')$ is exactly $\Theta^{1/2} \widehat{\Theta}(x) \Theta^{1/2}$.
 By invariance of the relative Frobenius error, $D_F(\widehat\Theta(x') \Vert \Theta) = D_F(\widehat\Theta(x) \Vert I)$ (the same is true for $D_{\op}$).
-This shows that to prove \cref{thm:tensor-frobenius} it is enough to consider the case that $\Theta = (I_{d_1},\dots,I_{d_k})$, i.e., the standard Gaussian.
+This shows that to prove \cref{thm:tensor-frobenius} it is enough to consider the case that $\Theta = I_D$, i.e., the standard Gaussian.
 \item\label{it:grad} \textbf{Bound the gradient:}
-Show that the gradient $\nabla f_x(I_{d_1},\dots,I_{d_k})$ (defined below) is small with high probability.
+Show that the gradient $\nabla f_x(I_D)$ (defined below) is small with high probability.
 \item\label{it:convexity} \textbf{Show strong convexity:}
 Show that, with high probability, $f_x$ is $\Omega(1)$-strongly geodesically convex near $I$.
 \end{enumerate}
@@ -707,11 +699,11 @@ Then the components of the Riemannian gradient $\nabla \ef_{\samp}$ at the ident
 and $\nabla_0 \ef_\samp = \tr \rho - 1 = \frac{1}{nD}\|\samp\|^2 - 1.$ 
 \end{lemma}
 \begin{proof}
-First note that $\nabla_a \log \det \Theta_1$ is zero because each component $H_a$ of the tangent vector is traceless for $a \in [k]$. Thus for all $a\in[k]$ the component $\nabla_a f_\samp$ is the same as $\nabla_a F$ where $F:\Theta \mapsto \tr \rho \ot_{a = 1}^k \Theta_a$. Thus
+First note that for $a \in [k]$, $\nabla_a \log \det \Theta_a$ is zero because each component $H_a$ of the tangent vector is traceless for $a \in [k]$. Thus for all $a\in[k]$ the component $\nabla_a f_\samp$ is the same as $\nabla_a F$ where $F:\Theta \mapsto \tr D \rho \ot_{a = 1}^k \Theta_a$. Thus
   \begin{align*}
    \langle \nabla_a f_{\samp} , Z \rangle
   % = \partial_{t=0} F_{\samp}(I_1,\dots,I_{a-1}, e^{tZ}, I_{a+1},\dots,I_n)
-  =  \partial_{t=0} \tr \rho \, e^{t \sqrt{\frac{d_a}{D}} Z_a}
+  =  \partial_{t=0} \tr \rho \, e^{t \sqrt{d_a} Z_a}
   = \sqrt{d_a} \tr \rho Z_a
   = \sqrt{d_a} \tr \rho^{(a)} Z
   \end{align*}
