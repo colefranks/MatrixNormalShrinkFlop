@@ -298,7 +298,7 @@ Given a tuple $x$ of samples $\samp_1,\dots,\samp_n\in\R^D$, the following funct
 % $\ell(\Theta|x) = \frac{n}2 \log \det \Theta - \frac12 \sum_{i=1}^n x_i^T \Theta x_i$, which we can rewrite as
 \begin{align*}
   \ef_\samp(\Theta_1, \dots, \Theta_k)
-=  \frac{1}{nD}\samp_i^T \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i -  \sum_{a = 1}^k \frac{1}{d_a}\log\det \Theta_a.
+=  \frac{1}{nD}\sum_{i = 1}^n \samp_i^T \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i -  \sum_{a = 1}^k \frac{1}{d_a}\log\det \Theta_a.
 \end{align*}
 One notes that the $\Theta_a$ are not identifiable; we assume all $\Theta_a$ have the same determinant in order to ensure identifiability.
 The \emph{maximum likelihood estimator (MLE)} for $\Theta_a$ is then
@@ -972,7 +972,7 @@ We are concerned with $\Phi^{ab}$ where $\rv$ is a random Gaussian.  Like random
 %We show that, restricted to the traceless matrices, this quadratic form is small. More precisely, we bound the operator norm of the map $T: Z \mapsto \tr_2 \rho^{(ab)} \left(I \ot Z\right)$ restricted to the traceless symmetric matrices. Such maps are called \emph{quantum channels}, and we will revisit their properties later \CF{where? or earlier?}. The operator norm condition we desire for $T_{\rho}$ is equivalent to $T_{\rho}$ being a good \emph{quantum expander} - this led Pisier to bound the operator norm of $T_{\rho}$ for random $\rho$. \CF{one-sentence motivation of quantum expanders?}
 
 \begin{theorem}[\cite{pisier2012grothendieck, P14}]\label{thm:hess-pisier} Let $X = (X_1, \dots, X_N)$ be a tuple of standard Gaussians on $(\R^{d_1}\ot \R^{d_2})^n$. Then for all $t >0$, with failure probability at most $t^{-\Omega(d_{1} + d_{2})}$, the random completely positive map $\Phi_X$ satisfies 
-$$\frac{1}{nD}\|\Phi_{X}\|_0 \leq t^{2} \frac{d_{1}+d_{2}}{\sqrt{d_{1} d_{2} nD}}$$ on traceless symmetric matrices. \CF{I got rid of the big O on the displayed bound...is this ok to be absorbed into the probability? I also got rid of $t > 1$ because the result vacuously holds if $t < 1$. Can \AR{} help?} \AR{Ya this should be fine since $(.1 t)^{\Omega(d)}$ is still $t^{\Omega(d)}$ }\end{theorem} 
+$$\frac{1}{nD}\|\Phi_{X}\|_0 \leq t^{2} \frac{d_{1}+d_{2}}{\sqrt{d_{1} d_{2} nD}}$$ on traceless symmetric matrices. \end{theorem} 
 
 %\CF{relate theorem 14 to quantum expansion; something like if $\|\Phi\|_0 = \lambda$ then $\Phi$ is $\lambda - C \eps$ quantum expander when balanced and if $\Phi$ is an $\eps$-balanced quantum expander then $\|\Phi\|_0$ has operator norm $\lambda - C \eps$}.
 
@@ -1143,7 +1143,7 @@ By the equivariance \CF{need to make determinants the same!} discussed in \cref{
 
 we have $\htheta_1(x) = A^{-1/2}\htheta_1(y)A^{-1/2}$ and $\htheta_2(x) = B^{-1/2}\htheta_1(y)B^{-1/2}.$ To bound $D_{op}(\htheta_1(x)||I_{d_1})$, write 
 $$D_{op}(\htheta_1(x)|| I_{d_1}) = D_{op}(\htheta_1(y)|| A)\leq D_{op}(\htheta_1(y)|| I_{d_1}) + D_{op}(A||I_{d_1})$$
-by the approximate triangle inequality for the relative spectral error \CF{cite}. Now $D_{op}(A|| I_{d_1}) = |1 - \det\left(\Phi_\samp^*(I_{d_2})/ nd_1\right)^{\frac{1}{2n}}| = O(\eps_0)$ by the $\eps_0$-balancedness of $\Phi_\samp^*(I_{d_2})/ nd_1$ and \cref{it:norm}. 
+by the approximate triangle inequality for the relative spectral error \CF{cite}. Now $D_{op}(A|| I_{d_1}) = |1 - \det\left(\Phi_\samp^*(I_{d_2})/ nd_1\right)^{\frac{1}{2n}}| = O(\eps_0)$ by the $\eps_0$-balancedness of $\Phi_\samp^*(I_{d_2})/ nd_1$ and \cref{it:norm}. \CF{actually this is maybe WRONG or at least not very good.}
 
 
 For $\htheta_2(x)$, by invariance of the relative spectral error we have 
