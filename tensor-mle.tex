@@ -298,11 +298,10 @@ Let $\Theta$ denote the \emph{precision matrix}, i.e., $\Theta = \bigotimes_{a=1
 \begin{align*}
   \P &= \{ \Theta_1 \ot \dots \ot \Theta_k \in \PD(d_1) \times \dots \times \PD(d_k) \}.
  \end{align*}
-Given a tuple $x$ of samples $\samp_1,\dots,\samp_n\in\R^D$, the following function is proportional to the negative log-likelihood: \CF{should I now use $1/n$ instead of $1/nD$?}
-% $\ell(\Theta|x) = \frac{n}2 \log \det \Theta - \frac12 \sum_{i=1}^n x_i^T \Theta x_i$, which we can rewrite as
+Given a tuple $x$ of samples $\samp_1,\dots,\samp_n\in\R^D$, the following function is proportional to the negative log-likelihood: % $\ell(\Theta|x) = \frac{n}2 \log \det \Theta - \frac12 \sum_{i=1}^n x_i^T \Theta x_i$, which we can rewrite as
 \begin{align*}
   \ef_\samp(\Theta)
-=  \frac{1}{n}\sum_{i = 1}^n \samp_i^T \Theta \samp_i -  \log\det\Theta.
+=  \frac{1}{nD}\sum_{i = 1}^n \samp_i^T \Theta \samp_i -  \frac{1}{D}\log\det\Theta.
 \end{align*}
 Though $\Theta_a$ are not identifiable, the above expression is nonetheless well-defined.
 The \emph{maximum likelihood estimator (MLE)} for $\Theta$ is then
@@ -445,10 +444,10 @@ The direction $(1, 0, \dots, 0)$ changes $\Theta$ by an overall scalar, and tang
 \begin{definition}[Geodesics and balls]
 Let $P\in\P$.
 The \emph{exponential map} $\exp_\Theta \colon \H \to \P$ at~$\Theta$ is defined by
-\begin{align*}
-  \exp_\Theta(H) &=   e^{\frac{H_0}{k \sqrt{D}}}\cdot ( \Theta_1^{1/2} e^{\sqrt{\frac{d_1}{D}} H_1} \Theta_1^{1/2}) \ot  \dots \ot (\Theta_k^{1/2} e^{\sqrt{\frac{d_k}{D}} H_k} \Theta_k^{1/2}).
-\end{align*}
-The \emph{geodesics} through $\Theta$ are the curves $t \mapsto \exp_\Theta(t H)$ for $t\in\R$ and $H\in\H$. They have unit speed if $\norm{H}_F^2 = \sum_{a=0}^k \norm{H_a}_F^2 = 1$.
+%\begin{align*}\exp_\Theta(H) &=   e^{\frac{H_0}{k \sqrt{D}}}\cdot ( \Theta_1^{1/2} e^{\sqrt{\frac{d_1}{D}} H_1} \Theta_1^{1/2}) \ot  \dots \ot (\Theta_k^{1/2} e^{\sqrt{\frac{d_k}{D}} H_k} \Theta_k^{1/2}).\end{align*}
+\begin{align*}\exp_\Theta(H) &=   e^{\frac{1}{k} H_0}\cdot ( \Theta_1^{1/2} e^{\sqrt{d_1} H_1} \Theta_1^{1/2}) \ot  \dots \ot (\Theta_k^{1/2} e^{\sqrt{d_k} H_k} \Theta_k^{1/2}).\end{align*}
+
+The \emph{geodesics} through $\Theta$ are the curves $t \mapsto \exp_\Theta(t H)$ for $t\in\R$ and $H\in\H$. We take the convention that the geodesics have unit speed if $\norm{H}_F^2 = \sum_{a=0}^k \norm{H_a}_F^2 = 1$.
 Therefore, the closed \emph{(geodesic) ball} of radius~$r>0$ about~$\Theta$ is given by
 \begin{align*}
   B_r(\Theta) = \{ \exp_\Theta(H) : \norm H_F \leq r \}.
