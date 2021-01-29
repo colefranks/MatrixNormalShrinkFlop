@@ -698,7 +698,7 @@ Then the components of the Riemannian gradient $\nabla \ef_{\samp}$ at the ident
 and $\nabla_0 \ef_\samp = \tr \rho - 1 = \frac{1}{nD}\|\samp\|^2 - 1.$ 
 \end{lemma}
 \begin{proof}
-First note that for $a \in [k]$, $\nabla_a \log \det \Theta_a$ is zero because each component $H_a$ of the tangent vector is traceless for $a \in [k]$. Thus for all $a\in[k]$ the component $\nabla_a f_\samp$ is the same as $\nabla_a F$ where $F:\Theta \mapsto \tr D \rho \ot_{a = 1}^k \Theta_a$. Thus
+First note that for $a \in [k]$, $\nabla_a \log\det \Theta $ is zero because each component $H_a$ of the tangent vector is traceless for $a \in [k]$. Thus for all $a\in[k]$ the component $\nabla_a f_\samp$ is the same as $\nabla_a F$ where $F:\Theta \mapsto \tr \rho \ot_{a = 1}^k \Theta_a$. Thus
   \begin{align*}
    \langle \nabla_a f_{\samp} , Z \rangle
   % = \partial_{t=0} F_{\samp}(I_1,\dots,I_{a-1}, e^{tZ}, I_{a+1},\dots,I_n)
@@ -777,14 +777,15 @@ Applying the union bound over $[k]$ completes the proof of the proposition.
   % $$\lambda_1(\rho^{\{a\}}), \lambda_2(\rho^{\{a\}}) \in  \cN(1 \pm c \cdot \eps)/ Nd(1 \pm c \cdot \eps) \in \frac{1}{d}(1 \pm \eps)$$
 % with probability $1 - 2 e^{- c N \eps^2}- 2 e^{- c Nd \eps^2} = 1 - 4 e^{- N\eps^2},$ provided $c$ is small enough.
 \end{proof}
-\CF{END not changed to log likelihood yet}
+
 
 It will also be convenient to have bounds on the norm of $X$; because $\|X\|_F^2$ is simply a sum of $\chi$-square random variables, the next proposition follows from standard concentration bounds (e.g. \cite{W19}).
+\CF{this is now actually a component of the gradient, so could be moved to gradient bound.}
 \begin{prop}[Norm of $X$]\label{prp:xnorm}
 Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where $D=d_1\cdots{}d_k$. For $t \leq c$,
 $$ (1 - t) nD \leq \|X\|^2 \leq (1 + t)nD$$ with probability $2e^{-t^2 nD/8}$.
 \end{prop}
-
+\CF{END not changed to log likelihood yet}
 % Both $\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a$ and $\| \samp\|_F^2 - Nd_a \leq .5 N d_a$ hold with probability \CF{blah}$. Now  $$ \|\rho^{\{a\}} - I_a/d_a\|_{op} \leq \|\rho^{\{a\}} - N I_{d_a}/ \|\samp\|_F\|_{op} + $$
 
 
@@ -838,7 +839,7 @@ for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d
 for all $a \in [k]$. 
 \end{lemma}
 \begin{proof}
-Note that for $a,b \in \{0,\dots, k\}$, $\nabla^2_{ab} f_\samp = \nabla^2_{ab} F$ where $F:\Theta \mapsto \tr \rho \ot_{a = 1}^k \Theta_a$. 
+Note that for $a,b \in \{0,\dots, k\}$, $\nabla^2_{ab} f_\samp = \nabla^2_{ab} F$ where $F:\Theta \mapsto \tr \rho \Theta$. 
   Then for $a \in [k]$, and $Y, Z$ Hermitian we have
   \begin{align*}
    \langle Y,  \left( \nabla^2_{aa} F_{\samp} \right) Y \rangle
@@ -977,7 +978,7 @@ for all $a \in [k]$.
 \end{obs}
 
 
-\begin{proof}[Proof of \cref{thm:tensor-convexity}] By \cref{lem:expansion-convexity}, it is enough to prove that $\Phi^{ab}$ is a $(\eps, \lambda):=(1/40 \sqrt{ k}, 1/20k)$-quantum expander for all $a < b \in [k]$ and that $\tr \rho \in (7/8, 9/8)$ with the desired failure probability. Firstly, $\tr \rho = \frac{1}{nD} \|X\|^2$ is in $(7/8, 9/8)$ with failure probability $e^{ -\Omega(nD)} $ by \cref{prp:xnorm}. 
+\begin{proof}[Proof of \cref{thm:tensor-convexity}] \CF{make sure this is in the big theta notation} By \cref{lem:expansion-convexity}, it is enough to prove that $\Phi^{ab}$ is a $(\eps, \lambda):=(1/40 \sqrt{ k}, 1/20k)$-quantum expander for all $a < b \in [k]$ and that $\tr \rho \in (7/8, 9/8)$ with the desired failure probability. Firstly, $\tr \rho = \frac{1}{nD} \|X\|^2$ is in $(7/8, 9/8)$ with failure probability $e^{ -\Omega(nD)} $ by \cref{prp:xnorm}. 
 
 Firstly, we describe an event that implies $\Phi^{ab}$ are $\eps$-balanced. By \cref{obs:doubly-gradient}, this is equivalent to the condition $\sqrt{d_a} \norm{\nabla_a f_{\rv}}_{\op} \leq \eps \tr \rho$ for all $a \in [k]$. By \cref{prop:gradient-bound} and conditioned on the bound $\tr \rho \leq 9/8$ from above, this occurs with failure probability at most $k e^{-D n \eps^2/2Cd_{\max}} = k e^{ - c D n / k d_{\max}}$ provided $n \geq C  d_{\max}^2 k/n D$. 
 
@@ -1022,9 +1023,9 @@ There is a constant $c>0$ such that if
 \begin{itemize}
 \item $f_{\samp}$ is $\lambda$-strongly convex at $I$, 
 \item $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$ for every $a \in [k]$, 
-\item and $\sum_{a} \|\delta_{a}\|_{op} \leq c$,
+\item and $\|\log \Theta\|_{op} \leq c$,
 \end{itemize}
- then $f$ is $(\lambda - O( \|\delta\|_{op}))$-strongly convex at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$.
+ then $f$ is $(\lambda - O( \|\delta\|_{op}))$-strongly convex at $\Theta$.
 \end{lemma}
 
 %-----------------------------------------------------------------------------
@@ -1035,7 +1036,7 @@ We are now ready to prove the main result of this section according to the plan 
 \begin{proof}[Proof of \cref{thm:tensor-frobenius}]By \cref{it:reduce} in \cref{subsec:proof-sketch}, it is enough to prove the theorem assuming $\Theta = I$. Assuming this, we now show that the minimizer of $f_\rv$ exists and is close to $\Theta = I$ with high probability.  Set $\delta = \eps/\sqrt{k d_k}$ and let $c$ be a constant. Consider the following two events.
 \begin{enumerate}
 \item\label{it:grad-bd} $\|(\nabla f_\rv)_{a}\|_{op} \leq \frac{\delta}{\sqrt{d_{a}}}$ for all $a \in [k]$,
-\item\label{it:sc-ball} $f_\rv$ is $1/2$-strongly convex at any point $\Theta$ such that $\sum_a \|\log \Theta_a\|_{op} \leq  c.$
+\item\label{it:sc-ball} $f_\rv$ is $1/2$-strongly convex at any point $\ot_{a = 1}^k\Theta_a$ such that $\sum_a \|\log \Theta_a\|_{op} \leq  c.$
 \end{enumerate}
 We now show that these events occur with failure probability $$k^2 \left(\sqrt{nD} / kd_1 \right)^{ - \Omega(d_1)} + O(k e^{ - nD \eps^2 / k d_k^2}).$$ Indeed, by our first assumption on $\eps$, we have $N_a \geq C d_a/\delta^2$ for all $a \in [k]$, we so we may apply \cref{prop:gradient-bound} to conclude \cref{it:grad-bd} occurs with failure probability $O\left( \sum_a \exp ( - N_a \delta^2)\right)$.
 By \cref{thm:ball-convexity}, if $c$ is a small enough absolute constant then \cref{it:sc-ball} occurs with failure probability at most $k^2 \left(\sqrt{nD} / kd_{\min} \right)^{ - \Omega(d_{\min})}$. %By \cref{prp:xnorm} with $t = k \eps/\sqrt{d_k}$, \cref{it:norm-bd} occurs with failure probability $2e^{- k nD \eps^2/8 d_k},$ which is dominated by the failure probability for \cref{it:grad-bd}. 
@@ -1096,7 +1097,7 @@ We will prove \cref{thm:operator-cheeger} in the appendix using techniques simil
 \subsection{Proof of \cref{thm:matrix-normal}}
 We now use \cref{thm:operator-cheeger} as well as some more refined concentration inequalities to prove \cref{thm:matrix-normal}. The additional concentration is required to obtain the tighter bounds on the lower-dimensional factor $\Theta_1$, where $d_1 \leq d_2$.
 
-We first sketch the proof of the implied Frobenius error bound. The idea of the proof is to apply one step of flip-flop algorithm, a step which normalizes the larger marginal of $\rho$. This has the effect of making the second component of $\nabla f_\samp$ equal to zero, and we will show that the first component enjoys the same concentration exploited in \cref{prop:gradient-bound} even with the step of flip-flop - thus the total gradient has become smaller. Using \cref{convexRobustness} to control the change induced in the minimal eigenvalue of the Hessian by the first step of the flip-flop and applying \cref{lem:convex-ball} results in an error bound proportional to the new gradient after flip-flop, which gives us the tighter bound. To obtain the relative spectral error bound, we employ a similar strategy but with \cref{thm:klr} instead of \cref{lem:convex-ball}. 
+We first sketch the proof of the implied Frobenius error bound. The idea of the proof is to apply one step of flip-flop algorithm, a step which normalizes the larger marginal of $\rho$. This has the effect of making the second component of $\nabla f_\samp$ equal to zero, and we will show that the first component enjoys the same concentration exploited in \cref{prop:gradient-bound} even with the step of flip-flop - thus the total gradient has become smaller, but only the second component of the estimate has changed. Thus, intuitively, the total change in the first component will be small. Using \cref{convexRobustness} to control the change induced in the minimal eigenvalue of the Hessian by the first step of the flip-flop and applying \cref{lem:convex-ball} results in an error bound proportional to the new gradient after flip-flop, which gives us the tighter bound. To obtain the relative spectral error bound, we employ a similar strategy but with \cref{thm:klr} instead of \cref{lem:convex-ball}. 
 
 We now discuss the concentration bound. Consider the new random variable $Y_i$ obtained by right-multiplying $X_i$ by the result of one step of the flip-flop algorithm on the larger factor $\Theta_2$. Explicitly, the new random variable $Y$ is given by
 $Y_i = \sqrt{n d_1} X_i \Phi_X^*(I_{d_1})^{-1/2} = \sqrt{n d_1}  X_i (\sum_{i = 1}^n X_i^\dagger X_i)^{-1/2}.$ 
@@ -1109,6 +1110,20 @@ $$\|d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op} \leq \eps \sqrt{ \frac{d_1}{nd_2}
  with probability $1 - \exp(- \Omega( \eps^2 d_{1})).$ In particular, the condition above implies $\tilde{\Phi}$ is $\eps \sqrt{ \frac{d_1}{nd_2}}$-balanced.
 \end{lemma}
 The proof of this lemma uses a result of \cite{hayden2006aspects} on the inner product of two random projections, combined with a standard net argument. The details can be found in \cref{sec:flipflop-concentration}. With this bound in hand, we may now prove \cref{thm:matrix-normal}.
+
+\begin{proof}[Proof of \cref{thm:matrix-normal}\CF{NEW}]
+As discussed in \cref{subsec:proof-sketch}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. Consider the following events.
+\begin{enumerate}
+\item\label{it:expander} The operator $\Phi_{\rv}$ is a $(\eps_0  \sqrt{{d_2}/{n d_1}},1-\lambda)$-quantum expander.
+\item\label{it:flop-balanced} The operator $\tilde{\Phi}$ is $\eps_0 \sqrt{{d_1}/{n d_2}}$-balanced.
+\item \label{it:norm} $|1 - \frac{\|X\|}{\sqrt{nD}}| \leq \frac{\eps_0}{\sqrt{d_2}}. $ 
+\end{enumerate}
+These events occur with failure probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)}).$ Indeed, by the assumption
+$$n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps_0^{-2}\} $$
+\cref{it:expander} occurs with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)})$ by \cref{thm:operator-cheeger}. By \cref{lem:flipflop-concentration}, \cref{it:flop-balanced} occurs with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)}).$ Finally, \cref{it:norm} occurs with probability $1 - e^{- \Omega(n d_1 \eps^2)}$ by \cref{prp:xnorm}. By the union bound all the events occur with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)})$. Let $\samp$ satisfy all three properties.
+
+We now would like to show that $\tilde{\Phi}$ is an $(\eps_0 \sqrt{{d_1}/{n d_2}}, 1 - \lambda/2)$ expander. The MLE is 
+\end{proof}
 
 \begin{proof}[Proof of \cref{thm:matrix-normal}] As discussed in \cref{subsec:proof-sketch}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. Consider the following events.
 \begin{enumerate}
