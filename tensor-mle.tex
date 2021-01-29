@@ -348,7 +348,7 @@ The bound in the above theorem implies there is an MLE $(\htheta_1, \dots, \hthe
 \noindent
 for the largest precision matrix $\Theta_k$, this rate matches that of \TODO{XXX} \CF{actually it looks wrong to me.}
 
-In the case of matrix normal models $(k=2)$, we obtain the following stronger result.
+In the case of matrix normal models $(k=2)$, we obtain a stronger result. In the following theorem we identify $\Theta_1, \Theta_2$ from $\Theta$ using the convention $\det \Theta_1 = 1$.
 \CF{$\eps$ at least some fixed constant?}
 \begin{theorem}[Matrix normal model spectral error]\label{thm:matrix-normal}
 There is a constant $C>0$ with the following property.
@@ -1033,6 +1033,7 @@ There is a constant $c>0$ such that if
 %-----------------------------------------------------------------------------
 We are now ready to prove the main result of this section according to the plan outlined in \cref{subsec:proof-sketch}.
 \TODO{restate it here?}
+\CF{make this proof use the BigTheta, remember to translate to actual $D_F$ bound and also include lemma concluding the same for the factors.}
 \begin{proof}[Proof of \cref{thm:tensor-frobenius}]By \cref{it:reduce} in \cref{subsec:proof-sketch}, it is enough to prove the theorem assuming $\Theta = I$. Assuming this, we now show that the minimizer of $f_\rv$ exists and is close to $\Theta = I$ with high probability.  Set $\delta = \eps/\sqrt{k d_k}$ and let $c$ be a constant. Consider the following two events.
 \begin{enumerate}
 \item\label{it:grad-bd} $\|(\nabla f_\rv)_{a}\|_{op} \leq \frac{\delta}{\sqrt{d_{a}}}$ for all $a \in [k]$,
@@ -1071,15 +1072,13 @@ It is known (Lemma A.3 in \cite{FM20}) that $(\eps, 1 - \lambda)$-quantum expans
 %$\sigma_1(\Phi) = \langle I_{d_1}/\sqrt{d_1}, \Phi(I_{d_1}/\sqrt{d_2}) \rangle$
 
 
-\begin{theorem}[\CF{KLR}]\label{thm:klr} There is a constant $c > 0$ such that the following holds for all $d_1 \leq d_2$.
-If $\Phi_{x}$ is $\eps$-doubly balanced and has spectral gap $\lambda$ for $\eps \leq c \lambda^2/\log d_1$, then there is unique positive definite matrices $P \in \SL(d_1), Q\in \SL(d_2)$ such that $\Phi_{(P \ot Q)x}$ is doubly balanced. Moreover,
-
-$$\| P^2 - I_{d_1}\|_{op}, \| Q^2 - I_{d_2}\|_{op} \leq \frac{\eps \log d_1}{\lambda}.$$
+\begin{theorem}[\CF{KLR}]\label{thm:klr} There is a constant $c > 0$ such that the following holds for all $d_1 \leq d_2$ and $\|x\|_2 = \sqrt{n D}$. If $\Phi_{x}$ is $\eps$-doubly balanced and has spectral gap $\lambda$ for $\eps \leq c \lambda^2/\log d_1$, then the MLEs $\htheta_1,\htheta_2$ for $x$ satisfy
+$$\| \htheta_1 - I_{d_1}\|_{op}, \| \htheta_2 - I_{d_2}\|_{op} \leq \frac{\eps \log d_1}{\lambda}.$$
 \end{theorem}
-The key observation here is that any $(P^2,Q^2)$ such that $\Phi_{(P \ot Q)x}$ is doubly balanced minimize $f_\samp$ subject to $\det P = \det Q = 1$. Thus, finding them captures the key difficulty of the MLE. \cref{thm:klr}, along with what we've shown so far, already implies a preliminary version of \cref{thm:matrix-normal}. For simplicity of the proof sketch, we stick to the case $\det \Theta = 1$ so we can set $\det \Theta_1 = \det \Theta_2 = 1$. In proving \cref{thm:tensor-convexity}, we've already shown that $\Phi$ is an $(\eps \sqrt{d_2/n d_1}, 1 - \lambda)$-quantum expander with failure probability 
+ \cref{thm:klr}, along with what we've shown so far, already implies a preliminary version of \cref{thm:matrix-normal}. In proving \cref{thm:tensor-convexity}, we've already shown that $\Phi$ is an $(\eps \sqrt{d_2/n d_1}, 1 - \lambda)$-quantum expander with failure probability 
 $$O(e^{ - \Omega( d_2 \eps^2)}) + (\sqrt{nD}/{d_1})^{ - \Omega(d_1)}.$$ 
 
-By \cref{thm:klr} and the discussion afterwards, we immediately have that with the above failure probability the minimizers $\Theta'_1, \Theta'_2$ of $f_\samp$ over $\SL(d_1)\times \SL(d_2)$ satisfy
+By \cref{thm:klr}, we immediately have that with the above failure probability the MLEs satisfy
 \begin{align*}
   D_{\op}(\Theta'_a \Vert \Theta_a) = O\left(\eps \sqrt{\frac{d_{2}}{n d_1}} \log d_1\right),
 \end{align*}
@@ -1101,19 +1100,19 @@ We now use \cref{thm:operator-cheeger} as well as some more refined concentratio
 We first sketch the proof of the implied Frobenius error bound. The idea of the proof is to apply one step of flip-flop algorithm, a step which normalizes the larger marginal of $\rho$. This has the effect of making the second component of $\nabla f_\samp$ equal to zero, and we will show that the first component enjoys the same concentration exploited in \cref{prop:gradient-bound} even with the step of flip-flop - thus the total gradient has become smaller, but only the second component of the estimate has changed. Thus, intuitively, the total change in the first component will be small. Using \cref{convexRobustness} to control the change induced in the minimal eigenvalue of the Hessian by the first step of the flip-flop and applying \cref{lem:convex-ball} results in an error bound proportional to the new gradient after flip-flop, which gives us the tighter bound. To obtain the relative spectral error bound, we employ a similar strategy but with \cref{thm:klr} instead of \cref{lem:convex-ball}. 
 
 We now discuss the concentration bound. Consider the new random variable $Y_i$ obtained by right-multiplying $X_i$ by the result of one step of the flip-flop algorithm on the larger factor $\Theta_2$. Explicitly, the new random variable $Y$ is given by
-$Y_i =  X_i \Phi_X^*(I_{d_1})^{-1/2} =  X_i (\sum_{i = 1}^n X_i^\dagger X_i)^{-1/2}.$ 
+$Y_i =  \sqrt{n d_1} X_i \Phi_X^*(I_{d_1})^{-1/2} =  \sqrt{n d_1} X_i (\sum_{i = 1}^n X_i^\dagger X_i)^{-1/2}.$ 
 The result gives rise to a new operator $\tilde{\Phi}$ \CF{just call if $\Phi_Y$?} which satisfies 
-\begin{align} \tilde{\Phi}(I_{d_2}) = \frac{1}{d_2}\sum_{i} X_{i} \left( \sum_{j}  X_{i}^{\dagger} X_{i}\right)^{-1} X_{i}^\dagger \textrm{ and } \tilde{\Phi}^*(I_{d_1}) = \frac{1}{d_2} I_{d_2}.   \label{eq:one-step}\end{align}
+\begin{align} \tilde{\Phi}(I_{d_2}) = n d_1 \sum_{i} X_{i} \left( \sum_{j}  X_{i}^{\dagger} X_{i}\right)^{-1} X_{i}^\dagger \textrm{ and } \tilde{\Phi}^*(I_{d_1}) = n d_1 I_{d_2}.   \label{eq:one-step}\end{align}
 where again $\dagger$ denotes $d_1\times d_2$ matrix transpose.
 \begin{lemma}[Concentration after flip-flop]\label{lem:flipflop-concentration}
 If $X$ is an $n$-tuple of i.i.d. standard Gaussians on $\R^{d_1}\ot \R^{d_2}$, $n \geq d_2/d_1$ and $\eps> 0$ is at least a large enough absolute constant $C$, then for $\tilde{\Phi}$ as in \cref{eq:one-step} we have
-$$\|d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op} \leq \eps \sqrt{ \frac{d_1}{nd_2}},$$
+$$\| \frac{1}{n d_2} \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op} \leq \eps \sqrt{ \frac{d_1}{nd_2}},$$
  with probability $1 - \exp(- \Omega( \eps^2 d_{1})).$ In particular, the condition above implies $\tilde{\Phi}$ is $\eps \sqrt{ \frac{d_1}{nd_2}}$-balanced.
 \end{lemma}
 The proof of this lemma uses a result of \cite{hayden2006aspects} on the inner product of two random projections, combined with a standard net argument. The details can be found in \cref{sec:flipflop-concentration}. With this bound in hand, we may now prove \cref{thm:matrix-normal}.
 
 
-\begin{proof}[Proof of \cref{thm:matrix-normal} \CF{Final form}] 
+\begin{proof}[Proof of \cref{thm:matrix-normal}] 
 Recall that we define $\htheta_1(\samp), \htheta_2(\samp)$ to be $\arg\min_{\det \htheta_1 = 1} f_\samp(\htheta_1 \ot \htheta_2)$. By the equivariance discussed in \cref{subsec:proof-sketch}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$.
 
 Consider the following events.
@@ -1133,77 +1132,9 @@ By our choice of $n$, we have $\eps \sqrt{d_1/nd_2} \leq c\lambda^2\log d_1$ pro
 By the equivariance of the MLE we have $\htheta_1(x) = \htheta_1(y)$ and $\htheta_2(x) = B \htheta_2 (y) B$. This immediately yields the bound $ D_{op}(\htheta_1(x) \rVert I_{d_1}) \leq \eps \sqrt{\frac{d_1}{n d_2}} \log d_1.$ 
 To bound $D_{op}(\htheta_1(x) \rVert I_{d_1})$, use invariance of $D_{op}$ to write 
 $$D_{op}(\htheta_1(x) \rVert I_{d_2}) = D_{op}(\htheta_1(x) \rVert B^{-2}) \leq D_{op}(\htheta_1(x)\rVert I_{d_2}) + D_{op}(B^{-2}\rVert I_{d_2}).$$
-We have already shown that the first term is $O(\eps \sqrt{\frac{d_1}{n d_2}}).$ Writing $B^{-2} = \frac{\|x\|^2}{nd_1 d_2} \frac{d_2 \Phi^*(I_{d_1})}{\|x\|^2}$, the second term is $O(\eps \sqrt{\frac{d_2}{n d_1}})$ by \cref{it:norm} and \cref{it:expander}, completing the proof.
+We have already shown that the first term is $O(\eps \sqrt{\frac{d_1}{n d_2}}).$ Writing $B^{-2} = \frac{\|x\|^2}{nd_1 d_2} \frac{d_2 \Phi^*(I_{d_1})}{\|x\|^2}$, the second term is $O(\eps \sqrt{\frac{d_2}{n d_1}})$ by \cref{it:norm} and \cref{it:expander}, completing the proof.  By setting the constant $C$ in the statement of the theorem large enough compared to $1/\lambda, 1/c$, all the constraints will be satisfied.
 \end{proof}
 
-\begin{proof}[Proof of \cref{thm:matrix-normal} \CF{BACK TO SL}] 
-By the equivariance discussed in \cref{subsec:proof-sketch}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. Let $P, Q$ positive definite be the minimizers of $f_\samp(P^2\otimes Q^2)$ restricted to $(P,Q) \in \SL(d_1)\times\SL(d_2)$. We first show that $P,Q$ are close to identity, and then show that $\htheta_1,\htheta_2$ are close to $P,Q$.
- Consider the following events. 
-\begin{enumerate}
-\item\label{it:expander} The operator $\Phi_{\rv}$ is a $(\eps_0  \sqrt{{d_2}/{n d_1}},1-\lambda)$-quantum expander.
-\item\label{it:flop-balanced} The operator $\tilde{\Phi}$ is $\eps_0 \sqrt{{d_1}/{n d_2}}$-balanced.
-\item \label{it:norm} $|1 - \frac{\|X\|}{\sqrt{nD}}| \leq \frac{\eps_0}{\sqrt{d_2}}. $ 
-\end{enumerate}
-These events occur with failure probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)}).$ Indeed, by the assumption
-$$n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps_0^{-2}\} $$
-\cref{it:expander} occurs with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)})$ by \cref{thm:operator-cheeger}. By \cref{lem:flipflop-concentration}, \cref{it:flop-balanced} occurs with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)}).$ Finally, \cref{it:norm} occurs with probability $1 - e^{- \Omega(n d_1 \eps^2)}$ by \cref{prp:xnorm}. By the union bound all the events occur with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)})$. Let $\samp$ satisfy all three properties.
- 
-We now use a lemma relating the quantum expansion of $\tilde{\Phi}$ and $\Phi_\samp$; this is analogous to \cref{convexRobustness} guaranteeing the strong convexity of $f$ in a neighborhood of the origin. Let $z = (I_{d_1} \ot B) x$ where $B = \det \Phi_\samp^*(I_{d_1})^{1/2n} \Phi_\samp(I_{d_1})^{-1/2} \in \SL(d_2).$ Note that the quantum expansion of $\Phi_z$ and $\tilde{\Phi}$ are the same. By Lemma 4.4 in \cite{FM20}, if $\kappa(B^2) - 1 \leq \delta < c$,  then $\Phi_z$ is an $(\eps_0 \sqrt{d_2/n d_1} + O(\delta), 1 - \lambda + O(\delta))$-quantum expander. We have $\kappa(B^2) = \kappa(\|x\|^{-2} \Phi_\samp^*(I_{d_1})) = O(\|\|x\|^{-2} \Phi_\samp^*(I_{d_1}) - I_{d_2}\|_{op}) = O(\eps_0 \sqrt{d_2/nd_1})$ by the balancedness of $\Phi_x$. Thus $\tilde{\Phi}$ is an $(\eps_0 \sqrt{d_1 / n d_2}, 1 - \lambda/2)$-quantum expander provided $c$ is small enough compared to $\lambda$.
-
-By our choice of $n$, we have $\eps_0 \sqrt{d_1/nd_2} \leq c\lambda^2\log d_1$ if we take $\eps_0 = \eps/\log(d_1)$ for $\eps \leq c\lambda^2$. Thus \cref{thm:klr} applies to $\Phi_z$ and hence there are unique minimizers $\tilde{P} \succ 0$ and $\tilde{Q} \succ 0$ of $f_z(\tilde{P}^2\ot \tilde{Q}^2)$ over $\SL(d_1)\times \SL(d_2)$ and they satisfy 
-$$\|\tilde{P}^2 - I_{d_1}\|_{op}, \|\tilde{Q}^2 - I_{d_2}\|_{op} \leq \eps_0 \sqrt{\frac{d_1}{n d_2}} \log d_1.$$
-
-By equivariance, this time applied to the minimization problem over $\SL(d_1)\times \SL(d_2)$), we have $P = \tilde{P}$ and $Q^2 = B \tilde{Q}^2 B.$ Now by invariance of $D_{op}$, 
-$$D_{op}(Q^2 \rVert I_{d_2}) = D_{op}(\tilde{Q}^2\rVert B^{-2}) \leq D_{op}(\tilde{Q}^2\rVert I_{d_2}) + D_{op}(B^{-2}\rVert I_{d_2}).$$
-The inequality follows from the approximate triangle inequality and approximate symmetry for the relative spectral error \CF{cite}. The first term of the right-hand side satisfies 
-$$ D_{op}(\tilde{Q}^2\rVert I_{d_2}) = \eps_0 \sqrt{\frac{d_1}{n d_2}} \log d_1 = O\left(\eps \sqrt{\frac{d_2}{n d_1}}\right).$$
-To bound the second term, observe that
-$$\|\det \Phi_\samp^*(I_{d_1})^{- 1/n} \Phi_\samp(I_{d_1}) - I_{d_2}\|_{op} = O( \|\frac{d_2}{\|x\|^2} \Phi_\samp(I_{d_1}) - I_{d_2}\|_{op}) = O(\eps_0 \sqrt{d_2/nd_1}).$$ The second inequality follows by balancedness of $\Phi_\samp$. The first inequality follows because $\eps_0 \sqrt{d_2/nd_1} \leq c$ and $\det \Phi_\samp^*(I_{d_1})^{- 1/n} \Phi_\samp(I_{d_1})$ are eigenvalues of $\frac{d_2}{\|x\|^2} \Phi_\samp(I_{d_1})$ divided by their geometric mean, which must be between the extremal eigenvalues. Taken together, we have 
-$$D_{op}(P^2 \rVert I_{d_2}) = O\left(\eps \sqrt{\frac{d_1}{n d_2}}\right) \text{ and } D_{op}(Q^2 \rVert I_{d_2}) = O\left(\eps \sqrt{\frac{d_2}{n d_1}}\right).$$
- It remains to relate $P^2, Q^2$ to $\htheta_1, \htheta_2$. Fortunately computing the optimum $\htheta$ of $f$ once $\Upsilon:=P^2 \ot Q^2$ is known is a simple one-dimensional optimization problem with a closed form solution. Indeed, we take $\Theta = \alpha \Upsilon$ for some $\alpha$ minimizing $f_x(\alpha \Upsilon) = \alpha f_x(\Upsilon) - \log \alpha,$ which takes its minimum at $\alpha = \frac{1}{f_x(\Upsilon)}$. Thus $\htheta_1 = f_x(\Upsilon)^{-1/2} P^2$ and $\htheta_2 =  f_x(\Upsilon)^{-1/2} Q^2$. But $f_x(\Upsilon) = f_z()$  
-
-
-
-
- Our choice $\eps_0 = \eps/\log(d_1)$ gives the failure probability $e^{- \Omega(\eps^2 d_1)/\log^2 d_1}$. By setting the constant $C$ in the statement of the theorem large enough compared to $1/\lambda, 1/c$, all the constraints will be satisfied.
-\end{proof}
-\CF{convention to rule them all: only the first determinant is fixed. Will also be equivariant.}
-
-
-
-
-\begin{proof}[Proof of \cref{thm:matrix-normal}] As discussed in \cref{subsec:proof-sketch}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. Consider the following events.
-\begin{enumerate}
-\item\label{it:expander} The operator $\Phi_{\rv}$ is a $(\eps_0  \sqrt{{d_2}/{n d_1}},1-\lambda)$-quantum expander.
-\item\label{it:flop-balanced} The operator $\tilde{\Phi}$ is $\eps_0 \sqrt{{d_1}/{n d_2}}$-balanced.
-\item \label{it:norm} $|1 - \frac{\|X\|}{\sqrt{nD}}| \leq \frac{\eps_0}{\sqrt{d_2}}. $ 
-\end{enumerate}
-These events occur with failure probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)}).$ Indeed, by the assumption
-$$n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps_0^{-2}\} $$
-\cref{it:expander} occurs with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)})$ by \cref{thm:operator-cheeger}. By \cref{lem:flipflop-concentration}, \cref{it:flop-balanced} occurs with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)}).$ Finally, \cref{it:norm} occurs with probability $1 - e^{- \Omega(n d_1 \eps^2)}$ by \cref{prp:xnorm}. By the union bound all the events occur with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)})$. Let $\samp$ satisfy all three properties.
- 
-We now use a lemma relating the quantum expansion of $\tilde{\Phi}$ and $\Phi_\samp$; this is analogous to \cref{convexRobustness} guaranteeing the strong convexity of $f$ in a neighborhood of the origin. \CF{simplify.}The operator $\tilde{\Phi}$ is a \emph{scaling} of $\Phi_\samp$, that is for some ``scalings'' $g \in \GL(d_1), h \in \GL(d_2)$ for all $Z$ we have $\tilde{\Phi}(Z) = g^\dagger \Phi_\samp( h Z h^\dagger) g$. In our case we may take $h = \frac{\|x\|}{\sqrt{d_2}}\Phi_\samp^*(I_{d_1})^{-1/2}$ and $g = \frac{1}{\|x\|} I_{d_1}$. By Lemma 4.4 in \cite{FM20}, if $\| h^\dagger h - I_{d_1}\|_{op} \leq \delta$,  then $\tilde{\Phi}$ is an $(\eps \sqrt{d_2/n d_1} + O(\delta), 1 - \lambda + O(\delta))$-quantum expander. Fortunately, $h^\dagger h$ is bounded by the balancedness of $\Phi_\samp$. Indeed, $h^\dagger h - I = \frac{\|x\|^2}{d_2} ( \Phi^*(I_{d_1}))^{-1} - I_{d_2}$. By the balancedness of $\Phi_\samp$ we already know that 
-$$\|\frac{d_2}{\|x\|_F^2}\Phi_\samp^*(I_{d_1}) - I_{d_2}\|_{op} \leq \eps_0 \sqrt{d_2/n d_1};$$
- provided $\eps_0 \sqrt{d_2/nd_1} \leq 1/2$ we have $\|h^\dagger h - I\|_{op} = O( \eps_0 \sqrt{d_2/n d_1})$. Thus $\tilde{\Phi}$ is an $(\eps_0 \sqrt{d_1 / n d_2}, 1 - \lambda/2)$-quantum expander provided $c'$ is small enough compared to $c$.
- 
-By our choice of $n$, we have $\eps \sqrt{d_1/nd_2} \leq c\lambda^2\log d_1$ if we take $\eps_0 = \eps/\log(d_1)$ for $\eps \leq c\lambda^2$. The tuple $y_i =  \sqrt{nd_1} x_i  \,\Phi_\samp^*(I_{d_1})^{-1/2}$ satisfies $\|y\| = 1$, so by \cref{thm:klr} the MLE $\htheta_1(y), \htheta_2(y)$ satisfies
-\begin{gather*} \| \htheta_1(y) - I_{d_1}\|_{op}, \| \htheta_2(y) - I_{d_2}\|_{op} \leq C \eps_0 \sqrt{\frac{d_1}{n d_2}} \log d_1 = O\left(\eps \sqrt{\frac{d_1}{n d_2}}\right).\end{gather*}
-We may write $y = (A^{-1/2} \ot B^{-1/2}) x_i$ for $\det A = \det B$ by setting 
-$$B =  \det\left(\frac{\Phi_\samp^*(I_{d_2})}{nd_1}\right)^{- \frac{1}{2n}} \frac{\Phi_\samp^*(I_{d_2})}{nd_1}\textrm{ and } A = \det\left(\frac{\Phi_\samp^*(I_{d_2})}{nd_1}\right)^{\frac{1}{2n}} I_{d_1}.$$
-
-By the equivariance \CF{need to make determinants the same!} discussed in \cref{it:reduce} of \cref{subsec:proof-sketch}, 
-
-
-we have $\htheta_1(x) = A^{-1/2}\htheta_1(y)A^{-1/2}$ and $\htheta_2(x) = B^{-1/2}\htheta_1(y)B^{-1/2}.$ To bound $D_{op}(\htheta_1(x)||I_{d_1})$, write 
-$$D_{op}(\htheta_1(x)|| I_{d_1}) = D_{op}(\htheta_1(y)|| A)\leq D_{op}(\htheta_1(y)|| I_{d_1}) + D_{op}(A||I_{d_1})$$
-by the approximate triangle inequality for the relative spectral error \CF{cite}. Now $D_{op}(A|| I_{d_1}) = |1 - \det\left(\Phi_\samp^*(I_{d_2})/ nd_1\right)^{\frac{1}{2n}}| = O(\eps_0)$ by the $\eps_0$-balancedness of $\Phi_\samp^*(I_{d_2})/ nd_1$ and \cref{it:norm}. \CF{actually this is maybe WRONG or at least not very good.}
-
-
-For $\htheta_2(x)$, by invariance of the relative spectral error we have 
-\begin{align*}D_{op}(\htheta_2(x)|| I_{d_2}) = D_{op} (\htheta_2(y) || d_2\Phi^*(I_{d_2})) &= O( D_{op}(\Theta_2(y) || I_{d_2}) + D_{op}(d_2\Phi_\samp^*(I_{d_2})|| I_{d_2}))\\
-& = O\left(\eps \sqrt{\frac{d_2}{n d_1}}\right),
-\end{align*} where the penultimate inequality is by the approximate triangle inequality and approximate symmetry for the relative spectral error \CF{cite}. To bound the second term, observe that Our choice $\eps_0 = \eps/\log(d_1)$ gives the failure probability $e^{- \Omega(\eps^2 d_1)/\log^2 d_1}$. By setting the constant $C$ in the statement of the theorem large enough compared to $1/\lambda, 1/c$, all the constraints will be satisfied.
-\end{proof}
 
 
 
@@ -2012,7 +1943,7 @@ $$\|A\|_{op} \leq (1 - 2 \delta)^{-1} \sup_{\xi \in \mathcal{N}_\delta} | \langl
 We apply the above lemma with $A = \sum_{i = 1}^n Y_i Y_i^{\dagger} - \frac{d_2}{d_1} I_{d_1}$ and $d = d_1$.
 Fix a net $\mathcal{N} = \mathcal{N}_\delta$ for $\delta = 1/4$; by standard packing bounds (e.g. Lemma 4.2 in \cite{vershynin2010introduction}) we may take $|\mathcal{N}| \leq 9^{d_1}$. By \cref{eq:fixed-concentration} and the union bound, with failure probability $9^{d_1} e^{- \Omega (n d_2 \eps_0^2)}$ we have that $|\langle \xi , A \xi \rangle| \leq \frac{d_2}{d_1} \eps_0$ for all $\xi \in \mathcal{N}$, and by \cref{lem:versh-net} this event implies $\|A\|_{op} \leq 2  \frac{d_2}{d_1} \eps_0$. 
 
-It remains to translate our bound on $A$ to our desired bound on $\tilde{\Phi}$. Recall that $A = \frac{d_2}{d_1} (d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}),$ so we have that $\|d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op} \leq 2 \eps_0$. Setting $\eps_0 = \eps \sqrt{\frac{d_1}{4n d_2}}$ yields the desired bound on $\|d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op}$, and provided $\eps$ is a large enough constant, the failure probability is $e^{ - \Omega(d_1) \eps^2}$.\end{proof}
+\CF{the normalization is different now; fix.} It remains to translate our bound on $A$ to our desired bound on $\tilde{\Phi}$. Recall that $A = \frac{d_2}{d_1} (d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}),$ so we have that $\|d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op} \leq 2 \eps_0$. Setting $\eps_0 = \eps \sqrt{\frac{d_1}{4n d_2}}$ yields the desired bound on $\|d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op}$, and provided $\eps$ is a large enough constant, the failure probability is $e^{ - \Omega(d_1) \eps^2}$.\end{proof}
 
 
 \end{appendix}
