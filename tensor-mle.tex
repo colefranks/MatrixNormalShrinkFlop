@@ -1609,10 +1609,13 @@ _{\samp}$ under perturbations. \CF{Akshay, will you use $\tr$ instead of $Tr$}
 %\[ \langle Z, (\nabla^{2} f) Z \rangle = \langle Z, (\nabla^{2} F) Z \rangle + \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle     \]
 %The second term is rank one, so the quadratic form is:
 %\[ \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle = \left( \sum_{a} \sqrt{d_{a}} \langle \rho^{(a)}, Z_{a} \rangle   \right)^{2}       \]
-We follow the same proof structure as \cref{thm:tensor-convexity}, and analyze diagonal and off-diagonal blocks separately:
+We follow the same proof structure as \cref{thm:tensor-convexity}, and analyze the blocks separately. Note the $00$ block is a scalar $\nabla^{2}_{00} f = Tr[\rho]$ and the terms involving the $0$ block are just a vector:
+\[ \sum_{a} \langle z_{0}, (\nabla^{2}_{0a} f) Z_{a} \rangle = z_{0} \langle \rho, \sum_{a} \sqrt{d_{a}} Z_{a} \rangle       \]
+The diagonal blocks involve only one-body marginals:
 \[ \langle Z_{a}, (\nabla^{2}_{aa} f) Z_{a} \rangle = \langle d_{a} \rho^{(a)}, Z_{a}^{2} \rangle       \]
-\[ \langle Z_{a}, (\nabla^{2}_{ba} f) Z_{b} \rangle = \sqrt{d_{a} d_{b}} \langle \rho^{(ab)}, Z_{a} \otimes Z_{b} \rangle   \]
-\cref{thm:tensor-convexity} gives good bounds on the Hessian of $\samp$; so in order to bound the Hessian at perturbation $\samp' := \prod_{a} (e^{\delta_{a}})_{a} \samp$, it is enough to bound the difference. By the above discussion then we will bound the difference of the diagonal and off-diagonal terms under each component-wise perturbation. Note both terms involve only $\{\rho^{(a)}\}, \{\rho^{(ab)}\}$, so we prove perturbations on marginals in the following lemmas.
+And the off-diagonal blocks involve two-body marginals:
+\[ \langle Z_{a}, (\nabla^{2}_{ba} f) Z_{b} \rangle =  \langle \sqrt{d_{a} d_{b}} \rho^{(ab)}, Z_{a} \otimes Z_{b} \rangle   \]
+\cref{thm:tensor-convexity} gives good bounds on the Hessian of $\samp$; so in order to bound the Hessian at perturbation $\samp' := \prod_{a} (e^{\delta_{a}})_{a} \samp$, it is enough to bound the difference. By the above discussion then we will bound the difference of each under each component-wise perturbation. Note the terms involve $\{\rho^{(a)}\}, \{\rho^{(ab)}\}$, so we prove perturbations on marginals in the following lemmas. 
 
 \begin{lemma} \label{atoaaRobustness}
 For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{a})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$, if we denote $\samp' := (e^{\delta})_{a} \samp$ then
@@ -1649,7 +1652,7 @@ The lemma follows by noting $\|Z\|_{1} = \|Z_{+}\|_{1} + \|Z_{-}\|_{1}$ and $\|\
 \[ \|\delta'\|_{op} = \|(1+\eta) e^{2 \delta} - I\|_{op} \leq |\eta|(1 + 2 \|\delta\|_{op}) + 2\|\delta\|_{op} \leq O(\|\delta\|_{op})   \qedhere  \]
 \end{proof}
 
-This is already enough to prove a bound on the diagonal terms: 
+This is already enough to prove a bound on the constant and diagonal terms: 
 %and rank one term $(\nabla^{2} f - \nabla^{2} F)$.
 
 \begin{corollary} \label{diagRobustness}
@@ -1667,6 +1670,19 @@ We can use \cref{atoaaRobustness} to handle $e^{\delta_{a}}$ and \cref{btoaaRobu
 & \leq \left( \prod_{j=1}^k (1+9.5 \|\delta_{j}\|_{op}) - 1 \right) \|\rho_{\samp}^{(a)}\|_{op} \|Y\|_{F}^{2} \\
 &\leq 10 \|\delta\|_{op} \|\rho_{\samp}^{(a)}\|_{op} \|Y\|_{F}^{2}.   \end{align*}
 The term in parenthesis is shown by induction, and in the inequality we used $\|\delta\|_{op} \leq \frac{1}{20}$. The final step follows by our initial condition on $\|d_{a} \rho_{\samp}^{(a)}\|_{op}$.
+\end{proof}
+
+\begin{corollary} \label{constantRobustness}
+For input $\samp \in \R^{nD}$ such that $\|d_{a} \rho_{\samp}^{(a)}\|_{op} \leq 1 + \frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a} \in \mat(d_{a}))_{a}$ such that $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
+\[ |\nabla^{2}_{00} f(e^{2\delta}) - \nabla^{2}_{00} f(I)| \leq 4 \|\delta\|_{op}     \]
+\[ \|\nabla^{2}_{0a} f(e^{2\delta}) - \nabla^{2}_{0a} f(I)\|_{op} \leq 12 \|\delta\|_{op}     \]
+\AR{Not really op norm here, just traceless part}
+\end{corollary}
+\begin{proof}
+Recall that the $00$ block of the Hessian is just a scalar:
+\[ |\tr[\rho_{\samp'} - \rho_{\samp}]| = |\langle \rho_{\samp}, e^{2\delta} - I \rangle| \leq Tr[\rho_{x}] \|e^{2 \delta} - I\|_{op} \leq 4 \|\delta\|_{op}     \]
+In the last step we used the approximation for $e^{\delta}$ given above. For each $a$, the $0a$ block is a vector, so it is enough to bound the inner product with any $Z \perp I_{a}$:
+\[ |\langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, \sqrt{d_{a}} Z \rangle| \leq \|\rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}\|_{op} \sqrt{d_{a}} \|Z\|_{1} \leq 10 \|\delta\|_{op} \|\rho^{(a)}_{\samp}\|_{op} d_{a} \|Z\|_{F} \leq 11 \|\delta\|_{op} \|Z\|_{F}   \]
 \end{proof}
 
 %\begin{corollary} \label{rankoneRobustness}
@@ -1688,6 +1704,7 @@ The term in parenthesis is shown by induction, and in the inequality we used $\|
 %% The final step follows from the initial conditions on $\|d_{a} \rho_{a}\|_{op}, \|d_{b} \rho_{b}\|_{op}$.
 %In the third line we used that $Z$ is traceless; in the last line we used our initial conditions on $\rho$; the last step was by Cauchy-Schwarz.
 %\end{proof}
+
 
 The off-diagonal blocks are only slightly more difficult as we need the following lemma on bipartite marginals:
 
@@ -1752,17 +1769,23 @@ Now it is a simple matter of putting both terms together.
 
 \begin{proof} [Proof of \cref{convexRobustness}]
 Recall the definition of a quadratic form of the Hessian:
-\[ \langle Z, (\nabla^{2} f) Z \rangle = \sum_{a} \langle Z_{a}, (\nabla^{2}_{aa} f) Z_{a} \rangle + \sum_{a \neq b} \langle Z_{a}, (\nabla^{2}_{ab} f) Z_{b} \rangle     \]
+\[ \langle Z, (\nabla^{2} f) Z \rangle = \langle Z, M Z \rangle \sum_{a} \langle Z_{a}, (\nabla^{2}_{aa} f) Z_{a} \rangle + \sum_{a \neq b} \langle Z_{a}, (\nabla^{2}_{ab} f) Z_{b} \rangle     \]
 %\[ \langle Z, (\nabla^{2} f) Z \rangle = \langle Z, (\nabla^{2} F) Z \rangle + \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle     \]
 %\[ = \sum_{a} \langle Z_{a}, (\nabla^{2}_{aa} F) Z_{a} \rangle + \sum_{a \neq b} \langle Z_{a}, (\nabla^{2}_{ab} F) Z_{b} \rangle - \left( \sum_{a} \sqrt{d_{a}} \langle \rho^{(a)}, Z_{a} \rangle  \right)^{2}       \]
-Let $\{\samp'_{i} := e^{\delta} \samp\}$. Then by \cref{diagRobustness} we have a bound on the diagonal terms, and by \cref{offdiagRobustness} we have a bound on the off-diagonal terms:
+Let $\{\samp' := e^{\delta} \samp\}$. Then by \cref{constantRobustness} we have a bound on the constant terms:
+\[ | z_{0}^{2} (\nabla^{2}_{00} f_{\samp'} - \nabla^{2}_{00} f_{\samp} ) + 2 \sum_{a} \langle z_{0}, (\nabla^{2}_{0a} f_{\samp'} - \nabla^{2}_{0a} f_{\samp}) Z_{a} \rangle |      \]
+\[ \leq 4 \|\delta\|_{op} z_{0}^{2} + (2 |z_{0}|) 12 \|\delta\|_{op} \sum_{a} \|Z_{a}\|_{F}
+\leq \|\delta\|_{op} (4 z_{0}^{2} + 24 |z_{0}| \sqrt{ k \sum_{a} \|Z_{a}\|_{F}^{2}} )   \]
 %and by $\cref{rankoneRobustness}$ we have a bound on the rank-one term.
 %\[ \langle Z, (\nabla^2 f_{\samp'} - \nabla^{2} f_{\samp}) Z \rangle \leq \|\delta\|_{op} \left( 11 \sum_{a} \|Z_{a}\|_{F}^{2} + 21 \sum_{a \neq b} \|Z_{a}\|_{F} \|Z_{b}\|_{F} + 1.5 k \|Z\|^{2} \right)   \]
 %\[ \leq (11 + 21(k-1) + 1.5 k) \|\delta\|_{op} \|Z\|^{2}    \]
-\[ \langle Z, (\nabla^2 f_{\samp'} - \nabla^{2} f_{\samp}) Z \rangle \leq \|\delta\|_{op} \left( 11 \sum_{a} \|Z_{a}\|_{F}^{2} + 21 \sum_{a \neq b} \|Z_{a}\|_{F} \|Z_{b}\|_{F} \right)   \]
-\[ \leq (11 + 21(k-1)) \|\delta\|_{op} \|Z\|^{2} \leq 21 k \|\delta\|_{op} \|Z\|^{2}   \]
-
-Here the last step is a simple application of Cauchy-Schwarz. Note that this also gives a spectral upper bound for $\nabla^{2} f_{\samp'}$.
+By \cref{diagRobustness} we have a bound on the diagonal terms, and by \cref{offdiagRobustness} we have a bound on the off-diagonal terms:
+\[ |\sum_{ab} \langle Z_{a}, (\nabla^{2}_{ab} f_{\samp'} - \nabla^{2}_{ab} f_{\samp} ) Z_{b} \rangle | \leq \|\delta\|_{op} \left( 11 \sum_{a} \|Z_{a}\|_{F}^{2} + 21 \sum_{a \neq b} \|Z_{a}\|_{F} \|Z_{b}\|_{F} \right)   \]
+\[ \leq (11 + 21(k-1)) \|\delta\|_{op} \left( \sum_{a} \|Z_{a}\|_{F}^{2} \right)   \]
+So combining all three terms and using Cauchy-Schwarz, we see:
+\[ |\langle Z, (\nabla^{2} f_{\samp'} - \nabla^{2} f_{\samp} ) Z \rangle | \leq \|\delta\|_{op} \left(  4 z_{0}^{2} + 2 \cdot 12 |z_{0}| \sqrt{ k \sum_{a} \|Z_{a}\|_{F}^{2} } + 21 k \sum_{a} \|Z_{a}\|_{F}^{2} \right)    \]
+\[ \leq 30 k \|\delta\|_{op} \left( z_{0}^{2} + \sum_{a} \|Z_{a}\|_{F}^{2} \right)    \]
+Note that this also gives a spectral upper bound for $\nabla^{2} f_{\samp'}$.
 %\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s? Also the constant is $50 k$ now, yay for better constants!}\CF{yay!}
 \end{proof}
 
