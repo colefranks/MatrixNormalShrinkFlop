@@ -560,9 +560,9 @@ With these definitions in place, we are able to state a proof plan, which is a R
 \begin{enumerate}
 \item\label{it:reduce}
 \textbf{Reduce to identity:}
-We can obtain $n$ independent samples from $\cN(0, \Theta_1^{-1} \ot \cdots \ot \Theta_k^{-1})$ as $x'_i = ( \Theta_1^{-1/2} \ot \cdots \ot \Theta_k^{-1/2} ) x_i$, where $x_1,\dots,x_n$ are distributed as $n$ independent samples from a standard Gaussian.
-For $\Theta \in \P$, the MLE $\widehat{\Theta}(x')$ is exactly $\Theta^{1/2} \widehat{\Theta}(x) \Theta^{1/2}$.
-By invariance of the relative Frobenius error, $D_F(\widehat\Theta(x') \Vert \Theta) = D_F(\widehat\Theta(x) \Vert I)$ (the same is true for $D_{\op}$).
+We can obtain $n$ independent samples from $\cN(0, \Theta^{-1})$ as $x'_i = \Theta^{-1/2} x_i$, where $x_1,\dots,x_n$ are distributed as $n$ independent samples from a standard Gaussian.
+The MLE $\widehat{\Theta}(x')$ for the former is exactly $\Theta^{1/2} \widehat{\Theta}(x) \Theta^{1/2}$.
+By invariance of the relative Frobenius error, $D_F(\widehat\Theta(x') \Vert \Theta) = D_F(\widehat\Theta(x) \Vert I_D)$; the same is true for $D_{\op}$.
 This shows that to prove \cref{thm:tensor-frobenius} it is enough to consider the case that $\Theta = I_D$, i.e., the standard Gaussian.
 \item\label{it:grad} \textbf{Bound the gradient:}
 Show that the gradient $\nabla f_x(I_D)$ (defined below) is small with high probability.
@@ -582,7 +582,7 @@ The \emph{(Riemannian) gradient}~$\nabla f(\Theta)$ is the unique element in $\H
 = \partial_{t=0} f(\exp_\Theta(tH))
 \qquad \forall H \in \H.
 \end{align*}
-We abbreviate $\nabla f = \nabla f(I,\dots,I)$ and write $\nabla_a f$ for the components.
+We abbreviate $\nabla f = \nabla f(I_D)$ and write $\nabla_a f$ for the components.
 As a block matrix,
 \begin{align*}
   \nabla f = \left[\begin{array}{c|ccc} \nabla_0 f & \nabla_1 f & \cdots & \nabla_k f \end{array}\right],
@@ -595,7 +595,7 @@ Similarly, the \emph{(Riemannian) Hessian}~$\nabla^2 f(\Theta)$ is the unique li
 = \partial_{s=0} \partial_{t=0} f(\exp_{\Theta}(sH + tK))
 \qquad \forall H,K \in \H.
 \end{align*}
-We abbreviate $\nabla^2 f = \nabla^2 f(I,\dots,I)$ and write $\nabla^2_{ab}f$ for its components.
+We abbreviate $\nabla^2 f = \nabla^2 f(I_D)$ and write $\nabla^2_{ab}f$ for its components.
 As a block matrix,
 \begin{align*}
   \nabla^2 f = \left[\begin{array}{c|ccc}
@@ -709,21 +709,22 @@ The gradient can be readily computed in terms of this data.
 Let $\rho = \frac{1}{nD} \sum_{i=1}^n \samp_i \samp_i^T $.
 The components of the gradient $\nabla f_x$ at the identity are given by
 \begin{align*}
- \nabla_a \ef_{\samp} = \sqrt{d_a}\left( \rho^{(a)} - \frac{\tr\rho^{(a)}}{d_a} I_a\right)
+ \nabla_a \ef_{\samp} &= \sqrt{d_a}\left( \rho^{(a)} - \frac{\tr\rho^{(a)}}{d_a} I_a\right)
   \qquad \text{ for } a \in [k],
+\intertext{and}
+  \nabla_0 \ef_\samp &= \tr \rho - 1 = \frac{1}{nD}\|\samp\|^2 - 1.
 \end{align*}
-and $\nabla_0 \ef_\samp = \tr \rho - 1 = \frac{1}{nD}\|\samp\|^2 - 1.$
 \end{lemma}
 \begin{proof}
 For all $a\in[k]$ and any traceless symmetric $d_a\times d_a$ matrix~$H$, we have
 \begin{align*}
-&\quad \braket{\nabla_a f_x(I,\dots,I), H}
-= \partial_{t=0} f_x(I,\dots,I,e^{t\sqrt{d_a} H},I,\dots,I) \\
-&= \partial_{t=0} \tr \rho \, (I \ot \cdots \ot I \ot e^{t\sqrt{d_a} H} \ot I \ot \cdots \ot I) - \frac1D\log\det(e^{t\sqrt{d_a} H_{(a)}}) \\
+\braket{\nabla_a f_x(I_D), H}
+&= \partial_{t=0} f_x(e^{t\sqrt{d_a} H_{(a)}})
+= \partial_{t=0} \tr \rho \, e^{t\sqrt{d_a} H_{(a)}} - \frac1D\log\det(e^{t\sqrt{d_a} H_{(a)}}) \\
 &= \sqrt{d_a} \tr \rho \, H_{(a)}
 = \sqrt{d_a} \tr \rho^{(a)} \, H
 \end{align*}
-using \cref{eq:partial trace duality} and that $\tr H_{(a)} = \tr H = 0$.
+using \cref{eq:obj via rho,eq:partial trace duality} and that $\tr H_{(a)} = \tr H = 0$.
 Since $\nabla_a f_{\samp}$ is traceless and symmetric by definition, while $\rho^{(a)}$ is symmetric, this implies
 \begin{align*}
   \nabla_a f_{\samp}
@@ -731,13 +732,13 @@ Since $\nabla_a f_{\samp}$ is traceless and symmetric by definition, while $\rho
 = \sqrt{d_a} \left( \rho^{(a)} - \frac{\tr \rho}{d_a} I_{d_a} \right).
 \end{align*}
 Finally,
-\begin{equation*}
+\[
   \nabla_0 f_x
 = \partial_{t=0} \left( \tr \rho e^t - \frac1D \log \det(e^t I_D) \right)
 % = \partial_{t=0} \left( \tr \rho e^t - \frac1D \log e^{tD} \right)
 = \partial_{t=0} \left( \tr \rho e^t - t \right)
-= \tr \rho - 1. \qedhere
-\end{equation*}
+= \tr \rho - 1.
+\]
 \end{proof}
 
 Having calculated the gradient of $f_\samp$, we are ready to state our bound:
