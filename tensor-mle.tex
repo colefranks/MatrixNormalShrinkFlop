@@ -226,14 +226,15 @@ As a corollary the MSE in $D_F$ is $O( \max \{ \frac{d_1^2}{nd_2}, \frac{d_2^2}{
 % \item For the matrix normal model, if $n \geq C (\max\{d_1^2,d_2^2\}/d_1 d_2) \log^2 d_1$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has MSE $O( \max\{ d_1^2, d_2^2 \}/ (n d_1 d_2) )$ in $D_{\op}$.
 % As a corollary the MSE in $D_F$ is $O( \max \{ d_1^3, d_2^3 \} / (nd_1d_2) )$.
 \item For the tensor normal model, if $n \geq C \max\{d_i^3\}/ \prod_i d_i$, then the MLE for the precision matrices $\Theta_1, \dots, \Theta_k$ has MSE $O(\max \{ d_i^3 \} / (n \prod_i d_i ) )$ in $D_F$.
-\item Under the same sample requirements as above in each case, the flip-flop algorithm converges exponentially quickly to the MLE with high probability. As a corollary, there is an algorithm to compute the MLE up to precision $\eps$ in $D_F$ or $D_{op}$ with expected runtime polynomial in the input size and~$\log\frac1\eps$.
+\item Under the same sample requirements as above in each case, the flip-flop algorithm converges exponentially quickly to the MLE with high probability.
+As a corollary, there is an algorithm to compute the MLE up to precision $\eps$ in $D_F$ or $D_{op}$ with expected runtime polynomial in the input size and~$\log\frac1\eps$.
 \end{enumerate}
 \CF{Mention $d_{TV}$ again.}
 \MW{Check that what is written above is the same as the results advertised in \cref{sec:main results}. Right now it isn't.}
 
 The first result is tight up to logarithmic factors, and the second result is tight.
 Without the restriction on $n$ in the first result, no estimator can converge in spectral norm as the parameters grow, so we consider the restriction mild. Likewise for the second result no estimator can converge in Frobenius norm without the restriction on $n$.
-\MW{Maybe say we we show this (by reduction to known results). Clarify `spectral/Frobenius norm' vs `$D_{\op}$/$D_F$'.}
+\MW{Maybe say we show this (by reduction to known results). Clarify `spectral/Frobenius norm' vs `$D_{\op}$/$D_F$'.}
 \CF{I think I'd like to do a better job at gradually defining notation so its clear that these are the right numbers.}
 
 For interesting cases of the tensor normal model such as $d\times d \times d$ tensors we just require that $n$ is at least a large constant.
@@ -257,7 +258,7 @@ Our regularizer has a Bayesian interpretation as coming from a Wishart prior for
 %-----------------------------------------------------------------------------
 We write $\PD(d)$ for the space of $d\times d$ positive definite matrices; $\GL(d)$ denotes the group of invertible $d\times d$ matrices.
 For a matrix $A$, $\norm{A}_{\op}$ denotes the operator norm, $\norm{A}_F = (\tr A^T A)^{\frac12}$ the Frobenius norm, and $\braket{A,B} = \tr A^T B$ for the Hilbert-Schmidt inner product.
-We extend these definitions to tuples of matrices $A=(A_1,\dots,A_k)$ and denote them by the same symbol, i.e., $\norm{A}_F = (\sum_{a=1}^k \norm{A_a}_F^2)^{1/2}$ and similarly for the inner product.
+\MW{Sadly now we have $k+1$-tuples, so $\norm{H}_F$ looks terrible :D Use $_2$?} We extend these definitions to tuples of matrices $A=(A_1,\dots,A_k)$ and denote them by the same symbol, i.e., $\norm{A}_F = (\sum_{a=1}^k \norm{A_a}_F^2)^{1/2}$ and similarly for the inner product.
 
 %=============================================================================
 \section{Model and main results}\label{sec:main results}
@@ -283,7 +284,6 @@ One may also think of each random sample $x_j$ as taking values in the set of $d
 There are $k$ natural ways to ``flatten" $x_j$ to a matrix:
 for example, we may think of it as a $d_1 \times d_2d_3\cdots{}d_k$ matrix whose column indexed by $(i_2,\dots, i_k)$ is the vector in $\R^{d_1}$ with $i_1^{\text{th}}$ entry equal to $(x_j)_{i_1, \dots, i_k}$.
 In an analogous way we may flatten it to a $d_2 \times d_1d_3\cdots{}d_k$ matrix, and so on.
-\MW{It might be useful to define notation for the flattening (so that we can just define $\rho^{(a)}$ as $FF^T$). If so, maybe add a picture\dots}
 In the tensor normal model, the $d_2d_3\cdots{}d_k$ many columns are each distributed as a Gaussian random vector with covariance proportional to~$\Sigma_1$.
 Similarly the columns of the $d_2 \times d_1d_3\cdots{}d_k$ flattening have covariance proportional to~$\Sigma_2$, and so on.
 As such, the columns of the $a^{\text{th}}$ flattening can be used to estimate~$\Sigma_a$ up to a scalar.
@@ -293,7 +293,8 @@ In fact they may be so highly correlated that they effectively constitute only o
 The MLE decorrelates the columns to obtain rates like those one would obtain if the columns were independent.
 
 The MLE is easier to describe in terms of the precision matrices, the inverses of the covariance matrices.
-Let $\Theta$ denote the \emph{precision matrix}, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$, where $\Theta_a = \Sigma_a^{-1}$. Let $\P$ denote the manifold of all such $\Theta$, i.e.
+Let~$\Theta$ denote the \emph{precision matrix}, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$, where $\Theta_a = \Sigma_a^{-1}$.
+Let~$\P$ denote the manifold of all such $\Theta$, i.e.
 % As above, we can fix this by working with tuples of precision matrices with equal determinant:
 \begin{align*}
   \P &= \{ \Theta_1 \ot \dots \ot \Theta_k \in \PD(d_1) \times \dots \times \PD(d_k) \}.
@@ -308,7 +309,9 @@ The \emph{maximum likelihood estimator (MLE)} for $\Theta$ is then
 \begin{align}\label{eq:mle}
   \widehat{\Theta} := \underset{\Theta \in \P}{ \arg\min} f_x(\Theta)
 \end{align}
-whenever the minimizer exists and is unique. We write $\widehat\Theta = \widehat\Theta(x)$ when we want to emphasize the dependence of the MLE on the samples~$x$, and we we say $(\htheta_1, \dots, \htheta_k)$ is \emph{an} MLE for $(\Theta_1, \dots, \Theta_k)$ if $\otimes_{a = 1}^k \htheta_a = \htheta$. Note that $\P$ is not a convex domain under the Euclidean geometry on the $D\times D$ matrices.
+whenever the minimizer exists and is unique.
+We write $\widehat\Theta = \widehat\Theta(x)$ when we want to emphasize the dependence of the MLE on the samples~$x$, and we say $(\htheta_1, \dots, \htheta_k)$ is \emph{an} MLE for~$(\Theta_1, \dots, \Theta_k)$ if $\otimes_{a = 1}^k \htheta_a = \htheta$.
+Note that $\P$ is not a convex domain under the Euclidean geometry on the $D\times D$ matrices.
 
 %-----------------------------------------------------------------------------
 \subsection{Results on the MLE}
@@ -336,7 +339,7 @@ Then the MLE $\htheta $ for $\Theta$ from $n$ independent samples of the tensor 
 \begin{align*}
   D_F(\widehat{\Theta} \Vert \Theta) = O\left( \sqrt{\frac{d_{\min}d_{\max}}{n }}\eps\right);
 \end{align*}
-for all $a \in [k]$, with probability at least
+with probability at least
 \begin{align*}
   1 - k^2 \left(\sqrt{nD} / kd_{\min} \right)^{ - \Omega(d_{\min})} - O(k e^{ - \eps^2 d_k / k}).
 \end{align*}
@@ -359,8 +362,6 @@ Then there are MLEs $\widehat{\Theta}_1,\widehat{\Theta}_2$ for factors $\Theta_
 \end{align*}
 for $a \in \{1,2\}$ with probability $1 - O(e^{ - \Omega( d_1 \eps^2)})$.
 \end{theorem}
-%\CF{I feel like we should be able to get $\tilde{O}\sqrt{\frac{d_1}{n d_2}}$ for the smaller marginal. Akshay and I discussed a lot in rocketchat. }
-%\CF{we can! based on michael's calc}
 
 %-----------------------------------------------------------------------------
 \subsection{Flip-flop algorithm}
@@ -379,7 +380,8 @@ If $d_F( \Upsilon^{-1}|| \overline{\Theta}_2) > \eps$, set $\overline{\Theta}_2 
 We can motivate this procedure by noting that if in the first step we already $\overline{\Theta}_2 = \Theta_2$, then $\frac{1}{n d_2} \sum_{i = 1}^n X_i \overline{\Theta}_2 X_i^T$ is simply a sum of outer products of $nd_2$ many independent random vectors with covariance $\Sigma_1 = \Theta_1^{-1}$; as such the inverse is a good estimator for $\Theta_1$.
 As we don't know $\Theta_2$, the flip-flop algorithm instead uses $\overline{\Theta}_2$ our current best guess.
 
-For the general tensor normal model, the flip flop algorithm cycles through the $k$~many dimensions, using the $a^\text{th}$ flattening of the samples~$x_i$ (which are just $X_i$ and $X_i^T$ in the matrix case) to update $\overline{\Theta}_a$ in the $a^\text{th}$ step. \CF{could be a bit more precise since it needs to choose one with large error.}
+For the general tensor normal model, the flip flop algorithm cycles through the $k$~many dimensions, using the $a^\text{th}$ flattening of the samples~$x_i$ (which are just $X_i$ and $X_i^T$ in the matrix case) to update $\overline{\Theta}_a$ in the $a^\text{th}$ step.
+\CF{could be a bit more precise since it needs to choose one with large error.}
 
 %-----------------------------------------------------------------------------
 \subsection{Results on the flip-flop algorithm}
@@ -422,8 +424,8 @@ be proved later in \cref{sec:matrix-normal}.
 \subsection{Geometry of precision matrices and geodesic convexity}\label{subsec:geom}
 %-----------------------------------------------------------------------------
 We now discuss the geodesic convexity used here and outline the strategy for our proof.
-We start by introducing a Riemannian metric on the manifold $\PD(d)$ of positive-definite $d\times d$ matrices.
-Rather than simply considering the metric induced by the Euclidean metric on the symmetric matrices, we consider the metric whose geodesics starting at a point $\Theta \in \PD(d)$ are of the form $\Theta^{1/2} e^{Ht} \Theta^{1/2}$ for $t \in \R$ and a symmetric matrix~$H$. % with $\norm H_F=D$.
+We start by introducing a Riemannian metric on the manifold $\PD(D)$ of positive-definite $D\times D$ matrices.
+Rather than simply considering the metric induced by the Euclidean metric on the symmetric matrices, we consider the metric whose geodesics starting at a point $\Theta \in \PD(D)$ are of the form $t \mapsto \Theta^{1/2} e^{Ht} \Theta^{1/2}$ for~$t \in \R$ and a symmetric matrix~$H$. % with $\norm H_F=D$.
 % Accordingly, the geodesic distance between $\Theta, \Theta'$ is given by $\norm{\log(\Theta^{-1/2} \Theta' \Theta^{-1/2})}_F$.
 This metric arises from the Hessian of the log-determinant \citep{bhatia2009positive} and also as the Fisher-Rao metric on centered Gaussians parametrized by their precision matrices \CF{cite}.
 If $\Theta$ is positive definite and $A$ an invertible matrix then $A\Theta A^T$ is again in positive definite.
@@ -437,23 +439,28 @@ This invariance is natural because changing a pair of precision matrices in this
 
 As observed by \cite{wiesel2012geodesic}, the negative log-likelihood is convex as the precision matrix moves along these geodesics, and in particular for the tensor normal model it is convex along geodesics in $\P = \{ \Theta_1 \ot \dots \ot \Theta_k \in \PD(d_1) \times \dots \times \PD(d_k) \}$. This is because the geodesics in $\PD(D)$ between elements of the manifold $\P = \{ \Theta_1 \ot \dots \ot \Theta_k \in \PD(d_1) \times \dots \times \PD(d_k) \}$ remain in $\P$. That is, $\P$ is a \emph{totally geodesic submanifold} of $\PD(D)$.  The tangent space of $\P$ can be identified with the real vector space
 \begin{align*}
-  \H &= \{ (H_0, H_1,\dots,H_k) \;:\; H_0 \in \R \text{ and }H_a \text{ a symmetric $d_a \times d_a$ matrix}, \; \tr H_a = 0\; \forall a \in [k]  \}.
+  \H &= \{ (H_0, H_1,\dots,H_k) \;:\; H_0 \in \R \text{ and }H_a \text{ a symmetric traceless $d_a \times d_a$ matrix} \, \forall a \in [k]  \}.
 \end{align*}
-The direction $(1, 0, \dots, 0)$ changes $\Theta$ by an overall scalar, and tangent directions with supported only in the $a^{th}$ component for $a > 1$ change $\Theta_a$ subject to its determinant staying fixed. We now define the geodesics precisely.
+The direction $(1, 0, \dots, 0)$ changes $\Theta$ by an overall scalar, and tangent directions supported only in the $a^{th}$ component for $a \in [k]$ only change~$\Theta_a$, subject to its determinant staying fixed. We now define the geodesics precisely.
 
 \begin{definition}[Geodesics and balls]
 Let $P\in\P$.
 The \emph{exponential map} $\exp_\Theta \colon \H \to \P$ at~$\Theta$ is defined by
+\MW{No $1/k$ in front of $H_0$ I think.}
+\MW{Can we also divide by $D$ here in the exponent, instead of in the objective function?}
 %\begin{align*}\exp_\Theta(H) &=   e^{\frac{H_0}{k \sqrt{D}}}\cdot ( \Theta_1^{1/2} e^{\sqrt{\frac{d_1}{D}} H_1} \Theta_1^{1/2}) \ot  \dots \ot (\Theta_k^{1/2} e^{\sqrt{\frac{d_k}{D}} H_k} \Theta_k^{1/2}).\end{align*}
-\begin{align*}\exp_\Theta(H) &=   e^{\frac{1}{k} H_0}\cdot ( \Theta_1^{1/2} e^{\sqrt{d_1} H_1} \Theta_1^{1/2}) \ot  \dots \ot (\Theta_k^{1/2} e^{\sqrt{d_k} H_k} \Theta_k^{1/2}).\end{align*}
-
-The \emph{geodesics} through $\Theta$ are the curves $t \mapsto \exp_\Theta(t H)$ for $t\in\R$ and $H\in\H$. We take the convention that the geodesics have unit speed if $\norm{H}_F^2 = \sum_{a=0}^k \norm{H_a}_F^2 = 1$.
+\begin{align*}
+  \exp_\Theta(H) &=   e^{\frac{1}{k} H_0}\cdot ( \Theta_1^{1/2} e^{\sqrt{d_1} H_1} \Theta_1^{1/2}) \ot  \dots \ot (\Theta_k^{1/2} e^{\sqrt{d_k} H_k} \Theta_k^{1/2}).
+\end{align*}
+The \emph{geodesics} through $\Theta$ are the curves $t \mapsto \exp_\Theta(t H)$ for $t\in\R$ and $H\in\H$.
+Up to reparameterization, there is a unique geodesic between any two points of~$\P$.
+We take the convention that the geodesics have unit speed if $\norm{H}_F^2 = \abs{H_0}^2 + \sum_{a=1}^k \norm{H_a}_F^2 = 1$. \MW{$\leftarrow$ meh}
 Therefore, the closed \emph{(geodesic) ball} of radius~$r>0$ about~$\Theta$ is given by
 \begin{align*}
   B_r(\Theta) = \{ \exp_\Theta(H) : \norm H_F \leq r \}.
 \end{align*}
 Such balls are geodesically convex, that is, if $\gamma(t)$ is a geodesic such that $\gamma(0),\gamma(1) \in B_r(\Theta)$ then $\gamma(t) \in B_r(\Theta)$ for all $r\in[0,1]$.
-
+\MW{What is the difference between a (totally) convex and (totally) geodesic subset?}
 % The geodesic distance squared between two points $P,Q\in\P$ is given by
 % \begin{align*}
 %   \sum_{a=1}^k \frac 1{d_a} \norm{\log(P_a^{-1/2} Q_a P_a^{-1/2})}_F^2.
@@ -466,7 +473,7 @@ Using our definition of geodesics, we obtain the following notion of geodesic co
 A twice differentiable function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $\Theta\in\P$ if $\partial^2_{t=0} f(\exp_\Theta(tH)) \geq 0$ for all~$H\in\H$.
 It is called \emph{$\lambda$-strongly geodesically convex} at $\Theta$ for some $\lambda>0$ if $\partial^2_{t=0} f(\exp_P(tH)) \geq \lambda \norm H_F^2$ for all~$H\in\H$.
 
-We note that for a geodesically convex domain $D \subseteq \P$, a function $f$ is (strongly) geodesically convex on~$D$ if, and only if, the function $t \mapsto f(\gamma(t))$ is (strongly) convex on~$[0,1]$ for any geodesic $\gamma(t)$ with $\gamma(0),\gamma(1)\in D$.
+We note that for a geodesically convex domain $D \subseteq \P$, a function $f$ is (strongly) geodesically convex on~$D$ if, and only if, the function $t \mapsto f(\gamma(t))$ is (strongly) convex on~$[0,1]$ for any unit-speed geodesic $\gamma(t)$ with $\gamma(0),\gamma(1)\in D$.
 In other words, geodesic convexity simply means convexity in the ordinary Euclidean sense when restricted to geodesics.
 % A function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $P\in\P$ if the functions $t \mapsto f(\exp_P(tH))$ are convex in $t\in\R$ for all~$H \in \H$.
 % Assuming $f$ is twice differentiable, this holds if, and only if, $\partial^2_t f(\exp_P(tH)) \geq 0$ for all~$H\in\H$.
@@ -475,7 +482,7 @@ In other words, geodesic convexity simply means convexity in the ordinary Euclid
 % Assuming the function is twice differentiable, this holds if, and only if, $\partial^2_t f(\exp_P(tH)) \geq \lambda \norm H_F^2$ for all~$H\in\H$.
 \end{definition}
 
-The invariance properties described above for $\PD(d)$ are directly inherited for tuples of precision matrices with determinant one.
+The invariance properties described above for $\PD(D)$ are directly inherited.
 The manifold $\P$ carries a natural action by the group
 \begin{align*}
   \G =  \{G_1 \ot \dots \ot G_1: \GL(d_1)\ot \times \dots \times \ot \GL(d_k)\}
@@ -571,20 +578,24 @@ To make this discussion more concrete, we now define the gradient and Hessian fo
 Let $f\colon \P \to \R$ be a once or twice differentiable function and $\Theta \in \P$.
 The \emph{(Riemannian) gradient}~$\nabla f(\Theta)$ is the unique element in $\H$ such that
 \begin{align*}
-  \braket{\nabla f(\Theta), H} = \sum_{a=1}^k \braket{\nabla_a f(\Theta), H_a} = \partial_{t=0} f(\exp_\Theta(tH))
+  \braket{\nabla f(\Theta), H}
+= \partial_{t=0} f(\exp_\Theta(tH))
+\qquad \forall H \in \H.
 \end{align*}
-for all $Z\in \H$.
-The components $\nabla_a f(\Theta)$ of the gradient are $d_a \times d_a$ traceless symmetric matrices.
-We often abbreviate $\nabla f = \nabla f(I,\dots,I)$ and write $\nabla_a f$ for its components.
+We abbreviate $\nabla f = \nabla f(I,\dots,I)$ and write $\nabla_a f$ for the components.
+As a block matrix,
+\begin{align*}
+  \nabla f = \left[\begin{array}{c|ccc} \nabla_0 f & \nabla_1 f & \cdots & \nabla_k f \end{array}\right],
+\end{align*}
+where $\nabla_0 f \in \R$, while each $\nabla_a f(\Theta)$ is a $d_a \times d_a$ traceless symmetric matrix for~$a\in[k]$.
 
-The \emph{(Riemannian) Hessian}~$\nabla^2 f(\Theta)$ is the unique linear operator on~$\H$ such that
+Similarly, the \emph{(Riemannian) Hessian}~$\nabla^2 f(\Theta)$ is the unique linear operator on~$\H$ such that
 \begin{align*}
   \braket{H, \nabla^2 f(\Theta) K}
-% = \sum_{a=1}^k \sum_{b=1}^k \braket{H_a, \nabla^2_{ab} f(P) K_b}
 = \partial_{s=0} \partial_{t=0} f(\exp_{\Theta}(sH + tK))
+\qquad \forall H,K \in \H.
 \end{align*}
-for all $H,K \in \H$.
-We often abbreviate $\nabla^2 f = \nabla^2 f(I,\dots,I)$ and write $\nabla^2_{ab}f$ for its components.
+We abbreviate $\nabla^2 f = \nabla^2 f(I,\dots,I)$ and write $\nabla^2_{ab}f$ for its components.
 As a block matrix,
 \begin{align*}
   \nabla^2 f = \left[\begin{array}{c|ccc}
@@ -594,7 +605,9 @@ As a block matrix,
   \nabla_{k0}^2 f & \nabla_{k1}^2 f \dots & \nabla_{kk}^2 f \\
   \end{array}\right],
 \end{align*}
-where for $a, b \in [k]$ (i.e. the submarix to the lower-right of the lines) the components $\nabla_{ab}^2f(\Theta)$ of the Hessian are linear operators from the space of traceless symmetric $d_b\times d_b$-matrices to the space of traceless symmetric $d_a \times d_a$-matrices. The $00$ block, $\nabla^2_{00} f(\Theta),$ is a real number, and $\nabla_{0a}f$ is a linear operator from $\R$ to the space of traceless symmetric $d_1\times d_a$ matrices. Thus $\nabla_{0a}f$ itself can be viewed as a matrix.
+where for $a, b \in [k]$ (i.e., for the blocks of the submatrix to the lower-right of the lines) the components $\nabla_{ab}^2f(\Theta)$ of the Hessian are linear operators from the space of traceless symmetric $d_b\times d_b$ matrices to the space of traceless symmetric $d_a \times d_a$ matrices.
+Moreover, $\nabla_{a0}f$ is a linear operator from $\R$ to the space of traceless symmetric $d_a\times d_a$ matrices (hence can itself be viewed as a matrix), $\nabla_{0a}f$ is the adjoint of this linear operators (which using the Hilbert-Schmidt inner product can be identified with the same matrix), and $\nabla^2_{00} f(\Theta)$ is a real number.
+\MW{The block conventions are a bit confusing :>}
 \end{definition}
 
 We note that the Hessian is symmetric with respect to the inner product~$\braket{\cdot,\cdot}$ on $\H$.
@@ -673,40 +686,23 @@ Proceeding according the plan outlined in \cref{subsec:proof-sketch}, we now com
 
 To calculate the gradient, we need a definition from linear algebra.
 Recall that our data comes as an $n$-tuple $x=(x_1,\dots,x_n)$ of tensors. %, which we can also think of as an array of format~$d_1\times\dots\times d_k\times n$.
-Let $\rho := \sum_i x_i x_i^T$ denote the ``sample covariance matrix'' of the data.
+Let $\rho := \frac1{nD}\sum_i x_i x_i^T$ denote the matrix of ``second sample moments'' of the data.
 Then we can rewrite the objective function as
 \begin{align}\label{eq:obj via rho}
-  f_x(P_1,\dots,P_k) = \log \tr \rho \left( \textstyle \bigotimes_{a=1}^k P_a \right).
+  f_x(\Theta) = \tr \rho \, \Theta - \frac1D \log \det \Theta.
 \end{align}
-We may also consider the ``sample covariance matrix'' of an individual coordinate.
-For this, analogously to the discussion in \cref{subsec:model}, we ``flatten''~$x$ by thinking of it as a $d_a \times \frac{d_1d_2d_3\dots d_kn}{d_a}$ matrix~$x^{(a)}$ for any $a\in[k]$, and define $\rho^{(a)} := x^{(a)} (x^{(a)})^T$.
-It is not hard to verify that $\rho^{(a)}$ is a positive definite $d_a\times d_a$ matrix and satisfies the following property:
+We may also consider the ``second sample moments'' of an individual coordinate.
+For this, analogously to the discussion in \cref{subsec:model}, we ``flatten''~$x$ by thinking of it as a $d_a \times \frac{d_1d_2d_3\dots d_kn}{d_a}$ matrix~$x^{(a)}$ for any $a\in[k]$, and define $\rho^{(a)} := \frac1{nD} x^{(a)} (x^{(a)})^T$.
+It is not hard to verify that $\rho^{(a)}$ is a positive semidefinite $d_a\times d_a$ matrix and satisfies the following property:
 \begin{align}\label{eq:partial trace duality}
   \tr \rho^{(a)} H = \tr \rho H_{(a)}
 \quad\text{where}\quad
   H_{(a)} := I_{d_1\cdots d_{a-1}} \ot H \ot I_{d_{a+1} \cdots d_k}
 \end{align}
-for any $d_a \times d_a$-matrix~$H$.
+for any $d_a \times d_a$ matrix~$H$.
 Note that $\tr \rho^{(a)} = \tr \rho = \norm x_2^2$.
-In the language of linear algebra, $\rho^{(a)}$ is the \emph{partial trace} of~$\rho$ over all but one of the coordinates.
+In the language of linear algebra, the matrix $\rho^{(a)}$ is known as the \emph{partial trace} of~$\rho$ over all but one of the coordinates.
 The gradient can be readily computed in terms of this data.
-\MW{Careful, $\rho$ is now unnormalized (since Cole's nice text did it that way).}
-
-% To calculate the gradient, we need a definition from linear algebra. Recall that our data comes as an $n$-tuple of $D$-dimensional vectors. We think of such a sample $\samp$ as a $D \times n$ matrix, so that $\samp^T$ denotes its $n \times D$ transpose. We can compute the gradient from the ``sample covariance matrix" $\rho = \samp \samp^T$.
-% %Think of $\rv$ as $D \times n$ matrix, $\rho = \rv\rv^T,xx^T$ etc.
-
-% \begin{definition}[Partial trace]\label{def:single marginal}
-% For $\rho \in \PD_D$ and $a\in[k]$, let $\rho^{(a)} \in \PD_{d_a}$ denote the \emph{partial trace} defined by the condition that
-% \begin{align*}
-%   \tr \rho^{(a)} Z = \tr \rho Z_a,
-% \end{align*}
-% for all $d_a \times d_a$ matrices $Z$, where $Z_{(a)} := (I_1 \ot \cdots \ot I_{a-1} \ot Z \ot I_{a+1} \ot \cdots \ot I_k)$.
-% Here and in the following we write $I_a$ for the $d_a\times d_a$ identity matrix.
-% \end{definition}
-
-% If the definition above seems abstract, one can compute the partial trace of $\rho = \samp \samp^T$ from the different flattenings we mentioned in the introduction. The partial trace $\rho_1$ is computed by computing the flattening of $\samp$ into a $d_1\times d_2 d_3 \dots d_k n$ matrix $M$ and then setting $\rho_1 = M M^T$. The other matrices $\rho_2, \dots, \rho_k$ are analogous.
-
-%\MW{Explain how to compute in terms of $\samp$. Ref above \cref{cor:vershynin}.}
 
 \begin{lemma}[Gradient]\label{lem:gradient}
 Let $\rho = \frac{1}{nD} \sum_{i=1}^n \samp_i \samp_i^T $.
@@ -718,40 +714,34 @@ The components of the gradient $\nabla f_x$ at the identity are given by
 and $\nabla_0 \ef_\samp = \tr \rho - 1 = \frac{1}{nD}\|\samp\|^2 - 1.$
 \end{lemma}
 \begin{proof}
-\MW{HEAD}
-First note that for $a \in [k]$, $\nabla_a \log\det \Theta $ is zero because each component $H_a$ of the tangent vector is traceless for $a \in [k]$. Thus for all $a\in[k]$ the component $\nabla_a f_\samp$ is the same as $\nabla_a F$ where $F:\Theta \mapsto \tr \rho \ot_{a = 1}^k \Theta_a$. Thus
-\MW{OLD}
-Define $F_x(P) := \tr \rho \, (\bigotimes_{a=1}^k P_a)$, so that $F_x(P) = e^{f_x(P)}$ by \cref{eq:obj via rho}.
-  Then, for all $a\in[k]$ and any $d_a\times d_a$ matrix~$H$, we have
-  \begin{align*}
-    \braket{\nabla_a F_x(I,\dots,I), H}
-  &= \partial_{t=0} F_x(I,\dots,I,e^{t\sqrt{d_a} H},I,\dots,I) \\
-  &= \partial_{t=0} \tr \rho \, (I \ot \cdots \ot I \ot e^{t\sqrt{d_a} H} \ot I \ot \cdots \ot I) \\
-  &= \sqrt{d_a} \tr \rho \, H_{(a)}
-  = \sqrt{d_a} \tr \rho^{(a)} \, H
-  \end{align*}
-  using \cref{eq:partial trace duality}.
-  Since $\nabla_a F_{\samp}$ is traceless and symmetric by definition, while $\rho^{(a)}$ is symmetric, this implies
-  \begin{align*}
-    \nabla_a F_{\samp}
-  = \sqrt{d_a} \left( \rho^{(a)} - \tr(\rho^{(a)}) \frac{I_{d_a}}{d_a} \right)
-  = \sqrt{d_a} \left( \rho^{(a)} - \tr(\rho) \frac{I_{d_a}}{d_a} \right).
-  \end{align*}
-  Finally, since $f_x(P) = \log F_x(P)$, we obtain
-  \begin{align*}
-    \nabla_a f_x
-  = \frac{\nabla_a F_x}{F_x(I,\dots,I)}
-  % = \frac{\sqrt{d_a} \left( \rho^{(a)} - \tr(\rho) \frac{I_{d_a}}{d_a} \right)}{\tr\rho}
-  = \sqrt{d_a} \left( \frac{\rho^{(a)}}{\tr\rho} - \frac{I_{d_a}}{d_a} \right),
-  \end{align*}
-  using that $F_x(I,\dots,I) = \tr \rho$.
-  Finally $\nabla_0 \ell_\samp = \partial_{t=0} (\tr e^{t} \rho - t) = \tr \rho - 1.$
+For all $a\in[k]$ and any traceless symmetric $d_a\times d_a$ matrix~$H$, we have
+\begin{align*}
+&\quad \braket{\nabla_a f_x(I,\dots,I), H}
+= \partial_{t=0} f_x(I,\dots,I,e^{t\sqrt{d_a} H},I,\dots,I) \\
+&= \partial_{t=0} \tr \rho \, (I \ot \cdots \ot I \ot e^{t\sqrt{d_a} H} \ot I \ot \cdots \ot I) - \frac1D\log\det(e^{t\sqrt{d_a} H_{(a)}}) \\
+&= \sqrt{d_a} \tr \rho \, H_{(a)}
+= \sqrt{d_a} \tr \rho^{(a)} \, H
+\end{align*}
+using \cref{eq:partial trace duality} and that $\tr H_{(a)} = \tr H = 0$.
+Since $\nabla_a f_{\samp}$ is traceless and symmetric by definition, while $\rho^{(a)}$ is symmetric, this implies
+\begin{align*}
+  \nabla_a f_{\samp}
+= \sqrt{d_a} \left( \rho^{(a)} - \frac{\tr \rho^{(a)}}{d_a} I_{d_a} \right)
+= \sqrt{d_a} \left( \rho^{(a)} - \frac{\tr \rho}{d_a} I_{d_a} \right).
+\end{align*}
+Finally,
+\begin{equation*}
+  \nabla_0 f_x
+= \partial_{t=0} \left( \tr \rho e^t - \frac1D \log \det(e^t I_D) \right)
+% = \partial_{t=0} \left( \tr \rho e^t - \frac1D \log e^{tD} \right)
+= \partial_{t=0} \left( \tr \rho e^t - t \right)
+= \tr \rho - 1. \qedhere
+\end{equation*}
 \end{proof}
 
-\MW{MICHAEL MARKER}
 Having calculated the gradient of $f_\samp$, we are ready to state our bound:
 %\MW{Please check updated proof. Can we assume $\eps<1$ and simply take~$C=16$?}
-\MW{Make pretty by manipulating $C$}
+\MW{MICHAEL MARKER}
 \CF{BEGIN not changed to using log likelihood yet}
 \begin{prop}\label{prop:gradient-bound}
 Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where $D=d_1\cdots{}d_k$.
