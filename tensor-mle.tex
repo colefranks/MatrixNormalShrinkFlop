@@ -619,16 +619,15 @@ Similarly, $f$ is $\lambda$-strongly geodesically convex if and only if~$\nabla^
 We can now state and prove the following lemma, which shows that strong convexity in a ball about a point where the gradient is sufficiently small implies the optimizer cannot be far.
 
 \begin{lemma}\label{lem:convex-ball}
-Let $f\colon \P \to \R$ be geodesically convex everywhere, and $\lambda$-strongly geodesically convex in a ball $B_r(\Theta)$ of radius~$r>0$.
-Further assume the gradient is bounded as $\norm{\nabla f(\Theta)}_F \leq \eps < \frac{\lambda r} 2$.
-Then the sublevel set $\{\Upsilon \in \P : f(\Upsilon) \leq f(\Theta)\}$ is contained in the ball $B_{2\eps/\lambda}(\Theta) \subset B_r(\Theta)$, $f$ has a unique minimizer $\cramped{\htheta}$ which is contained in $B_{\eps/\lambda}(P)$, and
+Let $f\colon \P \to \R$ be geodesically convex.
+Assume the gradient at some~$\Theta\in\P$ is bounded as $\norm{\nabla f(\Theta)}_F \leq \eps$, and that $f$ is $\lambda$-strongly geodesically convex in a ball $B_r(\Theta)$ of radius~$r > \frac{2\eps}\lambda$.
+Then the sublevel set $\{\Upsilon \in \P : f(\Upsilon) \leq f(\Theta)\}$ is contained in the ball~$B_{2\eps/\lambda}(\Theta)$, $f$ has a unique minimizer $\smash{\htheta}$, this minimizer is contained in $B_{\eps/\lambda}(P)$, and
 \begin{align}\label{eq:minimum lower bound}
   f(\htheta) \geq f(\Theta) - \frac{\eps^2}{2 \lambda}.
 \end{align}
-\MW{Just state the lemma for $r=2\eps/\lambda$.}\CF{actually it's sort of hard to write it that way}
 \end{lemma}
 \begin{proof}
-We first show that the sublevel set of~$f(\Theta)$ is included in the ball of radius~$r$.
+We first show that the sublevel set of~$f(\Theta)$ is included in the ball of radius~$\frac{2\eps}\lambda$.
 Consider $g(t) := f(\exp_\Theta(tH))$, where~$H\in\H$ is an arbitrary vector of unit norm~$\norm H_F = 1$.
 Then, using the assumption on the gradient,
 \begin{align}\label{eq:grad bound}
@@ -653,17 +652,19 @@ Since $g$ is convex due to the geodesic convexity of $f$, it follows that, for a
 \end{align*}
 hence
 \begin{align*}
-  f(P) = g(0) < g(t) = f(\exp_\Theta(tH)).
+  f(\Theta) = g(0) < g(t) = f(\exp_\Theta(tH)).
 \end{align*}
-It follows that the sublevel set of~$f(\Theta)$ is contained in the ball of radius~$r$, which is compact.
-Thus, $f$ has a minimum and any minimizer~$\hat P$ is contained in this ball.
+Thus the sublevel set of~$f(\Theta)$ is contained in the ball of radius~$r$ about~$\Theta$.
+\MW{Added:} By replacing $r$ with any smaller~$r'>\frac{2\eps}\lambda$, we see that the sublevel set is in fact contained in the ball of radius~$\frac{2\eps}\lambda$.
+In particular, $f$ has a minimum and any minimizer~$\smash{\htheta}$ is contained in this ball.
 Moreover, as the right-hand side of \cref{eq:g convex lower} takes a minimum at $t=\frac\eps\lambda$, we have $g(t) \geq g(0) - \frac{\eps^2}{2\lambda}$ for all~$0\leq t\leq r$.
 By definition of $g$, this implies \cref{eq:minimum lower bound}.
 
-Next, we prove that any minimizer of~$f$ is necessarily contained in the (smaller) ball of radius~$\frac\eps\lambda$.
-To see this, take an arbitrary minimizer~$\htheta$ and write it in the form $\htheta = \exp_\Theta(TH)$, where $H\in \H$ is a unit vector and~$T>0$.
+
+Next, we prove that any minimizer of~$f$ is necessarily contained in the ball of radius~$\frac\eps\lambda$.
+To see this, take an arbitrary minimizer~$\htheta$ and write it in the form $\htheta = \exp_\Theta(TH)$, where~$H\in \H$ is a unit vector and~$T>0$.
 As before, we consider the function $g(t) = f(\exp_\Theta(tH))$.
-Then, using \cref{eq:grad bound}, the convexity of~$g(t)$ for all $t\in\R$ and the $\lambda$-strong convexity of~$g(t)$ for $\abs t \leq  r$, we have
+Then, using \cref{eq:grad bound}, the convexity of~$g(t)$ for all $t\in\R$ and the $\lambda$-strong convexity of~$g(t)$ for~$\abs t \leq  r$, we have
 \begin{align*}
   0 = g'(T) = g'(0) + \int_0^T g''(t) \, dt \geq \lambda \min(T,  r) - \eps.
 \end{align*}
