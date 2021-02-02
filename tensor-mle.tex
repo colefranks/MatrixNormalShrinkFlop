@@ -958,13 +958,20 @@ If the completely positive maps $\Phi^{(ab)}$ defined in \cref{eq:hessian channe
 \end{align*}
 \end{lemma}
 
+The proof of \cref{lem:expansion-convexity} uses a basic lemma that gives upper and lower bounds on a block matrix in terms of block diagonal matrices and the Loewner order.
+
+\begin{lemma}\label{lem:block-matrix}
+Let $M$ be a square symmetric block matrix with blocks $M_{ij}$ of size~$d_i \times d_j$.
+Then,
+\begin{align*}
+  \bigoplus_i \left(M_{ii} - I_{d_i} \cdot \sum_{j \neq i} \norm{M_{ij}}_{\op} \right)
+\preceq M
+\preceq \bigoplus_i \left(M_{ii} + I_{d_i} \cdot \sum_{j \neq i} \norm{M_{ij}}_{\op} \right)
+\end{align*}
+\end{lemma}
+
 \MW{MARKER}
 
-The proof of \cref{lem:expansion-convexity} uses a basic bound on the semidefiniteness of matrices.
-\begin{lemma}\label{lem:block-matrix}
-Let $M$ be a square, symmetric block matrix with blocks $M_{ab}$ of dimension $d_a \times d_b$ for $a,b \in [k]$. Then
-$$ \bigoplus_{a \in [k]} \left(M_{aa} - I \cdot \sum_{b \neq a} \|M_{ab}\|_{op}\right) \preceq M \preceq \bigoplus_{a \in [k]} \left(M_{aa} + I \cdot \sum_{b \neq a} \|M_{ab}\|_{op}\right) .$$
-\end{lemma}
 \begin{proof}
 We first prove the lower bound on $M$. We use the inequality for block matrices
 \begin{align}\begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix} \succeq - \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}\label{eq:psd-bound}\end{align} for any $A,B \succeq 0$ such that $\|A^{-1/2} K B^{-1/2}\|_{op} \leq 1,$ which may be proved by computing Schur complements. By changing basis it can be shown that this inequality also holds with $\| \cdot \|_{op}$ replaced by $\|\cdot\|_0$. We will sequentially apply this inequality to each $2\times 2$ principal block submatrix until we are left with a block diagonal matrix.
