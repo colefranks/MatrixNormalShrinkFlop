@@ -103,7 +103,7 @@
 %=============================================================================
 \begin{frontmatter}
 \title{Near optimal sample complexity for matrix and tensor normal models via geodesic convexity}
-\runtitle{Optimal sample complexity for matrix and tensor normal models}
+\runtitle{Near optimal sample complexity for matrix and tensor normal models}
 %=============================================================================
 \begin{aug}
 \author[A]{\fnms{Cole} \snm{Franks}\corref{}\ead[label=e1]{franks@mit.edu}},
@@ -601,6 +601,7 @@ Here, $\nabla_0 f \in \R$ and each $\nabla_a f(\Theta)$ is a $d_a \times d_a$ tr
 Similarly, for~$a, b \in [k]$ (i.e., for the blocks of the submatrix to the lower-right of the lines) the components $\nabla_{ab}^2f(\Theta)$ of the Hessian are linear operators from the space of traceless symmetric $d_b\times d_b$ matrices to the space of traceless symmetric $d_a \times d_a$ matrices.
 Moreover, $\nabla_{a0}f$ is a linear operator from $\R$ to the space of traceless symmetric $d_a\times d_a$ matrices (hence can itself be viewed as such a matrix), $\nabla_{0a}f$ is the adjoint of this linear operators (which using the Hilbert-Schmidt inner product can be identified with the same matrix), and $\nabla^2_{00} f(\Theta)$ is a real number.
 \MW{The block conventions are utterly insane :)}
+
 \end{definition}
 
 We note that the Hessian is symmetric with respect to the inner product~$\braket{\cdot,\cdot}$ on $\H$.
@@ -647,8 +648,8 @@ hence
 \begin{align*}
   f(\Theta) = g(0) < g(t) = f(\exp_\Theta(tH)).
 \end{align*}
-Thus the sublevel set of~$f(\Theta)$ is contained in the ball of radius~$r$ about~$\Theta$.
-\MW{Added:} By replacing $r$ with any smaller~$r'>\frac{2\eps}\lambda$, we see that the sublevel set is in fact contained in the ball of radius~$\frac{2\eps}\lambda$.
+Thus the sublevel set of~$f(\Theta)$ is contained in the ball of radius~$r$ about~$\Theta$. 
+By replacing $r$ with any smaller~$r'>\frac{2\eps}\lambda$, we see that the sublevel set is in fact contained in the ball of radius~$\frac{2\eps}\lambda$.
 In particular, $f$ has a minimum and any minimizer~$\smash{\htheta}$ is contained in this ball.
 Moreover, as the right-hand side of \cref{eq:g convex lower} takes a minimum at $t=\frac\eps\lambda$, we have $g(t) \geq g(0) - \frac{\eps^2}{2\lambda}$ for all~$0\leq t\leq r$.
 By definition of $g$, this implies \cref{eq:minimum lower bound}.
