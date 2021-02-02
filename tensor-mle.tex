@@ -1036,10 +1036,10 @@ To conclude the proof, decompose
 The nonzero entries of the first matrix are bounded by $\lambda$, hence its operator norm is at most $(k-1)\lambda$.
 The second matrix is diagonal with diagonal entries bounded by $\eps$, hence its operator norm is at most~$\eps$.
 The third matrix has nonzero entries bounded by $\eps$, hence its operator norm is bounded by~$\sqrt k \eps$.
-Together, and using \cref{eq:baby norm bounds}, we conclude that
-\begin{align*}
-  \norm M_{\op} \leq \norm m_{\op} \leq (k-1)\lambda + (1 + \sqrt k) \eps.
-\end{align*}
+Using \cref{eq:baby norm bounds} we obtain the desired bound.
+% \begin{align*}
+%   \norm M_{\op} \leq \norm m_{\op} \leq (k-1)\lambda + (1 + \sqrt k) \eps.
+% \end{align*}
 \end{proof}
 
 % We note that a slightly more complicated proof yields the improved estimate $\leq (k-1) \lambda + (\sqrt k + 1) \eps$.
