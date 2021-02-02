@@ -952,53 +952,19 @@ For us, their purpose will be the following lemma allowing us to translate quant
 \begin{lemma}[Strong convexity from expansion]\label{lem:expansion-convexity}
 If the completely positive maps $\Phi^{(ab)}$ defined in \cref{eq:hessian channel} are $(\eps,\lambda)$-quantum expanders for every $a\neq b\in[k]$, then
 \begin{align*}
-  \norm*{\frac{\nabla^2 f_x}{\tr \rho} - I_\H}
-\leq k (\lambda + \eps).
+  \norm*{\frac{\nabla^2 f_x}{\tr \rho} - I_\H}_{\op}
+\leq (k-1)\lambda + (1 + \sqrt k) \eps.
 \end{align*}
-\end{lemma}
-
-We note that a slightly more complicated proof yields the improved estimate $\leq (k-1) \lambda + (\sqrt k + 1) \eps$.
-
-The proof of \cref{lem:expansion-convexity} uses a basic lemma that gives upper and lower bounds on a block matrix in terms of block diagonal matrices and the Loewner order, and a resulting norm bound.
-
-\begin{lemma}\label{lem:block-matrix}
-Let $M$ be a symmetric block matrix with blocks $M_{ij}$ of size~$d_i \times d_j$, where~$i,j\in[N]$.
-Then,
-\begin{align*}
-  \bigoplus_{i=1}^N \left(M_{ii} - I_{d_i} \cdot \sum_{j \neq i} \norm{M_{ij}}_{\op} \right)
-\preceq M
-\preceq \bigoplus_{i=1}^N \left(M_{ii} + I_{d_i} \cdot \sum_{j \neq i} \norm{M_{ij}}_{\op} \right)
-\end{align*}
-and hence \MW{Isn't the following all we need?}
-\begin{align*}
-  \norm{M}_{\op} \leq \max_i \sum_j \norm{M_{ij}}_{\op}.
-\end{align*}
+Assuming $k\geq2$, the right-hand side is at most $k (\lambda + \eps)$.
 \end{lemma}
 \begin{proof}
-We use the inequality for block matrices
-\begin{align}\label{eq:psd-bound}
-  -\begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}
-\preceq \begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix}
-\preceq \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}
+We wish to bound the operator norm of $M = \frac{\nabla^2 f_\samp}{\tr \rho} - I_\H$, which we consider as a block matrix as in \cref{def:hess grad}.
+For this, we use the following basic estimate of the norm of a block matrix in terms of the norm of the matrix of blocks norms, i.e.,
+\begin{align}\label{eq:baby norm bounds}
+  \norm{M}_{\op} \leq \norm{m}_{\op},
+\quad \text{ where } m=(\norm{M_{ab}}_{\op})_{a,b\in\{0,1,\dots,k\}}.
 \end{align}
-for any $A,B \succ 0$ such that $\norm{A^{-1/2} K B^{-1/2}}_{\op} \leq 1$, which may be proved by computing Schur complements.
-We first apply the upper bound in \cref{eq:psd-bound} to the upper-left two-by-two block matrix.
-Taking $A = I_{d_1} \cdot \norm{M_{12}}_{\op}$ and $B = I_{d_2} \cdot \norm{M_{12}}_{\op}$,
-we find that
-\begin{align*}
-  M \preceq \begin{bmatrix}
-  M_{11} + I_{d_1} \cdot \norm{M_{12}}_{\op} & 0 & \quad M_{13} & \cdots & M_{1N} \\
-  0 & M_{22} + I_{d_2} \cdot \norm{M_{12}}_{\op} & \quad M_{23} & \cdots & M_{2N} \\
-  M_{31} & M_{32} & \quad M_{33} & \cdots & M_{3N} \\
-  \vdots & \vdots & \vdots & \;\;\;\;\ddots & \vdots \\
-  M_{N1} & M_{N2} & \quad\; M_{N3} & \cdots & M_{NN}
-  \end{bmatrix}.
-\end{align*}
-By sequentially apply this inequality to all other $2\times 2$ principal block submatrices, we obtain the desired upper bound.
-The lower bound is proved completely analogously.
-\end{proof}
-\begin{proof}[Proof of \cref{lem:expansion-convexity}]
-We apply \cref{lem:block-matrix} with $M = \frac{\nabla^2 f_\samp}{\tr \rho} - I_\H$, which we consider as a block matrix as in \cref{def:hess grad}.
+We first bound the individual block norms.
 Recall from \cref{lem:hessian} that the off-diagonal blocks of the Hessian for $a \neq b\in[k]$ are given by $\nabla^2_{ab} f_x = \sqrt{d_a d_b} \Phi^{(ab)}$.
 Thus, since $\Phi^{(ab)}$ is an $(\eps,\lambda)$-quantum expander, we have
 \begin{align*}
@@ -1008,7 +974,7 @@ Thus, since $\Phi^{(ab)}$ is an $(\eps,\lambda)$-quantum expander, we have
 \leq \lambda,
 \end{align*}
 using that $\tr \Phi^{(ab)}(I_{d_b}) = \tr \rho$.
-The remaining off-diagonal elements can be bounded as
+The remaining off-diagonal blocks can be bounded as
 \begin{align*}
 \norm{M_{a0}}
 = \frac{\norm{\nabla^2_{a0} f_x}_{\op}}{\tr \rho}
@@ -1018,7 +984,7 @@ The remaining off-diagonal elements can be bounded as
 \leq \eps,
 \end{align*}
 using that $\Phi^{(ab)}(I_{d_b}) = \rho^{(a)}$.
-On the other hand, the diagonal blocks for $a\in[k]$ can be bounded by observing that, for any traceless Hermitian $H$, 
+On the other hand, the diagonal blocks for $a\in[k]$ can be bounded by observing that, for any traceless Hermitian $H$,
 \begin{align*}
   \abs{\braket{H, M_{aa} H}}
 &= \abs*{\braket{H, \left( \frac{\nabla^2_{aa} f_x}{\tr \rho} - I_\H \right) H}}
@@ -1027,19 +993,138 @@ On the other hand, the diagonal blocks for $a\in[k]$ can be bounded by observing
 \leq \eps \norm H_F^2,
 \end{align*}
 hence $\norm{M_{aa}}_{\op} \leq \eps$, while $\abs{M_{00}} = \abs{\frac{\nabla^2_{00} f_x}{\tr \rho} - 1} = 0$.
-Applying the bound from \cref{lem:block-matrix}, we obtain
+% Since $m$ is a symmetric matrix, it follows that
+% \begin{align*}
+%   \norm m_{\op} \leq \max_i \sum_j m_{ij} = \max \{ k \eps, \eps + (k-1) \lambda \}
+% \end{align*}
+To conclude the proof, decompose
 \begin{align*}
-  \norm{M}_{\op} = \max \{ k \eps, \eps + (k-1) \lambda \} \leq k(\eps+\lambda).
+  m
+% = \left[\begin{array}{c|cccc}
+%   0 & m_{01} & m_{02} & \cdots & m_{0k} \\
+%   \hline
+%   m_{10} & m_{11} & m_{12} & \cdots & m_{1k} \\
+%   m_{20} & m_{21} & m_{22} & & m_{2k} \\
+%   \vdots & \vdots & & \ddots & \hdots \\
+%   m_{k0} & m_{k1} & m_{k2} & \cdots & m_{kk}
+%   \end{array}\right]
+= \left[\begin{array}{c|cccc}
+  0 & 0 & 0 & \cdots & 0 \\
+  \hline
+  0 & 0 & m_{12} & \cdots & m_{1k} \\
+  0 & m_{21} & 0 & & m_{2k} \\
+  \vdots & \vdots & & \ddots & \vdots \\
+  0 & m_{k1} & m_{k2} & \cdots & 0
+  \end{array}\right]
++ \left[\begin{array}{c|cccc}
+  0 & 0 & 0 & \cdots & 0 \\
+  \hline
+  0 & m_{11} & 0 & \cdots & 0 \\
+  0 & 0 & m_{22} & & 0 \\
+  \vdots & \vdots & & \ddots & \vdots \\
+  0 & 0 & 0 & \cdots & m_{kk}
+  \end{array}\right]
++ \left[\begin{array}{c|cccc}
+  0 & m_{01} & m_{02} & \cdots & m_{0k} \\
+  \hline
+  m_{10} & 0 & 0 & \cdots & 0 \\
+  m_{20} & 0 & 0 & & 0 \\
+  \vdots & \vdots & & \ddots & \vdots \\
+  m_{k0} & 0 & 0 & \cdots & 0
+  \end{array}\right].
 \end{align*}
-% We next bound $\nabla_{aa}^2 f_\samp$. Recall again from \cref{lem:hessian} that the diagonal blocks of the Hessian are given by \begin{align}
-%  \langle Y,  \left( \nabla^2_{aa} f_{\samp} \right) Y \rangle=  d_a \tr \rho^{(a)} Y^2 .\label{eq:on-diag-hess-ii}
-% \end{align}
-% Again, the $\eps$-balancedness of $\Phi^{ab}$ implies $ |\tr (d_a \rho^{(a)}  - (\tr \rho) I_a)Y^2| \leq \eps (\tr \rho) \tr Y^2$, or that the first term of \cref{eq:on-diag-hess-ii} is in $(1 \pm \eps) \|Y\|_F^2 (\tr \rho)$. Hence $\|\nabla_{aa}^2 f_\samp - (\tr \rho) I\|_{op} \leq \eps^2 + \eps$. Finally, $\nabla_{00}^2 f_\samp$ is exactly $\tr \rho$. Using \cref{lem:block-matrix}, we find that the submatrix of $\nabla^2 f$ excluding the $0$ row and column tells us that dominates the block diagonal matrix where the $aa$ block is at least $(1 - \eps) (\tr \rho) I - (k-1) \lambda (\tr \rho) I $ for $a \in [k]$. Furthermore, the 00 block is exactly $ \tr \rho$. The analogous upper bound on $\nabla^2 f_\samp$ follows similarly. We now wish to apply \cref{lem:block-matrix} one more time, this time with only two diagonal blocks, one of which is the 00 block. It remains to bound the operator norm of the off diagonal block of this matrix, which we call $M_{\text{off}}$, consisting of $\nabla_{a 0}^2 f$ vertically concatenated together for $a \in [k]$.
+The nonzero entries of the first matrix are bounded by $\lambda$, hence its operator norm is at most $(k-1)\lambda$.
+The second matrix is diagonal with diagonal entries bounded by $\eps$, hence its operator norm is at most~$\eps$.
+The third matrix has nonzero entries bounded by $\eps$, hence its operator norm is bounded by~$\sqrt k \eps$.
+Together, and using \cref{eq:baby norm bounds}, we conclude that
+\begin{align*}
+  \norm M_{\op} \leq \norm m_{\op} \leq (k-1)\lambda + (1 + \sqrt k) \eps.
+\end{align*}
+\end{proof}
 
-% First we bound $\|\nabla_{a0} f\|_{op}$. This is simply $\sqrt{d_a}\sup_{\|Z\|_F = 1} |\tr Z \rho^{(a)}|$ where $Z$ ranges over traceless Hermitians. Using that $\rho^{(a)} = \Phi^{ab}(I_{d_b})$, we have $\|d_a \rho^{(a)} - (\tr \rho) I_{d_a}\|_{op} \leq \eps \tr \rho $ by quantum expansion. For traceless $Z$ we have
-% \begin{align}\tr Z \rho^{(a)} = \frac{1}{d_a} \tr Z (d_a \rho^{(a)} - (\tr \rho) I_{d_a}) \leq \frac{\tr \rho}{d_a} \eps \|Z\|_1 \leq \frac{\tr \rho}{\sqrt{d_a}} \eps \|Z\|_F,\label{eq:second-term-hess}\end{align}
-% thus $\|\nabla_{a0} f\|_{op} \leq \eps \tr \rho$. It follows that $\|M_{\text{off}}\|_{op} \leq \sqrt{k} \eps \tr \rho$. Applying \cref{lem:block-matrix} to these two blocks shows $\nabla^2 f_\samp$ dominates a block diagonal matrix where each block is dominates $(1 - \eps) (\tr \rho) I - (k-1) \lambda (\tr \rho) I  - \sqrt{k} \eps (\tr \rho) I.$
- \end{proof}
+% We note that a slightly more complicated proof yields the improved estimate $\leq (k-1) \lambda + (\sqrt k + 1) \eps$.
+
+% The proof of \cref{lem:expansion-convexity} uses a basic lemma that gives upper and lower bounds on a block matrix in terms of block diagonal matrices and the Loewner order, and a resulting norm bound.
+
+% \begin{lemma}\label{lem:block-matrix}
+% Let $M$ be a symmetric block matrix with blocks $M_{ij}$ of size~$d_i \times d_j$, where~$i,j\in[N]$.
+% Then,
+% \begin{align*}
+%   \bigoplus_{i=1}^N \left(M_{ii} - I_{d_i} \cdot \sum_{j \neq i} \norm{M_{ij}}_{\op} \right)
+% \preceq M
+% \preceq \bigoplus_{i=1}^N \left(M_{ii} + I_{d_i} \cdot \sum_{j \neq i} \norm{M_{ij}}_{\op} \right)
+% \end{align*}
+% and hence \MW{Isn't the following all we need?}
+% \begin{align*}
+%   \norm{M}_{\op} \leq \max_i \sum_j \norm{M_{ij}}_{\op}.
+% \end{align*}
+% \end{lemma}
+% \begin{proof}
+% We use the inequality for block matrices
+% \begin{align}\label{eq:psd-bound}
+%   -\begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}
+% \preceq \begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix}
+% \preceq \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}
+% \end{align}
+% for any $A,B \succ 0$ such that $\norm{A^{-1/2} K B^{-1/2}}_{\op} \leq 1$, which may be proved by computing Schur complements.
+% We first apply the upper bound in \cref{eq:psd-bound} to the upper-left two-by-two block matrix.
+% Taking $A = I_{d_1} \cdot \norm{M_{12}}_{\op}$ and $B = I_{d_2} \cdot \norm{M_{12}}_{\op}$,
+% we find that
+% \begin{align*}
+%   M \preceq \begin{bmatrix}
+%   M_{11} + I_{d_1} \cdot \norm{M_{12}}_{\op} & 0 & \quad M_{13} & \cdots & M_{1N} \\
+%   0 & M_{22} + I_{d_2} \cdot \norm{M_{12}}_{\op} & \quad M_{23} & \cdots & M_{2N} \\
+%   M_{31} & M_{32} & \quad M_{33} & \cdots & M_{3N} \\
+%   \vdots & \vdots & \vdots & \;\;\;\;\ddots & \vdots \\
+%   M_{N1} & M_{N2} & \quad\; M_{N3} & \cdots & M_{NN}
+%   \end{bmatrix}.
+% \end{align*}
+% By sequentially apply this inequality to all other $2\times 2$ principal block submatrices, we obtain the desired upper bound.
+% The lower bound is proved completely analogously.
+% \end{proof}
+% \begin{proof}[Proof of \cref{lem:expansion-convexity}]
+% We apply \cref{lem:block-matrix} with $M = \frac{\nabla^2 f_\samp}{\tr \rho} - I_\H$, which we consider as a block matrix as in \cref{def:hess grad}.
+% Recall from \cref{lem:hessian} that the off-diagonal blocks of the Hessian for $a \neq b\in[k]$ are given by $\nabla^2_{ab} f_x = \sqrt{d_a d_b} \Phi^{(ab)}$.
+% Thus, since $\Phi^{(ab)}$ is an $(\eps,\lambda)$-quantum expander, we have
+% \begin{align*}
+%   \norm{M_{ab}}_{\op}
+% = \frac{\norm{\nabla^2_{ab} f_x}_{\op}}{\tr\rho}
+% = \frac{\sqrt{d_a d_b}}{\tr \Phi^{(ab)}(I_{d_b})} \norm{\Phi^{(ab)}}_0
+% \leq \lambda,
+% \end{align*}
+% using that $\tr \Phi^{(ab)}(I_{d_b}) = \tr \rho$.
+% The remaining off-diagonal elements can be bounded as
+% \begin{align*}
+% \norm{M_{a0}}
+% = \frac{\norm{\nabla^2_{a0} f_x}_{\op}}{\tr \rho}
+% &= \norm*{\sqrt{d_a} \left( \frac{\rho^{(a)}}{\tr \rho} - \frac{I_{d_a}}{d_a} \right)}_F
+% = \sqrt{d_a} \norm*{\frac{\Phi^{(ab)}(I_{d_b})}{\tr \Phi^{(ab)}(I_{d_b})} - \frac{I_{d_a}}{d_a}}_F \\
+% &\leq d_a \norm*{\frac{\Phi^{(ab)}(I_{d_b})}{\tr \Phi^{(ab)}(I_{d_b})} - \frac{I_{d_a}}{d_a}}_{\op}
+% \leq \eps,
+% \end{align*}
+% using that $\Phi^{(ab)}(I_{d_b}) = \rho^{(a)}$.
+% On the other hand, the diagonal blocks for $a\in[k]$ can be bounded by observing that, for any traceless Hermitian $H$, 
+% \begin{align*}
+%   \abs{\braket{H, M_{aa} H}}
+% &= \abs*{\braket{H, \left( \frac{\nabla^2_{aa} f_x}{\tr \rho} - I_\H \right) H}}
+% = d_a \abs*{\tr \left( \frac{\rho^{(a)}}{\tr \rho} - \frac{I_{d_a}}{d_a} \right) H^2} \\
+% &\leq d_a \norm*{\frac{\rho^{(a)}}{\tr \rho} - \frac{I_{d_a}}{d_a}}_{\op} \norm{H}_F^2
+% \leq \eps \norm H_F^2,
+% \end{align*}
+% hence $\norm{M_{aa}}_{\op} \leq \eps$, while $\abs{M_{00}} = \abs{\frac{\nabla^2_{00} f_x}{\tr \rho} - 1} = 0$.
+% Applying the bound from \cref{lem:block-matrix}, we obtain
+% \begin{align*}
+%   \norm{M}_{\op} = \max \{ k \eps, \eps + (k-1) \lambda \} \leq k(\eps+\lambda).
+% \end{align*}
+% % We next bound $\nabla_{aa}^2 f_\samp$. Recall again from \cref{lem:hessian} that the diagonal blocks of the Hessian are given by \begin{align}
+% %  \langle Y,  \left( \nabla^2_{aa} f_{\samp} \right) Y \rangle=  d_a \tr \rho^{(a)} Y^2 .\label{eq:on-diag-hess-ii}
+% % \end{align}
+% % Again, the $\eps$-balancedness of $\Phi^{ab}$ implies $ |\tr (d_a \rho^{(a)}  - (\tr \rho) I_a)Y^2| \leq \eps (\tr \rho) \tr Y^2$, or that the first term of \cref{eq:on-diag-hess-ii} is in $(1 \pm \eps) \|Y\|_F^2 (\tr \rho)$. Hence $\|\nabla_{aa}^2 f_\samp - (\tr \rho) I\|_{op} \leq \eps^2 + \eps$. Finally, $\nabla_{00}^2 f_\samp$ is exactly $\tr \rho$. Using \cref{lem:block-matrix}, we find that the submatrix of $\nabla^2 f$ excluding the $0$ row and column tells us that dominates the block diagonal matrix where the $aa$ block is at least $(1 - \eps) (\tr \rho) I - (k-1) \lambda (\tr \rho) I $ for $a \in [k]$. Furthermore, the 00 block is exactly $ \tr \rho$. The analogous upper bound on $\nabla^2 f_\samp$ follows similarly. We now wish to apply \cref{lem:block-matrix} one more time, this time with only two diagonal blocks, one of which is the 00 block. It remains to bound the operator norm of the off diagonal block of this matrix, which we call $M_{\text{off}}$, consisting of $\nabla_{a 0}^2 f$ vertically concatenated together for $a \in [k]$.
+
+% % First we bound $\|\nabla_{a0} f\|_{op}$. This is simply $\sqrt{d_a}\sup_{\|Z\|_F = 1} |\tr Z \rho^{(a)}|$ where $Z$ ranges over traceless Hermitians. Using that $\rho^{(a)} = \Phi^{ab}(I_{d_b})$, we have $\|d_a \rho^{(a)} - (\tr \rho) I_{d_a}\|_{op} \leq \eps \tr \rho $ by quantum expansion. For traceless $Z$ we have
+% % \begin{align}\tr Z \rho^{(a)} = \frac{1}{d_a} \tr Z (d_a \rho^{(a)} - (\tr \rho) I_{d_a}) \leq \frac{\tr \rho}{d_a} \eps \|Z\|_1 \leq \frac{\tr \rho}{\sqrt{d_a}} \eps \|Z\|_F,\label{eq:second-term-hess}\end{align}
+% % thus $\|\nabla_{a0} f\|_{op} \leq \eps \tr \rho$. It follows that $\|M_{\text{off}}\|_{op} \leq \sqrt{k} \eps \tr \rho$. Applying \cref{lem:block-matrix} to these two blocks shows $\nabla^2 f_\samp$ dominates a block diagonal matrix where each block is dominates $(1 - \eps) (\tr \rho) I - (k-1) \lambda (\tr \rho) I  - \sqrt{k} \eps (\tr \rho) I.$
+%  \end{proof}
 
 \MW{MARKER}
 
