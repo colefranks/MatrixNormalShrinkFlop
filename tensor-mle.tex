@@ -73,7 +73,7 @@
 \newcommand{\smallSym}{S}
 \newcommand{\SPD}{\mathcal{P}}
 \newcommand{\samp}{x}
-\newcommand{\rv}{X}
+\newcommand{\rv}{x}
 \newcommand{\ef}{f}
 \newcommand{\TT}{\mathcal{T}}
 \newcommand{\PP}{\mathcal{P}}
@@ -446,11 +446,10 @@ The direction $(1, 0, \dots, 0)$ changes $\Theta$ by an overall scalar, and tang
 \begin{definition}[Geodesics and balls]
 Let $P\in\P$.
 The \emph{exponential map} $\exp_\Theta \colon \H \to \P$ at~$\Theta$ is defined by
-\MW{No $1/k$ in front of $H_0$ I think.}
 \MW{Can we also divide by $D$ here in the exponent, instead of in the objective function?}
 %\begin{align*}\exp_\Theta(H) &=   e^{\frac{H_0}{k \sqrt{D}}}\cdot ( \Theta_1^{1/2} e^{\sqrt{\frac{d_1}{D}} H_1} \Theta_1^{1/2}) \ot  \dots \ot (\Theta_k^{1/2} e^{\sqrt{\frac{d_k}{D}} H_k} \Theta_k^{1/2}).\end{align*}
 \begin{align*}
-  \exp_\Theta(H) &=   e^{\frac{1}{k} H_0}\cdot ( \Theta_1^{1/2} e^{\sqrt{d_1} H_1} \Theta_1^{1/2}) \ot  \dots \ot (\Theta_k^{1/2} e^{\sqrt{d_k} H_k} \Theta_k^{1/2}).
+  \exp_\Theta(H) &= e^{H_0} \cdot ( \Theta_1^{1/2} e^{\sqrt{d_1} H_1} \Theta_1^{1/2}) \ot  \dots \ot (\Theta_k^{1/2} e^{\sqrt{d_k} H_k} \Theta_k^{1/2}).
 \end{align*}
 The \emph{geodesics} through $\Theta$ are the curves $t \mapsto \exp_\Theta(t H)$ for $t\in\R$ and $H\in\H$.
 Up to reparameterization, there is a unique geodesic between any two points of~$\P$.
@@ -693,15 +692,16 @@ Then we can rewrite the objective function as
   f_x(\Theta) = \tr \rho \, \Theta - \frac1D \log \det \Theta.
 \end{align}
 We may also consider the ``second sample moments'' of an individual coordinate.
-For this, analogously to the discussion in \cref{subsec:model}, we ``flatten''~$x$ by thinking of it as a $d_a \times \frac{d_1d_2d_3\dots d_kn}{d_a}$ matrix~$x^{(a)}$ for any $a\in[k]$, and define $\rho^{(a)} := \frac1{nD} x^{(a)} (x^{(a)})^T$.
-It is not hard to verify that $\rho^{(a)}$ is a positive semidefinite $d_a\times d_a$ matrix and satisfies the following property:
+For this, analogously to the discussion in \cref{subsec:model}, we may for any $a\in[k]$ ``flatten''~$x$ by regarding it as a $d_a \times N_a$~matrix~$x^{(a)}$, where $N_a = \frac{nD}{d_a}$, and define $\rho^{(a)} := \frac1{nD} x^{(a)} (x^{(a)})^T$.
+It is not hard to verify that $\rho^{(a)}$ is a positive semidefinite $d_a\times d_a$ matrix.
+It satisfies the property
 \begin{align}\label{eq:partial trace duality}
   \tr \rho^{(a)} H = \tr \rho H_{(a)}
 \quad\text{where}\quad
   H_{(a)} := I_{d_1\cdots d_{a-1}} \ot H \ot I_{d_{a+1} \cdots d_k}
 \end{align}
 for any $d_a \times d_a$ matrix~$H$.
-Note that $\tr \rho^{(a)} = \tr \rho = \norm x_2^2$.
+Note that $\tr \rho^{(a)} = \tr \rho = \frac1{nD}\norm x_2^2$.
 In the language of linear algebra, the matrix $\rho^{(a)}$ is known as the \emph{partial trace} of~$\rho$ over all but one of the coordinates.
 The gradient can be readily computed in terms of this data.
 
@@ -709,10 +709,10 @@ The gradient can be readily computed in terms of this data.
 Let $\rho = \frac{1}{nD} \sum_{i=1}^n \samp_i \samp_i^T $.
 The components of the gradient $\nabla f_x$ at the identity are given by
 \begin{align*}
- \nabla_a \ef_{\samp} &= \sqrt{d_a}\left( \rho^{(a)} - \frac{\tr\rho^{(a)}}{d_a} I_a\right)
+ \nabla_a \ef_{\samp} &= \sqrt{d_a}\left( \rho^{(a)} - \frac{\tr\rho}{d_a} I_{d_a}\right)
   \qquad \text{ for } a \in [k],
 \intertext{and}
-  \nabla_0 \ef_\samp &= \tr \rho - 1 = \frac{1}{nD}\|\samp\|^2 - 1.
+  \nabla_0 \ef_\samp &= \tr \rho - 1.
 \end{align*}
 \end{lemma}
 \begin{proof}
@@ -741,76 +741,91 @@ Finally,
 \]
 \end{proof}
 
-Having calculated the gradient of $f_\samp$, we are ready to state our bound:
-%\MW{Please check updated proof. Can we assume $\eps<1$ and simply take~$C=16$?}
-\MW{MICHAEL MARKER}
-\CF{BEGIN not changed to using log likelihood yet}
+Having calculated the gradient of the objective function, we are ready to state our bound:
+
 \begin{prop}\label{prop:gradient-bound}
-Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where $D=d_1\cdots{}d_k$.
-Let $\eps>0$ and $C = 16^2\max\{\eps^2,1\}$.
-Suppose that, for all $a \in [k]$,
+Let $\rv = (\rv_1,\dots,\rv_n)$ consist of independent standard Gaussian random variables in~$\R^D$, % where $D=d_1\cdots{}d_k$,
+and let $0<\eps<1$.
+Suppose $N_a := \frac{nD}{d_a}$ is at least $N_a \geq \frac{d_a}{\eps^2}$ for all~$a\in[k]$.
+Then, the following occurs with probability at least
+$1 - 2e^{-\eps^2 nD/8} - \sum_{a=1}^k 2 e^{-\eps^2 N_a/2}$:
 \begin{align*}
-  N_a := \frac{n D}{d_a} \geq C \frac{d_a}{\eps^2}.
+  \norm{\nabla_a f_x}_{\op} &\leq \frac{9\eps}{\sqrt{d_a}} \qquad\text{ for all } a\in[k], \\
+  \abs{\nabla_0 f_x} &\leq \eps;
 \end{align*}
-Then, with probability at least $1 - 2 \sum_{a=1}^k e^{-N_a \eps^2/2C}$ we have that
+In particular,
 \begin{align*}
-\norm{\nabla_a f_{\rv}}_{\op} \leq \eps/\sqrt{d_a}
+  \norm{\nabla f_x}_F^2
+% = \abs{\nabla_0 f_x}^2 + \sum_{a=1}^k \norm{\nabla_a f_x}_F^2
+% \leq \abs{\nabla_0 f_x}^2 + \sum_{a=1}^k d_a \norm{\nabla_a f_x}_{\op}^2 \\
+% \leq \eps^2 + \sum_{a=1}^k 81 \eps^2 =
+\leq (1 + 81 k) \eps^2.
 \end{align*}
-for all $a\in[k]$, and hence $\norm{\nabla f_{\rv}}^2 \leq k \eps^2$.
 \end{prop}
 
 To prove this we will need a standard result in matrix concentration.
-Recall that $\nabla_a f_{\samp} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}$ by \cref{lem:gradient}.
-Recall from the discussion below \cref{def:single marginal} that $\rho^{(a)}$ is distributed as $Y Y^T / \norm{Y}_F^2$, where $Y$ is a $d_a \times N_a$ matrix with independent Gaussian entries.
+When the samples $x=(x_1,\dots,x_n)$ are independent standard Gaussians, then $\rho^{(a)}$ is distributed as $\frac1{nD} Y Y^T$, where~$Y$ is a random $d_a \times N_a$ matrix with independent standard Gaussian entries, where~$N_a = \frac{nD}{d_a}$.
 The following result bounds the singular values of such random matrices.
 
 \begin{theorem}[Corollary 5.35 of \cite{vershynin2010introduction}]\label{cor:vershynin}
-Let $Y \in \R^{d \times N}$ have independent standard Gaussian entries.
-Then, for $t \geq 0$, the following occurs with probability at least $1 - 2 \exp(-t^{2}/2)$:
+Let $Y \in \R^{d \times N}$ have independent standard Gaussian entries where $N\geq d$.
+Then, for every $t > 0$, the following occurs with probability at least $1 - 2 e^{-t^2/2}$:
 \begin{align*}
-  \sqrt{N} - \sqrt{d} - t \leq s_{\min}(Y) \leq s_{\max}(Y) \leq \sqrt{N} + \sqrt{d} + t,
+  \sqrt{N} - \sqrt{d} - t \leq \sigma_d(Y) \leq \sigma_1(Y) \leq \sqrt{N} + \sqrt{d} + t,
 \end{align*}
-where $s_{\min}$ and $s_{\max}$ denote the smallest and largest singular value, respectively (we allow for singular values that are zero).
+where $\sigma_j$ denotes the $j$-th largest singular value.
 \end{theorem}
 
-\begin{proof}[Proof of \cref{prop:gradient-bound}]
-We first consider a fixed $a\in[k]$ and later take a union bound.
-Let $d = d_a$ and $N = N_a = n D/d_a$.
-Again, $\nabla_a f_{\rv} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}$ where $\rho^{(a)}$ is distributed as $Y Y^T/\|Y\|_F^2$, where $Y$ is a $d \times N$ matrix with independent Gaussian entries.
-By \cref{cor:vershynin}, we have the following with $\leq 2 \exp(-t^2/2)$ failure probability:
-\begin{align*}
-  \sqrt{N} \left( 1 -  \frac{\sqrt{d} + t }{\sqrt{N}}  \right)\leq s_{\min}(Y) \leq s_{\max}(Y) \leq  \sqrt{N} \left( 1 + \frac{\sqrt{d} + t }{\sqrt{N}} \right).
-\end{align*}
-Let $t = \sqrt{N} \eps / \sqrt{C}$.
-Because $d \leq N \eps^2 / C$, this shows that all singular values are in $\sqrt{N} \left( 1 \pm 2\eps/\sqrt{C} \right)$.
-It follows that the eigenvalues of $YY^T$ are in $N \left( 1 \pm 8\eps/\sqrt{C} \right)$.
-Since there are at most $d \leq N$ nonzero eigenvalues, this implies in turn that the eigenvalues of $Y Y^T/\|Y\|_F^2$ are in
-\begin{align*}
-\frac {\left( 1 \pm 8\eps/\sqrt{C} \right)} {d \left( 1 \pm 8\eps/\sqrt{C} \right)} \subseteq \frac1d \left( 1 \pm 16\eps/\sqrt{C} \right) \subseteq \frac1d \left( 1 \pm \eps \right),
-\end{align*}
-Thus,
-$\norm{\nabla_a f_{\rv}}_{\op} \leq \eps/\sqrt{d_a}$
-with failure probability at most $2 \exp(-N \eps^2/2C)$.
-Applying the union bound over $[k]$ completes the proof of the proposition.
-% Next, observe that $\|Y\|_F^2$ is a $\chi^2$-distribution with $Nd$ degrees of freedom, and thus satisfies
-% \begin{align*}
-%   \norm Y_F^2 - Nd \leq tNd
-% \end{align*}
-% with failure probability at most $e^{-Ndt^2/18}$ for $t \in [0,3]$~\cite[(2.44)]{W19}.
-% WAS: $\| Y\|_F^2 - Nd \leq t N d$ with probability $1 - 2e^{- Nd t^2/8}$ for $t \leq 1$ \cite{W19}.
-% Thus
-  % $$\lambda_1(\rho^{\{a\}}), \lambda_2(\rho^{\{a\}}) \in  \cN(1 \pm c \cdot \eps)/ Nd(1 \pm c \cdot \eps) \in \frac{1}{d}(1 \pm \eps)$$
-% with probability $1 - 2 e^{- c N \eps^2}- 2 e^{- c Nd \eps^2} = 1 - 4 e^{- N\eps^2},$ provided $c$ is small enough.
-\end{proof}
+We will also need to bound $\tr\rho = \frac1{nD} \norm x_2^2$.
+Because $\norm x_2^2$ is simply a sum of $nD$ many $\chi$-squared random variables, the next proposition follows from standard concentration bounds.
 
-
-It will also be convenient to have bounds on the norm of $X$; because $\|X\|_F^2$ is simply a sum of $\chi$-square random variables, the next proposition follows from standard concentration bounds (e.g. \cite{W19}).
-\CF{this is now actually a component of the gradient, so could be moved to gradient bound.}
-\begin{prop}[Norm of $X$]\label{prp:xnorm}
-Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where $D=d_1\cdots{}d_k$. For $t \leq c$,
-$$ (1 - t) nD \leq \|X\|^2 \leq (1 + t)nD$$ with probability $2e^{-t^2 nD/8}$.
+\begin{prop}[Example~2.11 of \cite{W19}]\label{prp:xnorm}
+Let $\rv = (\rv_1,\dots,\rv_n)$ consist of independent standard Gaussian random variables in~$\R^D$.
+Then, for $0 < t < 1$, the following occurs with probability at least $1 - 2e^{-t^2 nD/8}$:
+\begin{align*}
+  (1 - t) nD \leq \norm{x}_2^2 \leq (1 + t) nD.
+\end{align*}
 \end{prop}
-\CF{END not changed to log likelihood yet}
+
+Equipped with these results we now prove our gradient bound.
+
+\begin{proof}[Proof of \cref{prop:gradient-bound}]
+For any fixed $a\in[k]$, recall that $\rho^{(a)}$ has the same distribution as~$\frac1{nD} YY^T$, where $Y$ is an $d_a\times N_a$-matrix with standard Gaussian entries.
+By \cref{cor:vershynin}, we have the following bound with $\leq 2 e^{-t^2/2}$ failure probability:
+\begin{align*}
+  \sqrt{N_a} - \sqrt{d_a} - t \leq \sigma_d(Y) \leq \sigma_1(Y) \leq \sqrt{N_a} + \sqrt{d_a} + t.
+\end{align*}
+Let $t = \eps \sqrt{N_a}$.
+Using that $0<\eps<1$ and $d_a \leq N_a \eps^2$ by assumption, this bound implies that
+% \begin{align*}
+%   \abs*{\frac{\sigma(Y)}{\sqrt{N_a}} - 1}
+% \leq \frac{\sqrt{d_a} + t}{\sqrt{N_a}}
+% = \frac{\sqrt{d_a} + \eps\sqrt{N_a}}{\sqrt{N_a}}
+% \leq \frac{2\eps\sqrt{N_a}}{\sqrt{N_a}}
+% = 2\eps \\
+% \Rightarrow
+%   \abs*{\frac{\sigma^2(Y)}{N_a} - 1}
+% = \abs*{\frac{\sigma(Y)}{\sqrt{N_a}} - 1} \abs*{\frac{\sigma(Y)}{\sqrt{N_a}} + 1}
+% \leq \abs*{\frac{\sigma(Y)}{\sqrt{N_a}} - 1} \abs*{2 + \abs[\big]{\frac{\sigma(Y)}{\sqrt{N_a}} - 1}}
+% \leq 2\eps \left( 2 + 2\eps \right)
+% = 4\eps + 4\eps^2 \leq 8\eps
+% \end{align*}
+% the eigenvalues of $YY^T$ are in $N_a(1\pm8\eps)$. It follows that
+with the same failure probability, the eigenvalues of $\rho^{(a)}$ are in $\frac1{d_a}(1\pm8\eps)$.
+On the other hand, by \cref{prp:xnorm}, we have that $\abs{\tr \rho - 1} \leq \eps$ with $\leq 2e^{-\eps^2 nD/8}$ failure probability.
+Therefore, by the formulas in \cref{lem:gradient} and the union bound, we have
+\begin{align*}
+  \norm{\nabla_a f_x}_{\op}
+% &=\sqrt{d_a} \norm*{\rho^{(a)} - \frac{\tr\rho}{d_a} I_{d_a}}_{\op} \\
+% &=\sqrt{d_a} \norm*{\rho^{(a)} - \frac1{d_a} I_{d_a} + \frac{\tr\rho - 1}{d_a} I_{d_a}}_{\op} \\
+&\leq\sqrt{d_a} \norm*{\rho^{(a)} - \frac1{d_a} I_{d_a}} + \frac{\abs{\tr\rho - 1}}{\sqrt{d_a}}
+\leq\frac{9\eps}{\sqrt{d_a}} \qquad \text{for all } a\in[k], \\
+  \abs{\nabla_0 f_x}
+&=\abs{\tr \rho - 1} \leq \eps,
+\end{align*}
+with failure probability at most $2e^{-\eps^2 nD/8} + \sum_{a=1}^k 2 e^{-\eps^2 N_a/2}$.
+\end{proof}
+\MW{MICHAEL MARKER}
 % Both $\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a$ and $\| \samp\|_F^2 - Nd_a \leq .5 N d_a$ hold with probability \CF{blah}$. Now  $$ \|\rho^{\{a\}} - I_a/d_a\|_{op} \leq \|\rho^{\{a\}} - N I_{d_a}/ \|\samp\|_F\|_{op} + $$
 
 
