@@ -827,10 +827,7 @@ with failure probability at most $2e^{-\eps^2 nD/8} + \sum_{a=1}^k 2 e^{-\eps^2 
 In this section, we prove our strong convexity result, \cref{thm:ball-convexity}, in order to carry out step~\ref{it:convexity} of the plan from \cref{subsec:proof-sketch}.
 The theorem states that, with high probability, $f_x$ is strongly convex near the identity.
 
-%\begin{theorem}\label{thm:ball-convexity}There is $c> 0$ such that the following holds: with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, the function $f_{\rv}$ is $1/2$-strongly convex at all points $Z\in \PD$ with $\sum_{i = 1}^n \|\log Z_a\|_{op} < c/k.$\end{theorem}
-
-
-\begin{theorem}\label{thm:ball-convexity}
+\begin{theorem}[Strong convexity near identity]\label{thm:ball-convexity}
 \MW{CHECK}
 There are constants $C,c>0$ such that the following holds. For $n \geq C k^2 d_1^2/D$, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, $f$ is $1/2$-strongly convex at any point $Z \in \SPD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$.
 \end{theorem}
@@ -912,57 +909,57 @@ for all $a \in [k]$.
   \end{align*}
 \end{proof}
 
-\MW{MICHAEL MARKER}
-We now state our strong convexity result at the identity:
-
-%\begin{theorem}\label{thm:tensor-convexity-old}Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples is $N \geq k^2 \max_{a=1}^k d_a^2 / D$. Then, with probability at least $1 - 1/{\color{red}\poly(D)}$ \TODO{propagate from \cref{cor:off-diag-hess}} ,$$ (1 - (k - 1) \lambda - k \eps^2 - \eps) I \preceq \nabla^2 f_{\rv} \preceq (1 + (k - 1) \lambda + k \eps^2 + \eps) I.$$ $$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq (k - 1) \lambda + k \eps^2 + \eps $$ In particular, $f_{\rv}$ is $\Omega(1)$ strongly convex with probability \TODO{propagate from \cref{cor:off-diag-hess}} \end{theorem}
-
-\begin{theorem}[Strong convexity]\label{thm:tensor-convexity} There is an absolute constant $C$ such that the following holds. Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples $n$ is at least $C k^2 d_{\max}^2/D$ for $k \geq 2$. Then we have
-%$$ I/2 \preceq  \nabla^2 f_{\rv} \preceq 2I.$$
-$$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq 1/4$$
-with probability $1 - k^2 \left(\frac {kd_{\min}}{\sqrt{nD}}\right)^{ \Omega(d_{\min})}.$
-%In particular, $f_{\rv}$ is $3/4$-strongly convex at the identity.
-\end{theorem}
-
-
-
-The most interesting part of the Hessian is the quadratic form $Y,Z \mapsto \tr \rho^{(ab)} \left( Y \ot Z \right) = \langle Y, \tr_b \rho^{(ab)} \left(I \ot Z\right) \rangle$ appearing in the off-diagonal blocks. For a general state $\rho \in \PD(d_1, d_2)$, the linear map $\Phi:\mat(d_2) \to \mat(d_1)$ corresponding to the bilinear form above, or
-$$\Phi: Z \mapsto \tr_2 \rho \left(I \ot Z\right),$$
- is known as a \emph{completely positive map} or quantum operation.
-
-
-
- If $\rho = \sum_{i = 1}^N x_i x_i^T$ for $x_i \in \R^{d_1 \ot d_2}$, then we have the following two equivalent ways to write the corresponding completely positive map, which we call $\Phi_{\samp}$:
-\begin{align} \Phi_{\samp}(Z) = \sum_{i = 1}^N x_i Z x_i^\dagger = \left(\sum_{i = 1}^N x_i \ot x_i\right) Z.\label{eq:quantum-channel}\end{align}
-Here $x_i$ are viewed as $d_1 \times d_2$ matrices and $x_i^\dagger$ is the matrix transpose. In our proof of strong convexity, we will show that strong convexity follows if all the completely positive maps $\Phi^{ab}$ arising from the partial traces $\rho^{(a,b)}$ are good \emph{quantum expanders}.
-%The quantum expansion we need will then follow from a result of Pisier.
-
-\begin{definition}[Quantum expansion] Let $\Phi:\mat(d_1) \to \mat(d_2)$ be a completely positive map (c.f. \cref{eq:quantum-channel}).
-\begin{enumerate}
-\item Say $\Phi$ is \emph{$\eps$-doubly balanced} if
+The most interesting part of the Hessian are the offdiagonal blocks for $a\neq b\in[k]$, which up an overall factor $\sqrt{d_a d_b}$ can be seen as the restrictions of the linear maps
+\begin{align}\label{eq:hessian channel}
+  \Phi^{(ab)} \colon \mat(d_b) \to \mat(d_a), \quad \braket{H, \Phi^{(ab)}(K)} &= \tr \rho^{(ab)} \left( H \ot K \right)
+\end{align}
+to the traceless symmetric matrices.
+For general $\omega \in \PD(d_1d_2)$, a linear map of the form
 \begin{align*}
-\|d_2 \Phi(I_{d_1})/\tr \Phi(I_{d_1})  - I_{d_2} \|_{op}& \leq \eps\\
-\textrm{and }\|d_1 \Phi^*(I_{d_2})/\tr \Phi(I_{d_1})  - I_{d_1}  \|_{op} & \leq \eps,
+  \Phi \colon \mat(d_1) \to \mat(d_2), \quad \braket{H, \Phi(K)} = \tr \omega (H \ot K)
 \end{align*}
-\item $\Phi$ is an \emph{$(\eps, \lambda)$-quantum expander} if $\Phi$ is $\eps$-doubly balanced and
-$$\|\Phi\|_{op} \leq \frac{1-\lambda}{\sqrt{d_1d_2}} \tr \Phi(I_{d_2})$$
-when restricted to the traceless Hermitian matrices.
-\end{enumerate}
-A $(0, \lambda)$-quantum expander is called a $\lambda$-quantum expander.
+is known as a \emph{completely positive map}.
+If $\omega = \sum_{i=1}^N \operatorname{vec}(A_i) \operatorname{vec}(A_i)^T$ for $d_2\times d_1$ matrices~$A_1,\dots,A_N$, we have the following two equivalent ways to write the corresponding completely positive map:
+\begin{align*}
+  \Phi(K) = \sum_{i=1}^N A_i K A_i^T
+\quad\text{or}\quad
+  \operatorname{vec}(\Phi(K)) = \sum_{i=1}^N (A_i \ot A_i) \operatorname{vec}(K).
+\end{align*}
+Conversely, any linear map $\Phi$ of this form is completely positive.
+The matrices $A_1,\dots,A_N$ are known as Kraus operators of~$\Phi$.
+We denote by $\Phi^*\colon\mat(d_2)\to\mat(d_1)$ the adjoint of $\Phi$ with respect to the Hilbert-Schmidt inner product; it has $A_1^T,\dots,A_N^T$ as Kraus operators.
+
+In our proof of strong convexity, we will show that strong convexity follows if all the completely positive maps $\Phi^{(ab)}$ arising from the partial traces $\rho^{(ab)}$ are good \emph{quantum expanders}.
+
+\begin{definition}[Quantum expansion]
+Let $\Phi\colon\mat(d_1) \to \mat(d_2)$ be a completely positive map.
+Say $\Phi$ is \emph{$\eps$-doubly balanced} if
+\begin{align*}
+  \norm{\frac{\Phi(I_{d_1})}{\tr \Phi(I_{d_1})} - \frac{I_{d_2}}{d_2}}_{\op} \leq \frac\eps{d_2}
+\quad\text{and}\quad
+  \norm{\frac{\Phi^*(I_{d_2})}{\tr \Phi(I_{d_2})} - \frac{I_{d_1}}{d_1}}_{\op} \leq \frac\eps{d_1}.
+\end{align*}
+Say $\Phi$ is an \emph{$(\eps, \lambda)$-quantum expander} if $\Phi$ is $\eps$-doubly balanced and
+\begin{align*}
+  \norm{\Phi}_0 := \max_{\substack{H \text{ traceless symmetric} \\ \norm H_F=1}} \norm{\Phi(H)}_F
+\leq \frac{1-\lambda}{\sqrt{d_1d_2}} \tr \Phi(I_{d_1})
+\end{align*}
+A $(0, \lambda)$-quantum expander is called a \emph{$\lambda$-quantum expander}.
 \end{definition}
 
+Quantum expanders play an important role in quantum information theory and quantum computation \TODO{cite}.
+For us, their purpose will be the following lemma allowing us to translate quantum expansion properties into strong convexity.
 
-%for $\rho = \rho^{(a,b)}$ is a good \emph{quantum expander}, which or rather that $\Phi_{\samp}$ has a small operator norm on the traceless symmetric matrices.
-
-
-
-Quantum expanders play an important role in quantum information theory and quantum computation \TODO{cite}. For us, their purpose will be the following lemma allowing us to translate quantum expansion properties into strong convexity. \CF{maybe we don't need to define $\Phi^{ab}$ explicitly, now that the blocks of the hessian really are channels?}
-
-\begin{lemma}\label{lem:expansion-convexity} Let $\samp \in (\R^{d_1} \ot \dots \ot \R^{d_k})^n$, and $\rho = \frac{1}{nD} \sum_{i = 1}^n \samp_i \samp_i^T$. Define $\Phi^{ab}:\mat (d_b) \to \mat(d_a)$ by
-$$ \Phi^{ab}: Z \mapsto \tr_b \rho^{(a,b)} \left(I \ot Z\right).$$
-If $\Phi^{ab}$ is an $(\eps, \lambda)$-quantum expander for every $a < b \in [k]$, then
-$$ \|\nabla^2 f_\samp - (\tr \rho) I\| \leq ((k-1)\lambda + (\sqrt{k} + 1) \eps)\tr \rho.$$
+\begin{lemma}[Strong convexity from expansion]\label{lem:expansion-convexity}
+If the completely positive maps $\Phi^{(ab)}$ defined in \cref{eq:hessian channel} are $(\eps,\lambda)$-quantum expanders for every $a\neq b\in[k]$, then
+\begin{align*}
+  \norm*{\frac{\nabla^2 f_x}{\tr \rho} - I}
+\leq \bigl(k-1\bigr) \lambda + \bigl(\sqrt k + 1\bigr) \eps.
+\end{align*}
 \end{lemma}
+
+\MW{MARKER}
+
 The proof of \cref{lem:expansion-convexity} uses a basic bound on the semidefiniteness of matrices.
 \begin{lemma}\label{lem:block-matrix}
 Let $M$ be a square, symmetric block matrix with blocks $M_{ab}$ of dimension $d_a \times d_b$ for $a,b \in [k]$. Then
@@ -1017,6 +1014,17 @@ $\Phi^{ab}(I_{d_b})$ is doubly balanced for all $a<b \in [k]$ if and only if
 $$\sqrt{d_a} \| \nabla_a f\| \leq \eps \tr \rho.$$
 for all $a \in [k]$.
 \end{obs}
+
+We now state our strong convexity result at the identity:
+
+\begin{theorem}[Strong convexity at identity]\label{thm:tensor-convexity}
+\MW{CHECK}
+There is an absolute constant $C$ such that the following holds. Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples $n$ is at least $C k^2 d_{\max}^2/D$ for $k \geq 2$. Then we have
+%$$ I/2 \preceq  \nabla^2 f_{\rv} \preceq 2I.$$
+$$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq 1/4$$
+with probability $1 - k^2 \left(\frac {kd_{\min}}{\sqrt{nD}}\right)^{ \Omega(d_{\min})}.$
+%In particular, $f_{\rv}$ is $3/4$-strongly convex at the identity.
+\end{theorem}
 
 
 \begin{proof}[Proof of \cref{thm:tensor-convexity}] \CF{make sure this is in the big theta notation} By \cref{lem:expansion-convexity}, it is enough to prove that $\Phi^{ab}$ is a $(\eps, \lambda):=(1/40 \sqrt{ k}, 1/20k)$-quantum expander for all $a < b \in [k]$ and that $\tr \rho \in (7/8, 9/8)$ with the desired failure probability. Firstly, $\tr \rho = \frac{1}{nD} \|X\|^2$ is in $(7/8, 9/8)$ with failure probability $e^{ -\Omega(nD)} $ by \cref{prp:xnorm}.
