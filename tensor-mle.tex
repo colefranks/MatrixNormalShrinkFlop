@@ -859,7 +859,7 @@ for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d
   \nabla^2_{00} f_x &= \tr \rho.
 \end{align*}
 for all $a \in [k]$.
-\MW{Subtracted trace from $0a/a0$ components. OK?}
+\MW{Caution the reader about the $a0$ components!}
 \end{lemma}
 \begin{proof}
   Note that the Hessian of~$f_x$ coincides with the one of $\tr\rho\,\Theta$.
@@ -969,26 +969,32 @@ Then,
 \preceq \bigoplus_i \left(M_{ii} + I_{d_i} \cdot \sum_{j \neq i} \norm{M_{ij}}_{\op} \right)
 \end{align*}
 \end{lemma}
+\begin{proof}
+We use the inequality for block matrices
+\begin{align}\label{eq:psd-bound}
+  -\begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}
+\preceq \begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix}
+\preceq \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}
+\end{align}
+for any $A,B \succ 0$ such that $\norm{A^{-1/2} K B^{-1/2}}_{\op} \leq 1$, which may be proved by computing Schur complements.
+We first apply the upper bound in \cref{eq:psd-bound} to the upper-left two-by-two block matrix.
+Taking $A = I_{d_1} \cdot \norm{M_{12}}_{\op}$ and $B = I_{d_2} \cdot \norm{M_{12}}_{\op}$,
+we find that
+\begin{align*}
+  M \preceq \begin{bmatrix}
+  M_{11} + I_{d_1} \cdot \norm{M_{12}}_{\op} & 0 & \quad M_{13} & \cdots \\
+  0 & M_{22} + I_{d_2} \cdot \norm{M_{12}}_{\op} & \quad M_{23} & \\
+  M_{31} & M_{23} & \quad M_{33} &\\
+  \vdots & & & \;\;\;\;\ddots
+  \end{bmatrix}.
+\end{align*}
+By sequentially apply this inequality to all other $2\times 2$ principal block submatrices until we obtain the desired upper bound.
+The lower bound is proved completely analogously.
+\end{proof}
 
 \MW{MARKER}
 
-\begin{proof}
-We first prove the lower bound on $M$. We use the inequality for block matrices
-\begin{align}\begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix} \succeq - \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}\label{eq:psd-bound}\end{align} for any $A,B \succeq 0$ such that $\|A^{-1/2} K B^{-1/2}\|_{op} \leq 1,$ which may be proved by computing Schur complements. By changing basis it can be shown that this inequality also holds with $\| \cdot \|_{op}$ replaced by $\|\cdot\|_0$. We will sequentially apply this inequality to each $2\times 2$ principal block submatrix until we are left with a block diagonal matrix.
-%By the final bound in \cref{cor:off-diag-hess} with $c = 1/25$, with probability $1 - 2k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$ we have $\|\nabla^2_{ab} f_{\rv}\|_0 \leq 1/25k$ for all $a,b \in [k]$ and $\|\nabla^2_{aa}f - I\|_0 \leq \sqrt{1/25k}$ for all $a \in [k]$.
-
-We first apply the inequality to the upper-left block two-by-two matrix. By our bound on $\|M_{12}\|_{op}$, we may take
-   $A = \|M_{12}\|_{op} I_{d_1\times d_1}$, $B = \|M_{12}\|_{op} I_{d_2\times d_2}$ to find that
-   \begin{align*}
-M \succeq \begin{bmatrix}
-M_{11}-  \|M_{12}\|_{op} I & 0 & \hdots &  M_{1k} \\
-0 & M_{11} - \|M_{12}\|_{op} I & \ddots & \vdots \\
-\vdots & \ddots & \ddots & \vdots\\
-M_{k1} & \hdots &  \hdots & M_{kk}\\
-  \end{bmatrix}.\end{align*}
- Applying this for all $a < b$ yields the result. The inequality \cref{eq:psd-bound} also applies with the signs and inequalities reversed; applying this inequality for all $a < b$ yields the upper bound on $M$. \end{proof}
-  %By a change of basis, \cref{lem:block-matrix} also applies with $\| \cdot \|_{op}$ replaced by $\|\cdot \|_0$ and $\preceq$ with respect to the inner product on $\H$. We will need to supply bounds on $\|\nabla_{ab}^2 f\|_{op}$ and $\| \nabla_{aa}^2 f - I \|_{0}$ for $a \neq b$. First we bound the off-diagonal terms.
- \begin{proof}[Proof of \cref{lem:expansion-convexity}]  We apply \cref{lem:block-matrix} with $M = \nabla^2 f_\samp$. Recall from \cref{lem:hessian} that the off-diagonal blocks of the Hessian are defined by
+\begin{proof}[Proof of \cref{lem:expansion-convexity}]  We apply \cref{lem:block-matrix} with $M = \nabla^2 f_\samp$. Recall from \cref{lem:hessian} that the off-diagonal blocks of the Hessian are defined by
 \begin{align} \langle Y,  \left( \nabla^2_{ab} f_{\samp} \right) Z \rangle
 = \sqrt{d_a d_b} \tr \rho^{(ab)} \left( Y \ot Z \right) \label{eq:grad-off-diag}\end{align}
 for $a, b \in [k]$. Thus $\nabla^2_{ab} f_{\samp} = \sqrt{d_a d_b} \Phi^{ab}.$ By quantum expansion of $\Phi^{ab}$, we have $\|\Phi^{ab}\|_{op} \leq \lambda \frac{1}{\sqrt{d_a d_b}} \tr \rho$.
