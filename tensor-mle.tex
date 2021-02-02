@@ -256,7 +256,7 @@ Our regularizer has a Bayesian interpretation as coming from a Wishart prior for
 %-----------------------------------------------------------------------------
 \subsection{Notation}
 %-----------------------------------------------------------------------------
-We write $\PD(d)$ for the space of $d\times d$ positive definite matrices; $\GL(d)$ denotes the group of invertible $d\times d$ matrices.
+We write $\mat(d)$ for the space of $d\times d$ matrices, $\PD(d)$ for the convex cone of $d\times d$ positive definite matrices; $\GL(d)$ denotes the group of invertible $d\times d$ matrices.
 For a matrix $A$, $\norm{A}_{\op}$ denotes the operator norm, $\norm{A}_F = (\tr A^T A)^{\frac12}$ the Frobenius norm, and $\braket{A,B} = \tr A^T B$ for the Hilbert-Schmidt inner product.
 We extend these definitions to tuples $A=(A_0;A_1,\dots,A_k)$, where~$A_0\in\R$ and the $A_a$ for $a\in[k]$ are matrices and denote them by the same symbol, i.e., $\norm{A}_F = (\abs{A_0}^2 + \sum_{a=1}^k \norm{A_a}_F^2)^{1/2}$ and similarly for the inner product.
 
@@ -571,7 +571,7 @@ These together imply the desired sample complexity bounds -- as in the Euclidean
 
 To make this discussion more concrete, we now define the gradient and Hessian formally, and state the lemma that we will use to relate the gradient and strong convexity to the distance to the optimizer as in the plan above.
 
-\begin{definition}[Gradient and Hessian]
+\begin{definition}[Gradient and Hessian]\label{def:hess grad}
 Let $f\colon \P \to \R$ be a once or twice differentiable function and $\Theta \in \P$.
 The \emph{(Riemannian) gradient}~$\nabla f(\Theta)$ is the unique element in $\H$ such that
 \begin{align*}
@@ -590,8 +590,6 @@ As block matrices,
 \begin{align*}
   \nabla f = \left[\begin{array}{c} \nabla_0 f \\ \hline \nabla_1 f \\ \vdots \\ \nabla_k f \end{array}\right],
   \qquad
-% \end{align*}
-% \begin{align*}
   \nabla^2 f = \left[\begin{array}{c|ccc}
   \nabla_{00}^2 f & \nabla_{01}^2 f \dots & \nabla_{0k}^2 f \\
     \hline\nabla_{10}^2 f & \nabla_{11}^2 f \dots & \nabla_{1k}^2 f \\
@@ -855,11 +853,11 @@ Then the components of the Hessian~$\nabla^2 f_{\samp}$ at the identity are give
 \end{align*}
 for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d_b\times d_b$ matrices~$Z$, and
 \begin{align*}
-  \nabla^2_{a0} f_x = \nabla^2_{0a} f_x &= \sqrt{d_a} \left( \rho^{(a)} - \frac{\tr \rho}{d_a} I_{d_a} \right) \\
+  \nabla^2_{a0} f_x \,\widehat=\, \nabla^2_{0a} f_x &\,\widehat=\, \sqrt{d_a} \left( \rho^{(a)} - \frac{\tr \rho}{d_a} I_{d_a} \right) \\
   \nabla^2_{00} f_x &= \tr \rho.
 \end{align*}
 for all $a \in [k]$.
-\MW{Caution the reader about the $a0$ components!}
+\MW{Caution the reader about the $a0$ components! Added a hat for now\dots}
 \end{lemma}
 \begin{proof}
   Note that the Hessian of~$f_x$ coincides with the one of $\tr\rho\,\Theta$.
@@ -942,31 +940,38 @@ Say $\Phi$ is \emph{$\eps$-doubly balanced} if
 Say $\Phi$ is an \emph{$(\eps, \lambda)$-quantum expander} if $\Phi$ is $\eps$-doubly balanced and
 \begin{align*}
   \norm{\Phi}_0 := \max_{\substack{H \text{ traceless symmetric} \\ \norm H_F=1}} \norm{\Phi(H)}_F
-\leq \frac{1-\lambda}{\sqrt{d_1d_2}} \tr \Phi(I_{d_1})
+\leq \lambda \frac{\tr \Phi(I_{d_1})}{\sqrt{d_1d_2}}
 \end{align*}
 A $(0, \lambda)$-quantum expander is called a \emph{$\lambda$-quantum expander}.
 \end{definition}
 
 Quantum expanders play an important role in quantum information theory and quantum computation \TODO{cite}.
+\MW{There, typically $\Phi$ is trace preserving (a quantum channel) and $d_1=d_2$, so the condition is just $\norm{\Phi}_0 \leq \lambda$.}
 For us, their purpose will be the following lemma allowing us to translate quantum expansion properties into strong convexity.
 
 \begin{lemma}[Strong convexity from expansion]\label{lem:expansion-convexity}
 If the completely positive maps $\Phi^{(ab)}$ defined in \cref{eq:hessian channel} are $(\eps,\lambda)$-quantum expanders for every $a\neq b\in[k]$, then
 \begin{align*}
-  \norm*{\frac{\nabla^2 f_x}{\tr \rho} - I}
-\leq \bigl(k-1\bigr) \lambda + \bigl(\sqrt k + 1\bigr) \eps.
+  \norm*{\frac{\nabla^2 f_x}{\tr \rho} - I_\H}
+\leq k (\lambda + \eps).
 \end{align*}
 \end{lemma}
 
-The proof of \cref{lem:expansion-convexity} uses a basic lemma that gives upper and lower bounds on a block matrix in terms of block diagonal matrices and the Loewner order.
+We note that a slightly more complicated proof yields the improved estimate $\leq (k-1) \lambda + (\sqrt k + 1) \eps$.
+
+The proof of \cref{lem:expansion-convexity} uses a basic lemma that gives upper and lower bounds on a block matrix in terms of block diagonal matrices and the Loewner order, and a resulting norm bound.
 
 \begin{lemma}\label{lem:block-matrix}
-Let $M$ be a square symmetric block matrix with blocks $M_{ij}$ of size~$d_i \times d_j$.
+Let $M$ be a symmetric block matrix with blocks $M_{ij}$ of size~$d_i \times d_j$, where~$i,j\in[N]$.
 Then,
 \begin{align*}
-  \bigoplus_i \left(M_{ii} - I_{d_i} \cdot \sum_{j \neq i} \norm{M_{ij}}_{\op} \right)
+  \bigoplus_{i=1}^N \left(M_{ii} - I_{d_i} \cdot \sum_{j \neq i} \norm{M_{ij}}_{\op} \right)
 \preceq M
-\preceq \bigoplus_i \left(M_{ii} + I_{d_i} \cdot \sum_{j \neq i} \norm{M_{ij}}_{\op} \right)
+\preceq \bigoplus_{i=1}^N \left(M_{ii} + I_{d_i} \cdot \sum_{j \neq i} \norm{M_{ij}}_{\op} \right)
+\end{align*}
+and hence \MW{Isn't the following all we need?}
+\begin{align*}
+  \norm{M}_{\op} \leq \max_i \sum_j \norm{M_{ij}}_{\op}.
 \end{align*}
 \end{lemma}
 \begin{proof}
@@ -982,33 +987,61 @@ Taking $A = I_{d_1} \cdot \norm{M_{12}}_{\op}$ and $B = I_{d_2} \cdot \norm{M_{1
 we find that
 \begin{align*}
   M \preceq \begin{bmatrix}
-  M_{11} + I_{d_1} \cdot \norm{M_{12}}_{\op} & 0 & \quad M_{13} & \cdots \\
-  0 & M_{22} + I_{d_2} \cdot \norm{M_{12}}_{\op} & \quad M_{23} & \\
-  M_{31} & M_{23} & \quad M_{33} &\\
-  \vdots & & & \;\;\;\;\ddots
+  M_{11} + I_{d_1} \cdot \norm{M_{12}}_{\op} & 0 & \quad M_{13} & \cdots & M_{1N} \\
+  0 & M_{22} + I_{d_2} \cdot \norm{M_{12}}_{\op} & \quad M_{23} & \cdots & M_{2N} \\
+  M_{31} & M_{32} & \quad M_{33} & \cdots & M_{3N} \\
+  \vdots & \vdots & \vdots & \;\;\;\;\ddots & \vdots \\
+  M_{N1} & M_{N2} & \quad\; M_{N3} & \cdots & M_{NN}
   \end{bmatrix}.
 \end{align*}
-By sequentially apply this inequality to all other $2\times 2$ principal block submatrices until we obtain the desired upper bound.
+By sequentially apply this inequality to all other $2\times 2$ principal block submatrices, we obtain the desired upper bound.
 The lower bound is proved completely analogously.
 \end{proof}
+\begin{proof}[Proof of \cref{lem:expansion-convexity}]
+We apply \cref{lem:block-matrix} with $M = \frac{\nabla^2 f_\samp}{\tr \rho} - I_\H$, which we consider as a block matrix as in \cref{def:hess grad}.
+Recall from \cref{lem:hessian} that the off-diagonal blocks of the Hessian for $a \neq b\in[k]$ are given by $\nabla^2_{ab} f_x = \sqrt{d_a d_b} \Phi^{(ab)}$.
+Thus, since $\Phi^{(ab)}$ is an $(\eps,\lambda)$-quantum expander, we have
+\begin{align*}
+  \norm{M_{ab}}_{\op}
+= \frac{\norm{\nabla^2_{ab} f_x}_{\op}}{\tr\rho}
+= \frac{\sqrt{d_a d_b}}{\tr \Phi^{(ab)}(I_{d_b})} \norm{\Phi^{(ab)}}_0
+\leq \lambda,
+\end{align*}
+using that $\tr \Phi^{(ab)}(I_{d_b}) = \tr \rho$.
+The remaining off-diagonal elements can be bounded as
+\begin{align*}
+\norm{M_{a0}}
+= \frac{\norm{\nabla^2_{a0} f_x}_{\op}}{\tr \rho}
+&= \norm*{\sqrt{d_a} \left( \frac{\rho^{(a)}}{\tr \rho} - \frac{I_{d_a}}{d_a} \right)}_F
+= \sqrt{d_a} \norm*{\frac{\Phi^{(ab)}(I_{d_b})}{\tr \Phi^{(ab)}(I_{d_b})} - \frac{I_{d_a}}{d_a}}_F \\
+&\leq d_a \norm*{\frac{\Phi^{(ab)}(I_{d_b})}{\tr \Phi^{(ab)}(I_{d_b})} - \frac{I_{d_a}}{d_a}}_{\op}
+\leq \eps,
+\end{align*}
+using that $\Phi^{(ab)}(I_{d_b}) = \rho^{(a)}$.
+On the other hand, the diagonal blocks for $a\in[k]$ can be bounded by observing that, for any traceless Hermitian $H$, 
+\begin{align*}
+  \abs{\braket{H, M_{aa} H}}
+&= \abs*{\braket{H, \left( \frac{\nabla^2_{aa} f_x}{\tr \rho} - I_\H \right) H}}
+= d_a \abs*{\tr \left( \frac{\rho^{(a)}}{\tr \rho} - \frac{I_{d_a}}{d_a} \right) H^2} \\
+&\leq d_a \norm*{\frac{\rho^{(a)}}{\tr \rho} - \frac{I_{d_a}}{d_a}}_{\op} \norm{H}_F^2
+\leq \eps \norm H_F^2,
+\end{align*}
+hence $\norm{M_{aa}}_{\op} \leq \eps$, while $\abs{M_{00}} = \abs{\frac{\nabla^2_{00} f_x}{\tr \rho} - 1} = 0$.
+Applying the bound from \cref{lem:block-matrix}, we obtain
+\begin{align*}
+  \norm{M}_{\op} = \max \{ k \eps, \eps + (k-1) \lambda \} \leq k(\eps+\lambda).
+\end{align*}
+% We next bound $\nabla_{aa}^2 f_\samp$. Recall again from \cref{lem:hessian} that the diagonal blocks of the Hessian are given by \begin{align}
+%  \langle Y,  \left( \nabla^2_{aa} f_{\samp} \right) Y \rangle=  d_a \tr \rho^{(a)} Y^2 .\label{eq:on-diag-hess-ii}
+% \end{align}
+% Again, the $\eps$-balancedness of $\Phi^{ab}$ implies $ |\tr (d_a \rho^{(a)}  - (\tr \rho) I_a)Y^2| \leq \eps (\tr \rho) \tr Y^2$, or that the first term of \cref{eq:on-diag-hess-ii} is in $(1 \pm \eps) \|Y\|_F^2 (\tr \rho)$. Hence $\|\nabla_{aa}^2 f_\samp - (\tr \rho) I\|_{op} \leq \eps^2 + \eps$. Finally, $\nabla_{00}^2 f_\samp$ is exactly $\tr \rho$. Using \cref{lem:block-matrix}, we find that the submatrix of $\nabla^2 f$ excluding the $0$ row and column tells us that dominates the block diagonal matrix where the $aa$ block is at least $(1 - \eps) (\tr \rho) I - (k-1) \lambda (\tr \rho) I $ for $a \in [k]$. Furthermore, the 00 block is exactly $ \tr \rho$. The analogous upper bound on $\nabla^2 f_\samp$ follows similarly. We now wish to apply \cref{lem:block-matrix} one more time, this time with only two diagonal blocks, one of which is the 00 block. It remains to bound the operator norm of the off diagonal block of this matrix, which we call $M_{\text{off}}$, consisting of $\nabla_{a 0}^2 f$ vertically concatenated together for $a \in [k]$.
 
-\MW{MARKER}
-
-\begin{proof}[Proof of \cref{lem:expansion-convexity}]  We apply \cref{lem:block-matrix} with $M = \nabla^2 f_\samp$. Recall from \cref{lem:hessian} that the off-diagonal blocks of the Hessian are defined by
-\begin{align} \langle Y,  \left( \nabla^2_{ab} f_{\samp} \right) Z \rangle
-= \sqrt{d_a d_b} \tr \rho^{(ab)} \left( Y \ot Z \right) \label{eq:grad-off-diag}\end{align}
-for $a, b \in [k]$. Thus $\nabla^2_{ab} f_{\samp} = \sqrt{d_a d_b} \Phi^{ab}.$ By quantum expansion of $\Phi^{ab}$, we have $\|\Phi^{ab}\|_{op} \leq \lambda \frac{1}{\sqrt{d_a d_b}} \tr \rho$.
-
-We next bound $\nabla_{aa}^2 f_\samp$. Recall again from \cref{lem:hessian} that the diagonal blocks of the Hessian are given by \begin{align}
- \langle Y,  \left( \nabla^2_{aa} f_{\samp} \right) Y \rangle=  d_a \tr \rho^{(a)} Y^2 .\label{eq:on-diag-hess-ii}
-\end{align}
-Again, the $\eps$-balancedness of $\Phi^{ab}$ implies $ |\tr (d_a \rho^{(a)}  - (\tr \rho) I_a)Y^2| \leq \eps (\tr \rho) \tr Y^2$, or that the first term of \cref{eq:on-diag-hess-ii} is in $(1 \pm \eps) \|Y\|_F^2 (\tr \rho)$. Hence $\|\nabla_{aa}^2 f_\samp - (\tr \rho) I\|_{op} \leq \eps^2 + \eps$. Finally, $\nabla_{00}^2 f_\samp$ is exactly $\tr \rho$. Using \cref{lem:block-matrix}, we find that the submatrix of $\nabla^2 f$ excluding the $0$ row and column tells us that dominates the block diagonal matrix where the $aa$ block is at least $(1 - \eps) (\tr \rho) I - (k-1) \lambda (\tr \rho) I $ for $a \in [k]$. Furthermore, the 00 block is exactly $ \tr \rho$. The analogous upper bound on $\nabla^2 f_\samp$ follows similarly. We now wish to apply \cref{lem:block-matrix} one more time, this time with only two diagonal blocks, one of which is the 00 block. It remains to bound the operator norm of the off diagonal block of this matrix, which we call $M_{\text{off}}$, consisting of $\nabla_{a 0}^2 f$ vertically concatenated together for $a \in [k]$.
-
-First we bound $\|\nabla_{a0} f\|_{op}$. This is simply $\sqrt{d_a}\sup_{\|Z\|_F = 1} |\tr Z \rho^{(a)}|$ where $Z$ ranges over traceless Hermitians. Using that $\rho^{(a)} = \Phi^{ab}(I_{d_b})$, we have $\|d_a \rho^{(a)} - (\tr \rho) I_{d_a}\|_{op} \leq \eps \tr \rho $ by quantum expansion. For traceless $Z$ we have
-\begin{align}\tr Z \rho^{(a)} = \frac{1}{d_a} \tr Z (d_a \rho^{(a)} - (\tr \rho) I_{d_a}) \leq \frac{\tr \rho}{d_a} \eps \|Z\|_1 \leq \frac{\tr \rho}{\sqrt{d_a}} \eps \|Z\|_F,\label{eq:second-term-hess}\end{align}
-thus $\|\nabla_{a0} f\|_{op} \leq \eps \tr \rho$. It follows that $\|M_{\text{off}}\|_{op} \leq \sqrt{k} \eps \tr \rho$. Applying \cref{lem:block-matrix} to these two blocks shows $\nabla^2 f_\samp$ dominates a block diagonal matrix where each block is dominates $(1 - \eps) (\tr \rho) I - (k-1) \lambda (\tr \rho) I  - \sqrt{k} \eps (\tr \rho) I.$
+% First we bound $\|\nabla_{a0} f\|_{op}$. This is simply $\sqrt{d_a}\sup_{\|Z\|_F = 1} |\tr Z \rho^{(a)}|$ where $Z$ ranges over traceless Hermitians. Using that $\rho^{(a)} = \Phi^{ab}(I_{d_b})$, we have $\|d_a \rho^{(a)} - (\tr \rho) I_{d_a}\|_{op} \leq \eps \tr \rho $ by quantum expansion. For traceless $Z$ we have
+% \begin{align}\tr Z \rho^{(a)} = \frac{1}{d_a} \tr Z (d_a \rho^{(a)} - (\tr \rho) I_{d_a}) \leq \frac{\tr \rho}{d_a} \eps \|Z\|_1 \leq \frac{\tr \rho}{\sqrt{d_a}} \eps \|Z\|_F,\label{eq:second-term-hess}\end{align}
+% thus $\|\nabla_{a0} f\|_{op} \leq \eps \tr \rho$. It follows that $\|M_{\text{off}}\|_{op} \leq \sqrt{k} \eps \tr \rho$. Applying \cref{lem:block-matrix} to these two blocks shows $\nabla^2 f_\samp$ dominates a block diagonal matrix where each block is dominates $(1 - \eps) (\tr \rho) I - (k-1) \lambda (\tr \rho) I  - \sqrt{k} \eps (\tr \rho) I.$
  \end{proof}
 
+\MW{MARKER}
 
 We are concerned with $\Phi^{ab}$ where $\rv$ is a random Gaussian.  Like random graphs, it is known that random completely positive maps, namely those $\Phi_\samp$ obtained by choosing $x_i$ from various well-behaved distributions, yield good quantum expanders. Pisier showed the following result when $x_i$ are chosen from a standard Gaussian.
 
