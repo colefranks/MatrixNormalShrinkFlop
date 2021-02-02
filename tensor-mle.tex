@@ -585,15 +585,15 @@ Similarly, the \emph{(Riemannian) Hessian}~$\nabla^2 f(\Theta)$ is the unique li
 = \partial_{s=0} \partial_{t=0} f(\exp_{\Theta}(sH + tK))
 \qquad \forall H,K \in \H.
 \end{align*}
-We abbreviate $\nabla f = \nabla f(I_D)$, $\nabla^2 f = \nabla^2 f(I_D)$ and write $\nabla_a f$, $\nabla^2_{ab}f$ for the components of the gradient and Hessian.
+We abbreviate $\nabla f = \nabla f(I_D)$ and $\nabla^2 f = \nabla^2 f(I_D)$ for the gradient and Hessian, respectively, at the identity matrix, and we write $\nabla_a f$ and $\nabla^2_{ab}f$ for the components.
 As a block matrix,
 \begin{align*}
-  \nabla f = \left[\begin{array}{c|ccc} \nabla_0 f & \nabla_1 f & \cdots & \nabla_k f \end{array}\right],
-\end{align*}
-where $\nabla_0 f \in \R$, while each $\nabla_a f(\Theta)$ is a $d_a \times d_a$ traceless symmetric matrix for~$a\in[k]$.
-Similarly,
-\begin{align*}
-  \nabla^2 f = \left[\begin{array}{c|ccc}
+  \nabla f &= \left[\begin{array}{c|ccc} \nabla_0 f & \nabla_1 f & \cdots & \nabla_k f \end{array}\right], \\
+% \end{align*}
+\intertext{where $\nabla_0 f \in \R$ and each $\nabla_a f(\Theta)$ is a $d_a \times d_a$ traceless symmetric matrix. % for~$a\in[k]$.
+Similarly,}
+% \begin{align*}
+  \nabla^2 f &= \left[\begin{array}{c|ccc}
   \nabla_{00}^2 f & \nabla_{01}^2 f \dots & \nabla_{0k}^2 f \\
     \hline\nabla_{10}^2 f & \nabla_{11}^2 f \dots & \nabla_{1k}^2 f \\
   \vdots  & \vdots & \ddots & \vdots \\
