@@ -258,7 +258,7 @@ Our regularizer has a Bayesian interpretation as coming from a Wishart prior for
 %-----------------------------------------------------------------------------
 We write $\PD(d)$ for the space of $d\times d$ positive definite matrices; $\GL(d)$ denotes the group of invertible $d\times d$ matrices.
 For a matrix $A$, $\norm{A}_{\op}$ denotes the operator norm, $\norm{A}_F = (\tr A^T A)^{\frac12}$ the Frobenius norm, and $\braket{A,B} = \tr A^T B$ for the Hilbert-Schmidt inner product.
-\MW{Sadly now we have $k+1$-tuples, so $\norm{H}_F$ looks terrible :D Use $_2$?} We extend these definitions to tuples of matrices $A=(A_1,\dots,A_k)$ and denote them by the same symbol, i.e., $\norm{A}_F = (\sum_{a=1}^k \norm{A_a}_F^2)^{1/2}$ and similarly for the inner product.
+We extend these definitions to tuples $A=(A_0;A_1,\dots,A_k)$, where~$A_0\in\R$ and the $A_a$ for $a\in[k]$ are matrices and denote them by the same symbol, i.e., $\norm{A}_F = (\abs{A_0}^2 + \sum_{a=1}^k \norm{A_a}_F^2)^{1/2}$ and similarly for the inner product.
 
 %=============================================================================
 \section{Model and main results}\label{sec:main results}
@@ -452,13 +452,12 @@ The \emph{exponential map} $\exp_\Theta \colon \H \to \P$ at~$\Theta$ is defined
 \end{align*}
 The \emph{geodesics} through $\Theta$ are the curves $t \mapsto \exp_\Theta(t H)$ for $t\in\R$ and $H\in\H$.
 Up to reparameterization, there is a unique geodesic between any two points of~$\P$.
-We take the convention that the geodesics have unit speed if $\norm{H}_F^2 = \abs{H_0}^2 + \sum_{a=1}^k \norm{H_a}_F^2 = 1$. \MW{$\leftarrow$ meh}
+We take the convention that the geodesics have unit speed if $\norm{H}_F^2 = \abs{H_0}^2 + \sum_{a=1}^k \norm{H_a}_F^2 = 1$.
 Therefore, the closed \emph{(geodesic) ball} of radius~$r>0$ about~$\Theta$ is given by
 \begin{align*}
   B_r(\Theta) = \{ \exp_\Theta(H) : \norm H_F \leq r \}.
 \end{align*}
-Such balls are geodesically convex, that is, if $\gamma(t)$ is a geodesic such that $\gamma(0),\gamma(1) \in B_r(\Theta)$ then $\gamma(t) \in B_r(\Theta)$ for all $r\in[0,1]$.
-\MW{What is the difference between a (totally) convex and (totally) geodesic subset?}
+Such balls are \emph{geodesically convex} subsets of~$\P$, that is, if $\gamma(t)$ is a geodesic such that~$\gamma(0),\gamma(1) \in B_r(\Theta)$ then $\gamma(t) \in B_r(\Theta)$ for all $r\in[0,1]$.
 % The geodesic distance squared between two points $P,Q\in\P$ is given by
 % \begin{align*}
 %   \sum_{a=1}^k \frac 1{d_a} \norm{\log(P_a^{-1/2} Q_a P_a^{-1/2})}_F^2.
@@ -471,7 +470,7 @@ Using our definition of geodesics, we obtain the following notion of geodesic co
 A twice differentiable function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $\Theta\in\P$ if $\partial^2_{t=0} f(\exp_\Theta(tH)) \geq 0$ for all~$H\in\H$.
 It is called \emph{$\lambda$-strongly geodesically convex} at $\Theta$ for some $\lambda>0$ if $\partial^2_{t=0} f(\exp_P(tH)) \geq \lambda \norm H_F^2$ for all~$H\in\H$.
 
-We note that for a geodesically convex domain $D \subseteq \P$, a function $f$ is (strongly) geodesically convex on~$D$ if, and only if, the function $t \mapsto f(\gamma(t))$ is (strongly) convex on~$[0,1]$ for any unit-speed geodesic $\gamma(t)$ with $\gamma(0),\gamma(1)\in D$.
+We note that for a geodesically convex domain $D \subseteq \P$, a function $f$ is (strongly) geodesically convex on~$D$ if, and only if, the function $t \mapsto f(\gamma(t))$ is (strongly) convex on~$[0,1]$ for any (unit-speed) geodesic $\gamma(t)$ with $\gamma(0),\gamma(1)\in D$.
 In other words, geodesic convexity simply means convexity in the ordinary Euclidean sense when restricted to geodesics.
 % A function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $P\in\P$ if the functions $t \mapsto f(\exp_P(tH))$ are convex in $t\in\R$ for all~$H \in \H$.
 % Assuming $f$ is twice differentiable, this holds if, and only if, $\partial^2_t f(\exp_P(tH)) \geq 0$ for all~$H\in\H$.
@@ -481,7 +480,7 @@ In other words, geodesic convexity simply means convexity in the ordinary Euclid
 \end{definition}
 
 The invariance properties described above for $\PD(D)$ are directly inherited.
-The manifold $\P$ carries a natural action by the group
+The manifold~$\P$ carries a natural action by the group
 \begin{align*}
   \G =  \{G_1 \ot \dots \ot G_1: \GL(d_1)\ot \times \dots \times \ot \GL(d_k)\}
 \end{align*}
@@ -580,21 +579,19 @@ The \emph{(Riemannian) gradient}~$\nabla f(\Theta)$ is the unique element in $\H
 = \partial_{t=0} f(\exp_\Theta(tH))
 \qquad \forall H \in \H.
 \end{align*}
-We abbreviate $\nabla f = \nabla f(I_D)$ and write $\nabla_a f$ for the components.
-As a block matrix,
-\begin{align*}
-  \nabla f = \left[\begin{array}{c|ccc} \nabla_0 f & \nabla_1 f & \cdots & \nabla_k f \end{array}\right],
-\end{align*}
-where $\nabla_0 f \in \R$, while each $\nabla_a f(\Theta)$ is a $d_a \times d_a$ traceless symmetric matrix for~$a\in[k]$.
-
 Similarly, the \emph{(Riemannian) Hessian}~$\nabla^2 f(\Theta)$ is the unique linear operator on~$\H$ such that
 \begin{align*}
   \braket{H, \nabla^2 f(\Theta) K}
 = \partial_{s=0} \partial_{t=0} f(\exp_{\Theta}(sH + tK))
 \qquad \forall H,K \in \H.
 \end{align*}
-We abbreviate $\nabla^2 f = \nabla^2 f(I_D)$ and write $\nabla^2_{ab}f$ for its components.
+We abbreviate $\nabla f = \nabla f(I_D)$, $\nabla^2 f = \nabla^2 f(I_D)$ and write $\nabla_a f$, $\nabla^2_{ab}f$ for the components of the gradient and Hessian.
 As a block matrix,
+\begin{align*}
+  \nabla f = \left[\begin{array}{c|ccc} \nabla_0 f & \nabla_1 f & \cdots & \nabla_k f \end{array}\right],
+\end{align*}
+where $\nabla_0 f \in \R$, while each $\nabla_a f(\Theta)$ is a $d_a \times d_a$ traceless symmetric matrix for~$a\in[k]$.
+Similarly,
 \begin{align*}
   \nabla^2 f = \left[\begin{array}{c|ccc}
   \nabla_{00}^2 f & \nabla_{01}^2 f \dots & \nabla_{0k}^2 f \\
@@ -605,7 +602,7 @@ As a block matrix,
 \end{align*}
 where for $a, b \in [k]$ (i.e., for the blocks of the submatrix to the lower-right of the lines) the components $\nabla_{ab}^2f(\Theta)$ of the Hessian are linear operators from the space of traceless symmetric $d_b\times d_b$ matrices to the space of traceless symmetric $d_a \times d_a$ matrices.
 Moreover, $\nabla_{a0}f$ is a linear operator from $\R$ to the space of traceless symmetric $d_a\times d_a$ matrices (hence can itself be viewed as a matrix), $\nabla_{0a}f$ is the adjoint of this linear operators (which using the Hilbert-Schmidt inner product can be identified with the same matrix), and $\nabla^2_{00} f(\Theta)$ is a real number.
-\MW{The block conventions are a bit confusing :>}
+\MW{The block conventions are utterly insane :)}
 \end{definition}
 
 We note that the Hessian is symmetric with respect to the inner product~$\braket{\cdot,\cdot}$ on $\H$.
