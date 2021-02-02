@@ -448,7 +448,7 @@ Let $P\in\P$.
 The \emph{exponential map} $\exp_\Theta \colon \H \to \P$ at~$\Theta$ is defined by
 %\begin{align*}\exp_\Theta(H) &=   e^{\frac{H_0}{k \sqrt{D}}}\cdot ( \Theta_1^{1/2} e^{\sqrt{\frac{d_1}{D}} H_1} \Theta_1^{1/2}) \ot  \dots \ot (\Theta_k^{1/2} e^{\sqrt{\frac{d_k}{D}} H_k} \Theta_k^{1/2}).\end{align*}
 \begin{align*}
-  \exp_\Theta(H) &= e^{H_0} \cdot ( \Theta_1^{1/2} e^{\sqrt{d_1} H_1} \Theta_1^{1/2}) \ot  \dots \ot (\Theta_k^{1/2} e^{\sqrt{d_k} H_k} \Theta_k^{1/2}).
+  \exp_\Theta(H) &= e^{H_0} \cdot ( \Theta_1^{1/2} e^{\sqrt{d_1} H_1} \Theta_1^{1/2}) \ot \cdots \ot (\Theta_k^{1/2} e^{\sqrt{d_k} H_k} \Theta_k^{1/2}).
 \end{align*}
 The \emph{geodesics} through $\Theta$ are the curves $t \mapsto \exp_\Theta(t H)$ for $t\in\R$ and $H\in\H$.
 Up to reparameterization, there is a unique geodesic between any two points of~$\P$.
@@ -586,21 +586,21 @@ Similarly, the \emph{(Riemannian) Hessian}~$\nabla^2 f(\Theta)$ is the unique li
 \qquad \forall H,K \in \H.
 \end{align*}
 We abbreviate $\nabla f = \nabla f(I_D)$ and $\nabla^2 f = \nabla^2 f(I_D)$ for the gradient and Hessian, respectively, at the identity matrix, and we write $\nabla_a f$ and $\nabla^2_{ab}f$ for the components.
-As a block matrix,
+As block matrices,
 \begin{align*}
-  \nabla f &= \left[\begin{array}{c|ccc} \nabla_0 f & \nabla_1 f & \cdots & \nabla_k f \end{array}\right], \\
+  \nabla f = \left[\begin{array}{c} \nabla_0 f \\ \hline \nabla_1 f \\ \vdots \\ \nabla_k f \end{array}\right],
+  \qquad
 % \end{align*}
-\intertext{where $\nabla_0 f \in \R$ and each $\nabla_a f(\Theta)$ is a $d_a \times d_a$ traceless symmetric matrix. % for~$a\in[k]$.
-Similarly,}
 % \begin{align*}
-  \nabla^2 f &= \left[\begin{array}{c|ccc}
+  \nabla^2 f = \left[\begin{array}{c|ccc}
   \nabla_{00}^2 f & \nabla_{01}^2 f \dots & \nabla_{0k}^2 f \\
     \hline\nabla_{10}^2 f & \nabla_{11}^2 f \dots & \nabla_{1k}^2 f \\
   \vdots  & \vdots & \ddots & \vdots \\
   \nabla_{k0}^2 f & \nabla_{k1}^2 f \dots & \nabla_{kk}^2 f \\
-  \end{array}\right],
+  \end{array}\right].
 \end{align*}
-where for $a, b \in [k]$ (i.e., for the blocks of the submatrix to the lower-right of the lines) the components $\nabla_{ab}^2f(\Theta)$ of the Hessian are linear operators from the space of traceless symmetric $d_b\times d_b$ matrices to the space of traceless symmetric $d_a \times d_a$ matrices.
+Here, $\nabla_0 f \in \R$ and each $\nabla_a f(\Theta)$ is a $d_a \times d_a$ traceless symmetric matrix.
+Similarly, for~$a, b \in [k]$ (i.e., for the blocks of the submatrix to the lower-right of the lines) the components $\nabla_{ab}^2f(\Theta)$ of the Hessian are linear operators from the space of traceless symmetric $d_b\times d_b$ matrices to the space of traceless symmetric $d_a \times d_a$ matrices.
 Moreover, $\nabla_{a0}f$ is a linear operator from $\R$ to the space of traceless symmetric $d_a\times d_a$ matrices (hence can itself be viewed as such a matrix), $\nabla_{0a}f$ is the adjoint of this linear operators (which using the Hilbert-Schmidt inner product can be identified with the same matrix), and $\nabla^2_{00} f(\Theta)$ is a real number.
 \MW{The block conventions are utterly insane :)}
 \end{definition}
@@ -703,11 +703,10 @@ The gradient can be readily computed in terms of this data.
 
 \begin{lemma}[Gradient]\label{lem:gradient}
 Let $\rho = \frac{1}{nD} \sum_{i=1}^n \samp_i \samp_i^T $.
-The components of the gradient $\nabla f_x$ at the identity are given by
+Then the components of the gradient~$\nabla f_x$ at the identity are given by
 \begin{align*}
  \nabla_a \ef_{\samp} &= \sqrt{d_a}\left( \rho^{(a)} - \frac{\tr\rho}{d_a} I_{d_a}\right)
-  \qquad \text{ for } a \in [k],
-\intertext{and}
+  \qquad \text{ for } a \in [k], \\
   \nabla_0 \ef_\samp &= \tr \rho - 1.
 \end{align*}
 \end{lemma}
@@ -747,15 +746,15 @@ Then, the following occurs with probability at least
 $1 - 2e^{-\eps^2 nD/8} - \sum_{a=1}^k 2 e^{-\eps^2 N_a/2}$:
 \begin{align*}
   \norm{\nabla_a f_x}_{\op} &\leq \frac{9\eps}{\sqrt{d_a}} \qquad\text{ for all } a\in[k], \\
-  \abs{\nabla_0 f_x} &\leq \eps;
-\end{align*}
-In particular,
-\begin{align*}
+  \abs{\nabla_0 f_x} &\leq \eps.
+% \end{align*}
+\intertext{In particular,}
+% \begin{align*}
   \norm{\nabla f_x}_F^2
 % = \abs{\nabla_0 f_x}^2 + \sum_{a=1}^k \norm{\nabla_a f_x}_F^2
 % \leq \abs{\nabla_0 f_x}^2 + \sum_{a=1}^k d_a \norm{\nabla_a f_x}_{\op}^2 \\
 % \leq \eps^2 + \sum_{a=1}^k 81 \eps^2 =
-\leq (1 + 81 k) \eps^2.
+&\leq (1 + 81 k) \eps^2.
 \end{align*}
 \end{prop}
 
@@ -844,62 +843,76 @@ Recall that given data $x=(x_1,\dots,x_n)$, we defined $\rho = \frac1{nD} \sum_{
 For any $a \neq b \in [k]$, we may ``flatten'' $x$ by thinking of it as a $d_a d_b \times \frac{nD}{d_ad_b}$ matrix $x^{(ab)}$, and define $\rho^{(ab)} := x^{(ab)} (x^{(ab)})^T$.
 Then $\rho^{(ab)}$ is a positive semidefinite $d_ad_b \times d_ad_b$ matrix, which satisfies the defining property that
 \begin{align}\label{eq:two body partial trace duality}
-  \tr \rho^{(ab)} (H \ot H') = \tr \rho H_{(a)} H'_{(b)}
+  \tr \rho^{(ab)} (H \ot K) = \tr \rho \, H_{(a)} K_{(b)}
 \end{align}
-for any $d_a\times d_a$ matrix $H$ and any $d_b\times d_b$ matrix $H'$, with $H_{(a)}$, $H'_{(b)}$ defined as in \cref{eq:partial trace duality}.
+for any $d_a\times d_a$ matrix $H$ and any $d_b\times d_b$ matrix $K$, with $H_{(a)}$, $K_{(b)}$ defined as in \cref{eq:partial trace duality}.
 The matrices $\rho^{(ab)}$ are the \emph{partial trace} of $\rho$ over all but two of the coordinates.
-By comparing \cref{eq:partial trace duality,eq:two body partial trace duality}, we see that this definition is consistent with the definitions of~$\rho^{(a)}$,~$\rho^{(b)}$ in the sense that $\tr \rho^{(ab)} (H \ot I_{d_b}) = \tr \rho^{(a)} H$ and $\tr \rho^{(ab)} (I_{d_a} \ot H') = \tr \rho^{(b)} H'$ for all~$H,H'$.
+By comparing \cref{eq:partial trace duality,eq:two body partial trace duality}, we see that this definition is consistent with the definitions of~$\rho^{(a)}$,~$\rho^{(b)}$ in the sense that $\tr \rho^{(ab)} (H \ot I_{d_b}) = \tr \rho^{(a)} H$ and $\tr \rho^{(ab)} (I_{d_a} \ot K) = \tr \rho^{(b)} K$ for all~$H,K$.
 
-\MW{MICHAEL MARKER}
-
-\begin{lemma}[Riemmanian Hessian]\label{lem:hessian} Let $\rho = \frac{1}{nD}\sum_{i=1}^n \samp_i \samp_i^T$. Then the Riemannian Hessian $\nabla^2 \ell_{\samp}$ at the identity is given by
+\begin{lemma}[Hessian]\label{lem:hessian}
+Let $\rho = \frac{1}{nD}\sum_{i=1}^n \samp_i \samp_i^T$.
+Then the components of the Hessian~$\nabla^2 f_{\samp}$ at the identity are given by
 \begin{align*}
- \langle Y,  \left( \nabla^2_{aa} \ef_{\samp} \right) Y \rangle
-&=  d_a \tr \rho^{(a)} Y^2 \\
-  \langle Y,  \left( \nabla^2_{ab} \ef_{\samp} \right) Z \rangle
-&= \sqrt{d_a d_b} \tr \rho^{(ab)} \left( Y \ot Z \right)
+  \braket{H, (\nabla^2_{aa} f_x) H} &= d_a \tr \rho^{(a)} H^2 \\
+  \braket{H, (\nabla^2_{ab} f_x) K} &= \sqrt{d_a d_b} \tr \rho^{(ab)} \left( H \ot K \right)
 \end{align*}
 for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d_b\times d_b$ matrices~$Z$, and
 \begin{align*}
-\nabla^2_{00} \ef_\samp &=\tr \rho = \frac{1}{nD}\|\samp\|^2 \\
-\nabla^2_{a0} \ef_\samp &= \sqrt{d_a}\rho_a
+  \nabla^2_{a0} f_x = \nabla^2_{0a} f_x &= \sqrt{d_a} \left( \rho^{(a)} - \frac{\tr \rho}{d_a} I_{d_a} \right) \\
+  \nabla^2_{00} f_x &= \tr \rho.
 \end{align*}
 for all $a \in [k]$.
+\MW{Subtracted trace from $0a/a0$ components. OK?}
 \end{lemma}
 \begin{proof}
-Note that for $a,b \in \{0,\dots, k\}$, $\nabla^2_{ab} f_\samp = \nabla^2_{ab} F$ where $F:\Theta \mapsto \tr \rho \Theta$.
-  Then for $a \in [k]$, and $Y, Z$ Hermitian we have
+  Note that the Hessian of~$f_x$ coincides with the one of $\tr\rho\,\Theta$.
+  This follows from \cref{eq:obj via rho}, since the Hessian of $\log\det\Theta$ vanishes identically.
+  % Indeed, for any $H\in\H$,
+  % \begin{align*}
+  %   \log\det(\exp_\Theta(tH))
+  % = \log\det(e^{tH_0} \Theta)
+  % = \log \det(\Theta) + t H_0 D,
+  % \end{align*}
+  % which is an affine-linear function in $t\in\R$.
+  Accordingly, we will compute the Hessian of~$\tr\rho\,\Theta$.
+  For $a\in[k]$ and any traceless symmetric $d_a\times d_a$ matrix $H$, we have
   \begin{align*}
-   \langle Y,  \left( \nabla^2_{aa} F_{\samp} \right) Y \rangle
-  &=  \partial_{s=0} \partial_{t=0} \tr \rho \, e^{(s+t)\sqrt{d_a}  Y_{(a)}} \\
-  &= \partial_{s=0} \partial_{t=0} \tr \rho^{(a)} e^{(s+t)  \sqrt{d_a}Y}
-  = d_a \tr \rho^{(a)} Y^2,
+    \braket{H, (\nabla^2_{aa} f_x) H}
+  = \partial_{s=0} \partial_{t=0} \tr \rho \, e^{(s+t) \sqrt{d_a} H_{(a)}}
+  = d_a \tr \rho H_{(a)}^2
+  = d_a \tr \rho^{(a)} H^2
   \end{align*}
-  while for $a\neq b \in [k]$ we have
+  using \cref{eq:partial trace duality}.
+  Similarly, for $a\neq b\in[k]$, any traceless symmetric $d_a\times d_a$ matrix $H$, and any traceless symmetric $d_b\times d_b$ matrix $K$, we find that
   \begin{align*}
-    \langle Y,  \left( \nabla^2_{ab} F_{\samp} \right) Z \rangle
-  &=\partial_{s=0} \partial_{t=0} \tr \rho \, e^{s \sqrt{d_a}Y_{(a)} + t \sqrt{d_b} Z_{(b)}} \\
-  &= \partial_{s=0} \partial_{t=0} \tr \rho^{(ab)} \left( e^{s \sqrt{d_a}  Y} \ot e^{t \sqrt{d_b} Z} \right)\\
-  &= \sqrt{d_a d_b}  \tr \rho^{(ab)} \left( Y \ot Z \right).
+    \braket{H, (\nabla^2_{ab} f_x) K}
+  &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s \sqrt{d_a} H_{(a)} + t \sqrt{d_b} K_{(b)}} \\
+  &= \sqrt{d_a d_b} \tr \rho \, H_{(a)} K_{(b)}
+  = \sqrt{d_a d_b} \tr \rho^{(ab)} \left( H \ot K \right)
   \end{align*}
- Also $\nabla^2_{00} F_{\samp} =\partial^2_{t=0} \tr \rho  e^{t} = \tr \rho$, and for all $a \in [k],$
- \begin{align*}
-\langle Z, \nabla^2_{a0} F_{\samp} H_0 \rangle
-  &=  \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s\sqrt{d_a} Z_{(a)}}e^{tH_0} \\
-  &= \sqrt{d_a} H_0 \tr \rho_a Z.
+  using \cref{eq:two body partial trace duality}.
+  Next, for $a\in[k]$ and any traceless symmetric $d_a\times d_a$ matrix $H$, we have
+  \begin{align*}
+    \braket{H, \nabla^2_{a0} f_x}
+  = \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s\sqrt{d_a} H_{(a)} + t}
+  = \sqrt{d_a} \tr \rho \, H_{(a)}
+  = \sqrt{d_a} \tr \rho^{(a)} H,
   \end{align*}
-  for all $\lambda \in \R$ and Hermitian $Z$.
+  recalling that we identify $\nabla^2_{a0} f_x$ with a traceless symmetric $d_a\times d_a$ matrix;
+  this shows that
+  \begin{align*}
+    \nabla^2_{a0} f_x = \sqrt{d_a} \left( \rho^{(a)} - \frac{\tr \rho}{d_a} I_{d_a} \right),
+  \end{align*}
+  and similarly for the transpose.
+  Finally,
+  \begin{align*}
+    \nabla^2_{00} f_x
+  = \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s+t}
+  = \tr \rho.
+  \end{align*}
 \end{proof}
 
-%\MW{Explain that this looks like $\frac1{\norm \samp_2^2} \sum_i \samp_i \ot \samp_i - \dots$ if we think of \dots}
-%\CF{most important part of hessian is this $\rho^{ab}$ part ( a channel), discuss that there are three ways to look at it: partial trace, channel (cpm), and natural representation. Cite Pisier in channel form. In appendix prove by translating to channel}
-
-
-
-
-
-
-
+\MW{MICHAEL MARKER}
 We now state our strong convexity result at the identity:
 
 %\begin{theorem}\label{thm:tensor-convexity-old}Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples is $N \geq k^2 \max_{a=1}^k d_a^2 / D$. Then, with probability at least $1 - 1/{\color{red}\poly(D)}$ \TODO{propagate from \cref{cor:off-diag-hess}} ,$$ (1 - (k - 1) \lambda - k \eps^2 - \eps) I \preceq \nabla^2 f_{\rv} \preceq (1 + (k - 1) \lambda + k \eps^2 + \eps) I.$$ $$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq (k - 1) \lambda + k \eps^2 + \eps $$ In particular, $f_{\rv}$ is $\Omega(1)$ strongly convex with probability \TODO{propagate from \cref{cor:off-diag-hess}} \end{theorem}
