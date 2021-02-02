@@ -917,15 +917,15 @@ For general $\omega \in \PD(d_1d_2)$, a linear map of the form
   \Phi \colon \mat(d_1) \to \mat(d_2), \quad \braket{H, \Phi(K)} = \tr \omega (H \ot K)
 \end{align*}
 is known as a \emph{completely positive map}.
-If $\omega = \sum_{i=1}^N \operatorname{vec}(A_i) \operatorname{vec}(A_i)^T$ for $d_2\times d_1$ matrices~$A_1,\dots,A_N$, we have the following two equivalent ways to write the corresponding completely positive map:
-\begin{align*}
-  \Phi(K) = \sum_{i=1}^N A_i K A_i^T
+If $\omega = \sum_{i=1}^N \operatorname{vec}(A_i) \operatorname{vec}(A_i)^T$ for $d_2\times d_1$ matrices~$A_1,\dots,A_N$, we have the following two equivalent ways to write the corresponding completely positive map, which we denote by $\Phi_A$:
+\begin{align}\label{eq:kraus}
+  \Phi_A(K) = \sum_{i=1}^N A_i K A_i^T
 \quad\text{or}\quad
-  \operatorname{vec}(\Phi(K)) = \sum_{i=1}^N (A_i \ot A_i) \operatorname{vec}(K).
-\end{align*}
-Conversely, any linear map $\Phi$ of this form is completely positive.
-The matrices $A_1,\dots,A_N$ are known as Kraus operators of~$\Phi$.
-We denote by $\Phi^*\colon\mat(d_2)\to\mat(d_1)$ the adjoint of $\Phi$ with respect to the Hilbert-Schmidt inner product; it has $A_1^T,\dots,A_N^T$ as Kraus operators.
+  \operatorname{vec}(\Phi_A(K)) = \sum_{i=1}^N (A_i \ot A_i) \operatorname{vec}(K).
+\end{align}
+Conversely, any linear map of this form is completely positive.
+The matrices $A_1,\dots,A_N$ are known as Kraus operators of~$\Phi_A$.
+We denote by $\Phi^*\colon\mat(d_2)\to\mat(d_1)$ the adjoint of a completely positive map~$\Phi$ with respect to the Hilbert-Schmidt inner product; this is again a completely positive map (with Kraus operators the transposes of the original Kraus operators).
 
 In our proof of strong convexity, we will show that strong convexity follows if all the completely positive maps $\Phi^{(ab)}$ arising from the partial traces $\rho^{(ab)}$ are good \emph{quantum expanders}.
 
@@ -1126,20 +1126,36 @@ Using \cref{eq:baby norm bounds} we obtain the desired bound.
 % % thus $\|\nabla_{a0} f\|_{op} \leq \eps \tr \rho$. It follows that $\|M_{\text{off}}\|_{op} \leq \sqrt{k} \eps \tr \rho$. Applying \cref{lem:block-matrix} to these two blocks shows $\nabla^2 f_\samp$ dominates a block diagonal matrix where each block is dominates $(1 - \eps) (\tr \rho) I - (k-1) \lambda (\tr \rho) I  - \sqrt{k} \eps (\tr \rho) I.$
 %  \end{proof}
 
+We are concerned with $\Phi^{(ab)}$ that arise from random Gaussians.
+Just like random graphs can give rise to good expanders, it is known that random completely positive maps, namely~$\Phi$ constructed by choosing Kraus operators at random from various well-behaved distributions, yield good quantum expanders.
+Pisier showed the following result when the Kraus operators are chosen to be standard Gaussians.
+\MW{Should explain in the appendix how exactly this follows from what is stated there.}
+\MW{What does the $\Omega$ depend on? Universal constant?}
+\MW{And how did the constant $C>0$ in the appendix vanish?}
+\MW{Why is the RHS now $\sqrt{d_1} + \sqrt{d_2}$?}
+\MW{I think there was some normalization mismatch, please check.}
+
+\begin{theorem}[\cite{pisier2012grothendieck,P14}]\label{thm:hess-pisier}
+Let $A_1,\dots,A_N$ be independent $d_2\times d_1$ random matrices with independent standard Gaussian entries.
+Then, for every $t >0$, with probability at least~$1 - t^{-\Omega(d_{1} + d_{2})}$, the completely positive map $\Phi_A$, defined as in \cref{eq:kraus}, satisfies
+\begin{align*}
+  \norm \Phi_A \leq t^{2} \sqrt N \left( d_1 + d_2 \right).
+\end{align*}
+\end{theorem}
+
+Pisier's actual result is slightly different.
+As stated, \cref{thm:hess-pisier} is an easy consequence Theorem~16.6 in~\cite{pisier2012grothendieck}, together with a standard symmetrization trick (see, e.g., the proof of Lemma~4.1 in~\cite{P14}).
+We present the details in \cref{sec:pisier}.
+
 \MW{MARKER}
 
-We are concerned with $\Phi^{ab}$ where $\rv$ is a random Gaussian.  Like random graphs, it is known that random completely positive maps, namely those $\Phi_\samp$ obtained by choosing $x_i$ from various well-behaved distributions, yield good quantum expanders. Pisier showed the following result when $x_i$ are chosen from a standard Gaussian.
 
 %We show that, restricted to the traceless matrices, this quadratic form is small. More precisely, we bound the operator norm of the map $T: Z \mapsto \tr_2 \rho^{(ab)} \left(I \ot Z\right)$ restricted to the traceless symmetric matrices. Such maps are called \emph{quantum channels}, and we will revisit their properties later \CF{where? or earlier?}. The operator norm condition we desire for $T_{\rho}$ is equivalent to $T_{\rho}$ being a good \emph{quantum expander} - this led Pisier to bound the operator norm of $T_{\rho}$ for random $\rho$. \CF{one-sentence motivation of quantum expanders?}
 
-\begin{theorem}[\cite{pisier2012grothendieck, P14}]\label{thm:hess-pisier} Let $X = (X_1, \dots, X_N)$ be a tuple of standard Gaussians on $(\R^{d_1}\ot \R^{d_2})^n$. Then for all $t >0$, with failure probability at most $t^{-\Omega(d_{1} + d_{2})}$, the random completely positive map $\Phi_X$ satisfies
-$$\frac{1}{nD}\|\Phi_{X}\|_0 \leq t^{2} \frac{d_{1}+d_{2}}{\sqrt{d_{1} d_{2} nD}}$$ on traceless symmetric matrices. \end{theorem}
 
 %\CF{relate theorem 14 to quantum expansion; something like if $\|\Phi\|_0 = \lambda$ then $\Phi$ is $\lambda - C \eps$ quantum expander when balanced and if $\Phi$ is an $\eps$-balanced quantum expander then $\|\Phi\|_0$ has operator norm $\lambda - C \eps$}.
 
-Pisier's actual result is slightly different; \cref{thm:hess-pisier} is essentially Theorem~16.6 in~\cite{pisier2012grothendieck}, together with a standard symmetrization trick (e.g., Proof of Lemma~4.1 in~\cite{P14}). We present the details in \cref{sec:pisier}.
-
-The operator $\Phi^{ab}$ is precisely of the form of $\Phi_{\rv}$ in \cref{thm:hess-pisier}: $\Phi^{(a,b)}$ is distributed as $\Phi_{\rv}$ for $\rv$ a tuple of $n D/d_a d_b$ many i.i.d. $d_b \times d_a $ standard Gaussian matrices, so \cref{thm:tensor-convexity} follows quite easily once balancedness can be controlled. The following shows that our gradient bounds \cref{prop:gradient-bound} also control balancedness. The observation follows immediately from \cref{lem:gradient} and the fact that $\Phi^{ab}(I_{d_b}) = \rho^{(a)}$, $(\Phi^{ab})^*(I_{d_a}) = \rho^{(b)}$, and $\tr \Phi^{ab}(I_{d_b}) = \tr \rho$.
+The operator $\Phi^{ab}$ is precisely of the form of $\Phi_{\rv}$ in \cref{thm:hess-pisier} \MW{Up to $1/N$.}: $\Phi^{(a,b)}$ is distributed as $\Phi_{\rv}$ for $\rv$ a tuple of $n D/d_a d_b$ many i.i.d. $d_b \times d_a $ standard Gaussian matrices, so \cref{thm:tensor-convexity} follows quite easily once balancedness can be controlled. The following shows that our gradient bounds \cref{prop:gradient-bound} also control balancedness. The observation follows immediately from \cref{lem:gradient} and the fact that $\Phi^{ab}(I_{d_b}) = \rho^{(a)}$, $(\Phi^{ab})^*(I_{d_a}) = \rho^{(b)}$, and $\tr \Phi^{ab}(I_{d_b}) = \tr \rho$.
 \begin{obs}\label{obs:doubly-gradient}
 $\Phi^{ab}(I_{d_b})$ is doubly balanced for all $a<b \in [k]$ if and only if
 $$\sqrt{d_a} \| \nabla_a f\| \leq \eps \tr \rho.$$
@@ -1669,14 +1685,11 @@ We compare the performance of the estimator with Zhou's single step estimator \C
 %=============================================================================
 We restate the theorem in language closer to Pisier's original:
 
-% Appendix - \url{https://arxiv.org/abs/1209.2059}
-% Theorem 16.6 - \url{https://arxiv.org/pdf/1101.4195.pdf}
-%\CF{at some point include a sentence about the setting of $\alpha_i$, maybe in the main body}
-%\CF{choose different letter for $n$}
 \begin{theorem}\label{thm:Pisier-expansion}
 Let $\Pi: \mat(m) \to \mat(m)$ denote the projection onto the traceless matrices, and $Y$ a tuple of i.i.d. standard Gaussians in $\mat(n,m)$. There are constants $c,C > 0$ such that for all $m \leq n$ we have
 \[ \left\| \left(\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i}\right) \circ \Pi \right\|_{op} \leq C t^{2} \|\alpha\|_{2} \left( \E \|Y\|_{op} \right)^{2} \]
 with probability at least $ 1- t^{-c(m+n)}$.
+\MW{The thing on the right should be $\E \norm{Y_i}_{\op}$ (for any $j$) right?}
 \end{theorem}
 
 The relation to our desired expansion result follows from the following: for $Y \in \R^{n \times m}$ we have $Y \otimes Y : \R^{m \times m} \to \R^{n \times n}$, and so for $Z \in \mat(m)$:
