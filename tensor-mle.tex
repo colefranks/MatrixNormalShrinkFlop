@@ -947,7 +947,7 @@ A $(0, \lambda)$-quantum expander is called a \emph{$\lambda$-quantum expander}.
 \end{definition}
 
 Quantum expanders play an important role in quantum information theory and quantum computation \TODO{cite}.
-\MW{There, typically $\Phi$ is trace preserving (a quantum channel) and $d_1=d_2$, so the condition is just $\norm{\Phi}_0 \leq \lambda$.}\CF{doesn't it also have to be unital?}
+\MW{There, typically $\Phi$ is trace preserving (a quantum channel) and $d_1=d_2$, so the latter condition is just $\norm{\Phi}_0 \leq \lambda$.}\CF{doesn't it also have to be unital?}\MW{Yes, definitely, I was just talking about the inequality involving $\lambda$.}
 For us, their purpose will be the following lemma allowing us to translate quantum expansion properties into strong convexity.
 
 \begin{lemma}[Strong convexity from expansion]\label{lem:expansion-convexity}
@@ -1131,10 +1131,8 @@ We are concerned with $\Phi^{(ab)}$ that arise from random Gaussians.
 Just like random graphs can give rise to good expanders, it is known that random completely positive maps, namely~$\Phi$ constructed by choosing Kraus operators at random from various well-behaved distributions, yield good quantum expanders.
 Pisier showed the following result when the Kraus operators are chosen to be standard Gaussians.
 \MW{Should explain in the appendix how exactly this follows from what is stated there.}
-\MW{What does the $\Omega$ depend on? Universal constant?}\CF{yes, isn't that the usual assumption?}
-\MW{And how did the constant $C>0$ in the appendix vanish?} \CF{Fixed}
-\MW{Why is the RHS now $\sqrt{d_1} + \sqrt{d_2}$?} \CF{probably a mistake!}
-\MW{I think there was some normalization mismatch, please check.}\CF{I agree with what you have now}
+\MW{What does the $\Omega$ depend on? Universal constant?}\CF{yes, isn't that the usual assumption?}\MW{Not sure, but if we use this consistently let's add to the notations!}
+\MW{Why is the RHS not $\sqrt{d_1} + \sqrt{d_2}$?} \CF{probably a mistake!}
 
 \begin{theorem}[\cite{pisier2012grothendieck,P14}]\label{thm:hess-pisier}
 There is an absolute constant $C>0$ such that the following holds. Let $A_1,\dots,A_N$ be independent $d_2\times d_1$ random matrices with independent standard Gaussian entries.
