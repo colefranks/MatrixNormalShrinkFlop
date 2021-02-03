@@ -1317,7 +1317,7 @@ The proof is given in the appendix.
 
 \begin{lemma}[Robustness]\label{convexRobustness}
 There is a universal constant $c>0$ such that if $f_x$ is $\lambda$-strongly convex at~$I_D$,
-$\norm{\nabla_a f_x(I_D)}_{\op} \leq \frac c{\sqrt{d_a}}$ for every $a\in[k]$ \MW{and probably 0 component $\leq c$?},
+$\norm{\sqrt{d_{a}} \nabla_a f_x(I_D)}_{\op} \leq c$ for every $a\in[k]$ and $|\nabla_{0} f_{\samp}(I_{D})| \leq c$ \MW{and probably 0 component $\leq c$?} \AR{Good point, added a condition here and used it in appendix B to derive the conditions I need for robustness proof},
 then $f_x$ is $(\lambda-O(\delta))$-strongly convex at any $\Theta\in\P$ such that $\delta := \norm{\log\Theta}_{\op} \leq c$.
 \end{lemma}
 
@@ -2055,7 +2055,7 @@ For operator $M : \mat(d_{b}) \to \mat(d_{a})$, we let $\|M\|_{0}$ denote the $F
 \end{definition}
 
 \begin{lemma}[\cite{KLR19}] \label{inftyto2}
-$\|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}^{2} \leq \|d_{a} \rho_{\samp}^{(a)}\|_{op} \|d_{b} \rho_{\samp}^{(b)}\|_{op}$
+$\|\nabla^{2}_{ab} f_{\samp}\|_{F \to F}^{2} \leq \|d_{a} \rho_{\samp}^{(a)}\|_{op} \|d_{b} \rho_{\samp}^{(b)}\|_{op}$
 \end{lemma}
 %\begin{proof}This was already in KLR and we have two new proofs: one by convexity, and one by Riesz-Thorin. \AR{The proofs are in some other file, we can add it if we like}\end{proof}
 
@@ -2070,12 +2070,16 @@ This is just a translation of \cref{btoabRobustness}, \cref{ctoabRobustness}:
 \[ \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} = \frac{\|\nabla^{2}_{ab} f_{\samp}\|_{F \to F}}{\sqrt{d_{a} d_{b}} }       \]
 Using the same iterative strategy as \cref{diagRobustness} we can show:
 \[ |\langle Y, (\nabla^{2}_{ab} f_{\samp'} - \nabla^{2}_{ab} f_{\samp}) Z \rangle| \leq 20 \|\delta\|_{op} \|\nabla^{2}_{ab} f_{\samp}\|_{F \to F} \|Y\|_{F} \|Z\|_{F}    \]
-We used \cref{btoabRobustness} for $\{a,b\}$ and \cref{ctoabRobustness} for the rest. The final step follows from \cref{inftyto2} and the initial conditions on $\|d_{a} \rho_{a}\|_{op}, \|d_{b} \rho_{b}\|_{op}$.
+We used \cref{btoabRobustness} for $\{a,b\}$ and \cref{ctoabRobustness} for the rest. The final step follows from \cref{inftyto2} stating $\|\nabla^{2}_{ab} f_{\samp}\|_{F \to F}^{2} \leq \|d_{a} \rho_{\samp}^{(a)}\|_{op} \|d_{a} \rho_{\samp}^{(a)}\|_{op}$; and the initial conditions on $\|d_{a} \rho_{a}\|_{op}, \|d_{b} \rho_{b}\|_{op} \leq 1 + \frac{1}{20}$.
 \end{proof}
 
-Now it is a simple matter of putting both terms together.
+Now it is a simple matter of combining terms.
 
 \begin{proof} [Proof of \cref{convexRobustness}]
+The above corollaries (\ref{constantRobustness},\ref{diagRobustness},\ref{offdiagRobustness}) require bounds on $\rho^{(a)}$, which are implied by the conditions on the gradient:
+\[ \|d_{a} \rho^{(a)}\|_{op} \leq 1 + |Tr \rho - 1| + \|d_{a} \rho^{(a)} - (Tr \rho) I_{d_{a}} \|_{op}    \]
+\[ = 1 + |\nabla_{0} f| + \|\sqrt{d_{a}} \nabla_{a} f\|_{op} \leq 1 + 2c     \]
+So choosing $c \leq \frac{1}{40}$ suffices. 
 Recall the definition of a quadratic form of the Hessian:
 \[ \langle Z, (\nabla^{2} f) Z \rangle = z_{0} (\nabla^{2}_{00} f) z_{0} + 2 \sum_{a} \langle z_{0}, (\nabla^{2}_{0a} f) Z_{a} \rangle + \sum_{a} \langle Z_{a}, (\nabla^{2}_{aa} f) Z_{a} \rangle + \sum_{a \neq b} \langle Z_{a}, (\nabla^{2}_{ab} f) Z_{b} \rangle     \]
 %\[ \langle Z, (\nabla^{2} f) Z \rangle = \langle Z, (\nabla^{2} F) Z \rangle + \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle     \]
