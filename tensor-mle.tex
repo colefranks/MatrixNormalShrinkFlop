@@ -256,6 +256,7 @@ Our regularizer has a Bayesian interpretation as coming from a Wishart prior for
 We write $\mat(d)$ for the space of $d\times d$ matrices, $\PD(d)$ for the convex cone of $d\times d$ positive definite matrices; $\GL(d)$ denotes the group of invertible $d\times d$ matrices.
 For a matrix $A$, $\norm{A}_{\op}$ denotes the operator norm, $\norm{A}_F = (\tr A^T A)^{\frac12}$ the Frobenius norm, and $\braket{A,B} = \tr A^T B$ for the Hilbert-Schmidt inner product.
 We extend these definitions to tuples $A=(A_0;A_1,\dots,A_k)$, where~$A_0\in\R$ and the $A_a$ for $a\in[k]$ are matrices and denote them by the same symbol, i.e., $\norm{A}_F = (\abs{A_0}^2 + \sum_{a=1}^k \norm{A_a}_F^2)^{1/2}$ and similarly for the inner product.
+\MW{Define $O, \Theta$ notation and say that for us this is always about universal constants.}
 
 %=============================================================================
 \section{Model and main results}\label{sec:main results}
@@ -1013,7 +1014,7 @@ A $(0, \lambda)$-quantum expander is called a \emph{$\lambda$-quantum expander}.
 Quantum expanders play an important role in quantum information theory and quantum computation \TODO{cite}.
 There one typically takes $d_a=d_b$, so that \cref{eq:expansion} simplifies to~$\norm{\Phi}_0 \leq \lambda$.
 For us, their purpose will be the following lemma allowing us to translate quantum expansion properties into strong convexity.
-\MW{Could already at this point translate the conditions into ones involving $\rho^{(a)}$, $\rho^{(b)}$. Or ok like it is?}
+\MW{Could at this point translate the conditions into ones that involve $\rho^{(a)}$, $\rho^{(b)}$, $\tr\rho$, as opposed to doing it twice in the proofs.}
 
 \begin{lemma}[Strong convexity from expansion]\label{lem:expansion-convexity}
 If the completely positive maps $\Phi^{(ab)}$ defined in \cref{eq:hessian channel} are $(\eps,\lambda)$-quantum expanders for every $a\neq b\in[k]$, then
@@ -1198,13 +1199,13 @@ Using \cref{eq:baby norm bounds} we obtain the desired bound.
 We are concerned with $\Phi^{(ab)}$ that arise from random Gaussians.
 Just like random graphs can give rise to good expanders, it is known that random completely positive maps, namely~$\Phi$ constructed by choosing Kraus operators at random from various well-behaved distributions, yield good quantum expanders.
 Pisier showed the following result when the Kraus operators are chosen to be standard Gaussians.
-\MW{What does the $\Omega$ depend on? Universal constant?}\CF{yes, isn't that the usual assumption?}\MW{Not sure, since on the other hand we write ``There exists an absolute constant $C>0$.'' (here there is no difference in contrast to the case that we discussed before, right?). Happy if we want to use $O$, $\Omega$ consistently in this way (and define it in the Notation subsection).}
 
 \begin{theorem}[\cite{pisier2012grothendieck,P14}]\label{thm:hess-pisier}
-There is an absolute constant $C>0$ such that the following holds. Let $A_1,\dots,A_N$ be independent $d_a\times d_b$ random matrices with independent standard Gaussian entries.
+% There is an absolute constant $C>0$ such that the following holds.
+Let $A_1,\dots,A_N$ be independent $d_a\times d_b$ random matrices with independent standard Gaussian entries.
 Then, for every $t >0$, with probability at least~$1 - t^{-\Omega(d_a + d_b)}$, the completely positive map $\Phi_A$, defined as in \cref{eq:def cp}, satisfies
 \begin{align*}
-  \norm{\Phi_A}_0 \leq Ct^{2} \sqrt N \left( d_a + d_b \right).
+  \norm{\Phi_A}_0 \leq O\left(t^{2} \sqrt N \left( d_a + d_b \right)\right).
 \end{align*}
 \end{theorem}
 
@@ -1264,11 +1265,11 @@ By \cref{prop:gradient-bound}, and assuming the bound $\tr \rho \geq \frac78$ fr
 Finally, we describe an event that ensures that $\norm{\Phi^{(ab)}}_{\op} \leq \lambda \smash{\frac{\tr\rho}{\sqrt{d_a d_b}}}$ for $\lambda=\frac1{20k}$ for any fixed~$a \neq b$, which is the other condition needed for quantum expansion.
 Recall that each~$\Phi^{(ab)}$ is distributed as $\frac1{nD} \Phi_A$, where $A$ is a tuple of $\frac{nD}{d_ad_b}$ many $d_a \times d_b$ matrices with independent standard Gaussian entries.
 Thus, taking $t^2 = O(\smash{\frac{\lambda \sqrt{nD}}{d_a + d_b}})$ and again assuming that $\tr\rho \geq \frac78$, we have $\norm{\Phi^{(ab)}}_{\op} \leq \lambda \frac{\tr\rho}{\sqrt{d_a d_b}}$
-% Take t^2 = \frac1{C'} \frac78 \frac{\lambda \sqrt{nD}}{d_a + d_b}, with $C'$ the constant from Pisier's theorem
+% Take t^2 = \frac1{X} \frac78 \frac{\lambda \sqrt{nD}}{d_a + d_b}, with $X$ the universal constant from Pisier's theorem
 % \begin{align*}
 %   \norm{\Phi^{(ab)}}_0
 % \leq \frac1{nD} \norm{\Phi_A}_0
-% \leq \frac1{nD} C' t^{2} \sqrt N \left( d_a + d_b \right) \\
+% \leq \frac1{nD} X t^{2} \sqrt N \left( d_a + d_b \right) \\
 % \leq \frac78 \frac1{nD} \lambda \sqrt{nD} \sqrt N
 % \leq \frac78\frac1{nD} \lambda \sqrt{nD} \sqrt{nD} \frac1{\sqrt{d_ad_b}}
 % = \frac78\lambda \frac1{\sqrt{d_ad_b}}
