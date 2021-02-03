@@ -42,6 +42,7 @@
 \DeclareMathOperator{\tr}{Tr}
 \DeclareMathOperator{\rk}{rk}
 \DeclareMathOperator{\PD}{PD}
+\DeclareMathOperator{\vect}{vec}
 
 \DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
 \DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
@@ -743,6 +744,7 @@ and let $0<\eps<1$.
 Suppose $N_a := \frac{nD}{d_a}$ is at least $N_a \geq \frac{d_a}{\eps^2}$ for all~$a\in[k]$.
 Then, the following occurs with probability at least
 $1 - 2e^{-\eps^2 nD/8} - \sum_{a=1}^k 2 e^{-\eps^2 N_a/2}$:
+\MW{Replace $\eps$ by $\eps/9$.}
 \begin{align*}
   \norm{\nabla_a f_x}_{\op} &\leq \frac{9\eps}{\sqrt{d_a}} \qquad\text{ for all } a\in[k], \\
   \abs{\nabla_0 f_x} &\leq \eps.
@@ -758,7 +760,7 @@ $1 - 2e^{-\eps^2 nD/8} - \sum_{a=1}^k 2 e^{-\eps^2 N_a/2}$:
 \end{prop}
 
 To prove this we will need a standard result in matrix concentration.
-When the samples $x=(x_1,\dots,x_n)$ are independent standard Gaussians, then $\rho^{(a)}$ is distributed as $\frac1{nD} Y Y^T$, where~$Y$ is a random $d_a \times N_a$ matrix with independent standard Gaussian entries, where~$N_a = \frac{nD}{d_a}$.
+When the samples $x=(x_1,\dots,x_n)$ are independent standard Gaussians in $\R^D$, then $\rho^{(a)}$ is distributed as $\frac1{nD} Y Y^T$, where~$Y$ is a random $d_a \times N_a$ matrix with independent standard Gaussian entries, where~$N_a = \frac{nD}{d_a}$.
 The following result bounds the singular values of such random matrices.
 
 \begin{theorem}[Corollary 5.35 of \cite{vershynin2010introduction}]\label{cor:vershynin}
@@ -918,11 +920,12 @@ For general $\omega \in \PD(d_1d_2)$, a linear map of the form
   \Phi \colon \mat(d_1) \to \mat(d_2), \quad \braket{H, \Phi(K)} = \tr \omega (H \ot K)
 \end{align*}
 is known as a \emph{completely positive map}.
-If $\omega = \sum_{i=1}^N \operatorname{vec}(A_i) \operatorname{vec}(A_i)^T$ for $d_2\times d_1$ matrices~$A_1,\dots,A_N$, we have the following two equivalent ways to write the corresponding completely positive map, which we denote by $\Phi_A$:
+\MW{Simplify, don't talk about a general $\omega$.}
+If $\omega = \sum_{i=1}^N \vect(A_i) \vect(A_i)^T$ for $d_2\times d_1$ matrices~$A_1,\dots,A_N$, we have the following two equivalent ways to write the corresponding completely positive map, which we denote by $\Phi_A$:
 \begin{align}\label{eq:kraus}
   \Phi_A(K) = \sum_{i=1}^N A_i K A_i^T
 \quad\text{or}\quad
-  \operatorname{vec}(\Phi_A(K)) = \sum_{i=1}^N (A_i \ot A_i) \operatorname{vec}(K).
+  \vect(\Phi_A(K)) = \sum_{i=1}^N (A_i \ot A_i) \vect(K).
 \end{align}
 Conversely, any linear map of this form is completely positive.
 The matrices $A_1,\dots,A_N$ are known as Kraus operators of~$\Phi_A$.
@@ -945,6 +948,8 @@ Say $\Phi$ is an \emph{$(\eps, \lambda)$-quantum expander} if $\Phi$ is $\eps$-d
 \end{align*}
 A $(0, \lambda)$-quantum expander is called a \emph{$\lambda$-quantum expander}.
 \end{definition}
+
+\MW{Could already at this point translate the conditions into ones involving $\rho^{(ab)}$.}
 
 Quantum expanders play an important role in quantum information theory and quantum computation \TODO{cite}.
 \MW{There, typically $\Phi$ is trace preserving (a quantum channel) and $d_1=d_2$, so the latter condition is just $\norm{\Phi}_0 \leq \lambda$.}\CF{doesn't it also have to be unital?}\MW{Yes, definitely, I was just talking about the inequality involving $\lambda$.}
@@ -1130,15 +1135,13 @@ Using \cref{eq:baby norm bounds} we obtain the desired bound.
 We are concerned with $\Phi^{(ab)}$ that arise from random Gaussians.
 Just like random graphs can give rise to good expanders, it is known that random completely positive maps, namely~$\Phi$ constructed by choosing Kraus operators at random from various well-behaved distributions, yield good quantum expanders.
 Pisier showed the following result when the Kraus operators are chosen to be standard Gaussians.
-\MW{Should explain in the appendix how exactly this follows from what is stated there.}
-\MW{What does the $\Omega$ depend on? Universal constant?}\CF{yes, isn't that the usual assumption?}\MW{Not sure, but if we use this consistently let's add to the notations!}
-\MW{Why is the RHS not $\sqrt{d_1} + \sqrt{d_2}$?} \CF{probably a mistake!}
+\MW{What does the $\Omega$ depend on? Universal constant?}\CF{yes, isn't that the usual assumption?}\MW{Not sure, since on the other hand we write ``There exists an absolute constant $C>0$.'' Or is there some subtlety that I am missing? Happy to use $O$, $\Omega$ consistently as you say (and to say so in the Notations subsection).}
 
 \begin{theorem}[\cite{pisier2012grothendieck,P14}]\label{thm:hess-pisier}
 There is an absolute constant $C>0$ such that the following holds. Let $A_1,\dots,A_N$ be independent $d_2\times d_1$ random matrices with independent standard Gaussian entries.
 Then, for every $t >0$, with probability at least~$1 - t^{-\Omega(d_{1} + d_{2})}$, the completely positive map $\Phi_A$, defined as in \cref{eq:kraus}, satisfies
 \begin{align*}
-  \norm \Phi_A \leq Ct^{2} \sqrt N \left( d_1 + d_2 \right).
+  \norm \Phi_A \leq Ct^{2} \sqrt N \left( d_1 + d_2 \right). \text{\MW{Should this be $\sqrt{d_1} + \sqrt{d_2}$?}}
 \end{align*}
 \end{theorem}
 
@@ -1146,22 +1149,28 @@ Pisier's actual result is slightly different.
 As stated, \cref{thm:hess-pisier} is an easy consequence Theorem~16.6 in~\cite{pisier2012grothendieck}, together with a standard symmetrization trick (see, e.g., the proof of Lemma~4.1 in~\cite{P14}).
 We present the details in \cref{sec:pisier}.
 
+When the samples $x=(x_1,\dots,x_n)$ are independent standard Gaussians in $\R^D$, then~$\rho^{(ab)}$ is distributed as $\frac1{nD} ZZ^T$, where $Z$ is a random $d_a d_b \times \frac{nD}{d_ad_b}$ matrix with independent standard Gaussian entries, as follows from the discussion above \cref{eq:two body partial trace duality}.
+Therefore, the random completely positive maps $\Phi^{(ab)}$ we are interested in have the same distribution as~$\frac1{nD}\Phi_A$, where the $A_1,\dots,A_N$ are independent $d_a \times d_b$ standard Gaussian matrices and~$N=\frac{nD}{d_ad_b}$.
+Accordingly, strong convexity at the identity follows quite easily from \cref{thm:hess-pisier} once double balancedness can be controlled.
+For the latter, observe that by \cref{lem:gradient},
+\begin{align*}
+  \norm*{\frac{\Phi^{(ab)}(I_{d_b})}{\tr \Phi^{(ab)}(I_{d_b})} - \frac{I_{d_a}}{d_a}}_{\op}
+= \frac1{\tr\rho} \norm*{\rho^{(a)} - \frac{\tr \rho}{d_a} I_{d_a}}_{\op}
+% = \frac1{\tr\rho} \frac1{\sqrt{d_a}} \sqrt{d_a} \norm*{\rho^{(a)} - \frac{\tr \rho}{d_a} I_{d_a}}_{\op}
+% = \frac1{\tr\rho} \frac1{\sqrt{d_a}} \norm*{\nabla_a f_x}_{\op}
+= \frac1{1 + \nabla_0 f_x} \frac1{\sqrt{d_a}} \norm*{\nabla_a f_x}_{\op},
+\end{align*}
+and similarly for the adjoint, hence the completely positive maps $\Phi^{(ab)}$ are $\eps$-doubly balanced if and only if, for all $a\in[k]$,
+\begin{align*}
+  % \frac1{1 + \nabla_0 f_x} \frac1{\sqrt{d_a}} \norm*{\nabla_a f_x}_{\op} \leq \frac\eps{d_a}
+  \sqrt{d_a} \norm*{\nabla_a f_x}_{\op} \leq \left( 1 + \nabla_0 f_x \right) \eps.
+\end{align*}
+Thus, double balancedness can be controlled using the gradient bounds in \cref{prop:gradient-bound}.
+
+We now state and prove our strong convexity result at the identity:
+
 \MW{MARKER}
 
-
-%We show that, restricted to the traceless matrices, this quadratic form is small. More precisely, we bound the operator norm of the map $T: Z \mapsto \tr_2 \rho^{(ab)} \left(I \ot Z\right)$ restricted to the traceless symmetric matrices. Such maps are called \emph{quantum channels}, and we will revisit their properties later \CF{where? or earlier?}. The operator norm condition we desire for $T_{\rho}$ is equivalent to $T_{\rho}$ being a good \emph{quantum expander} - this led Pisier to bound the operator norm of $T_{\rho}$ for random $\rho$. \CF{one-sentence motivation of quantum expanders?}
-
-
-%\CF{relate theorem 14 to quantum expansion; something like if $\|\Phi\|_0 = \lambda$ then $\Phi$ is $\lambda - C \eps$ quantum expander when balanced and if $\Phi$ is an $\eps$-balanced quantum expander then $\|\Phi\|_0$ has operator norm $\lambda - C \eps$}.
-
-The operator $\Phi^{ab}$ is precisely of the form of $\Phi_{\rv}$ in \cref{thm:hess-pisier} \MW{Up to $1/N$.}: $\Phi^{(a,b)}$ is distributed as $\Phi_{\rv}$ for $\rv$ a tuple of $n D/d_a d_b$ many i.i.d. $d_b \times d_a $ standard Gaussian matrices, so \cref{thm:tensor-convexity} follows quite easily once balancedness can be controlled. The following shows that our gradient bounds \cref{prop:gradient-bound} also control balancedness. The observation follows immediately from \cref{lem:gradient} and the fact that $\Phi^{ab}(I_{d_b}) = \rho^{(a)}$, $(\Phi^{ab})^*(I_{d_a}) = \rho^{(b)}$, and $\tr \Phi^{ab}(I_{d_b}) = \tr \rho$.
-\begin{obs}\label{obs:doubly-gradient}
-$\Phi^{ab}(I_{d_b})$ is doubly balanced for all $a<b \in [k]$ if and only if
-$$\sqrt{d_a} \| \nabla_a f\| \leq \eps \tr \rho.$$
-for all $a \in [k]$.
-\end{obs}
-
-We now state our strong convexity result at the identity:
 
 \begin{theorem}[Strong convexity at identity]\label{thm:tensor-convexity}
 \MW{CHECK}
@@ -1692,7 +1701,9 @@ with probability at least $ 1- t^{-c(m+n)}$.
 
 The relation to our desired expansion result follows from the following: for $Y \in \R^{n \times m}$ we have $Y \otimes Y : \R^{m \times m} \to \R^{n \times n}$, and so for $Z \in \mat(m)$:
 \[ Y \otimes Y (\text{vec}(Z)) = \text{vec}( Y^{*} Z Y)      \]
-\cref{thm:hess-pisier} then follows as a corollary by choosing $\alpha \propto \vec{1}$ and standard results from Gaussian concentration. The proof of \cref{thm:Pisier-expansion} proceeds by a symmetrization trick, followed by the trace method. We will first state the necessary concentration results and then give the proof. Our setting required the result on rectangular matrices with strong error bounds, but we claim no originality.
+\cref{thm:hess-pisier} then follows as a corollary by choosing $\alpha \propto \vec{1}$ and standard results from Gaussian concentration.
+\MW{Please explain this in more detail (since the point of having the appendix is as a service to the non-expert reader :-).}
+The proof of \cref{thm:Pisier-expansion} proceeds by a symmetrization trick, followed by the trace method. We will first state the necessary concentration results and then give the proof. Our setting required the result on rectangular matrices with strong error bounds, but we claim no originality.
 
 \begin{theorem}[\cite{P86}]
 We denote a random Gaussian matrix $Y \in \R^{m \times n}$ (for $m < n$) with $Y_{ij} \sim \mathcal{N}(0,1)$, we have the following bound
