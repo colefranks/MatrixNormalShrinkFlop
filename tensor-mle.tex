@@ -13,15 +13,12 @@
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{prop}[theorem]{Proposition}
-\newtheorem{obs}[theorem]{Observation}
+% \newtheorem{obs}[theorem]{Observation}
 \newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{corol}[theorem]{Corollary}
 \newtheorem{fact}[theorem]{Fact}
-\newtheorem{claim}[theorem]{Claim}
+% \newtheorem{claim}[theorem]{Claim}
 \theoremstyle{definition}
-\newtheorem{remark}[theorem]{Remark}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{example}[theorem]{Example}
+\newtheorem*{definition}{Definition}
 \floatstyle{boxed}\newfloat{Algorithm}{ht}{alg}
 \crefname{Algorithm}{Algorithm}{Algorithms}
 \numberwithin{equation}{section}
@@ -1281,15 +1278,14 @@ The proof is given in the appendix.
 
 \MW{MARKER}
 
-\begin{lemma}\label{convexRobustness}
+\begin{lemma}[Robustness]\label{convexRobustness}
 There is a constant $c>0$ such that if $f_x$ is $\lambda$-strongly convex at~$I_D$,
-\begin{itemize}
-\item $f_{\samp}$ is $\lambda$-strongly convex at $I$,
-\item $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$ for every $a \in [k]$,
-\item and $\|\log \Theta\|_{op} \leq c$,
-\end{itemize}
- then $f$ is $(\lambda - O( \|\delta\|_{op}))$-strongly convex at $\Theta$.
+$\norm{\nabla_a f_x(I_D)}_{\op} \leq \frac c{\sqrt{d_a}}$ for every $a\in[k]$ \MW{something needed for the 0 component?},
+then $f_x$ is $(\lambda-O(\delta))$-strongly convex at any $\Theta\in\P$ such that $\delta := \norm{\log\Theta}_{\op} \leq c$.
 \end{lemma}
+
+\MW{note that if $\Theta$ comes from some $r'$ ball then this is true blabla}
+
 
 Finally we obtain our strong convexity result near the identity.
 
