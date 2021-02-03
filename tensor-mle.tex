@@ -742,7 +742,7 @@ Having calculated the gradient of the objective function, we are ready to state 
 \begin{prop}[Gradient bound]\label{prop:gradient-bound}
 Let $\rv = (\rv_1,\dots,\rv_n)$ consist of independent standard Gaussian random variables in~$\R^D$, % where $D=d_1\cdots{}d_k$,
 and let $0<\eps<1$.
-Suppose $nD \geq \left(\frac{d_{\max}}{\eps}\right)^2$.
+Suppose $nD \geq \frac{d_{\max}^2}{D \eps^2}$.
 % Suppose $N_a := \frac{nD}{d_a}$ is at least $N_a \geq \frac{d_a}{\eps^2}$ for all~$a\in[k]$.
 Then, the following occurs with probability at least
 % $1 - 2e^{-\eps^2 nD/8} - \sum_{a=1}^k 2 e^{-\eps^2 N_a/2} \geq$
@@ -987,7 +987,7 @@ A $(0, \lambda)$-quantum expander is called a \emph{$\lambda$-quantum expander}.
 Quantum expanders play an important role in quantum information theory and quantum computation \TODO{cite}.
 There one typically takes $d_a=d_b$, so that \cref{eq:expansion} simplifies to~$\norm{\Phi}_0 \leq \lambda$.
 For us, their purpose will be the following lemma allowing us to translate quantum expansion properties into strong convexity.
-\MW{Could already at this point translate the conditions into ones involving $\rho^{(ab)}$, $\rho^{(a)}$, $\rho^{(b)}$. But maybe ok like it is\dots}
+\MW{Could already at this point translate the conditions into ones involving $\rho^{(a)}$, $\rho^{(b)}$. Or ok like it is?}
 
 \begin{lemma}[Strong convexity from expansion]\label{lem:expansion-convexity}
 If the completely positive maps $\Phi^{(ab)}$ defined in \cref{eq:hessian channel} are $(\eps,\lambda)$-quantum expanders for every $a\neq b\in[k]$, then
@@ -1178,7 +1178,7 @@ Pisier showed the following result when the Kraus operators are chosen to be sta
 There is an absolute constant $C>0$ such that the following holds. Let $A_1,\dots,A_N$ be independent $d_a\times d_b$ random matrices with independent standard Gaussian entries.
 Then, for every $t >0$, with probability at least~$1 - t^{-\Omega(d_a + d_b)}$, the completely positive map $\Phi_A$, defined as in \cref{eq:def cp}, satisfies
 \begin{align*}
-  \norm \Phi_A \leq Ct^{2} \sqrt N \left( d_a + d_b \right). \text{\MW{Should this be $\sqrt{d_a} + \sqrt{d_b}$?}}
+  \norm{\Phi_A}_0 \leq Ct^{2} \sqrt N \left( d_a + d_b \right).
 \end{align*}
 \end{theorem}
 
@@ -1208,33 +1208,64 @@ Therefore, the completely positive maps $\Phi^{(ab)}$ are $\eps$-doubly balanced
 hence double balancedness can be controlled using the gradient bounds in \cref{prop:gradient-bound}.
 
 We now state and prove our strong convexity result at the identity:
+\MW{Cole, please have a glance to see if all the squares and $d_{\min}$ vs $d_{\max}$ look right to you, they changed slightly.}
 
 \begin{theorem}[Strong convexity at identity]\label{thm:tensor-convexity}
 There is an absolute constant $C>0$ such that the following holds.
-Let $x = (x_1,\dots,x_n)$ consist of independent standard Gaussian random variables in~$\R^D$, where \MW{CHECK}
+Let $x = (x_1,\dots,x_n)$ consist of independent standard Gaussian random variables in~$\R^D$, where $n \geq C k \frac{d_{\max}^2}D$.
+Then, with probability at least $1 - k^2 ( \frac{k d_{\max}}{\sqrt{nD}} )^{\Omega(d_{\min})}$,
 \begin{align*}
-  n \geq C k^2 d_{\max}^2/D
+  \norm{\nabla^2 f_x - I_\H}_{\op} \leq \frac14;
 \end{align*}
-for $k\geq2$.
-Then with probability $1 - k^2 \left(\frac {kd_{\min}}{\sqrt{nD}}\right)^{ \Omega(d_{\min})}$ we have
-\begin{align*}
-  \|\nabla^{2} f_{\rv} - I\|_{op} \leq 1/4
-\end{align*}
-In particular, $f_{\rv}$ is $3/4$-strongly convex at the identity.
+in particular, $f_x$ is $\frac34$-strongly convex at the identity.
 \end{theorem}
+\begin{proof}
+By \cref{lem:expansion-convexity}, it is enough to prove that with the desired probability all $\Phi^{(ab)}$ are $(\eps,\lambda):=(\frac1{40 k^{1/2}},\frac1{20k})$-quantum expanders for $a\neq b\in[k]$ and $\tr \rho \in (\frac78,\frac98)$.
+Indeed, then
+\begin{align*}
+  \norm*{\nabla^2 f_x - I_\H}_{\op}
+&\leq \norm*{\frac{\nabla^2 f_x}{\tr \rho} - I_\H}_{\op} \tr \rho + \abs{1 - \tr\rho} \\
+&\leq \left( (k-1)\lambda + (1 + \sqrt k) \eps \right) \tr\rho + \abs{1 - \tr\rho}
+% &\leq \left( \frac1{20} + \frac1{20} \right) \frac98 + \frac18
+% = \frac1{10} \frac98 + \frac18
+\leq \frac14.
+\end{align*}
+Firstly, $\tr \rho = \frac{1}{nD} \|X\|^2$ is in $(\frac78, \frac98)$ with failure probability $e^{-\Omega(nD)}$ by \cref{prp:xnorm}.
 
+Next, we describe an event that implies the $\Phi^{(ab)}$ are all $\eps$-balanced for $\eps=\frac1{40k^{1/2}}$.
+By \cref{eq:balanced via grad}, this is equivalent to the condition $\sqrt{d_a} \norm{\nabla_a f_{\rv}}_{\op} \leq \eps \tr \rho$ for all $a \in [k]$.
+By \cref{prop:gradient-bound}, and assuming the bound $\tr \rho \geq \frac78$ from above, the latter occurs with failure probability at most~$k \smash{e^{-\Omega(\frac{nD}{k d_{\max}})}}$ provided $n \geq C k \smash{\frac{d_{\max}^2}D}$ for a universal constant~$C>0$.
+
+Finally, we describe an event that ensures that $\norm{\Phi^{(ab)}}_{\op} \leq \lambda \smash{\frac{\tr\rho}{\sqrt{d_a d_b}}}$ for $\lambda=\frac1{20k}$ for any fixed~$a \neq b$, which is the other condition needed for quantum expansion.
+Recall that each~$\Phi^{(ab)}$ is distributed as $\frac1{nD} \Phi_A$, where $A$ is a tuple of $\frac{nD}{d_ad_b}$ many $d_a \times d_b$ matrices with independent standard Gaussian entries.
+Thus, taking $t^2 = O(\smash{\frac{\lambda \sqrt{nD}}{d_a + d_b}})$ and again assuming that $\tr\rho \geq \frac78$, we have $\norm{\Phi^{(ab)}}_{\op} \leq \lambda \frac{\tr\rho}{\sqrt{d_a d_b}}$
+% Take t^2 = \frac1{C'} \frac78 \frac{\lambda \sqrt{nD}}{d_a + d_b}, with $C'$ the constant from Pisier's theorem
+% \begin{align*}
+%   \norm{\Phi^{(ab)}}_0
+% \leq \frac1{nD} \norm{\Phi_A}_0
+% \leq \frac1{nD} C' t^{2} \sqrt N \left( d_a + d_b \right) \\
+% \leq \frac78 \frac1{nD} \lambda \sqrt{nD} \sqrt N
+% \leq \frac78\frac1{nD} \lambda \sqrt{nD} \sqrt{nD} \frac1{\sqrt{d_ad_b}}
+% = \frac78\lambda \frac1{\sqrt{d_ad_b}}
+% \leq \lambda \frac{\tr\rho}{\sqrt{d_ad_b}}
+% \end{align*}
+with failure probability at most~$\smash{( \frac{k d_{\max}}{\sqrt{nD}})^{\Omega(d_{\min})}}$.
+% \begin{align*}
+%   \left( \frac{\lambda \sqrt{nD}}{d_a + d_b} \right)^{-\Omega(d_a + d_b)}
+% \leq \left( \frac{20 k (d_a + d_b)}{\sqrt{nD}} \right)^{\Omega(d_a + d_b)}
+% \leq \left( \frac{40 k d_{\max}}{\sqrt{nD}} \right)^{\Omega(d_a + d_b)} \\
+% \leq \left( \frac{40 k d_{\max}}{\sqrt{nD}} \right)^{\Omega(2d_{\min})} \\
+% \lesssim \left( \frac{k d_{\max}}{\sqrt{nD}} \right)^{\Omega(d_{\min})}
+% \end{align*}
+
+By the union bound, we conclude that all $\Phi^{(ab)}$ for $a\neq b$ are $(\eps,\lambda)$-quantum expanders and that $\tr\rho \in (\frac78,\frac98)$, up to a failure probability of at most
+\begin{align*}
+  e^{-\Omega(nD)}
++ k \smash{e^{-\Omega(\frac{nD}{k d_{\max}})}}
++ k^2 \left( \frac{k d_{\max}}{\sqrt{nD}} \right)^{\Omega(d_{\min})}.
+\end{align*}
 \MW{MARKER}
-
-
-\begin{proof}[Proof of \cref{thm:tensor-convexity}] \CF{make sure this is in the big theta notation} By \cref{lem:expansion-convexity}, it is enough to prove that $\Phi^{ab}$ is a $(\eps, \lambda):=(1/40 \sqrt{ k}, 1/20k)$-quantum expander for all $a < b \in [k]$ and that $\tr \rho \in (7/8, 9/8)$ with the desired failure probability. Firstly, $\tr \rho = \frac{1}{nD} \|X\|^2$ is in $(7/8, 9/8)$ with failure probability $e^{ -\Omega(nD)} $ by \cref{prp:xnorm}.
-
-Firstly, we describe an event that implies $\Phi^{ab}$ are $\eps$-balanced. By \cref{eq:balanced via grad}, this is equivalent to the condition $\sqrt{d_a} \norm{\nabla_a f_{\rv}}_{\op} \leq \eps \tr \rho$ for all $a \in [k]$. By \cref{prop:gradient-bound} and conditioned on the bound $\tr \rho \leq 9/8$ from above, this occurs with failure probability at most $k e^{-D n \eps^2/2Cd_{\max}} = k e^{ - c D n / k d_{\max}}$ provided $n \geq C  d_{\max}^2 k/n D$.
-
-Secondly, we describe events that imply $\sqrt{d_a d_b} \|\Phi^{ab}\|_0 \leq \lambda \tr \rho$, the other condition needed for $(\eps, \lambda)$-quantum expansion. Recall from above that $\Phi^{ab}$ is distributed as $\frac{1}{nD}\Phi_{X}$ for $X$ a tuple of $n D/d_a d_b$ many i.i.d. $d_b \times d_a $ standard Gaussian matrices. By \cref{thm:hess-pisier} with $t^2 = \frac {\lambda \sqrt{nD}}{d_a + d_b}$, the operator norm of $\sqrt{d_a d_b} \Phi^{ab}$ restricted to $\smallSym^0_{d_b}$ is $8\lambda/9$
-with probability $(\lambda \sqrt{nD}/(d_a + d_b))^{ - \Omega(d_a + d_b)} \leq (\lambda \sqrt{nD} /d_{\min})^{ - \Omega(d_{\min})}$. Conditioned on the bound $\tr \rho \leq 9/8$ from above, $\sqrt{d_a d_b} \|\Phi^{ab}\|_0 \leq \lambda \tr \rho$.
-
-By the union bound, $\Phi^{ab}$ is an $(\eps, \lambda)$-quantum expander with failure probability $$O\left(k e^{ - c D n / k d_{\max}} + e^{ -\Omega(nD)} + k^2 ( \sqrt{nD} /2k d_{\min})^{ - \Omega(d_{\min})}\right); $$
-due to our assumption on $n$, the final term dominates and so the failure probability is $k^2 (  k d_{\min}/\sqrt{nD})^{\Omega(d_{\min})}$.
+Due to our assumption on~$n$, the final term dominates and so we obtain the desired bound the failure probability.
 \end{proof}
 
 
@@ -1275,6 +1306,8 @@ There is a constant $c>0$ such that if
 \end{itemize}
  then $f$ is $(\lambda - O( \|\delta\|_{op}))$-strongly convex at $\Theta$.
 \end{lemma}
+
+\MW{Say that we now proved \cref{thm:ball-convexity}.}
 
 %-----------------------------------------------------------------------------
 \subsection{Proof of \cref{thm:tensor-frobenius}}
