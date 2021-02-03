@@ -969,17 +969,17 @@ We denote by $\Phi^*\colon\mat(d_a)\to\mat(d_b)$ the adjoint of a completely pos
 In our proof of strong convexity, we will show that strong convexity follows if the completely positive maps $\Phi^{(ab)}$ are good \emph{quantum expanders}.
 
 \begin{definition}[Quantum expansion]
-Let $\Phi\colon\mat(d_a) \to \mat(d_b)$ be a completely positive map.
+Let $\Phi\colon\mat(d_b) \to \mat(d_a)$ be a completely positive map.
 Say $\Phi$ is \emph{$\eps$-doubly balanced} if
 \begin{align}\label{eq:doubly balanced}
-  \norm*{\frac{\Phi(I_{d_a})}{\tr \Phi(I_{d_a})} - \frac{I_{d_b}}{d_b}}_{\op} \leq \frac\eps{d_b}
+  \norm*{\frac{\Phi(I_{d_b})}{\tr \Phi(I_{d_b})} - \frac{I_{d_a}}{d_a}}_{\op} \leq \frac\eps{d_a}
 \quad\text{and}\quad
-  \norm*{\frac{\Phi^*(I_{d_b})}{\tr \Phi(I_{d_b})} - \frac{I_{d_a}}{d_a}}_{\op} \leq \frac\eps{d_a}.
+  \norm*{\frac{\Phi^*(I_{d_a})}{\tr \Phi(I_{d_a})} - \frac{I_{d_b}}{d_b}}_{\op} \leq \frac\eps{d_b}.
 \end{align}
 Say $\Phi$ is an \emph{$(\eps, \lambda)$-quantum expander} if $\Phi$ is $\eps$-doubly balanced and
 \begin{align}\label{eq:expansion}
   \norm{\Phi}_0 := \max_{\substack{H \text{ traceless symmetric} \\ \norm H_F=1}} \norm{\Phi(H)}_F
-\leq \lambda \frac{\tr \Phi(I_{d_a})}{\sqrt{d_ad_b}}
+\leq \lambda \frac{\tr \Phi(I_{d_b})}{\sqrt{d_ad_b}}
 \end{align}
 A $(0, \lambda)$-quantum expander is called a \emph{$\lambda$-quantum expander}.
 \end{definition}
@@ -997,6 +997,9 @@ If the completely positive maps $\Phi^{(ab)}$ defined in \cref{eq:hessian channe
 \end{align*}
 Assuming $k\geq2$, the right-hand side is at most $k (\lambda + \eps)$.
 \end{lemma}
+\noindent
+It suffices to verify the hypothesis for $a<b$.
+Indeed, since $\tr \Phi(I_{d_a}) = \tr \Phi(I_{d_b})$, any $\Phi$ is an $(\eps,\lambda)$-quantum expander if and only if this is the case for $\Phi^*$, and the adjoint of $\Phi^{(ab)}$ is~$\Phi^{(ba)}$.
 \begin{proof}
 We wish to bound the operator norm of $M = \frac{\nabla^2 f_\samp}{\tr \rho} - I_\H$, which we consider as a block matrix as in \cref{def:hess grad}.
 For this, we use the following basic estimate of the norm of a block matrix in terms of the norm of the matrix of blocks norms, i.e.,
@@ -1200,7 +1203,7 @@ by \cref{lem:gradient}, and similarly for the adjoint.
 Therefore, the completely positive maps $\Phi^{(ab)}$ are $\eps$-doubly balanced if and only if, for all $a\in[k]$,
 \begin{align}\label{eq:balanced via grad}
   % \frac1{1 + \nabla_0 f_x} \frac1{\sqrt{d_a}} \norm*{\nabla_a f_x}_{\op} \leq \frac\eps{d_a}
-  \sqrt{d_a} \norm*{\nabla_a f_x}_{\op} \leq \left( 1 + \nabla_0 f_x \right) \eps,
+  \sqrt{d_a} \norm*{\nabla_a f_x}_{\op} \leq \eps \tr \rho = \left( 1 + \nabla_0 f_x \right) \eps,
 \end{align}
 hence double balancedness can be controlled using the gradient bounds in \cref{prop:gradient-bound}.
 
