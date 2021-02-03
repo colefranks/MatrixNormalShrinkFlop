@@ -455,7 +455,7 @@ The \emph{exponential map} $\exp_\Theta \colon \H \to \P$ at~$\Theta$ is defined
 The \emph{geodesics} through $\Theta$ are the curves $t \mapsto \exp_\Theta(t H)$ for $t\in\R$ and $H\in\H$.
 Up to reparameterization, there is a unique geodesic between any two points of~$\P$.
 We take the convention that the geodesics have unit speed if $\norm{H}_F^2 = \abs{H_0}^2 + \sum_{a=1}^k \norm{H_a}_F^2 = 1$.
-Then, the geodesic distance between two points $\Theta$ and $\exp_\Theta(H)$ is given by~$\norm H_F$, and the closed \emph{(geodesic) ball} of radius~$r>0$ about~$\Theta$ is given by
+Then, the geodesic distance $d(\Theta,\Theta')$ between two points $\Theta$ and $\Theta'=\exp_\Theta(H)$ is equal to~$\norm H_F$, and the closed \emph{(geodesic) ball} of radius~$r>0$ about~$\Theta$ is given by
 \begin{align*}
   B_r(\Theta) = \{ \exp_\Theta(H) : \norm H_F \leq r \},
 \end{align*}
@@ -616,7 +616,7 @@ We can now state and prove the following lemma, which shows that strong convexit
 \begin{lemma}\label{lem:convex-ball}
 Let $f\colon \P \to \R$ be geodesically convex.
 Assume the gradient at some~$\Theta\in\P$ is bounded as $\norm{\nabla f(\Theta)}_F \leq \eps$, and that $f$ is $\lambda$-strongly geodesically convex in a ball $B_r(\Theta)$ of radius~$r > \frac{2\eps}\lambda$.
-Then the sublevel set $\{\Upsilon \in \P : f(\Upsilon) \leq f(\Theta)\}$ is contained in the ball~$B_{2\eps/\lambda}(\Theta)$, $f$ has a unique minimizer $\smash{\htheta}$, this minimizer is contained in $B_{\eps/\lambda}(P)$, and
+Then the sublevel set $\{\Upsilon \in \P : f(\Upsilon) \leq f(\Theta)\}$ is contained in the ball~$B_{2\eps/\lambda}(\Theta)$, $f$ has a unique minimizer $\smash{\htheta}$, this minimizer is contained in $B_{\eps/\lambda}(\Theta)$, and
 \begin{align}\label{eq:minimum lower bound}
   f(\htheta) \geq f(\Theta) - \frac{\eps^2}{2 \lambda}.
 \end{align}
@@ -776,19 +776,16 @@ Let $\rv = (\rv_1,\dots,\rv_n)$ consist of independent standard Gaussian random 
 and let $0<\eps<1$.
 Suppose $n \geq \frac{d_{\max}^2}{D \eps^2}$.
 % Suppose $N_a := \frac{nD}{d_a}$ is at least $N_a \geq \frac{d_a}{\eps^2}$ for all~$a\in[k]$.
-Then, the following occurs with probability at least
-% $1 - 2e^{-\eps^2 nD/8} - \sum_{a=1}^k 2 e^{-\eps^2 N_a/2} \geq$
-% $1 - 2e^{-\eps^2 nD/8} - 2 k e^{-\eps^2 nD/(2d_{\max})}$
-$1 - 2(k+1)e^{-\eps^2 \frac{nD}{8d_{\max}}}$
+Then, the following occurs with probability at least $1 - 2(k+1)e^{-\eps^2 \frac{nD}{8d_{\max}}}$:
 \begin{align*}
   \norm{\nabla_a f_x}_{\op} &\leq \frac{9\eps}{\sqrt{d_a}} \qquad\text{ for all $a\in[k]$}, \\
   \abs{\nabla_0 f_x} &\leq \eps.
-% \intertext{In particular,}
-%   \norm{\nabla f_x}_F^2
-% % = \abs{\nabla_0 f_x}^2 + \sum_{a=1}^k \norm{\nabla_a f_x}_F^2
-% % \leq \abs{\nabla_0 f_x}^2 + \sum_{a=1}^k d_a \norm{\nabla_a f_x}_{\op}^2 \\
-% % \leq \eps^2 + \sum_{a=1}^k 81 \eps^2 =
-% &\leq (1 + 81 k) \eps^2.
+\intertext{In particular,}
+  \norm{\nabla f_x}_F^2
+% = \abs{\nabla_0 f_x}^2 + \sum_{a=1}^k \norm{\nabla_a f_x}_F^2
+% \leq \abs{\nabla_0 f_x}^2 + \sum_{a=1}^k d_a \norm{\nabla_a f_x}_{\op}^2 \\
+% \leq \eps^2 + \sum_{a=1}^k 81 \eps^2 =
+&\leq (1 + 81 k) \eps^2.
 \end{align*}
 \end{prop}
 
@@ -1333,7 +1330,7 @@ where the latter term dominates, and there exists a constant $0<c\leq\eps_0$ suc
 \end{proof}
 
 While \cref{thm:ball-convexity} uses the operator norm to quantify closeness to the identity, we can easily translate it into a statement in terms of the geodesic distance on~$\P$.
-Namely, under the hypotheses of the lemma it holds that~$f_x$ is $\frac12$-strongly convex on the geodesic ball~$B_r(I_D)$ of radius $r=\smash{\frac c{\sqrt{(k+1)d_{\max}}}}$.
+Namely, under the same hypotheses it holds that~$f_x$ is $\frac12$-strongly convex on the geodesic ball~$B_r(I_D)$ of radius $r=\smash{\frac c{\sqrt{(k+1)d_{\max}}}}$.
 % Indeed, if $\Theta = \exp_{I_D}(H)$, then
 % \begin{align*}
 %   \norm{\log\Theta}_{\op}
@@ -1347,29 +1344,37 @@ Namely, under the hypotheses of the lemma it holds that~$f_x$ is $\frac12$-stron
 %-----------------------------------------------------------------------------
 \subsection{Proof of Theorem~\ref{thm:tensor-frobenius}}
 %-----------------------------------------------------------------------------
-\MW{MARKER}
 We are now ready to prove the main result of this section according to the plan outlined in \cref{subsec:proof-sketch}.
-\TODO{restate it here?}
-\CF{make this proof use the BigTheta, remember to translate to actual $D_F$ bound and also include lemma concluding the same for the factors.}
-\begin{proof}[Proof of \cref{thm:tensor-frobenius}]By \cref{it:reduce} in \cref{subsec:proof-sketch}, it is enough to prove the theorem assuming $\Theta = I$. Assuming this, we now show that the minimizer of $f_\rv$ exists and is close to $\Theta = I$ with high probability.  Set $\delta = \eps/\sqrt{k d_k}$ and let $c$ be a constant. Consider the following two events.
+
+\clearpage\begin{theorem}[Tensor normal Frobenius error]
+\MW{CHECK.}
+There are universal constants $C,c>0$ such that the following holds.
+Suppose $\eps \leq \smash{\frac c {\sqrt{(k+1)d_{\max}}}}$ and that the number of samples satisfies $n \geq C k \frac{d_{\max}^2}{D \eps^2}$.
+Then the MLE~$\htheta$ for $n$ independent samples of the tensor normal model with precision matrix~$\Theta$ satisfies
+\begin{align*}
+  D_F(\htheta_a\Vert\Theta_a) &= O(\sqrt{d_a} \eps) \text{ for all } a\in[k], \\
+  D_F(\htheta\Vert\Theta) &= O(\sqrt D \eps),
+\end{align*}
+with probability at least
+\begin{align*}
+  1 - k e^{-\Omega\bigl( \eps^2 \frac{nD}{k d_{\max}} \bigr)} - k^2 \left( \frac{\sqrt{nD}}{k d_{\max}} \right)^{-\Omega(d_{\min})}.
+\end{align*}
+\end{theorem}
+
+\begin{proof}[Proof of \cref{thm:tensor-frobenius}]
+By step~\ref{it:reduce} in \cref{subsec:proof-sketch}, it is enough to prove the theorem assuming $\Theta = I_D$.
+Assuming this, we now show that the minimizer of $f_\rv$ exists and is close to $\Theta = I_D$ with high probability.
+Let~$c$ be the constant from \cref{thm:ball-convexity}.
+Consider the following two events:
 \begin{enumerate}
-\item\label{it:grad-bd} $\|(\nabla f_\rv)_{a}\|_{op} \leq \frac{\delta}{\sqrt{d_{a}}}$ for all $a \in [k]$,
-\item\label{it:sc-ball} $f_\rv$ is $1/2$-strongly convex at any point $\ot_{a = 1}^k\Theta_a$ such that $\sum_a \|\log \Theta_a\|_{op} \leq  c.$
+\item\label{it:grad-bd} $\norm{\nabla f_x}_F \leq \frac\eps5$.
+\item\label{it:sc-ball} $f_\rv$ is $\frac12$-strongly convex on the geodesic ball $B_r(I_D)$ of radius $r=\frac c{\sqrt{(k+1) d_{\max}}}$.
 \end{enumerate}
-We now show that these events occur with failure probability $$k^2 \left(\sqrt{nD} / kd_1 \right)^{ - \Omega(d_1)} + O(k e^{ - nD \eps^2 / k d_k^2}).$$ Indeed, by our first assumption on $\eps$, we have $N_a \geq C d_a/\delta^2$ for all $a \in [k]$, we so we may apply \cref{prop:gradient-bound} to conclude \cref{it:grad-bd} occurs with failure probability $O\left( \sum_a \exp ( - N_a \delta^2)\right)$.
-By \cref{thm:ball-convexity}, if $c$ is a small enough absolute constant then \cref{it:sc-ball} occurs with failure probability at most $k^2 \left(\sqrt{nD} / kd_{\min} \right)^{ - \Omega(d_{\min})}$. %By \cref{prp:xnorm} with $t = k \eps/\sqrt{d_k}$, \cref{it:norm-bd} occurs with failure probability $2e^{- k nD \eps^2/8 d_k},$ which is dominated by the failure probability for \cref{it:grad-bd}.
-By the union bound, both items hold with the desired failure probability. Let $\samp$ be a sample satisfying both items.
+We may choose the constant~$C>0$ such that both \cref{prop:gradient-bound,thm:ball-convexity} apply, with the former showing the first and the latter showing the second event; the desired success probability then follows from the union bound.
 
-
-We seek to apply \cref{lem:convex-ball} with $\lambda = 1/2$, so we must find the radius of the largest geodesic ball in the region of $1/2$-strong convexity of $f_\samp$. Thus if we set $\kappa = c/\sqrt{d_1}$ we will have that $f_\samp$ is $1/2$-strongly convex on the $\kappa$-ball by \cref{it:sc-ball}, because for $\Theta \in B_\kappa(I)$ we have
-$$ \sum_a \|\log \Theta_a\|_{op} \leq \sqrt{d_1} d(I, \Theta) \leq c.$$
-Next we must verify that $\|\nabla f\| < \kappa/2$. By \cref{it:grad-bd} we have
-\[  \|\nabla f\|_F^{2} = \sum_{a} \|(\nabla f)_{a}\|_{F}^{2} \leq \sum_{a} d_a \|(\nabla f)_{a}\|_{op}^{2} \leq  k \delta^{2} \]
-%\CF{new cite theorem 9}
-
-%By \cref{thm:tensor-convexity}, with failure probability $\CF{1/poly(D)}$ we have that $f$ is $1-o_{d}(1)$ strongly convex at $I$. Because $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq \delta \leq c$, by \cref{convexRobustness} there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $\Theta$ such that $\sum_a \|\log \Theta_a\|_{op} \leq  c$ for all $a \in [k]$. \CF{end old}
-
-By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\sqrt{d_k}$, which holds by our definition of $\delta$ and our second assumption on $\eps$, there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$. We now use this bound on geodesic distance to bound error in $D_F$ for the individual Kronecker factors. By our choice of $\kappa$ and because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\log \widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) \leq \sqrt{d_a} d(I, \widehat{\Theta}) \leq 2\delta \sqrt{ k d_a}.$ Applying $\delta = \eps /\sqrt{k d_k}$ yields $\| I_a - \widehat{\Theta}_a\|_F \leq 2\eps \sqrt{ d_a/d_k}$. The reparametrization $\eps \leftarrow \eps \sqrt{d_k^{3/2}/ n D}$ completes the proof. \TODO{check reparametrization}
+By \cref{lem:convex-ball}, which applies by our assumption on~$\eps$, the MLE~$\htheta$ exists, is unique, and is contained in a geodesic ball of radius~$\eps$.
+\MW{if $d(I, \htheta) \leq 1/\sqrt{d_{\max}}$ then can bound local $D_F$'s in terms $\sqrt{d_{\max}}\eps$, and then also the global $D_F$ in terms of $\sqrt D \eps$.}
+\MW{And now reparameterize so that $\Theta_{\max}$ has the right decay and $\eps$ takes a constant range.}
 \end{proof}
 
 \section{Improvements for the matrix normal model}\label{sec:matrix-normal}
