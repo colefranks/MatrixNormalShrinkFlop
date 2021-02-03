@@ -454,9 +454,9 @@ The \emph{exponential map} $\exp_\Theta \colon \H \to \P$ at~$\Theta$ is defined
 The \emph{geodesics} through $\Theta$ are the curves $t \mapsto \exp_\Theta(t H)$ for $t\in\R$ and $H\in\H$.
 Up to reparameterization, there is a unique geodesic between any two points of~$\P$.
 We take the convention that the geodesics have unit speed if $\norm{H}_F^2 = \abs{H_0}^2 + \sum_{a=1}^k \norm{H_a}_F^2 = 1$.
-Therefore, the closed \emph{(geodesic) ball} of radius~$r>0$ about~$\Theta$ is given by
+Then, the geodesic distance between two points $\Theta$ and $\exp_\Theta(H)$ is given by~$\norm H_F$, and the closed \emph{(geodesic) ball} of radius~$r>0$ about~$\Theta$ is given by
 \begin{align*}
-  B_r(\Theta) = \{ \exp_\Theta(H) : \norm H_F \leq r \}.
+  B_r(\Theta) = \{ \exp_\Theta(H) : \norm H_F \leq r \},
 \end{align*}
 Such balls are \emph{geodesically convex} subsets of~$\P$, that is, if $\gamma(t)$ is a geodesic such that~$\gamma(0),\gamma(1) \in B_r(\Theta)$ then $\gamma(t) \in B_r(\Theta)$ for all $r\in[0,1]$.
 % The geodesic distance squared between two points $P,Q\in\P$ is given by
@@ -774,23 +774,22 @@ Having calculated the gradient of the objective function, we are ready to state 
 \begin{prop}[Gradient bound]\label{prop:gradient-bound}
 Let $\rv = (\rv_1,\dots,\rv_n)$ consist of independent standard Gaussian random variables in~$\R^D$, % where $D=d_1\cdots{}d_k$,
 and let $0<\eps<1$.
-Suppose $nD \geq \frac{d_{\max}^2}{D \eps^2}$.
+Suppose $n \geq \frac{d_{\max}^2}{D \eps^2}$.
 % Suppose $N_a := \frac{nD}{d_a}$ is at least $N_a \geq \frac{d_a}{\eps^2}$ for all~$a\in[k]$.
 Then, the following occurs with probability at least
 % $1 - 2e^{-\eps^2 nD/8} - \sum_{a=1}^k 2 e^{-\eps^2 N_a/2} \geq$
 % $1 - 2e^{-\eps^2 nD/8} - 2 k e^{-\eps^2 nD/(2d_{\max})}$
 $1 - 2(k+1)e^{-\eps^2 \frac{nD}{8d_{\max}}}$
+\MW{Maybe get rid of the $9$.}
 \begin{align*}
   \norm{\nabla_a f_x}_{\op} &\leq \frac{9\eps}{\sqrt{d_a}} \qquad\text{ for all $a\in[k]$}, \\
   \abs{\nabla_0 f_x} &\leq \eps.
-% \end{align*}
-\intertext{In particular,}
-% \begin{align*}
-  \norm{\nabla f_x}_F^2
-% = \abs{\nabla_0 f_x}^2 + \sum_{a=1}^k \norm{\nabla_a f_x}_F^2
-% \leq \abs{\nabla_0 f_x}^2 + \sum_{a=1}^k d_a \norm{\nabla_a f_x}_{\op}^2 \\
-% \leq \eps^2 + \sum_{a=1}^k 81 \eps^2 =
-&\leq (1 + 81 k) \eps^2.
+% \intertext{In particular,}
+%   \norm{\nabla f_x}_F^2
+% % = \abs{\nabla_0 f_x}^2 + \sum_{a=1}^k \norm{\nabla_a f_x}_F^2
+% % \leq \abs{\nabla_0 f_x}^2 + \sum_{a=1}^k d_a \norm{\nabla_a f_x}_{\op}^2 \\
+% % \leq \eps^2 + \sum_{a=1}^k 81 \eps^2 =
+% &\leq (1 + 81 k) \eps^2.
 \end{align*}
 \end{prop}
 
@@ -1313,31 +1312,43 @@ and so we obtain the desired bound on the failure probability.
 We now show our second strong convexity result, namely that if our function is strongly convex at the identity then it is also strongly convex in an operator norm ball about the identity.
 The proof is given in the appendix.
 
-\MW{MARKER}
-
 \begin{lemma}[Robustness]\label{convexRobustness}
-There is a universal constant $c>0$ such that if $f_x$ is $\lambda$-strongly convex at~$I_D$,
-$\norm{\sqrt{d_{a}} \nabla_a f_x(I_D)}_{\op} \leq c$ for every $a\in[k]$ and $|\nabla_{0} f_{\samp}(I_{D})| \leq c$ \MW{and probably 0 component $\leq c$?} \AR{Good point, added a condition here and used it in appendix B to derive the conditions I need for robustness proof},
-then $f_x$ is $(\lambda-O(\delta))$-strongly convex at any $\Theta\in\P$ such that $\delta := \norm{\log\Theta}_{\op} \leq c$.
+There is a universal constant $\eps_0>0$ such that if $f_x$ is $\lambda$-strongly convex at~$I_D$, $\norm{\nabla_a f_x(I_D)}_{\op} \leq \eps_0/\sqrt{d_a}$ for all $a\in[k]$ and $\abs{\nabla_{0} f_{\samp}(I_{D})} \leq \eps_0$, then~$f_x$ is $(\lambda-O(\delta))$-strongly convex at any $\Theta\in\P$ such that $\delta := \norm{\log\Theta}_{\op} \leq \eps_0$.
 \end{lemma}
-
-\MW{note that if $\Theta$ comes from some $r'$ ball then this is true blabla}
-
 
 Finally we obtain our strong convexity result near the identity.
 
 \begin{theorem}[Strong convexity near identity]\label{thm:ball-convexity}
-\MW{CHECK}
-There are universal constants $C,c>0$ such that the following holds. For $n \geq C k \frac{d_{\max}^2}D$, with probability at least $1 - k^2 (\frac {\sqrt{nD}}{kd_{\max}})^{ - \Omega(d_{\min})}$, $f$ is $\frac12$-strongly convex at any point $\Theta \in \P$ such that $\norm{\log\Theta}_{\op} \leq c$ for all $a \in [k]$.
+There are universal constants $C,c>0$ such that the following holds.
+Let $x = (x_1,\dots,x_n)$ be independent standard Gaussian random variables in~$\R^D$, where $n \geq C k \frac{d_{\max}^2}D$.
+Then, with probability at least~$1 - k^2 ( \frac{\sqrt{nD}}{k d_{\max}} )^{-\Omega(d_{\min})}$,
+the function~$f_x$ is $\frac12$-strongly convex at any point $\Theta\in\P$ such that $\norm{\log\Theta}_{\op} \leq c$.
 \end{theorem}
+\begin{proof}
+We can choose $C>0$ such that both \cref{prop:gradient-bound,thm:tensor-convexity} apply (the former with $\eps=\eps_0/9$, where $\eps_0$ is the universal constant from \cref{convexRobustness}).
+Then the assumptions of \cref{convexRobustness} are satisfied for $\lambda=\frac34$ with failure probability at most
+\begin{align*}
+  2(k+1)e^{-\eps^2 \frac{nD}{8d_{\max}}} + k^2 ( \frac{\sqrt{nD}}{k d_{\max}} )^{-\Omega(d_{\min})},
+\end{align*}
+where the latter term dominates, so there exists a constant $0<c\leq\eps_0$ such that $f$ is $\frac12$-strongly convex at any point $\Theta$ such that $\norm{\log\Theta}_{\op} \leq c$.
+\end{proof}
 
-
-\begin{proof}[Proof of \cref{thm:ball-convexity}]
-By \cref{thm:tensor-convexity}, with failure probability $k^2 ({\sqrt{nD}}/{kd_1})^{ - \Omega(d_1)}$ we have that $f$ is $3/4$-strongly convex at $I$. By our bound on $n$,  \cref{prop:gradient-bound} applies and so $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$ with failure probability $\sum_a e^{ - \Omega(nD/d_a)})$. By our assumption on $n$ this is at most $k^2 ({\sqrt{nD}}/{kd_1})^{ - \Omega(d_1)}$. Conditioned on both bounds, by \cref{convexRobustness} there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $Z$ such that $\sum_a \|\log Z_a\|_{op} \leq  c$ for all $a \in [k]$. \end{proof}
+While \cref{thm:ball-convexity} uses the operator norm to quantify closeness to the identity, we can easily translate it into a statement in terms of the geodesic distance on~$\P$.
+Namely, under the hypotheses of the lemma it holds that~$f_x$ is $\frac12$-strongly convex at any point~$\Theta$ that is $\frac c{\sqrt{(k+1)d_{\max}}}$-close to the identity in geodesic distance.
+% Indeed, if $\Theta = \exp_{I_D}(H)$, then
+% \begin{align*}
+%   \norm{\log\Theta}_{\op}
+% % = \norm{H_0 I_D + \sum_{a=1}^k \sqrt{d_a} H_{(a)}}_{\op}
+% \leq \abs{H_0} + \sum_{a=1}^k \sqrt{d_a} \norm{H_a}_{\op}
+% \leq \sqrt{d_{\max}} \left( \abs{H_0} + \sum_{a=1}^k \norm{H_a}_{\op} \right) \\
+% \leq \sqrt{d_{\max}} \left( \abs{H_0} + \sum_{a=1}^k \norm{H_a}_F \right)
+% \leq \sqrt{d_{\max}} \sqrt{k+1} \norm{H}_F.
+% \end{align*}
 
 %-----------------------------------------------------------------------------
-\subsection{Proof of \cref{thm:tensor-frobenius}}
+\subsection{Proof of Theorem~\ref{thm:tensor-frobenius}}
 %-----------------------------------------------------------------------------
+\MW{MARKER}
 We are now ready to prove the main result of this section according to the plan outlined in \cref{subsec:proof-sketch}.
 \TODO{restate it here?}
 \CF{make this proof use the BigTheta, remember to translate to actual $D_F$ bound and also include lemma concluding the same for the factors.}
