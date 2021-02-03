@@ -182,12 +182,11 @@ The matrix normal model, however, has $\Theta(d_1^2 + d_2^2)$ parameters so it s
 Assuming that the covariance factors have constant condition number and that $n$ is at least $\tilde{\Omega}(\max\{d_1,d_2\})$, \cite{tsiligkaridis2013convergence} showed that a three-step flip-flop estimator has mean-squared Frobenius error of $O((d_1^2 + d_2^2)/n)$ for the full matrix $\Sigma$; they did not state a bound for the individual factors $\Sigma_1,\Sigma_2$.
 The same authors showed tighter rates which hold even for~$n\ll d_i$ for a penalized estimator under the additional assumption that the precision matrices $\Sigma_i^{-1}$ are sparse.
 In the extremely undersampled regime, \cite{zhou2014gemini} demonstrated a single-step penalized estimator that converges even for a single matrix $(n=1)$ when the precision matrices have constant condition number, are highly sparse, and have bounded $\ell_1$ norm off the diagonal.
-Simply setting $\Sigma_2 = I_{d_2}$ or $\Sigma_1 = I_{d_1}$, in which case the matrix normal model reduces to standard covariance estimation with $d_1 n$ (resp. $d_2 n$) samples, shows the necessity of additional assumptions like sparsity or well-conditionedness if $n < \max\{d_1/d_2, d_2/d_1\}$.
+Simply setting $\Sigma_2 = I_{d_2}$ or $\Sigma_1 = I_{d_1}$, in which case the matrix normal model reduces to standard covariance estimation with $d_1 n$ (resp. $d_2 n$) samples, shows the necessity of additional assumptions like sparsity or well-conditionedness if $n < \max\{d_1/d_2, d_2/d_1\}$. 
 \cite{allen2010transposable} also considered penalized estimators for the purpose of missing data imputation.
 For the tensor normal model, a natural generalization of the flip-flop algorithm has been proposed to compute the MLE \citep{mardia1993spatial,manceur2013maximum}, but its convergence was not proven.
 Assuming bounded constant condition number of the true covariances and knowledge of initializers within constant Frobenius distance of the true precision matrices, \cite{sun2015nonconvex} propose an estimator with tight rates.
 In both the matrix and tensor case, no estimator for the Kronecker factors has been proven to have tight rates without additional assumptions on the factors' structure.
-\CF{The sparse folks should not feel bad because it's considered possible that estimating sparse GGMs without condition number bounds or irrepresentability conditions is NP hard.}
 
 Even characterizing the existence of the MLE for the matrix and tensor normal model has remained elusive until recently.
 \cite{amendola2020invariant} recently noted that the matrix normal and tensor MLEs are equivalent to algebraic problems about a group action called the \emph{left-right action} and the \emph{tensor action}, respectively.
@@ -212,10 +211,10 @@ However, neither of these metrics bound statistical dissimilarity measures of in
 
 Here we consider the \emph{relative Frobenius error} $D_F(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_F$ of the precision matrices, which is sometimes also called the \emph{Mahalanobis distance}.
 This is a natural dissimilarity measure on Gaussians because when any of~$D_F$, total variation distance, square of the KL-divergence, or Fisher-Rao distance is at most a small constant then they are all on the same order \CF{check, cite} \citep{barsov1987estimates}.
-We also consider the \emph{relative spectral error} $D_{\op}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_{\op}$, which yields even stronger results.
-\MW{Can we give an indication of what `stronger' means?}
+We also consider the \emph{relative spectral error} $D_{\op}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_{\op}$. 
+%The relative spectral error converges to zero in the regimes where the relative Frobenius error does not, and implies the Frobenius error bounds by the relation $D_{F} \leq \sqrt{d} D_{op}$. 
 Both can be related to the usual norms by $\norm{A - B}_F \leq \norm{B}_{\op} \, D_F(A\Vert B)$ and $\norm{A  - B}_{\op} \leq \norm{B}_{\op} \, D_{\op}(A \Vert B)$.
-Though we caution that $D_F$ and $D_{\op}$ are not truly metrics, we will call them distances because they are obey approximate symmetry and an approximate triangle inequality \CF{cite}.
+Though we caution that $D_F$ and $D_{\op}$ are not truly metrics, we will call them distances because they obey approximate symmetry and an approximate triangle inequality (see \cref{lem:triangle-ineq}).
 
 Our theoretical contributions are as follows:
 \begin{enumerate}
@@ -231,9 +230,8 @@ As a corollary, there is an algorithm to compute the MLE up to precision $\eps$ 
 \MW{Check that what is written above is the same as the results advertised in \cref{sec:main results}. Right now it isn't.}
 
 The first result is tight up to logarithmic factors, and the second result is tight.
-Without the restriction on $n$ in the first result, no estimator can converge in spectral norm as the parameters grow, so we consider the restriction mild. Likewise for the second result no estimator can converge in Frobenius norm without the restriction on $n$.
-\MW{Maybe say we show this (by reduction to known results). Clarify `spectral/Frobenius norm' vs `$D_{\op}$/$D_F$'.}
-\CF{I think I'd like to do a better job at gradually defining notation so its clear that these are the right numbers.}
+Without the restriction on $n$ in the first result, no estimator can have subconstant relative spectral error as the parameters grow, so we consider the restriction mild. Likewise for the second result no estimator can have subconstant relative Frobenius error without the restriction on $n$. This follows by known results on the Frobenius and operator norm error.
+
 
 For interesting cases of the tensor normal model such as $d\times d \times d$ tensors we just require that $n$ is at least a large constant.
 For the matrix normal model, our first result removes the added constraint $n \geq C \max\{d_1,d_2\}$ in \cite{tsiligkaridis2013convergence}.
@@ -1447,7 +1445,7 @@ We now use a lemma relating the quantum expansion of $\tilde{\Phi}$ and $\Phi_\s
 By our choice of $n$, we have $\eps \sqrt{d_1/nd_2} \leq c\lambda^2\log d_1$ provided $\eps \leq c\lambda^2$. Thus \cref{thm:klr} applies to $\tilde{\Phi}$ and so the MLE $\htheta_1(y), \htheta_2(y)$ satisfy
 \begin{gather*} \| \htheta_1(y) - I_{d_1}\|_{op}, \| \htheta_2(y) - I_{d_2}\|_{op} = O\left(\eps \sqrt{\frac{d_1}{n d_2}} \log d_1\right).\end{gather*}
 By the equivariance of the MLE we have $\htheta_1(x) = \htheta_1(y)$ and $\htheta_2(x) = B \htheta_2 (y) B$. This immediately yields the bound $ D_{op}(\htheta_1(x) \rVert I_{d_1}) \leq \eps \sqrt{\frac{d_1}{n d_2}} \log d_1.$
-To bound $D_{op}(\htheta_1(x) \rVert I_{d_1})$, use invariance of $D_{op}$ to write
+To bound $D_{op}(\htheta_1(x) \rVert I_{d_1})$, use invariance of $D_{op}$ and the approximate triangle inequality (\cref{lem:triangle-ineq}) to write
 $$D_{op}(\htheta_1(x) \rVert I_{d_2}) = D_{op}(\htheta_1(x) \rVert B^{-2}) \leq D_{op}(\htheta_1(x)\rVert I_{d_2}) + D_{op}(B^{-2}\rVert I_{d_2}).$$
 We have already shown that the first term is $O(\eps \sqrt{\frac{d_1}{n d_2}}).$ Writing $B^{-2} = \frac{\|x\|^2}{nd_1 d_2} \frac{d_2 \Phi^*(I_{d_1})}{\|x\|^2}$, the second term is $O(\eps \sqrt{\frac{d_2}{n d_1}})$ by \cref{it:norm} and \cref{it:expander}, completing the proof.  By setting the constant $C$ in the statement of the theorem large enough compared to $1/\lambda, 1/c$, all the constraints will be satisfied.
 \end{proof}
@@ -2290,7 +2288,20 @@ Fix a net $\mathcal{N} = \mathcal{N}_\delta$ for $\delta = 1/4$; by standard pac
 \CF{the normalization is different now; fix.} It remains to translate our bound on $A$ to our desired bound on $\tilde{\Phi}$. Recall that $A = \frac{d_2}{d_1} (d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}),$ so we have that $\|d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op} \leq 2 \eps_0$. Setting $\eps_0 = \eps \sqrt{\frac{d_1}{4n d_2}}$ yields the desired bound on $\|d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op}$, and provided $\eps$ is a large enough constant, the failure probability is $e^{ - \Omega(d_1) \eps^2}$.\end{proof}
 
 
+\section{Relative error metrics}\label{sec:rel-error}
+Here we state the approximate triangle inequality and approximate symmetry for our relative error metrics. 
+\begin{lemma}\label{lem:triangle-ineq}
+Let $A, B, C \in \PD(d)$. Let $D \in D_{op}, D_F$. Provided $D(A||B), D(B||C)$ are at most an absolute constant $c$, we have 
+\begin{align}D(A||C) &= O(D(A||B) + D(B||C)),\label{eq:tri}\\
+D(B||A) &= O(D(A||B))\label{eq:sym} \text{, and }\\  
+D(A^{-1}||B^{-1}) &= O(D(A||B)).
+\end{align}
+\end{lemma}
+For $D_{op}$, the result is \cite[Lemma C.1]{FM20}. For $D_F$, the result holds because because $D_F(A|| B) = \Theta(d(A, B))$ if either is at most some absolute constant. Because $d(A, B)$ is a metric, it automatically satisfies \cref{eq:tri,eq:sym}. Furthermore, $d(A,B) = d(A^{-1}, B^{-1})$ by direct calculation. Thus the following holds.
+
+
 \end{appendix}
+
 
 
 
