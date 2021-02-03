@@ -780,7 +780,6 @@ Then, the following occurs with probability at least
 % $1 - 2e^{-\eps^2 nD/8} - \sum_{a=1}^k 2 e^{-\eps^2 N_a/2} \geq$
 % $1 - 2e^{-\eps^2 nD/8} - 2 k e^{-\eps^2 nD/(2d_{\max})}$
 $1 - 2(k+1)e^{-\eps^2 \frac{nD}{8d_{\max}}}$
-\MW{Maybe get rid of the $9$.}
 \begin{align*}
   \norm{\nabla_a f_x}_{\op} &\leq \frac{9\eps}{\sqrt{d_a}} \qquad\text{ for all $a\in[k]$}, \\
   \abs{\nabla_0 f_x} &\leq \eps.
@@ -1325,7 +1324,7 @@ Then, with probability at least~$1 - k^2 ( \frac{\sqrt{nD}}{k d_{\max}} )^{-\Ome
 the function~$f_x$ is $\frac12$-strongly convex at any point $\Theta\in\P$ such that $\norm{\log\Theta}_{\op} \leq c$.
 \end{theorem}
 \begin{proof}
-We can choose $C>0$ such that both \cref{prop:gradient-bound,thm:tensor-convexity} apply (the former with $\eps=\eps_0/9$, where $\eps_0$ is the universal constant from \cref{convexRobustness}).
+We can choose $C>0$ such that both \cref{prop:gradient-bound,thm:tensor-convexity} apply (the former with $\eps\leq\eps_0/9$, where $\eps_0$ is the universal constant from \cref{convexRobustness}).
 Then the assumptions of \cref{convexRobustness} are satisfied for $\lambda=\frac34$ with failure probability at most
 \begin{align*}
   2(k+1)e^{-\eps^2 \frac{nD}{8d_{\max}}} + k^2 ( \frac{\sqrt{nD}}{k d_{\max}} )^{-\Omega(d_{\min})},
