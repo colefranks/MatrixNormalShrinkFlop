@@ -156,7 +156,6 @@ Polishing:
 \item Akshay's note on simplifying the proof of \cref{thm:tensor-convexity}: \AR{Can rephrase explicitly in terms of $\nabla^{2} F$ and rank-one term. Then \cref{prop:gradient-bound} gives $1-\eps$ lower bound on each diagonal block of $\nabla^{2} F$, \cref{offdiagPisier} gives $\lambda$ bound on each offdiagonal block of $\nabla^{2} F$, and \cref{prop:gradient-bound} once again gives $k \eps^{2}$ bound on whole rank-one term.  }
 \item \AR{Can improve the strong convexity stuff by a factor of two by using the projection to traceless on both sides of the inner product}
 \item \CF{for the readers' sake some justification is needed for why perturbing $\samp$ this is the same as considering the Hessian of our function at another point in $\SPD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
-\item Define $B^\infty_c$ to be all $\Theta$ such that $\sum \|\log \Theta_a\|_{op} \leq c$. May be able to avoid this since everything is internal to proofs.
 \item Add some discussion for noise added to data.
 \end{enumerate}
 }
@@ -700,6 +699,7 @@ It satisfies the property
 for any $d_a \times d_a$ matrix~$H$.
 Note that $\tr \rho^{(a)} = \tr \rho = \frac1{nD}\norm x_2^2$.
 In the language of linear algebra, the matrices $\rho^{(a)}$ are known as the \emph{partial traces} of~$\rho$ over all but one of the coordinates.
+\MW{It would for sure be nice to define the partial trace once in general for a subset $I \subseteq \{1,\dots,k\}$. Maybe do it here\dots or what do you think?}
 The gradient can be readily computed in terms of this data.
 
 \begin{lemma}[Gradient]\label{lem:gradient}
@@ -833,19 +833,13 @@ $2e^{-\eps^2 \frac{nD}8} + \sum_{a=1}^k 2 e^{-\eps^2 \frac{N_a}2}
 %-----------------------------------------------------------------------------
 In this section, we prove our strong convexity result, \cref{thm:ball-convexity}, in order to carry out step~\ref{it:convexity} of the plan from \cref{subsec:proof-sketch}.
 The theorem states that, with high probability, $f_x$ is strongly convex near the identity.
-
-\begin{theorem}[Strong convexity near identity]\label{thm:ball-convexity}
-\MW{CHECK}
-There are constants $C,c>0$ such that the following holds. For $n \geq C k^2 d_1^2/D$, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, $f$ is $1/2$-strongly convex at any point $Z \in \SPD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$.
-\end{theorem}
-
-
-\cref{thm:ball-convexity} follows straightforwardly from a bound on the convexity \emph{at} the origin,  \cref{thm:tensor-convexity} , and a bound on how the Hessian changes away from the origin, \cref{convexRobustness}. We assemble these results to prove \cref{thm:ball-convexity} at the end of this subsection. %\CF{Shall I actually prove theorem 9? yeah, I think so.}
+We will prove it by first establishing strong convexity \emph{at} the identity, \cref{thm:tensor-convexity}, using quantum expansion techniques, and then giving a bound on how the Hessian changes away from the origin, \cref{convexRobustness}.
+We first assemble these results and then prove \cref{thm:ball-convexity} at the end of this subsection.
 
 Similarly as for the gradient, we can compute the components of the Hessian in terms of a partial trace.
 Recall that given data $x=(x_1,\dots,x_n)$, we defined $\rho = \frac1{nD} \sum_{i=1}^n x_i x_i^T$.
 For any $a \neq b \in [k]$, we may ``flatten'' $x$ by thinking of it as a $d_a d_b \times \frac{nD}{d_ad_b}$ matrix $x^{(ab)}$, and define $\rho^{(ab)} := x^{(ab)} (x^{(ab)})^T$.
-Then $\rho^{(ab)}$ is a positive semidefinite $d_ad_b \times d_ad_b$ matrix, which satisfies the defining property that
+Then $\rho^{(ab)}$ is a positive semidefinite $d_ad_b \times d_ad_b$ matrix, and we have
 \begin{align}\label{eq:two body partial trace duality}
   \tr \rho^{(ab)} (H \ot K) = \tr \rho \, H_{(a)} K_{(b)}
 \end{align}
@@ -1282,38 +1276,13 @@ The final term dominates  \MW{I don't think we need the assumption on $n$ to see
 % \end{align*}
 \end{proof}
 
+We now show our second strong convexity result, namely that if our function is strongly convex at the identity then it is also strongly convex in an operator norm ball about the identity.
+The proof is given in the appendix.
+
 \MW{MARKER}
 
-
-
-
-
-
-
-%\begin{corollary}\label{cor:off-diag-hess} For traceless symmetric matrices $Y \in \Sym^0_{d_a}$, $Z \in \Sym^0_{d_a}$, we have
-%$O \left( \frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}} \right)$
-
-%$$ \langle Y,  \left( \nabla^2_{ab} f_{\samp} \right) Z \rangle
-%= O (\lambda)
-%$$
-%\TODO{Akshay, please make the rhs $O(\lambda)$ and then adjust the failure probability accordingly}
-%with probability $1 - \exp( - \Omega \left( (d_{a} + d_{b}) \log \frac{ \lambda \sqrt{n D} }{d_{a} + d_{b}}  \right) ) \geq 1 - \exp( - \Omega(d_{a} + d_{b}) )$ for $\lambda^{2} n D \gg \max_{a} d_{a}^{2}$.
-%\AR{In particular we get $\|\nabla^{2}_{ab} f\|_{op} \approx \frac{d_{a} + d_{b}}{\sqrt{n D}}$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}))$; as well as $\|\nabla^{2}_{ab} f\|_{op} \approx \frac{d_{a} + d_{b}}{\sqrt{D}}$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}) \log n)$ }
-%\end{corollary}
-
-
-
-%$$\bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr)$$
-
-
-
-We now show our second strong convexity result, namely that if our function is strongly convex at the origin then it is also strongly convex in an operator norm ball about the origin. The proof is given in the appendix. \CF{Regarding the changed definition of $f$, I am pretty sure this will only get easier, since Akshay bounds the hessian of $F$ and then just shows that the change in $F - f$ is junk.}
-
-
-%\CF{Akshay: $\sum_{a} \|\delta_{a}\|_{op} = \|\delta\|_{op}.$}
-%\CF{say stronger condition}
-\begin{lemma} \label{convexRobustness}
-There is a constant $c>0$ such that if
+\begin{lemma}\label{convexRobustness}
+There is a constant $c>0$ such that if $f_x$ is $\lambda$-strongly convex at~$I_D$,
 \begin{itemize}
 \item $f_{\samp}$ is $\lambda$-strongly convex at $I$,
 \item $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$ for every $a \in [k]$,
@@ -1321,6 +1290,18 @@ There is a constant $c>0$ such that if
 \end{itemize}
  then $f$ is $(\lambda - O( \|\delta\|_{op}))$-strongly convex at $\Theta$.
 \end{lemma}
+
+Finally we obtain our strong convexity result near the identity.
+
+\begin{theorem}[Strong convexity near identity]\label{thm:ball-convexity}
+\MW{CHECK}
+There are constants $C,c>0$ such that the following holds. For $n \geq C k^2 d_1^2/D$, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, $f$ is $1/2$-strongly convex at any point $Z \in \SPD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$.
+\end{theorem}
+
+
+\begin{proof}[Proof of \cref{thm:ball-convexity}]
+By \cref{thm:tensor-convexity}, with failure probability $k^2 ({\sqrt{nD}}/{kd_1})^{ - \Omega(d_1)}$ we have that $f$ is $3/4$-strongly convex at $I$. By our bound on $n$,  \cref{prop:gradient-bound} applies and so $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$ with failure probability $\sum_a e^{ - \Omega(nD/d_a)})$. By our assumption on $n$ this is at most $k^2 ({\sqrt{nD}}/{kd_1})^{ - \Omega(d_1)}$. Conditioned on both bounds, by \cref{convexRobustness} there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $Z$ such that $\sum_a \|\log Z_a\|_{op} \leq  c$ for all $a \in [k]$. \end{proof}
+
 
 \MW{Say that we now proved \cref{thm:ball-convexity}.}
 
@@ -2087,20 +2068,6 @@ So combining all three terms we see:
 Note that this also gives a spectral upper bound for $\nabla^{2} f_{\samp'}$.
 %\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s? Also the constant is $50 k$ now, yay for better constants!}\CF{yay!}
 \end{proof}
-
-Finally we may prove \cref{thm:ball-convexity}.
-\begin{proof}[Proof of \cref{thm:ball-convexity}]
-By \cref{thm:tensor-convexity}, with failure probability $k^2 ({\sqrt{nD}}/{kd_1})^{ - \Omega(d_1)}$ we have that $f$ is $3/4$-strongly convex at $I$. By our bound on $n$,  \cref{prop:gradient-bound} applies and so $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$ with failure probability $\sum_a e^{ - \Omega(nD/d_a)})$. By our assumption on $n$ this is at most $k^2 ({\sqrt{nD}}/{kd_1})^{ - \Omega(d_1)}$. Conditioned on both bounds, by \cref{convexRobustness} there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $Z$ such that $\sum_a \|\log Z_a\|_{op} \leq  c$ for all $a \in [k]$. \end{proof}
-
-
-%$O\left( \sum_a e^{ - \Omega(nD/d_a)}\right)\leq k e^{- \Omega(nD/d_1)}$
-
-
-
-
-
-%\CF{make consistent with def 4, hessian}
-
 
 %=============================================================================
 \section{The Cheeger constant of a random operator}
