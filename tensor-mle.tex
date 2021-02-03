@@ -154,6 +154,7 @@ Polishing:
 \item \AR{Can improve the strong convexity stuff by a factor of two by using the projection to traceless on both sides of the inner product}
 \item \CF{for the readers' sake some justification is needed for why perturbing $\samp$ this is the same as considering the Hessian of our function at another point in $\SPD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
 \item Add some discussion for noise added to data.
+\item Before \cref{lem:expansion-convexity}, add explanation of what the marginals of $\Phi^{ab}$ are in terms of $\rho^{a}$ etc.
 \end{enumerate}
 }
 
@@ -600,8 +601,7 @@ As block matrices,
 \end{align*}
 Here, $\nabla_0 f \in \R$ and each $\nabla_a f(\Theta)$ is a $d_a \times d_a$ traceless symmetric matrix.
 Similarly, for~$a, b \in [k]$ (i.e., for the blocks of the submatrix to the lower-right of the lines) the components $\nabla_{ab}^2f(\Theta)$ of the Hessian are linear operators from the space of traceless symmetric $d_b\times d_b$ matrices to the space of traceless symmetric $d_a \times d_a$ matrices.
-Moreover, $\nabla_{a0}f$ is a linear operator from $\R$ to the space of traceless symmetric $d_a\times d_a$ matrices (hence can itself be viewed as such a matrix), $\nabla_{0a}f$ is the adjoint of this linear operators (which using the Hilbert-Schmidt inner product can be identified with the same matrix), and $\nabla^2_{00} f(\Theta)$ is a real number.
-\MW{The block conventions are utterly insane :)}
+Moreover, $\nabla_{a0}f$ is a linear operator from $\R$ to the space of traceless symmetric $d_a\times d_a$ matrices (hence can itself be viewed as such a matrix), $\nabla_{0a}f$ is the adjoint of this linear operator (which using the Hilbert-Schmidt inner product can be identified with the same matrix), and $\nabla^2_{00} f(\Theta)$ is a real number.
 
 \end{definition}
 
@@ -887,12 +887,12 @@ Then the components of the Hessian~$\nabla^2 f_{\samp}$ at the identity are give
 \end{align*}
 for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d_b\times d_b$ matrices~$Z$, and
 \begin{align*}
-  \nabla^2_{a0} f_x \,\widehat=\, \nabla^2_{0a} f_x &\,\widehat=\, \sqrt{d_a} \left( \rho^{(a)} - \frac{\tr \rho}{d_a} I_{d_a} \right) \\
+  \nabla^2_{a0} f_x = \nabla^2_{a0} f_x = & =  \sqrt{d_a} \left( \rho^{(a)} - \frac{\tr \rho}{d_a} I_{d_a} \right) \\
   \nabla^2_{00} f_x &= \tr \rho.
 \end{align*}
 for all $a \in [k]$.
-\MW{Caution the reader about the $a0$ components! Added a hat for now\dots}
 \end{lemma}
+Again we caution the reader that $\nabla^2_{a0} f_x$ is a linear operator from the real numbers to the traceless symmetric matrices, which we identify with a traceless symmetric matrices, and similarly for its adjoint $\nabla^2_{0a} f_x$.
 \begin{proof}
   Note that the Hessian of~$f_x$ coincides with the one of $\tr\rho\,\Theta$.
   This follows from \cref{eq:obj via rho}, since the Hessian of $\log\det\Theta$ vanishes identically.
@@ -1012,7 +1012,6 @@ A $(0, \lambda)$-quantum expander is called a \emph{$\lambda$-quantum expander}.
 Quantum expanders play an important role in quantum information theory and quantum computation \TODO{cite}.
 There one typically takes $d_a=d_b$, so that \cref{eq:expansion} simplifies to~$\norm{\Phi}_0 \leq \lambda$.
 For us, their purpose will be the following lemma allowing us to translate quantum expansion properties into strong convexity.
-\MW{Could at this point translate the conditions into ones that involve $\rho^{(a)}$, $\rho^{(b)}$, $\tr\rho$, as opposed to doing it twice in the proofs.}
 
 \begin{lemma}[Strong convexity from expansion]\label{lem:expansion-convexity}
 If the completely positive maps $\Phi^{(ab)}$ defined in \cref{eq:hessian channel} are $(\eps,\lambda)$-quantum expanders for every $a\neq b\in[k]$, then
