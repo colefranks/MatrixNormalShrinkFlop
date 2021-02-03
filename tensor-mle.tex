@@ -330,6 +330,7 @@ Similarly, define the \emph{relative spectral error} as
 To state our results, and throughout this paper, we write $d_{\min} = \min_a d_a$, $d_{\max} = \max_a d_a$.
 Recall also that $D = \prod_{i=1}^k d_a$.
 \CF{definitely double check these bounds; esp if we need $n \geq k^2...$ or also a lower bound on $\eps$}
+
 \begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius}
 There are constants $C,c>0$ with the following property.
 Suppose $\eps \leq c/\sqrt{d_{\max}}$ and the number of samples satisfies $n \geq C \frac{k^2 d_k^3}{D\eps^2}$.
@@ -342,6 +343,7 @@ with probability at least
   1 - k^2 \left(\sqrt{nD} / kd_{\min} \right)^{ - \Omega(d_{\min})} - O(k e^{ - \eps^2 d_{\max} / k}).
 \end{align*}
 \end{theorem}
+
 The bound in the above theorem implies there is an MLE $(\htheta_1, \dots, \htheta_k)$ and Kronecker factors $\Theta_1, \dots, \Theta_k$ of $\Theta$ such that
 \begin{align*}
   D_F(\widehat{\Theta}_a \Vert \Theta_a) = O\left( \sqrt{\frac{d_a d_{\min}}{n D/d_k}}\eps\right);
@@ -676,7 +678,7 @@ Since $H$ was arbitrary, this shows that $f(\Upsilon) > f(\htheta)$ for any $\Up
 %-----------------------------------------------------------------------------
 \subsection{Bounding the gradient}
 %-----------------------------------------------------------------------------
-Proceeding according the plan outlined in \cref{subsec:proof-sketch}, we now compute the gradient of the objective function and bound it using basic matrix concentration results.
+Proceeding according to step~\ref{it:grad} of the plan outlined in \cref{subsec:proof-sketch}, we now compute the gradient of the objective function and bound it using basic matrix concentration results.
 
 To calculate the gradient, we need a definition from linear algebra.
 Recall that our data comes as an $n$-tuple $x=(x_1,\dots,x_n)$ of $k$-tensors. %, which we can also think of as an array of format~$d_1\times\dots\times d_k\times n$.
@@ -1325,13 +1327,13 @@ the function~$f_x$ is $\frac12$-strongly convex at any point $\Theta\in\P$ such 
 We can choose $C>0$ such that both \cref{prop:gradient-bound,thm:tensor-convexity} apply (the former with $\eps\leq\eps_0/9$, where $\eps_0$ is the universal constant from \cref{convexRobustness}).
 Then the assumptions of \cref{convexRobustness} are satisfied for $\lambda=\frac34$ with failure probability at most
 \begin{align*}
-  2(k+1)e^{-\eps^2 \frac{nD}{8d_{\max}}} + k^2 ( \frac{\sqrt{nD}}{k d_{\max}} )^{-\Omega(d_{\min})},
+  2(k+1)e^{-\eps^2 \frac{nD}{8d_{\max}}} + k^2 \left( \frac{\sqrt{nD}}{k d_{\max}} \right)^{-\Omega(d_{\min})},
 \end{align*}
-where the latter term dominates, so there exists a constant $0<c\leq\eps_0$ such that $f$ is $\frac12$-strongly convex at any point $\Theta$ such that $\norm{\log\Theta}_{\op} \leq c$.
+where the latter term dominates, and there exists a constant $0<c\leq\eps_0$ such that $f$ is $\frac12$-strongly convex at any point $\Theta$ such that $\norm{\log\Theta}_{\op} \leq c$.
 \end{proof}
 
 While \cref{thm:ball-convexity} uses the operator norm to quantify closeness to the identity, we can easily translate it into a statement in terms of the geodesic distance on~$\P$.
-Namely, under the hypotheses of the lemma it holds that~$f_x$ is $\frac12$-strongly convex at any point~$\Theta$ that is $\frac c{\sqrt{(k+1)d_{\max}}}$-close to the identity in geodesic distance.
+Namely, under the hypotheses of the lemma it holds that~$f_x$ is $\frac12$-strongly convex on the geodesic ball~$B_r(I_D)$ of radius $r=\smash{\frac c{\sqrt{(k+1)d_{\max}}}}$.
 % Indeed, if $\Theta = \exp_{I_D}(H)$, then
 % \begin{align*}
 %   \norm{\log\Theta}_{\op}
