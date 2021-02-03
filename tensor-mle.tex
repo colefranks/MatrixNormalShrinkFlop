@@ -1199,7 +1199,6 @@ Therefore, the completely positive maps $\Phi^{(ab)}$ are $\eps$-doubly balanced
 hence double balancedness can be controlled using the gradient bounds in \cref{prop:gradient-bound}.
 
 We now state and prove our strong convexity result at the identity:
-\MW{Cole, please have a glance to see if all the squares and $d_{\min}$ vs $d_{\max}$ look right to you, they changed slightly.}
 
 \begin{theorem}[Strong convexity at identity]\label{thm:tensor-convexity}
 There is an absolute constant $C>0$ such that the following holds.
@@ -1279,8 +1278,8 @@ The proof is given in the appendix.
 \MW{MARKER}
 
 \begin{lemma}[Robustness]\label{convexRobustness}
-There is a constant $c>0$ such that if $f_x$ is $\lambda$-strongly convex at~$I_D$,
-$\norm{\nabla_a f_x(I_D)}_{\op} \leq \frac c{\sqrt{d_a}}$ for every $a\in[k]$ \MW{something needed for the 0 component?},
+There is a universal constant $c>0$ such that if $f_x$ is $\lambda$-strongly convex at~$I_D$,
+$\norm{\nabla_a f_x(I_D)}_{\op} \leq \frac c{\sqrt{d_a}}$ for every $a\in[k]$ \MW{and probably 0 component $\leq c$?},
 then $f_x$ is $(\lambda-O(\delta))$-strongly convex at any $\Theta\in\P$ such that $\delta := \norm{\log\Theta}_{\op} \leq c$.
 \end{lemma}
 
@@ -1291,15 +1290,12 @@ Finally we obtain our strong convexity result near the identity.
 
 \begin{theorem}[Strong convexity near identity]\label{thm:ball-convexity}
 \MW{CHECK}
-There are constants $C,c>0$ such that the following holds. For $n \geq C k^2 d_1^2/D$, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, $f$ is $1/2$-strongly convex at any point $Z \in \SPD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$.
+There are universal constants $C,c>0$ such that the following holds. For $n \geq C k \frac{d_{\max}^2}D$, with probability at least $1 - k^2 (\frac {\sqrt{nD}}{kd_{\max}})^{ - \Omega(d_{\min})}$, $f$ is $\frac12$-strongly convex at any point $\Theta \in \P$ such that $\norm{\log\Theta}_{\op} \leq c$ for all $a \in [k]$.
 \end{theorem}
 
 
 \begin{proof}[Proof of \cref{thm:ball-convexity}]
 By \cref{thm:tensor-convexity}, with failure probability $k^2 ({\sqrt{nD}}/{kd_1})^{ - \Omega(d_1)}$ we have that $f$ is $3/4$-strongly convex at $I$. By our bound on $n$,  \cref{prop:gradient-bound} applies and so $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$ with failure probability $\sum_a e^{ - \Omega(nD/d_a)})$. By our assumption on $n$ this is at most $k^2 ({\sqrt{nD}}/{kd_1})^{ - \Omega(d_1)}$. Conditioned on both bounds, by \cref{convexRobustness} there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $Z$ such that $\sum_a \|\log Z_a\|_{op} \leq  c$ for all $a \in [k]$. \end{proof}
-
-
-\MW{Say that we now proved \cref{thm:ball-convexity}.}
 
 %-----------------------------------------------------------------------------
 \subsection{Proof of \cref{thm:tensor-frobenius}}
