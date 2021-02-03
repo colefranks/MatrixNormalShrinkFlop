@@ -1024,7 +1024,7 @@ Assuming $k\geq2$, the right-hand side is at most $k (\lambda + \eps)$.
 \end{lemma}
 \noindent
 It suffices to verify the hypothesis for $a<b$.
-Indeed, since $\tr \Phi(I_{d_a}) = \tr \Phi(I_{d_b})$, any $\Phi$ is an $(\eps,\lambda)$-quantum expander if and only if this is the case for $\Phi^*$, and the adjoint of $\Phi^{(ab)}$ is~$\Phi^{(ba)}$.
+Indeed, since $\tr \Phi(I_{d_a}) = \tr \Phi(I_{d_b})$, any $\Phi$ is an $(\eps,\lambda)$-quantum expander if and only if this is the case for the adjoint $\Phi^*$, and the adjoint of $\Phi^{(ab)}$ is~$\Phi^{(ba)}$.
 \begin{proof}
 We wish to bound the operator norm of $M = \frac{\nabla^2 f_\samp}{\tr \rho} - I_\H$, which we consider as a block matrix as in \cref{def:hess grad}.
 For this, we use the following basic estimate of the norm of a block matrix in terms of the norm of the matrix of blocks norms, i.e.,
@@ -1197,6 +1197,7 @@ Using \cref{eq:baby norm bounds} we obtain the desired bound.
 We are concerned with $\Phi^{(ab)}$ that arise from random Gaussians.
 Just like random graphs can give rise to good expanders, it is known that random completely positive maps, namely~$\Phi$ constructed by choosing Kraus operators at random from various well-behaved distributions, yield good quantum expanders.
 Pisier showed the following result when the Kraus operators are chosen to be standard Gaussians.
+
 
 \begin{theorem}[\cite{pisier2012grothendieck,P14}]\label{thm:hess-pisier}
 % There is an absolute constant $C>0$ such that the following holds.
