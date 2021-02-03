@@ -1289,7 +1289,8 @@ By the union bound, we conclude that all $\Phi^{(ab)}$ for $a\neq b$ are $(\eps,
 + k \smash{e^{-\Omega\bigl(\frac{nD}{k d_{\max}}\bigr)}}
 + k^2 \left( \frac{\sqrt{nD}}{k d_{\max}} \right)^{-\Omega(d_{\min})}.
 \end{align*}
-The final term dominates  \MW{I don't think we need the assumption on $n$ to see this.} and so we obtain the desired bound on the failure probability.
+The final term dominates
+% \MW{I don't think we need the assumption on $n$ to see this.}
 % Indeed, we have
 % \begin{align*}
 %   nD \geq \frac{nD}{k d_{\max}} \geq d_{\min} \log \frac{\sqrt{nD}}{k d_{\max}}.
@@ -1305,6 +1306,7 @@ The final term dominates  \MW{I don't think we need the assumption on $n$ to see
 % = k d_{\max}
 % \geq d_{\min}.
 % \end{align*}
+and so we obtain the desired bound on the failure probability.
 \end{proof}
 
 We now show our second strong convexity result, namely that if our function is strongly convex at the identity then it is also strongly convex in an operator norm ball about the identity.
