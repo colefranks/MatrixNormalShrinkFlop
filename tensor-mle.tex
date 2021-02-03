@@ -1212,8 +1212,8 @@ We now state and prove our strong convexity result at the identity:
 
 \begin{theorem}[Strong convexity at identity]\label{thm:tensor-convexity}
 There is an absolute constant $C>0$ such that the following holds.
-Let $x = (x_1,\dots,x_n)$ consist of independent standard Gaussian random variables in~$\R^D$, where $n \geq C k \frac{d_{\max}^2}D$.
-Then, with probability at least $1 - k^2 ( \frac{k d_{\max}}{\sqrt{nD}} )^{\Omega(d_{\min})}$,
+Let $x = (x_1,\dots,x_n)$ be independent standard Gaussian random variables in~$\R^D$, where $n \geq C k \frac{d_{\max}^2}D$.
+Then, with probability at least~$1 - k^2 ( \frac{\sqrt{nD}}{k d_{\max}} )^{-\Omega(d_{\min})}$,
 \begin{align*}
   \norm{\nabla^2 f_x - I_\H}_{\op} \leq \frac14;
 \end{align*}
@@ -1249,7 +1249,7 @@ Thus, taking $t^2 = O(\smash{\frac{\lambda \sqrt{nD}}{d_a + d_b}})$ and again as
 % = \frac78\lambda \frac1{\sqrt{d_ad_b}}
 % \leq \lambda \frac{\tr\rho}{\sqrt{d_ad_b}}
 % \end{align*}
-with failure probability at most~$\smash{( \frac{k d_{\max}}{\sqrt{nD}})^{\Omega(d_{\min})}}$.
+with failure probability at most~$\smash{( \frac{\sqrt{nD}}{k d_{\max}} )^{-\Omega(d_{\min})}}$.
 % \begin{align*}
 %   \left( \frac{\lambda \sqrt{nD}}{d_a + d_b} \right)^{-\Omega(d_a + d_b)}
 % \leq \left( \frac{20 k (d_a + d_b)}{\sqrt{nD}} \right)^{\Omega(d_a + d_b)}
@@ -1261,13 +1261,28 @@ with failure probability at most~$\smash{( \frac{k d_{\max}}{\sqrt{nD}})^{\Omega
 By the union bound, we conclude that all $\Phi^{(ab)}$ for $a\neq b$ are $(\eps,\lambda)$-quantum expanders and that $\tr\rho \in (\frac78,\frac98)$, up to a failure probability of at most
 \begin{align*}
   e^{-\Omega(nD)}
-+ k \smash{e^{-\Omega(\frac{nD}{k d_{\max}})}}
-+ k^2 \left( \frac{k d_{\max}}{\sqrt{nD}} \right)^{\Omega(d_{\min})}.
++ k \smash{e^{-\Omega\bigl(\frac{nD}{k d_{\max}}\bigr)}}
++ k^2 \left( \frac{\sqrt{nD}}{k d_{\max}} \right)^{-\Omega(d_{\min})}.
 \end{align*}
-\MW{MARKER}
-Due to our assumption on~$n$, the final term dominates and so we obtain the desired bound the failure probability.
+The final term dominates  \MW{I don't think we need the assumption on $n$ to see this.} and so we obtain the desired bound on the failure probability.
+% Indeed, we have
+% \begin{align*}
+%   nD \geq \frac{nD}{k d_{\max}} \geq d_{\min} \log \frac{\sqrt{nD}}{k d_{\max}}.
+% \end{align*}
+% To see the latter inequality, note that it is nontrivial only when
+% \begin{align*}
+%   \sqrt{nD} \geq k d_{\max},
+% \end{align*}
+% in which case we have
+% \begin{align*}
+%   \frac{nD}{k d_{\max}}
+% \geq \frac{k^2 d_{\max}^2}{k d_{\max}}
+% = k d_{\max}
+% \geq d_{\min}.
+% \end{align*}
 \end{proof}
 
+\MW{MARKER}
 
 
 
