@@ -356,9 +356,11 @@ There is a constant $C>0$ with the following property.
 Suppose $d_1 \leq d_2$ and the number $n$ of samples satisfies $n \geq C \frac{d_2}{d_1} \max \{\log \frac{d_2}{d_1},  \frac{\log^2 d_1}{\eps^2}\}$.
 Then there are MLEs $\widehat{\Theta}_1,\widehat{\Theta}_2$ for factors $\Theta_1, \Theta_2$ of $\Theta$ that satisfy
 \begin{align*}
-  D_{\op}(\widehat{\Theta}_1 \Vert \Theta_1) = O\left(\eps \sqrt{\frac{d_1}{nd_2}} \log d_1\right) \text{ and }   D_{\op}(\widehat{\Theta}_2 \Vert \Theta_2) = O\left(\eps \sqrt{\frac{d_2}{nd_1}}\right)
+  D_{\op}(\widehat{\Theta}_1 \Vert \Theta_1) = O\left(\eps \sqrt{\frac{d_1}{nd_2}} \log d_1\right)
+\quad\text{and}\quad
+D_{\op}(\widehat{\Theta}_2 \Vert \Theta_2) = O\left(\eps \sqrt{\frac{d_2}{nd_1}}\right)
 \end{align*}
-for $a \in \{1,2\}$ with probability $1 - O(e^{ - \Omega( d_1 \eps^2)})$.
+with probability at least $1 - O(e^{ - \Omega( d_1 \eps^2)})$.
 \end{theorem}
 
 %-----------------------------------------------------------------------------
