@@ -1994,7 +1994,7 @@ The term in parenthesis is shown by induction, and in the inequality we used $\|
 
 \begin{corollary} \label{constantRobustness}
 For input $\samp \in \R^{nD}$ such that $\tr[\rho_{\samp}] \leq 1 + \frac{1}{20}$ and $\|d_{a} \rho_{\samp}^{(a)}\|_{op} \leq 1 + \frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a} \in \mat(d_{a}))_{a}$ such that $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
-\[ |\nabla^{2}_{00} f_{\samp'} - \nabla^{2}_{00} f_{\samp}| \leq 4 \|\delta\|_{op}     \]
+\[ |\nabla^{2}_{00} f_{\samp'} - \nabla^{2}_{00} f_{\samp}| \leq 5 \|\delta\|_{op}     \]
 \[ \|\nabla^{2}_{0a} f_{\samp'} - \nabla^{2}_{0a} f_{\samp}\|_{op} \leq 11 \|\delta\|_{op}    \]
 %\AR{Not really op norm here, just traceless part. Is there a notation for this?}
 \end{corollary}
@@ -2102,8 +2102,8 @@ Recall the definition of a quadratic form of the Hessian:
 %\[ = \sum_{a} \langle Z_{a}, (\nabla^{2}_{aa} F) Z_{a} \rangle + \sum_{a \neq b} \langle Z_{a}, (\nabla^{2}_{ab} F) Z_{b} \rangle - \left( \sum_{a} \sqrt{d_{a}} \langle \rho^{(a)}, Z_{a} \rangle  \right)^{2}       \]
 Let $\{\samp' := e^{\delta} \samp\}$. Then by \cref{constantRobustness} we have a bound on the constant terms:
 \[ | z_{0}^{2} (\nabla^{2}_{00} f_{\samp'} - \nabla^{2}_{00} f_{\samp} ) + 2 \sum_{a} \langle z_{0}, (\nabla^{2}_{0a} f_{\samp'} - \nabla^{2}_{0a} f_{\samp}) Z_{a} \rangle |      \]
-\[ \leq 4 \|\delta\|_{op} z_{0}^{2} + (2 |z_{0}|) 12 \|\delta\|_{op} \sum_{a} \|Z_{a}\|_{F}
-\leq \|\delta\|_{op} (16 k z_{0}^{2} + 12 \sum_{a} \|Z_{a}\|_{F}^{2})   \]
+\[ \leq 5 \|\delta\|_{op} z_{0}^{2} + (2 |z_{0}|) 12 \|\delta\|_{op} \sum_{a} \|Z_{a}\|_{F}
+\leq \|\delta\|_{op} (17 k z_{0}^{2} + 12 \sum_{a} \|Z_{a}\|_{F}^{2})   \]
 In the last step we used Young's inequality ($2ab \leq a^{2} + b^{2}$).
 %and by $\cref{rankoneRobustness}$ we have a bound on the rank-one term.
 %\[ \langle Z, (\nabla^2 f_{\samp'} - \nabla^{2} f_{\samp}) Z \rangle \leq \|\delta\|_{op} \left( 11 \sum_{a} \|Z_{a}\|_{F}^{2} + 21 \sum_{a \neq b} \|Z_{a}\|_{F} \|Z_{b}\|_{F} + 1.5 k \|Z\|^{2} \right)   \]
@@ -2113,7 +2113,7 @@ By \cref{diagRobustness} we have a bound on the diagonal terms, and by \cref{off
 \[ |\sum_{ab} \langle Z_{a}, (\nabla^{2}_{ab} f_{\samp'} - \nabla^{2}_{ab} f_{\samp} ) Z_{b} \rangle | \leq \|\delta\|_{op} \left( 11 \sum_{a} \|Z_{a}\|_{F}^{2} + 21 \sum_{a \neq b} \|Z_{a}\|_{F} \|Z_{b}\|_{F} \right)   \]
 \[ \leq (11 + 21(k-1)) \|\delta\|_{op} \left( \sum_{a} \|Z_{a}\|_{F}^{2} \right)   \]
 So combining all three terms we see:
-\[ |\langle Z, (\nabla^{2} f_{\samp'} - \nabla^{2} f_{\samp} ) Z \rangle | \leq \|\delta\|_{op} \left( 16 k z_{0}^{2} + (12 + 11 + 21 (k-1)) \sum_{a} \|Z_{a}\|_{F}^{2} \right)    \]
+\[ |\langle Z, (\nabla^{2} f_{\samp'} - \nabla^{2} f_{\samp} ) Z \rangle | \leq \|\delta\|_{op} \left( 17 k z_{0}^{2} + (12 + 11 + 21 (k-1)) \sum_{a} \|Z_{a}\|_{F}^{2} \right)    \]
 \[ \leq 25 k \|\delta\|_{op} \left( z_{0}^{2} + \sum_{a} \|Z_{a}\|_{F}^{2} \right)    \]
 Note that this also gives a spectral upper bound for $\nabla^{2} f_{\samp'}$.
 %\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s? Also the constant is $50 k$ now, yay for better constants!}\CF{yay!}
