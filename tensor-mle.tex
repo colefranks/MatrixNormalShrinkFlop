@@ -1993,14 +1993,15 @@ The term in parenthesis is shown by induction, and in the inequality we used $\|
 \end{proof}
 
 \begin{corollary} \label{constantRobustness}
-For input $\samp \in \R^{nD}$ such that $\|d_{a} \rho_{\samp}^{(a)}\|_{op} \leq 1 + \frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a} \in \mat(d_{a}))_{a}$ such that $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
+For input $\samp \in \R^{nD}$ such that $\tr[\rho_{\samp}] \leq 1 + \frac{1}{20}$ and $\|d_{a} \rho_{\samp}^{(a)}\|_{op} \leq 1 + \frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a} \in \mat(d_{a}))_{a}$ such that $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
 \[ |\nabla^{2}_{00} f_{\samp'} - \nabla^{2}_{00} f_{\samp}| \leq 4 \|\delta\|_{op}     \]
 \[ \|\nabla^{2}_{0a} f_{\samp'} - \nabla^{2}_{0a} f_{\samp}\|_{op} \leq 11 \|\delta\|_{op}    \]
 %\AR{Not really op norm here, just traceless part. Is there a notation for this?}
 \end{corollary}
 \begin{proof}
 Recall that the $00$ block of the Hessian is just a scalar, so we can use the approximation for $e^{\delta}$ given above:
-\[ |\tr[\rho_{\samp'} - \rho_{\samp}]| = |\langle \rho_{\samp}, e^{2\delta} - I \rangle| \leq Tr[\rho_{x}] \|e^{2 \delta} - I\|_{op} \leq 4 \|\delta\|_{op}     \]
+\[ |\tr[\rho_{\samp'} - \rho_{\samp}]| = |\langle \rho_{\samp}, e^{2\delta} - I \rangle| \leq |Tr[\rho_{\samp}]-1|) \|e^{2 \delta} - I\|_{op} \leq 5 \|\delta\|_{op}     \]
+In the last step we used our bound on $\tr[\rho_{\samp}]$
 The $0a$ block is a vector, so it is enough to bound the inner product with any $Z \perp I_{a}$:
 \[ |\langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, \sqrt{d_{a}} Z \rangle| \leq \|\rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}\|_{op} \sqrt{d_{a}} \|Z\|_{1} \]
 From here we can use the same iterative strategy as in the proof of \cref{diagRobustness}:
@@ -2094,7 +2095,7 @@ Now it is a simple matter of combining terms.
 The above corollaries (\ref{constantRobustness},\ref{diagRobustness},\ref{offdiagRobustness}) require bounds on $\rho^{(a)}$, which are implied by the conditions on the gradient:
 \[ \|d_{a} \rho^{(a)}\|_{op} \leq 1 + |Tr \rho - 1| + \|d_{a} \rho^{(a)} - (Tr \rho) I_{d_{a}} \|_{op}    \]
 \[ = 1 + |\nabla_{0} f| + \|\sqrt{d_{a}} \nabla_{a} f\|_{op} \leq 1 + 2c     \]
-So choosing $c \leq \frac{1}{40}$ suffices. 
+Similarly $\tr \rho \leq 1 + |\nabla_{0} f|$, so choosing $c \leq \frac{1}{40}$ suffices for both. 
 Recall the definition of a quadratic form of the Hessian:
 \[ \langle Z, (\nabla^{2} f) Z \rangle = z_{0} (\nabla^{2}_{00} f) z_{0} + 2 \sum_{a} \langle z_{0}, (\nabla^{2}_{0a} f) Z_{a} \rangle + \sum_{a} \langle Z_{a}, (\nabla^{2}_{aa} f) Z_{a} \rangle + \sum_{a \neq b} \langle Z_{a}, (\nabla^{2}_{ab} f) Z_{b} \rangle     \]
 %\[ \langle Z, (\nabla^{2} f) Z \rangle = \langle Z, (\nabla^{2} F) Z \rangle + \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle     \]
