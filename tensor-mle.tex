@@ -775,7 +775,6 @@ Having calculated the gradient of the objective function, we are ready to state 
 Let $\rv = (\rv_1,\dots,\rv_n)$ consist of independent standard Gaussian random variables in~$\R^D$, % where $D=d_1\cdots{}d_k$,
 and let $0<\eps<1$.
 Suppose $n \geq \frac{d_{\max}^2}{D \eps^2}$.
-% Suppose $N_a := \frac{nD}{d_a}$ is at least $N_a \geq \frac{d_a}{\eps^2}$ for all~$a\in[k]$.
 Then, the following occurs with probability at least $1 - 2(k+1)e^{-\eps^2 \frac{nD}{8d_{\max}}}$:
 \begin{align*}
   \norm{\nabla_a f_x}_{\op} &\leq \frac{9\eps}{\sqrt{d_a}} \qquad\text{ for all $a\in[k]$}, \\
@@ -1349,32 +1348,58 @@ We are now ready to prove the main result of this section according to the plan 
 \clearpage\begin{theorem}[Tensor normal Frobenius error]
 \MW{CHECK.}
 There are universal constants $C,c>0$ such that the following holds.
-Suppose $\eps \leq \smash{\frac c {\sqrt{(k+1)d_{\max}}}}$ and that the number of samples satisfies $n \geq C k \frac{d_{\max}^2}{D \eps^2}$.
-Then the MLE~$\htheta$ for $n$ independent samples of the tensor normal model with precision matrix~$\Theta$ satisfies
+Suppose $\delta \leq \smash{\frac c {\sqrt{(k+1)d_{\max}}}}$ and that the number of samples satisfies $n \geq C k \frac{d_{\max}^2}{D \delta^2}$.
+Then the MLE~$\htheta = \htheta_1 \ot \cdots \ot \htheta_k$ for $n$ independent samples of the tensor normal model with precision matrix~$\Theta = \Theta_1 \ot \cdots \ot \Theta_k$ satisfies
 \begin{align*}
-  D_F(\htheta_a\Vert\Theta_a) &= O(\sqrt{d_a} \eps) \text{ for all } a\in[k], \\
-  D_F(\htheta\Vert\Theta) &= O(\sqrt D \eps),
+  D_F(\htheta_a\Vert\Theta_a) &= O(\sqrt{d_a} \delta) \text{ for all } a\in[k], \\
+  D_F(\htheta\Vert\Theta) &= O(\sqrt D \delta),
 \end{align*}
 with probability at least
 \begin{align*}
-  1 - k e^{-\Omega\bigl( \eps^2 \frac{nD}{k d_{\max}} \bigr)} - k^2 \left( \frac{\sqrt{nD}}{k d_{\max}} \right)^{-\Omega(d_{\min})}.
+  1 - k e^{-\Omega\bigl( \delta^2 \frac{nD}{k d_{\max}} \bigr)} - k^2 \left( \frac{\sqrt{nD}}{k d_{\max}} \right)^{-\Omega(d_{\min})},
 \end{align*}
+where the Kronecker factors are chosen s.~th.~$\det\htheta_1 = \cdots = \det\htheta_k$, $\det\Theta_1 = \cdots = \det\Theta_k$.
 \end{theorem}
 
 \begin{proof}[Proof of \cref{thm:tensor-frobenius}]
 By step~\ref{it:reduce} in \cref{subsec:proof-sketch}, it is enough to prove the theorem assuming $\Theta = I_D$.
 Assuming this, we now show that the minimizer of $f_\rv$ exists and is close to $\Theta = I_D$ with high probability.
-Let~$c$ be the constant from \cref{thm:ball-convexity}.
+Let~$c$ be the minimum of~$1$ and the constant from \cref{thm:ball-convexity}.
 Consider the following two events:
 \begin{enumerate}
-\item\label{it:grad-bd} $\norm{\nabla f_x}_F \leq \frac\eps5$.
-\item\label{it:sc-ball} $f_\rv$ is $\frac12$-strongly convex on the geodesic ball $B_r(I_D)$ of radius $r=\frac c{\sqrt{(k+1) d_{\max}}}$.
+\item\label{it:grad-bd} $\norm{\nabla f_x}_F \leq \frac\delta5$.
+\item\label{it:sc-ball} $f_\rv$ is $\frac12$-strongly convex on the geodesic ball $B_r(I_D)$ of radius $r=\smash{\frac c{\sqrt{(k+1) d_{\max}}}}$.
 \end{enumerate}
-We may choose the constant~$C>0$ such that both \cref{prop:gradient-bound,thm:ball-convexity} apply, with the former showing the first and the latter showing the second event; the desired success probability then follows from the union bound.
+By our assumption on~$n$, we may choose the constant~$C>0$ such that both \cref{prop:gradient-bound,thm:ball-convexity} apply, with the former showing the first and the latter showing the second event; the desired success probability then follows from the union bound.
+By \cref{lem:convex-ball}, these two events in turn, together with our assumption on~$\delta$, imply the MLE~$\htheta$ exists, is unique, and has geodesic distance at most $\delta$ from $I_D$.
 
-By \cref{lem:convex-ball}, which applies by our assumption on~$\eps$, the MLE~$\htheta$ exists, is unique, and is contained in a geodesic ball of radius~$\eps$.
-\MW{if $d(I, \htheta) \leq 1/\sqrt{d_{\max}}$ then can bound local $D_F$'s in terms $\sqrt{d_{\max}}\eps$, and then also the global $D_F$ in terms of $\sqrt D \eps$.}
-\MW{And now reparameterize so that $\Theta_{\max}$ has the right decay and $\eps$ takes a constant range.}
+We now show that $\htheta$ satisfies the desired bounds.
+Note that if $\htheta = \exp_{I_D}(H)$ for $H \in \H$, the equal-determinant Kronecker factors are given by $\htheta_a = \smash{e^{\frac{H_0}{d_a k}} e^{\sqrt{d_a} H_a}}$ for all~$a\in[k]$.
+Thus,
+\begin{align*}
+  \norm{\log \htheta_a}_F^2
+&= \norm{\frac{H_0}{d_a k} I_{d_a} + \sqrt{d_a} H_a}_F^2
+= \frac{\abs{H_0}^2}{d_a k^2} + \norm{\sqrt{d_a} H_a}_F^2 \\
+&\leq d_a \left( \abs{H_0}^2 + \norm{H_a}_F^2 \right)
+\leq d_a \norm H_F^2
+\leq d_a \delta^2.
+\end{align*}
+By our assumption on~$\delta$, the right-hand side is at most $1$, so we have
+\begin{align*}
+  D_F(\htheta_a\Vert I_a)
+= \norm{I_a - \htheta_a}_F
+\leq 2 \norm{\log\htheta_a}_F
+\leq 2 \sqrt{d_a} \, \delta,
+\end{align*}
+which establishes the first bound.
+The second now follows easily by a telescoping sum:
+\begin{align*}
+  D_F(\htheta\Vert I_D)
+&\leq \sum_{a=1}^k \norm{\htheta_1}_F \cdots \norm{\htheta_{a-1}}_F \norm{I_{d_a} - \htheta_a}_F \norm{I_{d_{a+1}}}_F \cdots \norm{I_{d_k}}_F \\
+% &= \sum_{a=1}^k \sqrt{d_{a+1}\cdots d_k} \norm{\htheta_1}_F \cdots \norm{\htheta_{a-1}}_F \norm{I_{d_a} - \htheta_a}_F \\
+&\leq 2 \sqrt{D} \sum_{a=1}^k (1 + 2\delta)^{a-1} \delta
+\end{align*}
+\MW{And now reparameterize $\delta$ so that $\Theta_{\max}$ has the right decay and $\eps$ takes a constant range.}
 \end{proof}
 
 \section{Improvements for the matrix normal model}\label{sec:matrix-normal}
