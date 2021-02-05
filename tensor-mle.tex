@@ -332,24 +332,34 @@ Recall also that $D = \prod_{i=1}^k d_a$.
 \CF{definitely double check these bounds; esp if we need $n \geq k^2...$ or also a lower bound on $\eps$}
 
 \begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius}
-There are constants $C,c>0$ with the following property.
-Suppose $\eps \leq c/\sqrt{d_{\max}}$ and the number of samples satisfies $n \geq C \frac{k^2 d_k^3}{D\eps^2}$.
-Then the MLE $\htheta $ for $\Theta$ from $n$ independent samples of the tensor normal model satisfies
+There are universal constants $C,c>0$ such that the following holds.
+Suppose $\delta \leq \smash{c / \!\! \sqrt{(k+1)d_{\max}}}$ and that the number of samples satisfies $n \geq C k \frac{d_{\max}^2}{D \delta^2}$.
+Then the MLE~$\htheta = \htheta_1 \ot \cdots \ot \htheta_k$ for $n$ independent samples of the tensor normal model with precision matrix~$\Theta = \Theta_1 \ot \cdots \ot \Theta_k$ satisfies
 \begin{align*}
-  D_F(\widehat{\Theta} \Vert \Theta) = O\left( \sqrt{\frac{d_{\min}d_{\max}}{n }}\eps\right);
+  D_F(\htheta_a\Vert\Theta_a) &= O(\sqrt{d_a} \delta) \qquad\text{ for all } a\in[k], \\
+  D_F(\htheta\Vert\Theta) &= O(k e^{2\delta k} \sqrt D \delta),
 \end{align*}
 with probability at least
 \begin{align*}
-  1 - k^2 \left(\sqrt{nD} / kd_{\min} \right)^{ - \Omega(d_{\min})} - O(k e^{ - \eps^2 d_{\max} / k}).
+  1 - k e^{-\Omega\bigl( \delta^2 \frac{nD}{k d_{\max}} \bigr)} - k^2 \left( \frac{\sqrt{nD}}{k d_{\max}} \right)^{-\Omega(d_{\min})},
 \end{align*}
+where the Kronecker factors are chosen s.~th.~$\det\htheta_1 = \cdots = \det\htheta_k$, $\det\Theta_1 = \cdots = \det\Theta_k$.
 \end{theorem}
 
-The bound in the above theorem implies there is an MLE $(\htheta_1, \dots, \htheta_k)$ and Kronecker factors $\Theta_1, \dots, \Theta_k$ of $\Theta$ such that
-\begin{align*}
-  D_F(\widehat{\Theta}_a \Vert \Theta_a) = O\left( \sqrt{\frac{d_a d_{\min}}{n D/d_k}}\eps\right);
-\end{align*}
-\noindent
-for the largest precision matrix $\Theta_k$, this rate matches that of \TODO{XXX} \CF{actually it looks wrong to me.}
+% \begin{theorem}[Tensor normal Frobenius error]
+% There are constants $C,c>0$ with the following property.
+% Suppose $\eps \leq c/\sqrt{d_{\max}}$ and the number of samples satisfies $n \geq C \frac{k^2 d_k^3}{D\eps^2}$.
+% Then the MLE $\htheta $ for $\Theta$ from $n$ independent samples of the tensor normal model satisfies
+% \begin{align*}
+%   D_F(\widehat{\Theta} \Vert \Theta) = O\left( \sqrt{\frac{d_{\min}d_{\max}}{n }}\eps\right);
+% \end{align*}
+% with probability at least
+% \begin{align*}
+%   1 - k^2 \left(\sqrt{nD} / kd_{\min} \right)^{ - \Omega(d_{\min})} - O(k e^{ - \eps^2 d_{\max} / k}).
+% \end{align*}
+% \end{theorem}
+
+The rate for the precision matrix~$\Theta_a$ with $d_a = d_{\max}$ matches that of \TODO{XXX} \CF{actually it looks wrong to me.}
 
 In the case of matrix normal models $(k=2)$, we obtain a stronger result. In the following theorem we identify $\Theta_1, \Theta_2$ from $\Theta$ using the convention $\det \Theta_1 = 1$.
 \CF{$\eps$ at least some fixed constant?}
@@ -1345,27 +1355,12 @@ Namely, under the same hypotheses it holds that~$f_x$ is $\frac12$-strongly conv
 %-----------------------------------------------------------------------------
 We are now ready to prove the main result of this section according to the plan outlined in \cref{subsec:proof-sketch}.
 
-\clearpage\begin{theorem}[Tensor normal Frobenius error]
-\MW{MOVE OVER TO SECTION 2 WHEN DONE.}
-There are universal constants $C,c>0$ such that the following holds.
-Suppose $\delta \leq \smash{\frac c {\sqrt{(k+1)d_{\max}}}}$ and that the number of samples satisfies $n \geq C k \frac{d_{\max}^2}{D \delta^2}$.
-Then the MLE~$\htheta = \htheta_1 \ot \cdots \ot \htheta_k$ for $n$ independent samples of the tensor normal model with precision matrix~$\Theta = \Theta_1 \ot \cdots \ot \Theta_k$ satisfies
-\begin{align*}
-  D_F(\htheta_a\Vert\Theta_a) &= O(\sqrt{d_a} \delta) \text{ for all } a\in[k], \\
-  D_F(\htheta\Vert\Theta) &= O(\sqrt D \delta),
-\end{align*}
-with probability at least
-\begin{align*}
-  1 - k e^{-\Omega\bigl( \delta^2 \frac{nD}{k d_{\max}} \bigr)} - k^2 \left( \frac{\sqrt{nD}}{k d_{\max}} \right)^{-\Omega(d_{\min})},
-\end{align*}
-where the Kronecker factors are chosen s.~th.~$\det\htheta_1 = \cdots = \det\htheta_k$, $\det\Theta_1 = \cdots = \det\Theta_k$.
-\end{theorem}
-
 \begin{proof}[Proof of \cref{thm:tensor-frobenius}]
 By step~\ref{it:reduce} in \cref{subsec:proof-sketch}, it is enough to prove the theorem assuming $\Theta = I_D$.
 Assuming this, we now show that the minimizer of $f_\rv$ exists and is close to $\Theta = I_D$ with high probability.
 Let~$c$ be the minimum of~$1$ and the constant from \cref{thm:ball-convexity}.
 Consider the following two events:
+\MW{Cole, I'll let you pick $\delta = \eps \frac{d_{\max} \sqrt{k}}{\sqrt{nD}}$ or whatever you feel looks best.}
 \begin{enumerate}
 \item\label{it:grad-bd} $\norm{\nabla f_x}_F \leq \frac\delta5$.
 \item\label{it:sc-ball} $f_\rv$ is $\frac12$-strongly convex on the geodesic ball $B_r(I_D)$ of radius $r=\smash{\frac c{\sqrt{(k+1) d_{\max}}}}$.
@@ -1398,8 +1393,8 @@ The second now follows easily by a telescoping sum:
 &\leq \sum_{a=1}^k \norm{\htheta_1}_F \cdots \norm{\htheta_{a-1}}_F \norm{I_{d_a} - \htheta_a}_F \norm{I_{d_{a+1}}}_F \cdots \norm{I_{d_k}}_F \\
 % &= \sum_{a=1}^k \sqrt{d_{a+1}\cdots d_k} \norm{\htheta_1}_F \cdots \norm{\htheta_{a-1}}_F \norm{I_{d_a} - \htheta_a}_F \\
 &\leq 2 \sqrt{D} \sum_{a=1}^k (1 + 2\delta)^{a-1} \delta
+\leq 2 k e^{2\delta k} \sqrt{D} \delta.
 \end{align*}
-\MW{And now reparameterize $\delta$ so that $\Theta_{\max}$ has the right decay and $\eps$ takes a constant range.}
 \end{proof}
 
 \section{Improvements for the matrix normal model}\label{sec:matrix-normal}
