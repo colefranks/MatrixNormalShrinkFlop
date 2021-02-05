@@ -329,7 +329,21 @@ Similarly, define the \emph{relative spectral error} as
 
 To state our results, and throughout this paper, we write $d_{\min} = \min_a d_a$, $d_{\max} = \max_a d_a$.
 Recall also that $D = \prod_{i=1}^k d_a$.
-\CF{definitely double check these bounds; esp if we need $n \geq k^2...$ or also a lower bound on $\eps$}
+
+\CF{If we don't like the $\max\{k, d_{\max}\}$ in the bound for $\eps$ we can put the $e^{k \delta}$ back in the bound, but I think it is worth it.}
+\begin{theorem}[\CF{new}Tensor normal Frobenius error]\label{thm:cole-tensor-frobenius}
+There are universal constants $C,c>0$ such that the following holds. Suppose 
+$$1 \leq \eps^2 \leq \frac{nD}{Ck^2 d_{\max}^2 \max\{k, d_{\max}\}}.$$ Then the MLE~$\htheta = \htheta_1 \ot \cdots \ot \htheta_k$ for $n$ independent samples of the tensor normal model with precision matrix~$\Theta = \Theta_1 \ot \cdots \ot \Theta_k$ satisfies
+\begin{align*}
+  D_F(\htheta_a\Vert\Theta_a) &= O\left(k \frac{d_a^{1/2} d_{\max}}{\sqrt{n D}} \eps\right) \qquad\text{ for all } a\in[k], \\
+  D_F(\htheta\Vert\Theta) &= O\left(k^{3/2} \frac{d_{\max}}{\sqrt{n}} \eps\right),
+\end{align*}
+with probability at least
+\begin{align*}
+  1 - k e^{-\Omega\bigl( \eps^2 d_{\max} \bigr)} - k^2 \left( \frac{\sqrt{nD}}{k d_{\max}} \right)^{-\Omega(d_{\min})},
+\end{align*}
+where the Kronecker factors are chosen s.~th.~$\det\htheta_1 = \cdots = \det\htheta_k$, $\det\Theta_1 = \cdots = \det\Theta_k$.
+\end{theorem}
 
 \begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius}
 There are universal constants $C,c>0$ such that the following holds.
@@ -1358,9 +1372,7 @@ We are now ready to prove the main result of this section according to the plan 
 \begin{proof}[Proof of \cref{thm:tensor-frobenius}]
 By step~\ref{it:reduce} in \cref{subsec:proof-sketch}, it is enough to prove the theorem assuming $\Theta = I_D$.
 Assuming this, we now show that the minimizer of $f_\rv$ exists and is close to $\Theta = I_D$ with high probability.
-Let~$c$ be the minimum of~$1$ and the constant from \cref{thm:ball-convexity}.
-Consider the following two events:
-\MW{Cole, I'll let you pick $\delta = \eps \frac{d_{\max} \sqrt{k}}{\sqrt{nD}}$ or whatever you feel looks best.}
+Let~$c$ be the minimum of~$1$ and the constant from \cref{thm:ball-convexity}. Let $\delta = \frac{ C\sqrt{k} d_{\max} }{\sqrt{nD}} \eps,$ and consider the following two events:
 \begin{enumerate}
 \item\label{it:grad-bd} $\norm{\nabla f_x}_F \leq \frac\delta5$.
 \item\label{it:sc-ball} $f_\rv$ is $\frac12$-strongly convex on the geodesic ball $B_r(I_D)$ of radius $r=\smash{\frac c{\sqrt{(k+1) d_{\max}}}}$.
