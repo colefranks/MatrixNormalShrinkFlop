@@ -69,7 +69,7 @@
 \newcommand{\Herm}{\operatorname{Herm}}
 \newcommand{\Sym}{\mathcal{S}}
 \newcommand{\smallSym}{S}
-\newcommand{\SPD}{\mathcal{P}}
+\newcommand{\SPD}{\mathbb{P}}
 \newcommand{\samp}{x}
 \newcommand{\rv}{x}
 \newcommand{\ef}{f}
@@ -84,6 +84,9 @@
 \newcommand{\eqdef}{:=}
 \newcommand{\maps}{\colon}
 \newcommand{\email}[1]{\href{mailto:#1}{\texttt{#1}}}
+
+\def\dmin{d_{\min}}
+\def\dmax{d_{\max}}
 
 \newcommand{\CF}[1]{{\color{purple}[CF: #1]}}
 \newcommand{\AR}[1]{{\color{orange}[AR: #1]}}
@@ -1501,30 +1504,10 @@ We have already shown that the first term is $O(\eps \sqrt{\frac{d_1}{n d_2}}).$
 %=============================================================================
 \section{Convergence of flip-flop algorithms}
 %=============================================================================
-In this section we prove that the flip-flop algorithms for the matrix and tensor normal models converge quickly to the MLE estimator with high probability. We begin by stating the flip-flop algorithm and then...
 
-\begin{Algorithm}
-\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
+In this section we prove that the flip-flop algorithms for the matrix and tensor normal models converge quickly to the MLE estimator with high probability. 
 
-\textbf{Output}: $\otheta \in \SPD$ such that $D_F(\htheta_a; \otheta_a) < \eps$, for each $a \in [k]$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
-
-\textbf{Algorithm}:
-\begin{enumerate}
-\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$, and $\delta = \dfrac{\eps^2}{16 d_k^{3/2}}$.
-\item\label{it:flip-flop step 2} For $t=1,\dots,T = 12 k d_k \cdot \log(k/\delta^2)$, repeat the following:
-%we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
-\begin{itemize}
-\item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \ldots, \otheta_k)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \ldots, \otheta_k)$, and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest.
-\item
-If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\left( \bigotimes_{a =1}^k \otheta_a \right)^{-1}$ and return.
-% S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
-\item Otherwise, set $\otheta_a \leftarrow \otheta_a^{1/2} (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$.
-\end{itemize}
-\end{enumerate}
-\caption{Tensor flip-flop algorithm}\label{alg:flip-flop}
-\end{Algorithm}
-
-Before we analyze the convergence of the flip-flop algorithms for the tensor and matrix normal models, we discuss the straightforward generalizations of convergence of general descent methods whenever the objective function is strongly geodesically convex.
+Before we analyze the convergence of the flip-flop algorithms for the tensor and matrix normal models, we discuss the straightforward generalization of convergence of general descent methods whenever the objective function is strongly geodesically convex.
 
 The next lemma shows that any descent method which manages to decrease the value of the function with respect to the gradient...
 The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
@@ -1558,8 +1541,33 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 \end{proof}
 
 %-----------------------------------------------------------------------------
-\subsection{Tensor flip-flop convergence}
+\subsection{Tensor flip-flop: algorithm and convergence}
 %-----------------------------------------------------------------------------
+
+We are now ready to state the tensor flip-flop algorithm and prove its fast convergence to the MLE.
+
+\begin{Algorithm}
+\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. \\ Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
+
+\textbf{Output}: $\otheta \in \SPD$ such that $D_F(\htheta_a \ || \ \otheta_a) < \eps$, for each $a \in [k]$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
+
+\textbf{Algorithm}:
+\begin{enumerate}
+\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$, and $\delta = \dfrac{\eps^2}{16 d_k^{3/2}}$.
+\item\label{it:flip-flop step 2} For $t=1,\dots,T = 12 k d_k \cdot \log(k/\delta^2)$, repeat the following:
+%we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
+\begin{itemize}
+\item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \ldots, \otheta_k)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \ldots, \otheta_k)$, and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest.
+\item
+If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\left( \bigotimes_{a =1}^k \otheta_a \right)^{-1}$ and return.
+% S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
+\item Otherwise, set $\otheta_a \leftarrow  \dfrac{\tr[\rho]}{d_a} \cdot \otheta_a^{1/2} (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$, where $\rho = \otheta^{1/2} \left( \sum_{i=1}^n x_ix_i^\dagger \right) \otheta^{1/2}.$
+\end{itemize}
+\end{enumerate}
+\caption{Tensor flip-flop algorithm}\label{alg:flip-flop}
+\end{Algorithm}
+
+
 \begin{lemma}[Initial Conditions]\label{lem:tensor-initial-conditions}
 	There exist absolute constants $\Gamma, \gamma > 0$ such that the following holds.
 	When the number of samples $n \geq \Gamma \cdot k^2 \cdot d_1^2/D$, with probability at least \CF{I think it may be $\sqrt{nD}$ in the numerator now} $1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}$ we have that the following conditions hold:
@@ -1573,8 +1581,8 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 \begin{proof}
 	The lemma follows from the observation that \cref{prop:gradient-bound} implies condition 1, and \cref{thm:ball-convexity} implies condition 2. So all we need to do is to check the parameters.
 
-	By \cref{thm:ball-convexity}, if we set $\gamma = c$ and if the number of samples $n \geq C k^2 d_1^2/D$, where $c, C > 0$ are the constants from \cref{thm:ball-convexity}, then with probability at most
-	$$k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)}$$
+	By \cref{thm:ball-convexity}, if we set $\gamma = c$ and if the number of samples $n \geq C k \dfrac{d_{\max}^2}{D}$, where $c, C > 0$ are the constants from \cref{thm:ball-convexity}, then with probability at most
+	$$k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)}$$
 	the second condition fails to hold.
 
 	By \cref{prop:gradient-bound} with parameter $\varepsilon = \frac{\gamma \sqrt{k}}{8}$, if the number of samples satisfies $n \geq \dfrac{2^{14} \cdot d_1^2}{\gamma^2 \cdot k \cdot D}$ then with probability at most
@@ -1589,38 +1597,38 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 
 \begin{lemma}[Descent Lemma]\label{lem:tensor-descent-lemma}
 	If $\Theta, \Upsilon$ are successive scalings from the flip-flop algorithm, then we have:
-	$$ f_x(\Upsilon) \leq f_x(\Theta) - \dfrac{1}{6k d_k} \cdot \min\{1, \norm{\nabla f_x(\Theta)}_F^2\} $$
+	$$ f_x(\Upsilon) \leq f_x(\Theta) - \dfrac{1}{6} \cdot \min\left\{ \dfrac{1}{\dmax} \ , \ \dfrac{\norm{\nabla f_x(\Theta)}_F^2}{k \cdot (1 + \nabla_0 f_x(\Theta))^2} \right\} $$
 \end{lemma}
 
 \begin{proof}
 	Let
-	$$\rho := \dfrac{\left( \bigotimes_{j=1}^k \Theta_j \right)^{1/2} \cdot \sum_{i=1}^n x_i x_i^\dagger \cdot \left( \bigotimes_{j=1}^k \Theta_j \right)^{1/2}}{\exp(f_x(\Theta))}.$$
-	Additionally, let $a \in [k]$ be such that $\nabla_a := \nabla_a f_x(\Theta)$ is largest. As $\Upsilon$ is the successive scaling, we have that $\Upsilon_b = \Theta_b$ when $b \neq a$ and
-	$$ \Upsilon_a = \det(\rho^{(a)})^{1/d_a} \cdot \Theta_a^{1/2} \cdot  (\rho^{(a)})^{-1} \cdot \Theta_a^{1/2} = \det(d_a \cdot \rho^{(a)})^{1/d_a} \cdot \Theta_a^{1/2} \cdot (d_a \cdot \rho^{(a)})^{-1} \cdot \Theta_a^{1/2}. $$
-	In particular, the above means that we can write $\bigotimes_{j=1}^k \Upsilon_j$ in the following way:
-	$$ \bigotimes_{j=1}^k \Upsilon_j = \det(d_a \cdot \rho^{(a)})^{1/d_a} \cdot E_{(a)} \cdot \bigotimes_{j=1}^k \Theta_j $$
-	where $E_{(a)} = I_1 \otimes \cdots \otimes I_{a-1} \otimes (d_a \cdot \rho^{(a)})^{-1} \otimes I_{a+1} \otimes \cdots \otimes I_k$.
+	$$\rho := \Theta^{1/2} \cdot \left( \sum_{i=1}^n x_i x_i^\dagger \right) \cdot \Theta^{1/2}.$$
+	Additionally, let $a \in [k]$ be such that $\nabla_a := \nabla_a f_x(\Theta)$ has largest norm. As $\Upsilon$ is the successive scaling, we have that $\Upsilon_b = \Theta_b$ when $b \neq a$ and
+	$$ \Upsilon_a = \dfrac{\tr[\rho]}{d_a} \cdot \Theta_a^{1/2} \cdot (\rho^{(a)})^{-1} \cdot \Theta_a^{1/2}. $$
+	%= \det(d_a \cdot \rho^{(a)})^{1/d_a} \cdot \Theta_a^{1/2} \cdot (d_a \cdot \rho^{(a)})^{-1} \cdot \Theta_a^{1/2}
+	In particular, the above means that we can write $\Upsilon$ in the following way:
+	$$ \Upsilon = \Theta^{1/2} \cdot  E_{(a)} \cdot \Theta^{1/2} $$
+	where $E_{(a)} = I_1 \otimes \cdots \otimes I_{a-1} \otimes \left( \dfrac{\tr[\rho]}{d_a} \cdot (\rho^{(a)})^{-1} \right) \otimes I_{a+1} \otimes \cdots \otimes I_k$.
 	Hence, we have:
 	\begin{align*}
-		f_x(\Upsilon) &= \log \sum_{i=1}^n \langle x_i , \bigotimes_{j=1}^k \Upsilon_j x_i \rangle \\
-		&= \log\left(\tr\left[ \bigotimes_{j=1}^k \Upsilon_j \cdot  \sum_{i=1}^n x_i x_i^\dagger  \right]\right) \\
-		&= \log\left(\tr\left[ \det(d_a \cdot \rho^{(a)})^{1/d_a} \cdot E_{(a)} \cdot \bigotimes_{j=1}^k \Theta_j \cdot  \sum_{i=1}^n x_i x_i^\dagger  \right]\right) \\
-		&= \log\left(\det(d_a \cdot \rho^{(a)})^{1/d_a} \right) +  \log\left(\tr\left[ \cdot E_{(a)} \cdot \bigotimes_{j=1}^k \Theta_j \cdot  \sum_{i=1}^n x_i x_i^\dagger  \right]\right) \\
-		&= \log\left(\det(d_a \cdot \rho^{(a)})^{1/d_a} \right) +  \log\left(\tr\left[ E_{(a)} \cdot \rho \right] \cdot \exp(f_x(\Theta)) \right) \\
-		&= f_x(\Theta) + \frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)})  +  \log\left(\tr\left[ E_{(a)} \cdot \rho \right] \right) \\
-		&= f_x(\Theta) + \frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)})  +  \log\left(\tr\left[ (d_a \rho^{(a)})^{-1} \cdot \rho^{(a)} \right] \right) \\
-		&= f_x(\Theta) + \frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)})
+		f_x(\Upsilon) &= \dfrac{1}{nD} \sum_{i=1}^n \langle x_i , \Upsilon x_i \rangle - \dfrac{1}{D} \log \det(\Upsilon) \\
+		&= \dfrac{1}{nD} \tr\left[ \Upsilon \cdot  \sum_{i=1}^n x_i x_i^\dagger  \right] - \dfrac{1}{D} \log \det(\Upsilon) \\
+		&= \dfrac{1}{nD} \tr\left[ \Theta^{1/2} \cdot  E_{(a)} \cdot \Theta^{1/2}  \cdot  \sum_{i=1}^n x_i x_i^\dagger  \right] - \dfrac{1}{D} \log \det(\Theta^{1/2} \cdot  E_{(a)} \cdot \Theta^{1/2}) \\
+		&= \dfrac{1}{nD} \tr\left[  E_{(a)} \cdot \rho  \right] - \dfrac{1}{D} \left( \log \det(E_{(a)}) + \log\det(\Theta) \right) \\
+		&= \dfrac{1}{nD} \tr\left[ \dfrac{\tr \rho}{d_a} \cdot (\rho^{(a)})^{-1} \cdot \rho^{(a)}  \right] - \dfrac{1}{D} \left( \log \det(E_{(a)}) + \log\det(\Theta) \right) \\
+		&= f_x(\Theta) + \dfrac{1}{D} \cdot \log \det\left( E_{(a)}^{-1} \right) \\
+		&= f_x(\Theta) + \frac{1}{d_a} \cdot  \log\det\left( \dfrac{d_a}{\tr \rho } \cdot \rho^{(a)} \right) 
 	\end{align*}
 	Lemma 5.1 from~\cite{GGOW19} states that for any $d$-dimensional PSD matrix $Z$ of trace $d$, the following inequality holds:
 	$$ \log\det(Z) \leq \max\left\{- \dfrac{\norm{Z - I_d}_F^2}{6}, - \dfrac{1}{6} \right\}. $$
-	Since $\tr \rho^{(a)} = 1$, if $\norm{d_a \rho^{(a)} - I_a}_F \leq 1$ we obtain that:
+	Since $\tr \rho^{(a)} = \tr \rho$, if $\norm{\dfrac{d_a}{\tr \rho} \rho^{(a)} - I_a}_F \leq 1$ we obtain that:
 	\begin{align*}
-		\frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)}) &\leq - \dfrac{\norm{d_a \rho^{(a)} - I_a}_F^2}{6 d_a} \\
-		&= - \dfrac{\norm{\sqrt{d_a} \rho^{(a)} - \frac{1}{\sqrt{d_a}} I_a}_F^2}{6} = - \dfrac{\norm{\nabla_a}_F^2}{6} \leq - \dfrac{1}{6k} \cdot \norm{\nabla f_x(\Theta)}_F^2
+		\frac{1}{d_a} \cdot  \log\det\left(\dfrac{d_a}{\tr \rho} \cdot \rho^{(a)} \right) &\leq - \dfrac{\norm{\dfrac{d_a}{\tr \rho} \cdot \rho^{(a)} - I_a}_F^2}{6 d_a} \\
+		&= - \dfrac{d_a \cdot \norm{ \rho^{(a)} - \frac{\tr \rho}{d_a} I_a}_F^2}{6 \cdot (\tr \rho)^2} = - \dfrac{\norm{\nabla_a}_F^2}{6 \cdot (\tr \rho)^2} \leq - \dfrac{\norm{\nabla f_x(\Theta)}_F^2}{6k \cdot (1 + \nabla_0 f_x(\Theta))^2}
 	\end{align*}
-	If $\norm{d_a \rho^{(a)} - I_a}_F > 1$, we have
+	If $\norm{\dfrac{d_a}{\tr \rho} \rho^{(a)} - I_a}_F > 1$, we have
 	\begin{align*}
-		\frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)}) &\leq - \dfrac{1}{6 d_a} \leq - \dfrac{1}{6 d_k}
+		\frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)}) &\leq - \dfrac{1}{6 d_a} \leq - \dfrac{1}{6 \dmax}
 	\end{align*}
 \end{proof}
 
