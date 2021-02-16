@@ -340,13 +340,15 @@ Recall also that $D = \prod_{i=1}^k d_a$.
 
 \CF{If we don't like the $\max\{k, d_{\max}\}$ in the bound for $\eps$ we can put the $e^{k \delta}$ back in the bound, but I think it is worth it.}
 
-\newcommand{\TensorFrob}{%
+\newcommand{\TensorFrob}[2]{%
 There are universal constants $C,c>0$ such that the following holds.
 Suppose
-\[ 1 \leq \eps^2 \leq \frac{nD}{Ck^2 d_{\max}^2 \max\{k, d_{\max}\}}. \]
+\begin{#1}#2
+  1 \leq \eps^2 \leq \frac{nD}{C k d_{\max}^2 \max\{k, d_{\max}\}}.
+\end{#1}
 Then the MLE~$\htheta = \htheta_1 \ot \cdots \ot \htheta_k$ for $n$ independent samples of the tensor normal model with precision matrix~$\Theta = \Theta_1 \ot \cdots \ot \Theta_k$ satisfies
 \begin{align*}
-  D_F(\htheta_a\Vert\Theta_a) &= O\left(k \frac{d_a^{1/2} d_{\max}}{\sqrt{n D}} \eps\right) \qquad\text{ for all } a\in[k], \\
+  D_F(\htheta_a\Vert\Theta_a) &= O\left(k^{1/2} \frac{\sqrt{d_a} \, d_{\max}}{\sqrt{n D}} \eps\right) \qquad\text{ for all } a\in[k], \\
   D_F(\htheta\Vert\Theta) &= O\left(k^{3/2} \frac{d_{\max}}{\sqrt{n}} \eps\right),
 \end{align*}
 with probability at least
@@ -356,7 +358,7 @@ with probability at least
 where the Kronecker factors are chosen s.~th.~$\det\htheta_1 = \cdots = \det\htheta_k$, $\det\Theta_1 = \cdots = \det\Theta_k$.}
 
 \begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius}
-\TensorFrob
+\TensorFrob{equation}{\label{eq:eps sqr assm}}
 \end{theorem}
 
 % \begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius}
@@ -822,7 +824,8 @@ Then, the following occurs with probability at least $1 - 2(k+1)e^{-\eps^2 \frac
 % = \abs{\nabla_0 f_x}^2 + \sum_{a=1}^k \norm{\nabla_a f_x}_F^2
 % \leq \abs{\nabla_0 f_x}^2 + \sum_{a=1}^k d_a \norm{\nabla_a f_x}_{\op}^2 \\
 % \leq \eps^2 + \sum_{a=1}^k 81 \eps^2 =
-&\leq (1 + 81 k) \eps^2.
+&\leq (1 + 81 k) \eps^2
+\leq 82 k \eps^2.
 \end{align*}
 \end{prop}
 
@@ -1385,17 +1388,83 @@ We are now ready to prove the main result of this section according to the plan 
 We restate the theorem for convenience.
 
 \begin{customthm}{\ref{thm:tensor-frobenius}}[Tensor normal Frobenius error, restated]
-\TensorFrob
+\TensorFrob{equation*}{\tag{\ref{eq:eps sqr assm}}}
 \end{customthm}
 \begin{proof}
 By step~\ref{it:reduce} in \cref{subsec:proof-sketch}, it is enough to prove the theorem assuming $\Theta = I_D$.
 Assuming this, we now show that the minimizer of $f_\rv$ exists and is close to $\Theta = I_D$ with high probability.
-Let~$c$ be the minimum of~$1$ and the constant from \cref{thm:ball-convexity}. Let $\delta = \frac{ C\sqrt{k} d_{\max} }{\sqrt{nD}} \eps,$ and consider the following two events:
+Let~$c$ be the minimum of~$1$ and the constant from \cref{thm:ball-convexity},
+and let $C$ be the maximum of~$25 \cdot 82$ and the constant from \cref{thm:ball-convexity}.
+For
+\begin{equation}\label{eq:def delta}
+  \delta = \frac{\sqrt{Ck} \, d_{\max} }{\sqrt{nD}} \eps,
+\quad\text{which satisfies}\quad
+  \delta^2 \leq \frac1{\max\{k, d_{\max}\}},
+\end{equation}
+consider the following two events:
 \begin{enumerate}
 \item\label{it:grad-bd} $\norm{\nabla f_x}_F \leq \frac\delta5$.
 \item\label{it:sc-ball} $f_\rv$ is $\frac12$-strongly convex on the geodesic ball $B_r(I_D)$ of radius $r=\smash{\frac c{\sqrt{(k+1) d_{\max}}}}$.
 \end{enumerate}
-By our assumption on~$n$, we may choose the constant~$C>0$ such that both \cref{prop:gradient-bound,thm:ball-convexity} apply, with the former showing the first and the latter showing the second event; the desired success probability then follows from the union bound.
+By our assumption~\eqref{eq:eps sqr assm}, both \cref{prop:gradient-bound,thm:ball-convexity} apply, with the former showing the first and the latter showing the second event; the desired success probability then follows from the union bound.
+
+%%%
+% {\color{blue}
+% To verify that \cref{prop:gradient-bound} applies, note that we wish to apply it with $\eps_{prop}$, where
+% \begin{align*}
+%   \sqrt{82 k \eps_{prop}^2} = \frac\delta5
+% \quad\Leftrightarrow\quad
+%   \eps_{prop} = \frac1{\sqrt{25 \cdot 82}} \frac{ \sqrt{C} d_{\max} }{\sqrt{nD}} \eps.
+% \end{align*}
+% Hence we need to verify the following conditions:
+% \begin{align*}
+%   \eps_{prop} < 1
+%   \quad\text{and}\quad
+%   n \geq \frac{d_{\max}^2}{D \eps_{prop}^2}
+% \end{align*}
+% These are equivalent to
+% \begin{align*}
+%   \frac1{\sqrt{25 \cdot 82}} \frac{ \sqrt{C} d_{\max} }{\sqrt{nD}} \eps \leq 1
+%   \Leftrightarrow
+%   \eps^2 \leq 25 \cdot 82 \frac{nD}{C d^2_{\max}}.
+% \end{align*}
+% and
+% \begin{align*}
+%   n \geq \frac{d_{\max}^2}{D \eps_{prop}^2}
+%   \Leftrightarrow
+%   \eps_{prop}^2 \geq \frac{d_{\max}^2}{Dn}
+%   \Leftrightarrow
+%   \eps^2 \geq \frac{25 \cdot 82}C.
+% \end{align*}
+% The first condition is clearly implied by the upper bound in~\eqref{eq:eps sqr assm}.
+% The second condition is implied by the lower bound in~\eqref{eq:eps sqr assm} (and using that $C\geq 25 \cdot 82$).
+% This \cref{prop:gradient-bound} applies and event~1 holds with failure probability
+% \begin{align*}
+%   2(k+1)e^{-\eps_{prop}^2 \frac{nD}{8d_{\max}}}
+% = 2(k+1)e^{-\frac{ \frac{C}{25\cdot82} d_{\max}^2 }{nD} \eps^2 \frac{nD}{8d_{\max}}}
+% = k e^{-\Omega(\eps^2 d_{\max})}
+% \end{align*}
+% %%%
+% For \cref{thm:ball-convexity} we simply need that
+% \begin{align*}
+%   n \geq C_{thm} k \frac{d_{\max}^2}D
+% \end{align*}
+% (by the comment below the theorem).
+% This follows from our assumption, since
+% \begin{align*}
+%   \frac{nD}{Ck d_{\max} \max\{k, d_{\max}\}} \geq 1
+% \Leftrightarrow
+%   n \geq C k \frac{d_{\max}^2 \max\{k, d_{\max}\}}{D}
+% \Rightarrow
+%   n \geq C k \frac{d_{\max}^2}{D}.
+% \end{align*}
+% (since $C \geq C_{thm}$).
+% Thus \cref{thm:ball-convexity} applies and event~2 holds with failure probability
+% \begin{align*}
+% k^2 \left( \frac{\sqrt{nD}}{k d_{\max}} \right)^{-\Omega(d_{\min})}
+% \end{align*}}
+%%%
+
 By \cref{lem:convex-ball}, these two events in turn, together with our assumption on~$\delta$, imply the MLE~$\htheta$ exists, is unique, and has geodesic distance at most $\delta$ from $I_D$.
 
 We now show that $\htheta$ satisfies the desired bounds.
@@ -1409,12 +1478,13 @@ Thus,
 \leq d_a \norm H_F^2
 \leq d_a \delta^2.
 \end{align*}
-By our assumption on~$\delta$, the right-hand side is at most $1$, so we have
+By \cref{eq:def delta}, $d_a \delta^2 \leq 1$, so we have
 \begin{align*}
   D_F(\htheta_a\Vert I_a)
 = \norm{I_a - \htheta_a}_F
 \leq 2 \norm{\log\htheta_a}_F
-\leq 2 \sqrt{d_a} \, \delta,
+\leq 2 \sqrt{d_a} \, \delta
+= O\biggl( \sqrt k \, \frac{\sqrt{d_a} \, d_{\max} }{\sqrt{nD}} \eps \biggr),
 \end{align*}
 which establishes the first bound.
 The second now follows easily by a telescoping sum:
@@ -1423,9 +1493,10 @@ The second now follows easily by a telescoping sum:
 &\leq \sum_{a=1}^k \norm{\htheta_1}_F \cdots \norm{\htheta_{a-1}}_F \norm{I_{d_a} - \htheta_a}_F \norm{I_{d_{a+1}}}_F \cdots \norm{I_{d_k}}_F \\
 % &= \sum_{a=1}^k \sqrt{d_{a+1}\cdots d_k} \norm{\htheta_1}_F \cdots \norm{\htheta_{a-1}}_F \norm{I_{d_a} - \htheta_a}_F \\
 &\leq 2 \sqrt{D} \sum_{a=1}^k (1 + 2\delta)^{a-1} \delta
-\leq 2 k e^{2\delta k} \sqrt{D} \delta.
+\leq 2 k e^{2\delta k} \sqrt{D} \delta
+= O\biggl( {\color{red}e^{2\delta k}} k^{3/2} \frac{d_{\max} }{\sqrt{n}} \eps \biggr)
 \end{align*}
-\MW{Convert to the new bounds stated in \cref{thm:tensor-frobenius}.}
+\MW{Bound $\delta k$ once we agree on it.}
 \end{proof}
 
 
