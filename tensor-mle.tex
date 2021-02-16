@@ -14,6 +14,8 @@
 
 \startlocaldefs
 \newtheorem{theorem}{Theorem}[section]
+\newtheorem{innercustomthm}{Theorem}
+\newenvironment{customthm}[1]{\renewcommand\theinnercustomthm{#1}\innercustomthm}{\endinnercustomthm}
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{prop}[theorem]{Proposition}
 % \newtheorem{obs}[theorem]{Observation}
@@ -1380,8 +1382,12 @@ Namely, under the same hypotheses it holds that~$f_x$ is $\frac12$-strongly conv
 \subsection{Proof of Theorem~\ref{thm:tensor-frobenius}}
 %-----------------------------------------------------------------------------
 We are now ready to prove the main result of this section according to the plan outlined in \cref{subsec:proof-sketch}.
+We restate the theorem for convenience.
 
-\begin{proof}[Proof of \cref{thm:tensor-frobenius}]
+\begin{customthm}{\ref{thm:tensor-frobenius}}[Tensor normal Frobenius error, restated]
+\TensorFrob
+\end{customthm}
+\begin{proof}
 By step~\ref{it:reduce} in \cref{subsec:proof-sketch}, it is enough to prove the theorem assuming $\Theta = I_D$.
 Assuming this, we now show that the minimizer of $f_\rv$ exists and is close to $\Theta = I_D$ with high probability.
 Let~$c$ be the minimum of~$1$ and the constant from \cref{thm:ball-convexity}. Let $\delta = \frac{ C\sqrt{k} d_{\max} }{\sqrt{nD}} \eps,$ and consider the following two events:
