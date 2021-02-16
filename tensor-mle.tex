@@ -349,46 +349,17 @@ Suppose
 \end{#1}
 Then the MLE~$\htheta = \htheta_1 \ot \cdots \ot \htheta_k$ for $n$ independent samples of the tensor normal model with precision matrix~$\Theta = \Theta_1 \ot \cdots \ot \Theta_k$ satisfies
 \begin{align*}
-  D_F(\htheta_a\Vert\Theta_a) &= O\left(k^{1/2} \frac{\sqrt{d_a} \, d_{\max}}{\sqrt{n D}} \eps\right) \qquad\text{ for all } a\in[k], \\
+  D_F(\htheta_a\Vert\Theta_a) &= O\left(k^{1/2} \frac{\sqrt{d_a} \, d_{\max}}{\sqrt{n D}} \eps\right) \quad\text{ for all } a\in[k], \\
   D_F(\htheta\Vert\Theta) &= O\left(k^{3/2} \frac{d_{\max}}{\sqrt{n}} \eps\right),
 \end{align*}
-with probability at least
+where the Kronecker factors of $\htheta$ and $\Theta$ are chosen such that $\det\htheta_1 = \cdots = \det\htheta_k$ and $\det\Theta_1 = \cdots = \det\Theta_k$, with probability at least
 \begin{align*}
   1 - k e^{-\Omega\bigl( \eps^2 d_{\max} \bigr)} - k^2 \left( \frac{\sqrt{nD}}{k d_{\max}} \right)^{-\Omega(d_{\min})},
-\end{align*}
-where the Kronecker factors are chosen s.~th.~$\det\htheta_1 = \cdots = \det\htheta_k$, $\det\Theta_1 = \cdots = \det\Theta_k$.}
+\end{align*}}
 
 \begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius}
 \TensorFrob{equation}{\label{eq:eps sqr assm}}
 \end{theorem}
-
-% \begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius}
-% There are universal constants $C,c>0$ such that the following holds.
-% Suppose $\delta \leq \smash{c / \!\! \sqrt{(k+1)d_{\max}}}$ and that the number of samples satisfies $n \geq C k \frac{d_{\max}^2}{D \delta^2}$.
-% Then the MLE~$\htheta = \htheta_1 \ot \cdots \ot \htheta_k$ for $n$ independent samples of the tensor normal model with precision matrix~$\Theta = \Theta_1 \ot \cdots \ot \Theta_k$ satisfies
-% \begin{align*}
-%   D_F(\htheta_a\Vert\Theta_a) &= O(\sqrt{d_a} \delta) \qquad\text{ for all } a\in[k], \\
-%   D_F(\htheta\Vert\Theta) &= O(k e^{2\delta k} \sqrt D \delta),
-% \end{align*}
-% with probability at least
-% \begin{align*}
-%   1 - k e^{-\Omega\bigl( \delta^2 \frac{nD}{k d_{\max}} \bigr)} - k^2 \left( \frac{\sqrt{nD}}{k d_{\max}} \right)^{-\Omega(d_{\min})},
-% \end{align*}
-% where the Kronecker factors are chosen s.~th.~$\det\htheta_1 = \cdots = \det\htheta_k$, $\det\Theta_1 = \cdots = \det\Theta_k$.
-% \end{theorem}
-
-% \begin{theorem}[Tensor normal Frobenius error]
-% There are constants $C,c>0$ with the following property.
-% Suppose $\eps \leq c/\sqrt{d_{\max}}$ and the number of samples satisfies $n \geq C \frac{k^2 d_k^3}{D\eps^2}$.
-% Then the MLE $\htheta $ for $\Theta$ from $n$ independent samples of the tensor normal model satisfies
-% \begin{align*}
-%   D_F(\widehat{\Theta} \Vert \Theta) = O\left( \sqrt{\frac{d_{\min}d_{\max}}{n }}\eps\right);
-% \end{align*}
-% with probability at least
-% \begin{align*}
-%   1 - k^2 \left(\sqrt{nD} / kd_{\min} \right)^{ - \Omega(d_{\min})} - O(k e^{ - \eps^2 d_{\max} / k}).
-% \end{align*}
-% \end{theorem}
 
 The rate for the precision matrix~$\Theta_a$ with $d_a = d_{\max}$ matches that of \TODO{XXX} \CF{actually it looks wrong to me.}
 
@@ -396,18 +367,18 @@ In the case of matrix normal models $(k=2)$, we obtain a stronger result. In the
 \CF{$\eps$ at least some fixed constant?}
 
 \newcommand{\MatrixSpec}{%
-There is a constant $C>0$ with the following property.
-Suppose $d_1 \leq d_2$ and the number $n$ of samples satisfies $n \geq C \frac{d_2}{d_1} \max \{\log \frac{d_2}{d_1},  \frac{\log^2 d_1}{\eps^2}\}$.
-Then there are MLEs $\widehat{\Theta}_1,\widehat{\Theta}_2$ for factors $\Theta_1, \Theta_2$ of $\Theta$ that satisfy
+There is a universal constant~$C>0$ with the following property.
+Suppose $d_1 \leq d_2$ and $n \geq C \frac{d_2}{d_1} \max \{\log \frac{d_2}{d_1},  \frac{\log^2 d_1}{\eps^2}\}$.
+
+Then the MLE $\htheta = \htheta_1 \ot \htheta_2$ for $n$ independent samples from the matrix normal model with precision matrix $\Theta = \Theta_1 \ot \Theta_2$ satisfies
 \begin{align*}
   D_{\op}(\widehat{\Theta}_1 \Vert \Theta_1) = O\left(\eps \sqrt{\frac{d_1}{nd_2}} \log d_1\right)
 \quad\text{and}\quad
-D_{\op}(\widehat{\Theta}_2 \Vert \Theta_2) = O\left(\eps \sqrt{\frac{d_2}{nd_1}}\right)
+D_{\op}(\widehat{\Theta}_2 \Vert \Theta_2) = O\left(\eps \sqrt{\frac{d_2}{nd_1}}\right),
 \end{align*}
-with probability at least $1 - O(e^{ - \Omega( d_1 \eps^2)})$.
-}
+where the Kronecker factors of $\htheta$ and $\Theta$ are chosen such that $\det\htheta_1 = \det\htheta_2$ and $\det\Theta_1 = \det\Theta_2$, with probability at least  $1 - O(e^{ - \Omega( d_1 \eps^2)})$.}
 
-\begin{theorem}[Matrix normal model spectral error]\label{thm:matrix-normal}
+\begin{theorem}[Matrix normal spectral error]\label{thm:matrix-normal}
 \MatrixSpec
 \end{theorem}
 
@@ -469,7 +440,7 @@ Our improved result for the matrix normal model, \cref{thm:matrix-normal}, requi
 be proved later in \cref{sec:matrix-normal}.
 
 %-----------------------------------------------------------------------------
-\subsection{Geometry of precision matrices and geodesic convexity}\label{subsec:geom}
+\subsection{Geometry and geodesic convexity}\label{subsec:geom}
 %-----------------------------------------------------------------------------
 We now discuss the geodesic convexity used here and outline the strategy for our proof.
 We start by introducing a Riemannian metric on the manifold $\PD(D)$ of positive-definite $D\times D$ matrices.
@@ -1634,7 +1605,7 @@ The details can be found in \cref{app:flipflop-concentration}.
 With this bound in hand, we may now prove \cref{thm:matrix-normal}.
 
 
-\begin{customthm}{\ref{thm:matrix-normal}}[Matrix normal model spectral error]
+\begin{customthm}{\ref{thm:matrix-normal}}[Matrix normal spectral error, restated]
 \MatrixSpec
 \end{customthm}
 \begin{proof}
