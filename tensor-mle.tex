@@ -1496,17 +1496,26 @@ The second now follows easily by a telescoping sum:
 \leq 2 k e^{2\delta k} \sqrt{D} \delta
 = O\biggl( {\color{red}e^{2\delta k}} k^{3/2} \frac{d_{\max} }{\sqrt{n}} \eps \biggr)
 \end{align*}
-\MW{Bound $\delta k$ once we agree on it.}
+\MW{Bound $\delta k$ once we agree on it. I think we can just change $k$ to $k^2$ inside the $\max$?}
 \end{proof}
 
 
 %=============================================================================
 \section{Improvements for the matrix normal model}\label{sec:matrix-normal}
 %=============================================================================
-\MW{MICHAEL MARKER}
-We now prove \cref{thm:matrix-normal}, an improvement to \cref{thm:tensor-frobenius} in the case $k=2$. The results for $k = 2$ are stronger in that \CF{enumerate or emph} the MLE can be shown to be close to the truth in operator norm rather than the looser Frobenius norm, the errors are tight for the individual factors, and that the failure probability is inverse exponential in the number of samples rather than inverse polynomial.
+We now prove \cref{thm:matrix-normal}, which improves over \cref{thm:tensor-frobenius} in the case of the matrix normal model ($k=2$).
+Our results for the matrix normal model are stronger in that
+\begin{enumerate}
+\item the MLE is shown to be close to the truth in spectral norm rather than the looser Frobenius norm,
+\item the errors are tight for the individual factors, and
+\item the failure probability is inverse exponential in the number of samples rather than inverse polynomial.
+\end{enumerate}
+The proof plan is similar to that in \cref{subsec:proof-sketch}, but to work directly with quantum expansion instead of strong convexity.
 
-The proof plan is similar to that in \cref{subsec:proof-sketch}, but to work directly with quantum expansion instead of strong convexity. In particular, the quantum expansion of the operators $\Phi^{ab}$ defined in \cref{lem:expansion-convexity}. Because $k = 2$ there is only one operator $\Phi^{12}$ to consider, which is proportional to $\Phi_X$ for $X$ a tuple of $n$ i.i.d. Gaussian vectors in $\R^{d_1} \ot \R^{d_2}$.
+eq:hessian channel
+
+\MW{MICHAEL MARKER}
+Because $k = 2$ there is only one operator $\Phi^{(12)}$ to consider, which is proportional to $\Phi_X$ for $X$ a tuple of $n$ i.i.d. Gaussian vectors in $\R^{d_1} \ot \R^{d_2}$.
 %\begin{align}\Phi:Z \mapsto \frac{1}{nD} \sum_{i = 1}^n X_i Z X_i^\dagger,\label{eq:matrix-normal-operator}\end{align} where $X_i^\dagger$ denotes the transpose of $X_i$ viewed as a $d_1\times d_2$ matrix.
 
 Our main tool is a bound by \CF{KLR} using a very similar notion as \emph{spectral gap}. $\Phi$ has spectral gap $ \lambda$ if it satisfies the condition
