@@ -8,6 +8,9 @@
 \RequirePackage[bookmarksnumbered,colorlinks,citecolor=blue,urlcolor=blue,linkcolor=blue,anchorcolor=green,breaklinks=true]{hyperref}
 \RequirePackage{graphicx}
 \RequirePackage[capitalize]{cleveref}
+\RequirePackage{silence}
+\WarningFilter{latexfont}{Font shape}
+\WarningFilter{latexfont}{Size substitutions}
 
 \startlocaldefs
 \newtheorem{theorem}{Theorem}[section]
@@ -153,7 +156,7 @@ The matrix normal model, the family of Gaussian matrix-variate distributions who
 \end{enumerate}
 Polishing:
 \begin{enumerate}
-\item Akshay's note on simplifying the proof of \cref{thm:tensor-convexity}: \AR{Can rephrase explicitly in terms of $\nabla^{2} F$ and rank-one term. Then \cref{prop:gradient-bound} gives $1-\eps$ lower bound on each diagonal block of $\nabla^{2} F$, \cref{offdiagPisier} gives $\lambda$ bound on each offdiagonal block of $\nabla^{2} F$, and \cref{prop:gradient-bound} once again gives $k \eps^{2}$ bound on whole rank-one term.  }
+\item Akshay's note on simplifying the proof of \cref{thm:tensor-convexity}: \AR{Can rephrase explicitly in terms of $\nabla^{2} F$ and rank-one term. Then \cref{prop:gradient-bound} gives $1-\eps$ lower bound on each diagonal block of $\nabla^{2} F$, offdiagPisier gives $\lambda$ bound on each offdiagonal block of $\nabla^{2} F$, and \cref{prop:gradient-bound} once again gives $k \eps^{2}$ bound on whole rank-one term.  }
 \item \AR{Can improve the strong convexity stuff by a factor of two by using the projection to traceless on both sides of the inner product}
 \item \CF{for the readers' sake some justification is needed for why perturbing $\samp$ this is the same as considering the Hessian of our function at another point in $\SPD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
 \item Add some discussion for noise added to data.
@@ -334,9 +337,12 @@ To state our results, and throughout this paper, we write $d_{\min} = \min_a d_a
 Recall also that $D = \prod_{i=1}^k d_a$.
 
 \CF{If we don't like the $\max\{k, d_{\max}\}$ in the bound for $\eps$ we can put the $e^{k \delta}$ back in the bound, but I think it is worth it.}
-\begin{theorem}[\CF{new}Tensor normal Frobenius error]\label{thm:cole-tensor-frobenius}
-There are universal constants $C,c>0$ such that the following holds. Suppose 
-$$1 \leq \eps^2 \leq \frac{nD}{Ck^2 d_{\max}^2 \max\{k, d_{\max}\}}.$$ Then the MLE~$\htheta = \htheta_1 \ot \cdots \ot \htheta_k$ for $n$ independent samples of the tensor normal model with precision matrix~$\Theta = \Theta_1 \ot \cdots \ot \Theta_k$ satisfies
+
+\newcommand{\TensorFrob}{%
+There are universal constants $C,c>0$ such that the following holds.
+Suppose
+\[ 1 \leq \eps^2 \leq \frac{nD}{Ck^2 d_{\max}^2 \max\{k, d_{\max}\}}. \]
+Then the MLE~$\htheta = \htheta_1 \ot \cdots \ot \htheta_k$ for $n$ independent samples of the tensor normal model with precision matrix~$\Theta = \Theta_1 \ot \cdots \ot \Theta_k$ satisfies
 \begin{align*}
   D_F(\htheta_a\Vert\Theta_a) &= O\left(k \frac{d_a^{1/2} d_{\max}}{\sqrt{n D}} \eps\right) \qquad\text{ for all } a\in[k], \\
   D_F(\htheta\Vert\Theta) &= O\left(k^{3/2} \frac{d_{\max}}{\sqrt{n}} \eps\right),
@@ -345,23 +351,26 @@ with probability at least
 \begin{align*}
   1 - k e^{-\Omega\bigl( \eps^2 d_{\max} \bigr)} - k^2 \left( \frac{\sqrt{nD}}{k d_{\max}} \right)^{-\Omega(d_{\min})},
 \end{align*}
-where the Kronecker factors are chosen s.~th.~$\det\htheta_1 = \cdots = \det\htheta_k$, $\det\Theta_1 = \cdots = \det\Theta_k$.
-\end{theorem}
+where the Kronecker factors are chosen s.~th.~$\det\htheta_1 = \cdots = \det\htheta_k$, $\det\Theta_1 = \cdots = \det\Theta_k$.}
 
 \begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius}
-There are universal constants $C,c>0$ such that the following holds.
-Suppose $\delta \leq \smash{c / \!\! \sqrt{(k+1)d_{\max}}}$ and that the number of samples satisfies $n \geq C k \frac{d_{\max}^2}{D \delta^2}$.
-Then the MLE~$\htheta = \htheta_1 \ot \cdots \ot \htheta_k$ for $n$ independent samples of the tensor normal model with precision matrix~$\Theta = \Theta_1 \ot \cdots \ot \Theta_k$ satisfies
-\begin{align*}
-  D_F(\htheta_a\Vert\Theta_a) &= O(\sqrt{d_a} \delta) \qquad\text{ for all } a\in[k], \\
-  D_F(\htheta\Vert\Theta) &= O(k e^{2\delta k} \sqrt D \delta),
-\end{align*}
-with probability at least
-\begin{align*}
-  1 - k e^{-\Omega\bigl( \delta^2 \frac{nD}{k d_{\max}} \bigr)} - k^2 \left( \frac{\sqrt{nD}}{k d_{\max}} \right)^{-\Omega(d_{\min})},
-\end{align*}
-where the Kronecker factors are chosen s.~th.~$\det\htheta_1 = \cdots = \det\htheta_k$, $\det\Theta_1 = \cdots = \det\Theta_k$.
+\TensorFrob
 \end{theorem}
+
+% \begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius}
+% There are universal constants $C,c>0$ such that the following holds.
+% Suppose $\delta \leq \smash{c / \!\! \sqrt{(k+1)d_{\max}}}$ and that the number of samples satisfies $n \geq C k \frac{d_{\max}^2}{D \delta^2}$.
+% Then the MLE~$\htheta = \htheta_1 \ot \cdots \ot \htheta_k$ for $n$ independent samples of the tensor normal model with precision matrix~$\Theta = \Theta_1 \ot \cdots \ot \Theta_k$ satisfies
+% \begin{align*}
+%   D_F(\htheta_a\Vert\Theta_a) &= O(\sqrt{d_a} \delta) \qquad\text{ for all } a\in[k], \\
+%   D_F(\htheta\Vert\Theta) &= O(k e^{2\delta k} \sqrt D \delta),
+% \end{align*}
+% with probability at least
+% \begin{align*}
+%   1 - k e^{-\Omega\bigl( \delta^2 \frac{nD}{k d_{\max}} \bigr)} - k^2 \left( \frac{\sqrt{nD}}{k d_{\max}} \right)^{-\Omega(d_{\min})},
+% \end{align*}
+% where the Kronecker factors are chosen s.~th.~$\det\htheta_1 = \cdots = \det\htheta_k$, $\det\Theta_1 = \cdots = \det\Theta_k$.
+% \end{theorem}
 
 % \begin{theorem}[Tensor normal Frobenius error]
 % There are constants $C,c>0$ with the following property.
@@ -1410,12 +1419,14 @@ The second now follows easily by a telescoping sum:
 &\leq 2 \sqrt{D} \sum_{a=1}^k (1 + 2\delta)^{a-1} \delta
 \leq 2 k e^{2\delta k} \sqrt{D} \delta.
 \end{align*}
+\MW{Convert to the new bounds stated in \cref{thm:tensor-frobenius}.}
 \end{proof}
 
+
+%=============================================================================
 \section{Improvements for the matrix normal model}\label{sec:matrix-normal}
-
-
-
+%=============================================================================
+\MW{MICHAEL MARKER}
 We now prove \cref{thm:matrix-normal}, an improvement to \cref{thm:tensor-frobenius} in the case $k=2$. The results for $k = 2$ are stronger in that \CF{enumerate or emph} the MLE can be shown to be close to the truth in operator norm rather than the looser Frobenius norm, the errors are tight for the individual factors, and that the failure probability is inverse exponential in the number of samples rather than inverse polynomial.
 
 The proof plan is similar to that in \cref{subsec:proof-sketch}, but to work directly with quantum expansion instead of strong convexity. In particular, the quantum expansion of the operators $\Phi^{ab}$ defined in \cref{lem:expansion-convexity}. Because $k = 2$ there is only one operator $\Phi^{12}$ to consider, which is proportional to $\Phi_X$ for $X$ a tuple of $n$ i.i.d. Gaussian vectors in $\R^{d_1} \ot \R^{d_2}$.
@@ -1451,7 +1462,7 @@ This also improves our result on strong convexity, which will be useful in the a
 
 We will prove \cref{thm:operator-cheeger} in the appendix using techniques similar to \cite{FM20} using Cheeger's inequality.
 
-\subsection{Proof of \cref{thm:matrix-normal}}
+\subsection{Proof of Theorem~\ref{thm:matrix-normal}}
 We now use \cref{thm:operator-cheeger} as well as some more refined concentration inequalities to prove \cref{thm:matrix-normal}. The additional concentration is required to obtain the tighter bounds on the lower-dimensional factor $\Theta_1$, where $d_1 \leq d_2$.
 
 We first sketch the proof of the implied Frobenius error bound. The idea of the proof is to apply one step of flip-flop algorithm, a step which normalizes the larger marginal of $\rho$. This has the effect of making the second component of $\nabla f_\samp$ equal to zero, and we will show that the first component enjoys the same concentration exploited in \cref{prop:gradient-bound} even with the step of flip-flop - thus the total gradient has become smaller, but only the second component of the estimate has changed. Thus, intuitively, the total change in the first component will be small. Using \cref{convexRobustness} to control the change induced in the minimal eigenvalue of the Hessian by the first step of the flip-flop and applying \cref{lem:convex-ball} results in an error bound proportional to the new gradient after flip-flop, which gives us the tighter bound. To obtain the relative spectral error bound, we employ a similar strategy but with \cref{thm:klr} instead of \cref{lem:convex-ball}.
@@ -1715,8 +1726,8 @@ If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\left( \bigotimes_{a =1}^k \othet
 
 \textbf{Algorithm}:
 \begin{enumerate}
-\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in \{1,2\}$, and $\delta = \dfrac{\eps^2}{16 d_2^{3/2}}$.
-\item\label{it:flip-flop step 2} For $t=1,\dots,T = 24 d_2 \cdot \log(2/\delta^2)$, repeat the following:
+\item\label{it:flip-flop step 1 matrix} Set $\otheta_a = I_a$ for each $a \in \{1,2\}$, and $\delta = \dfrac{\eps^2}{16 d_2^{3/2}}$.
+\item\label{it:flip-flop step 2 matrix} For $t=1,\dots,T = 24 d_2 \cdot \log(2/\delta^2)$, repeat the following:
 %we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
 \begin{itemize}
 \item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \otheta_2)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \otheta_2)$, and find the index $a \in \{1,2\}$ for which $\norm{\nabla_a}_{op}$ is non-zero.
@@ -1726,7 +1737,7 @@ If $\norm{\nabla_a}_{op}^2 < \delta^2$, output $\left( \otheta_1 \otimes \otheta
 \item Otherwise, set $\otheta_a \leftarrow \det(\rho^{(a)})^{1/d_a} \cdot \otheta_a^{1/2} \cdot (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$.
 \end{itemize}
 \end{enumerate}
-\caption{Matrix flip-flop algorithm}\label{alg:flip-flop}
+\caption{Matrix flip-flop algorithm}\label{alg:flip-flop matrix}
 \end{Algorithm}
 
 \TODO{Proof of \cref{thm:matrix-flipflop}}
@@ -1809,8 +1820,8 @@ The flip-flop algorithm for this regularized estimator is nearly as simple as th
 
 \textbf{Algorithm}:
 \begin{enumerate}
-\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$, and define $\otheta:= \otimes_a \otheta_a$.
-\item\label{it:flip-flop step 2} Repeat the following:
+\item\label{it:flip-flop step 1 reg} Set $\otheta_a = I_a$ for each $a \in [k]$, and define $\otheta:= \otimes_a \otheta_a$.
+\item\label{it:flip-flop step 2 reg} Repeat the following:
 %we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
 \begin{itemize}
 %\item Set $\otheta^1$
@@ -1841,10 +1852,6 @@ We compare the performance of the estimator with Zhou's single step estimator \C
 
 
 \begin{appendix}
-
-
-%One can calculate $$ H_{I, v}(\samp, \samp) = \langle w, \Pi(\samp)^2 w \rangle - \langle w, \Pi(\samp) w \rangle^2 $$ where $w = v/\|v\|$. We may calculate the Hessian $H_{P,v}$ using $H_{P, v} = H_{I, \sqrt{P}v}$.
-
 
 %=============================================================================
 \section{Pisier's proof of expansion}\label{sec:pisier}
@@ -2031,7 +2038,7 @@ Here in the first inequality we used that $\rho_{\samp} \succeq 0, Z \succeq 0$;
 In general we decompose $Z = Z_{+} - Z_{-}$ and use the above to show
 \[ |\langle Z, \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)} \rangle| \leq \|\delta'\|_{op} (\|Z_{+}\|_{1} + \|Z_{-}\|_{1}) \|\rho_{\samp}^{(a)}\|_{op}     \]
 The lemma follows by noting $\|Z\|_{1} = \|Z_{+}\|_{1} + \|Z_{-}\|_{1}$ and $\|\delta\|_{op} \leq c$:
-\[ \|\delta'\|_{op} = \|(1+\eta) e^{2 \delta} - I\|_{op} \leq |\eta|(1 + 2 \|\delta\|_{op}) + 2\|\delta\|_{op} \leq O(\|\delta\|_{op})   \qedhere  \]
+\[ \|\delta'\|_{op} = \|(1+\eta) e^{2 \delta} - I\|_{op} \leq |\eta|(1 + 2 \|\delta\|_{op}) + 2\|\delta\|_{op} \leq O(\|\delta\|_{op})  \]
 \end{proof}
 
 This is already enough to prove a bound on the constant and diagonal terms:
@@ -2371,8 +2378,6 @@ For $D_{op}$, the result is \cite[Lemma C.1]{FM20}. For $D_F$, the result holds 
 
 
 \end{appendix}
-
-
 
 
 %=============================================================================
