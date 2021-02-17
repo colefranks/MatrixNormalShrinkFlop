@@ -2094,8 +2094,8 @@ holds up to failure probability at most
 \leq % \frac{2 N^q m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(2C')^{4q} t^{4q} N^q \bigl( \E \norm{A}_{\op} \bigr)^{4q}} =
   \frac{m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(C' t)^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}}.
 \end{align*}
-\MW{I think this is buggy now (need to use $\Theta$ version of A.1). Also worry about $q\geq1$ (integer is not important I think).}
-Now we choose $q \in \mathbb{N}$ such that $C \sqrt{q} \leq \sqrt m + \sqrt n = \E \|A\|_{\op}$, where the last equality is by \cref{eq:op norm bound}. \AR{Changed the choice of constant, hope you don't mind}
+\MW{I think this is buggy now. Also worry about $q\geq1$ (integer is not important I think).}
+Now we choose $q \in \mathbb{N}$ such that $C \sqrt{q} \leq \sqrt m + \sqrt n = \E \|A\|_{\op}$ \MW{the $=$ is a $\geq$, brzz}, where the last equality is by \cref{eq:op norm bound}. \AR{Changed the choice of constant, hope you don't mind}
 We can moreover choose~$C'\geq 2$ to be a universal constant.
 Then, the failure probability is bounded as follows:
 \begin{align*}
