@@ -1,0 +1,2018 @@
+\documentclass[aos]{imsart}
+\pdfoutput=1
+\RequirePackage[english]{babel}
+\RequirePackage[ascii]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{microtype,amsthm,amsmath,amsfonts,amssymb,mathtools,braket,bm,xcolor,float}
+\RequirePackage[authoryear]{natbib}  % \RequirePackage[numbers]{natbib}
+\RequirePackage[bookmarksnumbered,colorlinks,citecolor=blue,urlcolor=blue,linkcolor=blue,anchorcolor=green,breaklinks=true]{hyperref}
+\RequirePackage{graphicx}
+\RequirePackage[capitalize]{cleveref}
+
+\startlocaldefs
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{obs}[theorem]{Observation}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corol}[theorem]{Corollary}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{claim}[theorem]{Claim}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\floatstyle{boxed}\newfloat{Algorithm}{ht}{alg}
+\crefname{Algorithm}{Algorithm}{Algorithms}
+\numberwithin{equation}{section}
+% \allowdisplaybreaks[4]
+\urlstyle{same}
+
+\DeclareMathOperator{\Lie}{Lie}
+\DeclareMathOperator{\Lin}{L}
+\DeclareMathOperator{\ope}{op}
+\DeclareMathOperator{\poly}{poly}
+\DeclareMathOperator{\op}{op}
+\DeclareMathOperator{\vol}{vol}
+\DeclareMathOperator{\cut}{cut}
+\DeclareMathOperator{\ch}{ch}
+\DeclareMathOperator{\mat}{Mat}
+\DeclareMathOperator{\GL}{GL}
+\DeclareMathOperator{\tr}{Tr}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\PD}{PD}
+
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+\DeclarePairedDelimiter{\ip}{\langle}{\rangle}
+
+\newcommand{\R}{{\mathbb{R}}}
+\renewcommand{\P}{{\mathbb{P}}}
+\newcommand{\C}{{\mathbb{C}}}
+\renewcommand{\H}{{\mathbb{H}}}
+\newcommand{\G}{{\mathbb{G}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\renewcommand{\S}{\mathbb{S}}
+\newcommand{\otheta}{\overline{\Theta}}
+\newcommand{\htheta}{\widehat{\Theta}}
+\newcommand{\oZ}{\overline{Z}}
+\newcommand{\ot}{\otimes}
+\renewcommand{\vec}{\bm}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\GG}{\mathcal{G}}
+\newcommand{\SL}{\operatorname{SL}}
+\newcommand{\Herm}{\operatorname{Herm}}
+\newcommand{\Sym}{\mathcal{S}}
+\newcommand{\smallSym}{S}
+\newcommand{\SPD}{\mathcal{P}}
+\newcommand{\samp}{x}
+\newcommand{\rv}{X}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\RR}{\mathcal{R}}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\II}{\mathcal{I}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\AP}{\mathcal{AP}}
+\newcommand{\eqdef}{:=}
+\newcommand{\maps}{\colon}
+\newcommand{\email}[1]{\href{mailto:#1}{\texttt{#1}}}
+
+\newcommand{\CF}[1]{{\color{purple}[CF: #1]}}
+\newcommand{\AR}[1]{{\color{orange}[AR: #1]}}
+\newcommand{\RMO}[1]{{\color{red}[RMO: #1]}}
+\newcommand{\MW}[1]{{\color{red}[MW: #1]}}
+\newcommand{\TODO}[1]{{\color{blue}[TODO: #1]}}
+
+
+\newcommand{\mitn}{\footnotemark[6]}
+\newcommand{\nyun}{\footnotemark[7]}
+
+\endlocaldefs
+
+\begin{document}
+\pagecolor{yellow}
+%=============================================================================
+\begin{frontmatter}
+\title{Optimal sample complexity for matrix and tensor normal models via geodesic convexity}
+\runtitle{Optimal sample complexity for matrix and tensor normal models}
+%=============================================================================
+\begin{aug}
+\author[A]{\fnms{Cole} \snm{Franks}\corref{}\ead[label=e1]{franks@mit.edu}},
+\author[B]{\fnms{Rafael} \snm{Oliveira}\corref{}\ead[label=e2]{second@somewhere.com}},
+\author[B]{\fnms{Akshay} \snm{Ramachandran}\corref{}\ead[label=e3]{third@somewhere.com}} \\ \and
+\author[C]{\fnms{Michael} \snm{Walter}\corref{}\ead[label=e4]{m.walter@uva.nl}}
+\runauthor{C.\ Franks, R.\ Oliveira, A.\ Ramachandran \and M.\ Walter}
+\affiliation[A]{Massachusetts Institute of Technology} %, \printead{e1}
+\affiliation[B]{University of Waterloo} %, \printead{e2,e3}}
+\affiliation[C]{University of Amsterdam} %, \printead{e4}}
+\end{aug}
+%=============================================================================
+\begin{abstract}
+The matrix normal model, the family of Gaussian matrix-variate distributions whose covariance matrix is the Kronecker product of two lower dimensional factors, is frequently used to model matrix-variate data. The tensor normal model generalizes this family to Kronecker products of three or more factors. We study the estimation of the Kronecker factors of the covariance matrix in the matrix and tensor models. We show nonasymptotic bounds for the maximum likelihood estimator (MLE) for the factors in several natural metrics. In contrast to existing bounds, our results do not depend on the factors being well-conditioned. For the matrix normal model, all our bounds are minimax optimal up to logarithmic factors, and for the tensor normal model our bound for the largest factor and overall covariance matrix are minimax optimal provided there are enough samples for any estimator to obtain better than constant Frobenius error. In the same regimes as our sample complexity bounds, we show that an iterative procedure to compute the MLE known as the flip-flop algorithm converges linearly with high probability. Our main tool is geodesic convexity in the Fisher-Rao metric on the positive definite matrices. We also provide numerical evidence that a simple regularizer can improve performance in the undersampled regime.
+
+
+
+\end{abstract}
+%=============================================================================
+\begin{keyword}[class=MSC2020]
+\kwd[Primary ]{???}
+\kwd{???}
+\kwd[; secondary ]{???}
+\end{keyword}
+
+\begin{keyword}
+\kwd{???}
+\kwd{???}
+\end{keyword}
+\end{frontmatter}
+%=============================================================================
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Please use \tableofcontents for articles %%
+%% with 50 pages and more                   %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tableofcontents
+%=============================================================================
+
+\TODO{
+\begin{enumerate}
+%\item Use $n$ instead of $T$ for number of samples.
+\item Fix the dimension issue in \cref{thm:tensor-convexity}.
+\item At some point we need to mention that the final step in flip-flop is to supply the normalizing constant.
+%\item When not random, use lower case $x$.
+%\item Comment that the geodesic distance is some variation on the Fischer-Rao distance.
+\end{enumerate}
+Polishing:
+\begin{enumerate}
+\item Akshay's note on simplifying the proof of \cref{thm:tensor-convexity}: \AR{Can rephrase explicitly in terms of $\nabla^{2} F$ and rank-one term. Then \cref{prop:gradient-bound} gives $1-\eps$ lower bound on each diagonal block of $\nabla^{2} F$, \cref{offdiagPisier} gives $\lambda$ bound on each offdiagonal block of $\nabla^{2} F$, and \cref{prop:gradient-bound} once again gives $k \eps^{2}$ bound on whole rank-one term.  }
+\item \AR{Can improve the strong convexity stuff by a factor of two by using the projection to traceless on both sides of the inner product}
+\item \CF{for the readers' sake some justification is needed for why perturbing $\samp$ this is the same as considering the Hessian of our function at another point in $\SPD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
+\item Define $B^\infty_c$ to be all $\Theta$ such that $\sum \|\log \Theta_a\|_{op} \leq c$. May be able to avoid this since everything is internal to proofs.
+\item Add some discussion for noise added to data.
+\end{enumerate}
+}
+
+
+%=============================================================================
+\section{Introduction}
+%=============================================================================
+Covariance matrix estimation is an important task in statistics, machine learning, and the empirical sciences.
+We consider covariance estimation for matrix-variate and tensor-variate Gaussian data, that is, when individual data points are matrices or tensors. Matrix-variate data arises naturally in numerous applications like gene microarrays, spatio-temporal data, and brain imaging.
+A significant challenge is that the dimensionality of these problems is frequently much higher than the number of samples, making estimation information-theoretically impossible without structural assumptions.
+
+To remedy this issue, matrix-variate data is commonly assumed to follow the \emph{matrix normal distribution} \citep{dutilleul1999mle,werner2008estimation}.
+Here the matrix follows a multivariate Gaussian distribution and the covariance between any two entries in the matrix is a product of an inter-row factor and an inter-column factor.
+In spatio-temporal statistics this is referred to as a separable covariance structure.
+Formally, if a matrix normal random variable~$X$ takes values in the~$d_1\times d_2$ matrices, then its covariance matrix $\Sigma$ is a $d_1d_2\times d_1 d_2$ matrix that is the Kronecker product~$\Sigma_1 \ot \Sigma_2$ of two positive-semidefinite matrices~$\Sigma_1$ and~$\Sigma_2$ of dimension~$d_1\times d_1$ and~$d_2\times d_2$, respectively.
+This naturally extends to the \emph{tensor normal model}, where $X$ is a $k$-dimensional array, with covariance matrix equal to the Kronecker product of $k$ many positive semidefinite matrices~$\Sigma_1, \dots, \Sigma_k$.
+In this paper we consider the estimation of $\Sigma_1, \dots, \Sigma_k$ from $n$ samples of a matrix or tensor normal random variable $X$.
+
+Much research has been devoted to estimating the covariance matrix for the matrix and tensor normal models, but gaps in rigorous understanding remain.
+\cite{dutilleul1999mle} and later \cite{werner2008estimation} proposed an iterative algorithm, known as the \emph{flip-flop algorithm}, to compute the maximum likelihood estimator (MLE).
+In the latter work, the authors also showed that the MLE is consistent and asymptotically normal, and showed the same for the estimator obtained by terminating the flip-flop after three steps.
+Here we will be interested in non-asymptotic rates.
+Standard estimation of the covariance matrix $\Sigma$ by the sample covariance matrix yields a mean-squared Frobenius norm error of $(d_1 d_2)^2/n$ assuming $n \geq C d_1 d_2$.
+The matrix normal model, however, has $\Theta(d_1^2 + d_2^2)$ parameters so it should be possible to do much better.
+Assuming that the covariance factors have constant condition number and that $n$ is at least $\tilde{\Omega}(\max\{d_1,d_2\})$, \cite{tsiligkaridis2013convergence} showed that a three-step flip-flop estimator has mean-squared Frobenius error of $O((d_1^2 + d_2^2)/n)$ for the full matrix $\Sigma$; they did not state a bound for the individual factors $\Sigma_1,\Sigma_2$.
+The same authors showed tighter rates which hold even for~$n\ll d_i$ for a penalized estimator under the additional assumption that the precision matrices $\Sigma_i^{-1}$ are sparse.
+In the extremely undersampled regime, \cite{zhou2014gemini} demonstrated a single-step penalized estimator that converges even for a single matrix $(n=1)$ when the precision matrices have constant condition number, are highly sparse, and have bounded $\ell_1$ norm off the diagonal.
+Simply setting $\Sigma_2 = I_{d_2}$ or $\Sigma_1 = I_{d_1}$, in which case the matrix normal model reduces to standard covariance estimation with $d_1 n$ (resp. $d_2 n$) samples, shows the necessity of additional assumptions like sparsity or well-conditionedness if $n < \max\{d_1/d_2, d_2/d_1\}$.
+\cite{allen2010transposable} also considered penalized estimators for the purpose of missing data imputation.
+For the tensor normal model, a natural generalization of the flip-flop algorithm has been proposed to compute the MLE \citep{mardia1993spatial,manceur2013maximum}, but its convergence was not proven.
+Assuming bounded constant condition number of the true covariances and knowledge of initializers within constant Frobenius distance of the true precision matrices, \cite{sun2015nonconvex} propose an estimator with tight rates.
+In both the matrix and tensor case, no estimator for the Kronecker factors has been proven to have tight rates without additional assumptions on the factors' structure.
+\CF{The sparse folks should not feel bad because it's considered possible that estimating sparse GGMs without condition number bounds or irrepresentability conditions is NP hard.}
+
+Even characterizing the existence of the MLE for the matrix and tensor normal model has remained elusive until recently.
+\cite{amendola2020invariant} recently noted that the matrix normal and tensor MLEs are equivalent to algebraic problems about a group action called the \emph{left-right action} and the \emph{tensor action}, respectively.
+In the computer science literature these two problems are called \emph{tensor} and \emph{operator scaling}, respectively.
+Independently from \cite{amendola2020invariant}, it was pointed out by \cite{FM20} that the Tyler's M estimator for elliptical distributions (which arises as the matrix normal problem under the additional promise that~$\Sigma_2$ is diagonal) is a special case of operator scaling.
+Using the connection to the left-right action, exact sample size thresholds for the existence of the MLE were recently determined in \cite{derksen2020matrix} for the matrix normal model and subsequently for the tensor normal model in \cite{derksen2020tensor}.
+In the context of operator scaling, \cite{gurvits2004classical} showed much earlier that the flip-flop algorithm converges to the matrix normal MLE whenever it exists.
+Recently it was shown that the number of flip-flop steps to obtain precision~$\eps$ for the tensor and matrix normal model is polynomial in the input size and~$1/\eps$ \citep{GGOW19,burgisser2017alternating,burgisser2019towards}.
+\MW{Can we clarify what `precision' means?}
+
+%In the context of tensor scaling, it was shown earlier that the flip-flop algorithm converges to the tensor MLE whenever it exists \CF{cite tensor scaling}.
+
+%In the current literature on matrix normal and tensor models, typically the estimators are assessed using Frobenius or spectral norm between the estimated parameter and the truth. However, neither of these metrics bound statistical distances of interest such as the total variation or Kullback-Leibler divergence between the true distribution and that corresponding to the estimated parameter, or the Fischer-Rao distance. These quantities are affinely invariant, meaning that for any invertible matrix $g$ we have $d(\Sigma, \Sigma') = d(g \Sigma g^T, g \Sigma' g^T)$. \CF{not exactly sure how to write this, but I want it to say that we get the right rates with no assumptions and we use more appropriate metrics. Amusingly, to get from these metrics TO the less useful metrics or vice versa, one needs the condition number assumptions. Also, it appears that the reason that the better metrics aren't being used is that the estimators didn't have the equivariance property.}
+
+%-----------------------------------------------------------------------------
+\subsection{Our contributions}
+%-----------------------------------------------------------------------------
+We take a geodesically convex optimization approach to provide bounds to estimate the precision matrices without any assumptions on their structure.
+For the matrix normal model our rates are tight in every regime up to logarithmic factors, and for the tensor normal model our rates our tight if there are enough samples.
+
+In the current literature on matrix normal and tensor models, typically the estimators are assessed using Frobenius or spectral norm between the estimated parameter and the truth.
+However, neither of these metrics bound statistical dissimilarity measures of interest such as the total variation or Kullback-Leibler divergence between the true distribution and that corresponding to the estimated parameter, or the Fisher-Rao distance.
+
+Here we consider the \emph{relative Frobenius error} $D_F(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_F$ of the precision matrices, which is sometimes also called the \emph{Mahalanobis distance}.
+This is a natural dissimilarity measure on Gaussians because when any of~$D_F$, total variation distance, square of the KL-divergence, or Fisher-Rao distance is at most a small constant then they are all on the same order \CF{check, cite} \citep{barsov1987estimates}.
+We also consider the \emph{relative spectral error} $D_{\op}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_{\op}$, which yields even stronger results.
+\MW{Can we give an indication of what `stronger' means?}
+Both can be related to the usual norms by $\norm{A - B}_F \leq \norm{B}_{\op} \, D_F(A\Vert B)$ and $\norm{A  - B}_{\op} \leq \norm{B}_{\op} \, D_{\op}(A \Vert B)$.
+Though we caution that $D_F$ and $D_{\op}$ are not truly metrics, we will call them distances because they are obey approximate symmetry and an approximate triangle inequality \CF{cite}.
+
+Our theoretical contributions are as follows:
+\begin{enumerate}
+\item For the matrix normal model, if $n \geq C \max\{\frac{d_1}{d_2},\frac{d_2}{d_1}\} \log^2 \min\{d_1,d_2\}$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has mean square error (MSE) of $O( \max\{ \frac{d_1}{nd_2}, \frac{d_2}{nd_1} \} )$ in $D_{\op}$.
+As a corollary the MSE in $D_F$ is $O( \max \{ \frac{d_1^2}{nd_2}, \frac{d_2^2}{nd_1} \} )$.
+% \item For the matrix normal model, if $n \geq C (\max\{d_1^2,d_2^2\}/d_1 d_2) \log^2 d_1$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has MSE $O( \max\{ d_1^2, d_2^2 \}/ (n d_1 d_2) )$ in $D_{\op}$.
+% As a corollary the MSE in $D_F$ is $O( \max \{ d_1^3, d_2^3 \} / (nd_1d_2) )$.
+\item For the tensor normal model, if $n \geq C \max\{d_i^3\}/ \prod_i d_i$, then the MLE for the precision matrices $\Theta_1, \dots, \Theta_k$ has MSE $O(\max \{ d_i^3 \} / (n \prod_i d_i ) )$ in $D_F$.
+\item Under the same sample requirements as above in each case, the flip-flop algorithm converges exponentially quickly to the MLE with high probability. As a corollary, there is an algorithm to compute the MLE with expected runtime polynomial in the input size and~$\log\frac1\eps$.
+\MW{$\eps$ is not defined}
+\end{enumerate}
+\CF{Can we say better for each individual matrix? Another thought is that if one of the matrices is too big, we can still try to get the other ones by marginalizing the bad one out.}
+\CF{Mention $d_{TV}$ again.}
+\MW{Check that what is written above is the same as the results advertised in \cref{sec:main results}. Right now it isn't.}
+
+The first result is tight up to logarithmic factors, and the second result is tight.
+Without the restriction on $n$ in the first result, no estimator can converge in spectral norm as the parameters grow, so we consider the restriction mild. Likewise for the second result no estimator can converge in Frobenius norm without the restriction on $n$.
+\MW{Maybe say we we show this (by reduction to known results). Clarify `spectral/Frobenius norm' vs `$D_{\op}$/$D_F$'.}
+\CF{I think I'd like to do a better job at gradually defining notation so its clear that these are the right numbers.}
+
+For interesting cases of the tensor normal model such as $d\times d \times d$ tensors we just require that $n$ is at least a large constant.
+For the matrix normal model, our first result removes the added constraint $n \geq C \max\{d_1,d_2\}$ in \cite{tsiligkaridis2013convergence}.
+For the tensor normal model we leave extending our MSE bounds for $D_{\op}$ as an open problem.
+
+To handle the undersampled case, we also introduce a regularized estimator that is much simpler to compute than the penalized regularizers introduced in \cite{tsiligkaridis2013convergence,sun2015nonconvex,zhou2014gemini}, and empirically has comparable to and sometimes better performance than existing regularizers.
+Our regularizer has a Bayesian interpretation as coming from a Wishart prior for the covariance, and is closer in spirit to the shrinkage estimators considered by \CF{cite Weisel, etc}.
+\CF{Expand up on this; put it in the bulleted list also?}
+\MW{Good idea.}
+
+\CF{Then add some discussion of methods.}
+
+%-----------------------------------------------------------------------------
+\subsection{Outline}
+%-----------------------------------------------------------------------------
+\TODO{In Section xxx, we\dots}
+
+%-----------------------------------------------------------------------------
+\subsection{Notation}
+%-----------------------------------------------------------------------------
+We write $\PD(d)$ for the space of $d\times d$ positive definite matrices; $\GL(d)$ denotes the group of invertible $d\times d$ matrices.
+For a matrix $A$, $\norm{A}_{\op}$ denotes the operator norm, $\norm{A}_F = (\tr A^T A)^{\frac12}$ the Frobenius norm, and $\braket{A,B} = \tr A^T B$ for the Hilbert-Schmidt inner product.
+We extend these definitions to tuples of matrices $A=(A_1,\dots,A_k)$ and denote them by the same symbol, i.e., $\norm{A}_F = (\sum_{a=1}^k \norm{A_a}_F^2)^{1/2}$ and similarly for the inner product.
+
+%=============================================================================
+\section{Model and main results}\label{sec:main results}
+%=============================================================================
+In this section we define the matrix and tensor normal models and we state our main technical results.
+\MW{I need to re-read this section once our definite results are in.}
+
+%-----------------------------------------------------------------------------
+\subsection{Matrix and tensor normal model}
+%-----------------------------------------------------------------------------
+The tensor normal model, of which the matrix normal model is a particular case, is formally defined as follows.
+
+\begin{definition}
+For positive definite matrices $\Sigma_1,\dots,\Sigma_k$, we define the \emph{tensor normal model} as the centered multivariate Gaussian distribution with covariance matrix given by the Kronecker product $\Sigma = \Sigma_1 \ot \dots \ot \Sigma_k$.
+For $k=2$, this is known as the \emph{matrix normal model}.
+\end{definition}
+
+\noindent
+Note that if each $\Sigma_a$ is a $d_a\times d_a$ matrix then $\Sigma$ is a $D\times D$-matrix, where $D=d_1 \cdots d_k$.
+Our goal is to estimate the $k$ Kronecker factors $\Sigma_1, \dots, \Sigma_k$ given access to $n$ i.i.d.\ random samples $x_1, \dots, x_n \in \R^D$ drawn from the model.
+
+One may also think of each random sample $x_j$ as taking values in the set of $d_1 \times \dots \times d_k$ arrays of real numbers.
+There are $k$ natural ways to ``flatten" $x_j$ to a matrix:
+for example, we may think of it as a $d_1 \times d_2d_3\cdots{}d_k$ matrix whose column indexed by $(i_2,\dots, i_k)$ is the vector in $\R^{d_1}$ with $i_1^{\text{th}}$ entry equal to $(x_j)_{i_1, \dots, i_k}$.
+In an analogous way we may flatten it to a $d_2 \times d_1d_3\cdots{}d_k$ matrix, and so on.
+\MW{It might be useful to define notation for the flattening (so that we can just define $\rho^{(a)}$ as $FF^T$). If so, maybe add a picture\dots}
+In the tensor normal model, the $d_2d_3\cdots{}d_k$ many columns are each distributed as a Gaussian random vector with covariance proportional to~$\Sigma_1$.
+Similarly the columns of the $d_2 \times d_1d_3\cdots{}d_k$ flattening have covariance proportional to~$\Sigma_2$, and so on.
+As such, the columns of the $a^{\text{th}}$ flattening can be used to estimate~$\Sigma_a$ up to a scalar.
+However, doing so na\"ively (e.g.\ using the sample covariance matrix of the columns) can result in an estimator with very high variance.
+This is because the columns of the flattenings are not independent.
+In fact they may be so highly correlated that they effectively constitute only one random sample rather than $d_2\dots d_k$ many.
+The MLE decorrelates the columns to obtain rates like those one would obtain if the columns were independent.
+
+The MLE is easier to describe in terms of the precision matrices, the inverses of the covariance matrices.
+Let $\Theta$ denote the \emph{precision matrix}, i.e., $\Theta = \bigotimes_{a=1}^k \Theta_a$, where $\Theta_a = \Sigma_a^{-1}$.
+Given a tuple $x$ of samples $\samp_1,\dots,\samp_n\in\R^D$, up to an additive constant the log-likelihood of the tensor normal model is given by the following expression:
+% $\ell(\Theta|x) = \frac{n}2 \log \det \Theta - \frac12 \sum_{i=1}^n x_i^T \Theta x_i$, which we can rewrite as
+\begin{align*}
+  \ell_x(\Theta_1, \dots, \Theta_k)
+% &= \frac{n}2 \log \det \Theta - \frac12 \sum_{i=1}^n x_i^T \Theta x_i \\
+&= \frac n 2 \log \det \left( \textstyle\bigotimes_{a=1}^k \Theta_a \right)  - \frac12 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k \Theta_a \right) x_i
+% &= \frac{n D}2 \sum_{a=1}^k \frac1{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k \Theta_a \right) x_i
+\end{align*}
+One notes that the $\Theta_a$ are not identifiable; we assume all $\Theta_a$ have the same determinant in order to ensure identifiability.
+The \emph{maximum likelihood estimator (MLE)} for $\Theta_a$ is then
+\begin{align}\label{eq:mle}
+  (\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) := \underset{\det \Theta_1 = \dots = \det \Theta_k}{ \arg\max} \ell_x(\Theta_1, \dots, \Theta_k).
+\end{align}
+
+%-----------------------------------------------------------------------------
+\subsection{Results on the MLE}
+%-----------------------------------------------------------------------------
+We may now state precisely our result for the tensor normal models.
+As mentioned in the introduction, we use the following natural distance measures.
+
+\begin{definition}
+For positive definite matrix $A, B$, define their \emph{relative Frobenius error} (or \emph{Mahalanobis distance}) as
+\begin{align*}
+  D_F(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_F.
+\end{align*}
+Similarly, define the \emph{relative spectral error} as
+\begin{align*}
+  D_{\op}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_{\op}.
+\end{align*}
+\end{definition}
+
+To state our results, and throughout this paper, we assume that $d_1 \leq \dots \leq d_k$.
+Recall also that $D = \prod_{i=1}^k d_a$.
+
+\begin{theorem}[Tensor normal Frobenius error]\label{thm:tensor-frobenius}
+There are constants $C,c>0$ with the following property.
+Suppose $\eps \leq c/\sqrt{d_k}$ and the number of samples satisfies $n \geq C \frac{k d_k^3}{D\eps^2}$.
+Then the MLE $(\widehat{\Theta}_1, \dots, \widehat{\Theta}_k) $ for $(\Theta_1, \dots, \Theta_k)$ from $n$ independent samples of the tensor normal model satisfies
+\begin{align*}
+  D_F(\widehat{\Theta}_a \Vert \Theta_a) = O\left( \sqrt{\frac{d_a d_{\min}}{n D/d_k}}\eps\right)
+\end{align*}
+for all $a \in [k]$, with probability at least
+\begin{align*}
+  1 - k^2 \left(\sqrt{nD} / kd_{\min} \right)^{ - \Omega(d_{\min})} - O(k e^{ - \eps^2 d_k / k}).
+\end{align*}
+\end{theorem}
+
+\noindent
+For the largest precision matrix $\Theta_k$, this rate matches that of \TODO{XXX}.
+
+In the case of matrix normal models $(k=2)$, we obtain the following stronger result.
+As before, we assume $d_1 \leq d_2$.
+
+\begin{theorem}[Matrix normal model spectral error]\label{thm:matrix-normal}
+There is a constant $C>0$ with the following property.
+Suppose the number of samples is $n \geq C \frac{d_2}{d_1} \max \{\log \frac{d_2}{d_1},  \frac{\log^2 d_1}{\eps^2}\}$.
+Then the MLE $(\widehat{\Theta}_1,\widehat{\Theta}_2) $ for $(\Theta_1, \Theta_2)$ from $n$ independent samples of the matrix normal model satisfies
+\begin{align*}
+  D_{\op}(\widehat{\Theta}_a \Vert \Theta_a) = O\left(\eps \sqrt{\frac{d_a^2}{nD}} \log d_1\right)
+\end{align*}
+for $a \in \{1,2\}$ with probability $1 - O(e^{ - \Omega( d_1 \eps^2)/\log^2 d_1})$.
+\end{theorem}
+%\CF{I feel like we should be able to get $\tilde{O}\sqrt{\frac{d_1}{n d_2}}$ for the smaller marginal. Akshay and I discussed a lot in rocketchat. }
+%\CF{we can! based on michael's calc}
+
+%-----------------------------------------------------------------------------
+\subsection{Flip-flop algorithm}
+%-----------------------------------------------------------------------------
+The MLE can be computed by a natural iterative procedure known as the \emph{flip-flop algorithm} \citep{dutilleul1999mle,gurvits2004classical}.
+
+For simplicity, we describe it for the matrix normal model ($k=2$), so that the samples $\samp_i$ can be viewed as $d_1\times d_2$ matrices which we denote by $X_i$.
+Initialize $\overline{\Theta}_1 = I_{d_1}$, $\overline{\Theta}_2 = I_{d_2}$, and choose a distance measure~$d$ and a tolerance $\eps > 0$.
+\begin{enumerate}
+\item Set $\overline{\Theta}_1 \leftarrow (\frac{1}{n d_2} \sum_{i = 1}^n X_i \overline{\Theta}_2 X_i^T)^{-1}.$
+\item Set $\Upsilon = \frac{1}{n d_1} \sum_{i = 1}^n X_i^T \overline{\Theta}_1 X_i$.
+If $d_F( \Upsilon^{-1}|| \overline{\Theta}_2) > \eps$, set $\overline{\Theta}_2 \leftarrow \Upsilon^{-1}$ and return to Step 1.
+\item Output $\overline{\Theta}_1, \overline{\Theta}_2$.
+\end{enumerate}
+
+We can motivate this procedure by noting that if in the first step we have $\overline{\Theta}_2 = \Theta_2$, then $\frac{1}{n d_2} \sum_{i = 1}^n X_i \overline{\Theta}_2 X_i^T$ is simply a sum of outer products of $nd_2$ many independent random vectors with covariance $\Sigma_1 = \Theta_1^{-1}$; as such the inverse is a good estimator for $\Theta_1$.
+As we don't know $\Theta_2$, the flip-flop algorithm instead uses $\overline{\Theta}_2$ our current best guess.
+
+For the general tensor normal model, the flip flop algorithm cycles through the $k$~many dimensions, using the $a^\text{th}$ flattening of the samples~$x_i$ (which are just $X_i$ and $X_i^T$ in the matrix case) to update $\overline{\Theta}_a$ in the $a^\text{th}$ step.
+
+%-----------------------------------------------------------------------------
+\subsection{Results on the flip-flop algorithm}
+%-----------------------------------------------------------------------------
+Our next results show that the flip-flop algorithm can efficiently find the MLEs with high probability.
+We first state our result for the general tensor normal model and then give an improved version for the matrix normal model.
+
+\begin{theorem}[Tensor flip-flop]\label{thm:tensor-flipflop}
+Suppose \TODO{}.
+Let $(\widehat{\Theta}_1,\dots,\widehat{\Theta}_k)$ denote the MLE for $(\Theta_1,\dots,\Theta_k)$.
+Then given $n$ samples of the tensor normal model, the flip-flop algorithm computes $(\overline{\Theta}_1,\dots,\overline{\Theta}_k)$ with
+\begin{align*}
+  D_F(\overline{\Theta}_a, \widehat{\Theta}_a) \leq \eps
+\end{align*}
+for all $a\in[k]$ in $O(\TODO{\log(1/\eps)})$ iterations, with probability at least \TODO{}.
+\end{theorem}
+
+\begin{theorem}[Matrix flip-flop]\label{thm:matrix-flipflop}
+Suppose \TODO{}.
+Let $(\widehat{\Theta}_1,\widehat{\Theta}_2)$ denote the MLE for $(\Theta_1,\Theta_2)$.
+Then given $n$ samples of the matrix normal model, the flip-flop algorithm computes $(\overline{\Theta}_1,\overline{\Theta}_2)$ with
+\begin{align*}
+  D_F(\overline{\Theta}_a, \widehat{\Theta}_a) \leq \eps
+\end{align*}
+for $a\in\{1,2\}$ in $O(\TODO{\log(1/\eps)})$ iterations, with probability at least \TODO{}.
+\end{theorem}
+
+One may wonder why in the above theorems we consider the distances for the individual tensor factors and not the covariance matrix itself, but tight bounds for the covariance matrix itself follow from the above bounds (apart from the logarithmic factor in the matrix normal case and a constant factor in general).
+
+
+%=============================================================================
+\section{Sample complexity for the tensor normal model}\label{sec:tensor-normal}
+%=============================================================================
+It was observed by \cite{wiesel2012geodesic} that the negative log-likelihood exhibits a certain variant of convexity known as \emph{geodesic convexity}.
+In this section, we use geodesic convexity, following a strategy similar to \cite{FM20}, to prove \cref{thm:tensor-frobenius}.
+Our improved result for the matrix normal model, \cref{thm:matrix-normal}, requires additional tools and will
+be proved later in \cref{sec:matrix-normal}.
+
+%-----------------------------------------------------------------------------
+\subsection{Geometry of precision matrices and geodesic convexity}\label{subsec:geom}
+%-----------------------------------------------------------------------------
+We now discuss the geodesic convexity used here and outline the strategy for our proof.
+We start by introducing a Riemannian metric on the manifold $\PD(d)$ of positive-definite $d\times d$ matrices.
+Rather than simply considering the metric induced by the Euclidean metric on the symmetric matrices, we consider the metric whose geodesics starting at a point $\Theta \in \PD(d)$ are of the form $\Theta^{1/2} e^{Ht} \Theta^{1/2}$ for $t \in \R$ and a symmetric matrix~$H$. % with $\norm H_F=D$.
+% Accordingly, the geodesic distance between $\Theta, \Theta'$ is given by $\norm{\log(\Theta^{-1/2} \Theta' \Theta^{-1/2})}_F$.
+This metric arises from the Hessian of the log-determinant \citep{bhatia2009positive} and also as the Fisher-Rao metric on centered Gaussians parametrized by their precision matrices \CF{cite}.
+If $\Theta$ is positive definite and $A$ an invertible matrix then $A\Theta A^T$ is again in positive definite.
+The transformation $\Theta \mapsto A\Theta A^T$ is an isometry, i.e., it preserves the geodesic distance.
+Importantly, the statistical distances we use are also \emph{invariant} under such transformations:
+\begin{align*}
+  D_F(A \Theta A^T \Vert A \Theta' A^T) = D_F(\Theta \Vert \Theta')
+\end{align*}
+and likewise for the distance~$D_{\op}$.
+This invariance is natural because changing a pair of precision matrices in this way does not change the statistical relationship between the corresponding Gaussians; in particular the total variation distance, Fisher-Rao, and Kullback-Leibler divergence are unchanged \CF{double check}.
+
+As observed by \cite{wiesel2012geodesic}, the negative log-likelihood of the tensor normal model is jointly convex in~$\Theta_1,\dots,\Theta_k$ along these geodesics.
+% , i.e., $-\log \ell_x(\Theta_1^{1/2} e^{H_1t} \Theta_1^{1/2}, \dots, \Theta_k^{1/2} e^{H_kt} \Theta_k^{1/2})$ is convex in $t\in\R$ for any choice of $\Theta_1,\dots,\Theta_k$ and~$H_1,\dots,H_k$.
+However, it is never strongly convex.
+This directly related to the non-identifiability of the $\Theta_a$, which makes the MLE not unique.
+To this end, we parameterize $\Theta_a = \lambda^{1/k} P_a$ for a scalar $\lambda>0$ and positive definite~$P_a$ of unit determinant, so that $\Theta_1 \ot \cdots \ot \Theta_k = \lambda \, P_1 \ot \cdots \ot P_k$ and all parameters are identifiable.
+In this parameterization, the log-likelihood function reads
+\begin{align}\label{eq:reparameterized log likelihood}
+  \ell_x(P_1,\dots,P_k,\lambda)
+% &= \frac n 2 \log \det \left( \lambda \textstyle\bigotimes_{a=1}^k P_a \right) - \frac\lambda2 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k P_a \right) x_i \\
+&= \frac {nD} 2 \log \lambda  - \frac\lambda2 \sum_{i=1}^n x_i^T \left( \textstyle\bigotimes_{a=1}^k P_a \right) x_i
+\end{align}
+Clearly, the difficulty in finding the MLE is in minimizing the right-hand side sum over $P_1,\dots,P_k$. Once this is achieved, the correct normalization can be determined by a simple one-dimensional optimization that has a closed form solution (see below).
+
+Accordingly, we define
+% As above, we can fix this by working with tuples of precision matrices with equal determinant:
+\begin{align*}
+  \P &= \{ (P_1,\dots,P_k) \in \PD(d_1) \times \dots \times \PD(d_k) \;:\; \det P_a = 1 \; \forall a \}.
+% \end{align*}
+\intertext{The tangent space of this manifold is naturally identified with the real vector space}
+% \begin{align*}
+  \H &= \{ (H_1,\dots,H_k) \;:\; H_a \text{ symmetric $d_a \times d_a$ matrix}, \, \tr H_a = 0 \; \forall a \}.
+\end{align*}
+The embedding $(P_1,\dots,P_d) \mapsto P_1 \ot \dots \ot P_d$ identifies $\P$ with the separable covariance matrices of determinant one, which form a totally geodesic submanifold of $\PD(D)$.
+This induces a Riemannian metric with the following geodesics.
+
+\begin{definition}[Geodesics and balls]
+Let $P\in\P$.
+The \emph{exponential map} $\exp_P \colon \H \to \P$ at~$P$ is defined by
+\begin{align*}
+  \exp_P(H) = \exp_{(P_1,\dots,P_k)}(H_1,\dots,H_k) = \left( P_1^{1/2} e^{\sqrt{d_1} H_1} P_1^{1/2}, \dots, P_k^{1/2} e^{\sqrt{d_k} H_k} P_k^{1/2} \right).
+\end{align*}
+The \emph{geodesics} through $P$ are the curves $t \mapsto \exp_P(t H)$ for $t\in\R$ and $H\in\H$.
+By convention, they have unit speed if $\norm{H}_F^2 = \sum_{a=1}^k \norm{H_a}_F^2 = 1$.
+Therefore, the closed \emph{(geodesic) ball} of radius~$r>0$ about~$P$ is given by
+\begin{align*}
+  B_r(P) = \{ \exp_P(H) : \norm H_F \leq r \}.
+\end{align*}
+Such balls are geodesically convex, that is, if $\gamma(t)$ is a geodesic such that $\gamma(0),\gamma(1) \in B_r(P)$ then $\gamma(t) \in B_r(P)$ for all $r\in[0,1]$.
+
+% The geodesic distance squared between two points $P,Q\in\P$ is given by
+% \begin{align*}
+%   \sum_{a=1}^k \frac 1{d_a} \norm{\log(P_a^{-1/2} Q_a P_a^{-1/2})}_F^2.
+% \end{align*}}
+\end{definition}
+
+Using our definition of geodesics, we obtain the following notion of geodesic convexity.
+\MW{I did the quick fix, someone else can improve to their liking.}
+
+\begin{definition}[Geodesic convexity]
+A twice differentiable function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $P\in\P$ if $\partial^2_{t=0} f(\exp_P(tH)) \geq 0$ for all~$H\in\H$.
+It is called \emph{$\lambda$-strongly geodesically convex} at $P$ for some $\lambda>0$ if $\partial^2_{t=0} f(\exp_P(tH)) \geq \lambda \norm H_F^2$ for all~$H\in\H$.
+
+We note that for a geodesically convex domain $D \subseteq \P$, a function $f$ is (strongly) geodesically convex on~$D$ if, and only if, the function $t \mapsto f(\gamma(t))$ is (strongly) convex on~$[0,1]$ for any geodesic $\gamma(t)$ with $\gamma(0),\gamma(1)\in D$.
+In other words, geodesic convexity simply means convexity in the ordinary Euclidean sense when restricted to geodesics.
+% A function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $P\in\P$ if the functions $t \mapsto f(\exp_P(tH))$ are convex in $t\in\R$ for all~$H \in \H$.
+% Assuming $f$ is twice differentiable, this holds if, and only if, $\partial^2_t f(\exp_P(tH)) \geq 0$ for all~$H\in\H$.
+
+% Similarly, $f$ is called \emph{$\lambda$-strongly geodesically convex} at $P$ for some $\lambda>0$ if the same is true for the functions $t \mapsto f(\exp_P(tH))$ for all~$H\in \H$.
+% Assuming the function is twice differentiable, this holds if, and only if, $\partial^2_t f(\exp_P(tH)) \geq \lambda \norm H_F^2$ for all~$H\in\H$.
+\end{definition}
+
+The invariance properties described above for $\PD(d)$ are directly inherited for tuples of precision matrices with determinant one.
+The manifold $\P$ carries a natural action by the group
+\begin{align*}
+  \G = \{ (G_1,\dots,G_k) \in \GL(d_1) \times \dots \times \GL(d_k) \;:\: \det G_a = 1 \; \forall \};
+\end{align*}
+Namely, if $P \in \P$ and $A \in \G$ then the tuple $A P A^T := (G_1 P_1 G_1^T, \dots, G_k P_k G_k^T) \in \P$.
+Moreover, the mapping $P \mapsto AP A^T$ is an isometry, and it preserves the statistical distances~$D_F$ and $D_{\op}$ between the individual precision matrices as well as between their tensor product.
+
+% We also note that \MW{It's not \dots} the MLE obeys a certain \emph{equivariance} property under such transformations.
+% For all $P \in \P$, $A \in \G$, and samples $x=(x_1,\dots,x_n)$, the log-likelihood satisfies
+% \begin{align*}
+%   \ell_{Ax}(P) = \ell_x(A^T P A),
+% \end{align*}
+% where we write $A x = ((G_1 \ot \dots \ot G_k) x_1, \dots, (G_1 \ot \dots \ot G_k) x_n)$.
+% Thus the MLE $\widehat P=\widehat P(x)$ satisfies
+% \begin{align}\label{eq:equivariance}
+%   \widehat P(\samp) = P^{1/2} \widehat P(P^{1/2} \samp) P^{1/2}
+% \end{align}
+% assuming either MLE exists and is unique.
+
+% %-----------------------------------------------------------------------------
+% \subsection{Notation}
+% %-----------------------------------------------------------------------------
+% \CF{some aspects of this seem awfully specific to the tensor normal model and maybe could wait until after we define it, or simply merge the two, i.e. "Notation and model"}
+% \MW{I think I like the former best.}
+% The letter $n$ will denote a number of samples, and $d_1\leq \dots \leq d_k$ will denote sorted dimensions, and we set $D:=\prod_{i = 1}^k d_i$. Let $\PD_d$ denote the positive definite $d\times d$ matrices with unit determinant, and $\PD_d^1$ the subset of $\PD$ with unit determinant. $\rv$ will denote the random tuple $(\rv_1, \dots, \rv_n)$ where $\rv_i \in \R^{D}$ are drawn i.i.d from the tensor normal model with precision matrix $\Theta \in \PD_D$, and $\samp$ will denote a deterministic tuple of tensors.
+
+% Let $\smallSym_d$ denote the vector space of $d\times d$ real symmetric matrices, and $\smallSym^0_d$ the subspace of traceless matrices in $\smallSym_d$, i.e. the tangent space of $\PD_d^1$. Let~$\SL_d$ denote the group of $d\times d$ matrices with unit determinant.
+% %Then, $A^T e^Z A \in \PD_d^1$ for any $A \in \SL_d$ and $Z\in\Sym_d^0$.
+% % Any matrix in $\PD_d^1$ can be written as the matrix exponential of a matrix in $\Sym_d^0$.
+% Let
+% $$\SL = \prod_{a=1}^k \SL_{d_a}, \SPD = \prod_{a = 1}^k \PD_{d_a}^1, \Sym = \bigoplus_{a = 1}^k \smallSym_{d_a}^0.$$ For a $k$-tuple of $A = (A_1, \dots, A_k)$ of matrices, $\|A\|_F^2:=\sum_{i = 1}^k \|A_i\|_F^2$.
+%  We denote by $AB=(A_1B_1,\dots,A_kB_k)$ and $e^Z=(e^{Z_1},\dots,e^{Z_k})$ the componentwise product and matrix exponential, respectively, of matrix tuples $A, B \in \SL$ and $Z\in\Sym$. $I$ will denote an identity matrix, and $I_{a}$ a $d_a\times d_a$ identity matrix. $\langle \cdot, \cdot \rangle$ denotes the standard inner product. $C, c$ denote large (resp. small) absolute constants that change line to line.
+
+
+% \CF{further notation to be introduced; delete as is done}
+% \begin{itemize}
+% %\item Number of samples $n$, dimensions $d_1\leq \dots \leq d_k$. $D$ for product of these.
+% %\item $X$ for the tensor random variable, $\samp_1, \dots, \samp_n$ for each , $\samp = (\samp_1, \dots, \samp_n)$ for the random tuple of samples. $\rho = \samp \samp^T/\|\samp\|_F^2$. Lower case $x$ for samples.
+
+% %\item $\rv$ for the random tuple $(\rv_1, \dots, \rv_n)$, $x$ for the tuple of samples $(x_1, \dots, x_n)$ when no longer random. Think of $\rv$ as $D \times n$ matrix, $\rho = \rv\rv^T,xx^T$ etc.
+% \item When $x_i$ is a matrix, which unfortunately does happen sometimes, we'll use $x_i^\dagger$ for the matrix transpose (open to suggestions on this one).
+% %\item $\braket{\cdot,\cdot}_{\vec d}$ denote modified Hilbert-Schmidt inner products\MW{sadly the corresponding norms look like $\ell_p$ norms},
+% \item $f_{\rv}$ for the function in \cref{dfn:function}, mostly drop $\rv$. $\langle \cdot, \cdot \rangle$ is the $\ell_2$ inner product of vectors
+
+% %\item $\smallSym_d$ for $d \times d$ real symmetric (meh), $\PD_d$ for $d \times d$ real positive definite, $\smallSym_d^0$ for traceless symmetric, $\PD_d^1$ for $\det=1$ positive definite?
+% \item $\Theta$ for big tensor product pd precision matrix, $\Theta_a$ for individual pd's. \CF{at some point $\Theta$ gets used for the tuple. We need to decide what to do about this.}
+% %\item I'm going to call $\SL = \oplus \SL_{d_i}, \SPD = \oplus \PD_{d_i}^1, \Sym = \oplus \smallSym_{d_i}^0$. Explain somewhere how $\Sym$ is the tangent space of $\SPD$.
+% %\MW{Suppressing the $^1$ and $^0$ is a bit confusing I think. Maybe $\operatorname{SPD}$ for $\SPD$ with $\det=1$? I still feel that $\Sym$ looks somewhat horrible (with or without subscript, but I am not sure what would be better).}
+% %\item $G = \prod_{a=1}^k \SL_{d_a}$, $P = \prod_{a=1}^k \PD_{d_a}^1$, and $S = \bigoplus_{a=1}^k \Sym_{d_a}^0$.
+
+% \item $\nabla, \nabla^2$ for Riemannian Hessians and gradients, $\nabla_a f$, $\nabla^2_{ab} f$ for components. $\nabla f$ means at the identity. $\|\nabla^2_{ab}f\|_{op}:=\|\nabla^2_{ab}f\|_{F\to F}$. \CF{as operator from $\Sym_{d}^0$ to self?}
+% %\item $C, c$ large (resp. small) constants that change line to line.
+% \item $\rho^{(a)}$, $\rho^{(ab)}$ for marginals.
+% %\item $I$ for an identity matrix, $I_a$ for the $d_a \times d_a$ identity matrix
+% \end{itemize}
+
+
+%-----------------------------------------------------------------------------
+\subsection{Sketch of proof}\label{subsec:proof-sketch}
+%-----------------------------------------------------------------------------
+As discussed above, the MLE problem reduces to minimizing $\sum_{i=1}^n x_i^T ( \bigotimes_{a=1}^k P_a ) x_i$ over $P \in \P$.
+We take as our objective its logarithm, which is also geodesically convex.
+
+\begin{definition}[Objective function]\label{dfn:function}
+Given $n$ samples $x = (x_1,\dots,x_n)$ in $\R^D$, define the function $f_x \colon \P \to \R$ by
+\begin{align*}
+  f_x(P_1,\dots,P_k)
+= \log \sum_{i=1}^n x_i^T \left( \textstyle \bigotimes_{a=1}^k P_a \right) \samp_i.
+\end{align*}
+Let $\widehat P = (\widehat P_1,\dots,\widehat P_k)$ denote the minimizer of $f_x$ if it exists and is unique.
+Then the maximum likelihood estimator is given by $\widehat\Theta_a = {\hat\lambda}^{1/k} \widehat P_a$ and $\hat\lambda = nD e^{-f_x(\widehat P)}$, as follows directly by maximizing \cref{eq:reparameterized log likelihood} with respect to~$\lambda$.
+We write $\widehat P = \widehat P(x)$ and $\widehat\Theta = \widehat\Theta(x)$ when we want to emphasize the depence of the MLE on the samples~$x$.
+\end{definition}
+
+
+
+%\begin{align}\label{eq:tilde ell}  \tilde\ell_{\samp}(\Theta) = \frac1D\log\det \Theta - \log \sum_{i=1}^n \braket{\samp_i, \Theta \samp_i};\end{align}
+
+% One may think of \cref{eq:f extension} as proportional, up to an additive constant, to the log-likelihood of $[\samp_1, \dots, \samp_n]$ under the tensor normal model.
+% Here $[\samp_1, \dots, \samp_n]$ denotes the equivalence class of the tuple of samples $(x_1, \dots, x_n)$ in projective space.
+
+
+With these definitions in place, we are able to state a proof plan, which is a Riemannian version of the standard approach using strong convexity.
+
+\begin{enumerate}
+\item\label{it:reduce}
+\textbf{Reduce to identity:}
+We can obtain $n$ independent samples from $\cN(0, \Theta_1^{-1} \ot \cdots \ot \Theta_k^{-1})$ as $x'_i = ( \Theta_1^{-1/2} \ot \cdots \ot \Theta_k^{-1/2} ) x_i$, where $x_1,\dots,x_n$ are distributed as $n$ independent samples from a standard Gaussian.
+Then the MLE $\widehat{\Theta}(x')$ is exactly $\Theta^{1/2} \widehat{\Theta}(x) \Theta^{1/2}$, i.e., we have $\widehat\Theta_a(x') = \Theta_a^{1/2} \widehat\Theta(x) \Theta_a^{1/2}$ for $a\in[k]$.
+By invariance of the relative Frobenius error, $D_F(\widehat\Theta(x') \Vert \Theta) = D_F(\widehat\Theta(x) \Vert I)$ (the same is true for $D_{\op}$).
+This shows that to prove \cref{thm:tensor-frobenius} it is enough to consider the case that $\Theta = (I,\dots,I)$, i.e., to the standard Gaussian.
+\item\label{it:grad} \textbf{Bound the gradient:}
+Show that the gradient $\nabla f_x(I,\dots,I)$ (defined below) is small with high probability.
+\item\label{it:convexity} \textbf{Show strong convexity:}
+Show that, with high probability, $f_x$ is $\Omega(1)$-strongly geodesically convex near $I$.
+\end{enumerate}
+
+These together imply the desired sample complexity bounds -- as in the Euclidean case, strong convexity in a suitably large ball about a point implies the optimizer cannot be far.
+
+In fact, $f_x$ is not only geodesically convex but has additional nice properties such as Lipschitz continuity and a Lipschitz-continous gradient \citep{burgisser2019towards}.
+In particular various optimization algorithms applied to~$f_\samp$ obey a descent lemma \citep{burgisser2017alternating}, and as such these algorithms must converge exponentially quickly by the strong geodesic convexity of~$f_\samp$.
+Using this we will show that the flip-flop algorithm converges exponentially quickly with high probability.
+
+To make this discussion more concrete, we now define the gradient and Hessian formally, and state the lemma that we will use to relate the gradient and strong convexity to the distance to the optimizer as in the plan above.
+
+\begin{definition}[Gradient and Hessian]
+Let $f\colon \P \to \R$ be a once or twice differentiable function and $P \in \P$.
+The \emph{(Riemannian) gradient}~$\nabla f(P)$ is the unique element in $\H$ such that
+\begin{align*}
+  \braket{\nabla f(P), H} = \sum_{a=1}^k \braket{\nabla_a f(P), H_a} = \partial_{t=0} f(\exp_P(tH))
+\end{align*}
+for all $Z\in \H$.
+The components $\nabla_a f(P)$ of the gradient are $d_a \times d_a$ traceless symmetric matrices.
+We often abbreviate $\nabla f = \nabla f(I,\dots,I)$ and write $\nabla_a f$ for its components.
+
+The \emph{(Riemannian) Hessian}~$\nabla^2 f(P)$ is the unique linear operator on~$\H$ such that
+\begin{align*}
+  \braket{H, \nabla^2 f(P) K}
+% = \sum_{a=1}^k \sum_{b=1}^k \braket{H_a, \nabla^2_{ab} f(P) K_b}
+= \partial_{s=0} \partial_{t=0} f(\exp_{P}(sH + tK))
+\end{align*}
+for all $H,K \in \H$.
+We often abbreviate $\nabla^2 f = \nabla^2 f(I,\dots,I)$ and write $\nabla^2_{ab}f$ for its components.
+As a block matrix,
+\begin{align*}
+  \nabla^2 f = \begin{bmatrix}
+  \nabla_{11}^2 f & \dots & \nabla_{1k}^2 f \\
+  \vdots & \ddots & \vdots \\
+  \nabla_{k1}^2 f & \dots & \nabla_{kk}^2 f \\
+  \end{bmatrix},
+\end{align*}
+where the components $\nabla_{ab}^2f(P)$ of the Hessians are linear operators from the space of traceless symmetric $d_b\times d_b$-matrices to the space of traceless symmetric $d_a \times d_a$-matrices.
+\end{definition}
+
+We note that the Hessian is symmetric with respect to the inner product~$\braket{\cdot,\cdot}$ on $\H$.
+Just like in the Euclidean case, the Hessian is convenient to characterize strong convexity.
+Indeed, $\braket{H, \nabla^2 f(P) H} = \partial^2_{t=0} f(\exp_{P}(tH))$ for all $H\in \H$.
+Thus, $f$~is geodesically convex if and only if the Hessian is positive semidefinite, that is, $\nabla^2 f(P) \succeq 0$. % where$\succeq$ is the Loewner order.
+Similarly, $f$ is $\lambda$-strongly geodesically convex if and only if~$\nabla^2 f(P) \succeq \lambda I$, i.e., the Hessian is positive definite with eigenvalues larger than or equal to~$\lambda$.
+
+We can now state and prove the following lemma, which shows that strong convexity in a ball about a point where the gradient is sufficiently small implies the optimizer cannot be far.
+
+\begin{lemma}\label{lem:convex-ball}
+Let $f\colon \P \to \R$ be geodesically convex everywhere, and $\lambda$-strongly geodesically convex in a ball $B_r(P)$ of radius~$r>0$.
+Further assume the gradient is bounded as $\norm{\nabla f(P)}_F \leq \eps < \frac{\lambda r} 2$.
+Then the sublevel set $\{Q \in \P : f(Q) \leq f(P)\}$ is contained in the ball $B_{2\eps/\lambda}(P) \subset B_r(P)$, $f$ has a unique minimizer $\cramped{\hat P}$ which is contained in $B_{\eps/\lambda}(P)$, and
+\begin{align}\label{eq:minimum lower bound}
+  f(\hat P) \geq f(P) - \frac{\eps^2}{2 \lambda}.
+\end{align}
+\MW{Just state the lemma for $r=2\eps/\lambda$.}
+\end{lemma}
+\begin{proof}
+We first show that the sublevel set of~$f(P)$ is included in the ball of radius~$r$.
+Consider $g(t) := f(\exp_P(tH))$, where~$H\in\H$ is an arbitrary vector of unit norm~$\norm H_F = 1$.
+Then, using the assumption on the gradient,
+\begin{align}\label{eq:grad bound}
+  g'(0)
+= \partial_{t=0} f(\exp_P(tH))
+= \braket{\nabla f(P), H}
+\geq -\norm{\nabla f(P)}_F \norm H_F
+\geq -\eps.
+\end{align}
+Since $f$ is $\lambda$-strongly geodesically convex on $B_r(P)$, we have $g''(t) \geq \lambda$ for all $\abs t\leq r$.
+It follows that for all $0 \leq t \leq  r$ we have
+\begin{align}\label{eq:g convex lower}
+  g(t) \geq g(0) - \eps t + \frac12 \lambda t^2.
+\end{align}
+Plugging in $t = r$ yields
+$g(r) \geq  % g(0) - \eps  r + \frac12 \lambda r^2 =
+g(0) + \left( \frac{\lambda r}2 - \eps \right)  r
+> g(0)$.
+Since $g$ is convex due to the geodesic convexity of $f$, it follows that, for any~$t \geq  r$,
+\begin{align*}
+  g(0) < g( r) \leq \left( 1-\frac{ r}t \right) g(0) + \frac{ r}t g(t),
+\end{align*}
+hence
+\begin{align*}
+  f(P) = g(0) < g(t) = f(\exp_P(tH)).
+\end{align*}
+It follows that the sublevel set of~$f(P)$ is contained in the ball of radius~$r$, which is compact.
+Thus, $f$ has a minimum and any minimizer~$\hat P$ is contained in this ball.
+Moreover, as the right-hand side of \cref{eq:g convex lower} takes a minimum at $t=\frac\eps\lambda$, we have $g(t) \geq g(0) - \frac{\eps^2}{2\lambda}$ for all~$0\leq t\leq r$.
+By definition of $g$, this implies \cref{eq:minimum lower bound}.
+
+Next, we prove that any minimizer of~$f$ is necessarily contained in the (smaller) ball of radius~$\frac\eps\lambda$.
+To see this, take an arbitrary minimizer~$\hat P$ and write it in the form $\hat P = \exp_P(TH)$, where $H\in \H$ is a unit vector and~$T>0$.
+As before, we consider the function $g(t) = f(\exp_P(tH))$.
+Then, using \cref{eq:grad bound}, the convexity of~$g(t)$ for all $t\in\R$ and the $\lambda$-strong convexity of~$g(t)$ for $\abs t \leq  r$, we have
+\begin{align*}
+  0 = g'(T) = g'(0) + \int_0^T g''(t) \, dt \geq \lambda \min(T,  r) - \eps.
+\end{align*}
+If $T> r$ then we have a contradiction as $\lambda r - \eps > \lambda r/2 - \eps > 0$.
+Therefore we must have~$T\leq r$ and hence $\lambda T - \eps \leq 0$, so $T \leq \frac\eps\lambda$.
+Thus we have proved that any minimizer of $f$ is contained in the ball of radius~$\frac\eps\lambda$.
+
+We still need to show that the minimizer is unique; that this follows from strong convexity is convex optimization ``folklore,'' but we include a proof nonetheless.
+Indeed, suppose that $\hat P$ is a minimizer and let $H\in \H$ be arbitrary.
+Consider $h(t) := f(\exp_{\hat P}(tH))$.
+Then the function $h(t)$ is convex, has a minimum at $t=0$, and satisfies $h''(0) > 0$, since $f$ is $\lambda$-strongly geodesically convex near~$\hat P$, as $\hat P \in B_r(P)$ by what we showed above.
+It follows that $h(t) > h(0)$ for any~$t\neq0$.
+Since $H$ was arbitrary, this shows that $f(Q) > f(\hat P)$ for any $Q\neq P'$.
+\end{proof}
+
+%-----------------------------------------------------------------------------
+\subsection{Bounding the gradient}
+%-----------------------------------------------------------------------------
+\MW{MICHAEL MARKER}
+Proceeding according the plan from the previous section, we now compute the gradient of $f_{\samp}$ and bound it using basic matrix concentration results.
+
+To calculate the gradient, we need a definition from linear algebra. Recall that our data comes as an $n$-tuple of $D$-dimensional vectors. We think of such a sample $\samp$ as a $D \times n$ matrix, so that $\samp^T$ denotes its $n \times D$ transpose. We can compute the gradient from the ``sample covariance matrix" $\rho = \samp \samp^T$.
+%Think of $\rv$ as $D \times n$ matrix, $\rho = \rv\rv^T,xx^T$ etc.
+
+\begin{definition}[Partial trace]\label{def:single marginal}
+For $\rho \in \PD_D$ and $a\in[k]$, let $\rho^{(a)} \in \PD_{d_a}$ denote the \emph{partial trace} defined by the condition that
+\begin{align*}
+  \tr \rho^{(a)} Z = \tr \rho Z_a,
+\end{align*}
+for all $d_a \times d_a$ matrices $Z$, where $Z_a = (I_1 \ot \cdots \ot I_{a-1} \ot Z \ot I_{a+1} \ot \cdots \ot I_k)$.
+Here and in the following we write $I_a$ for the $d_a\times d_a$ identity matrix. \CF{can I suggest $Z_{(a)}$ instead to avoid the confusion with components below?}
+\end{definition}
+
+If the definition above seems abstract, one can compute the partial trace of $\rho = \samp \samp^T$ from the different flattenings we mentioned in the introduction. The partial trace $\rho_1$ is computed by computing the flattening of $\samp$ into a $d_1\times d_2 d_3 \dots d_k n$ matrix $M$ and then setting $\rho_1 = M M^T$. The other matrices $\rho_2, \dots, \rho_k$ are analogous.
+
+%\MW{Explain how to compute in terms of $\samp$. Ref above \cref{cor:vershynin}.}
+
+\begin{lemma}[Riemannian gradient]\label{lem:gradient}
+Let $\rho = \sum_{i=1}^n \samp_i \samp_i^T / \norm{\samp}_2^2$.
+Then the components of the Riemannian gradient $\nabla f_{\samp}$ at the identity are given by
+\begin{align*}
+  \nabla_a f_{\samp} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a} \qquad \text{ for } a \in [k].
+\end{align*}
+\end{lemma}
+\begin{proof}
+  Let $F_{\samp}(\Theta) = \tr \rho \, \Theta$.
+  Then, for all $a\in[k]$, we have
+  \begin{align*}
+   \langle \nabla_a F_{\samp} , Z \rangle
+  % = \partial_{t=0} F_{\samp}(I_1,\dots,I_{a-1}, e^{tZ}, I_{a+1},\dots,I_n)
+  = \partial_{t=0} \tr \rho \, e^{t \sqrt{d_a} Z_a}
+  = \sqrt{d_a} \tr \rho Z_a
+  = \sqrt{d_a} \tr \rho^{(a)} Z
+  \end{align*}
+  for all traceless symmetric $d_a \times d_a$ matrices $Z$.
+  Since $\nabla_a F_{\samp}$ is traceless and symmetric by definition, this implies
+  \begin{align*}
+    \nabla_a F_{\samp}
+  = \sqrt{d_a} \rho^{(a)} - \tr(\rho^{(a)}) I_a /\sqrt{d_a}
+  = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}.
+  \end{align*}
+  Finally, note that $f_{\samp}(\Theta) = \log F_{\samp}(\Theta) + \log \norm{\samp}_2^2$, so
+  \begin{align*}
+    \nabla_a f_{\samp}
+  = \frac{\nabla_a F_{\samp}}{F_{\samp}(I)}
+  = \nabla_a F_{\samp}
+  = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a},
+  \end{align*}
+  using that $F_{\samp}(I) = \tr \rho = 1$.
+\end{proof}
+
+ Sometimes it is convenient to extend $f_{\samp}$ to $\oplus_i \PD(d_i)$ by writing
+ \begin{align}
+   f_{\samp}(\Theta_1,\dots,\Theta_k) &=   \log \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i} - \sum_{i=1}^k \frac1{d_a} \log \det \Theta_a,\label{eq:f extension}
+ \end{align}
+The extension agrees on $\P$, and the expression for the gradient is the same. \CF{I am doing this in case Rafael wants to use it for flip-flop which isn't normalized, but it's mildly wrong since we haven't defined the geometry except on $\P$.} 
+Having calculated the gradient of $f_\samp$, we are ready to state our bound:
+%\MW{Please check updated proof. Can we assume $\eps<1$ and simply take~$C=16$?}
+\MW{Make pretty by manipulating $C$}
+\begin{prop}\label{prop:gradient-bound}
+Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where $D=d_1\cdots{}d_k$.
+Let $\eps>0$ and $C = 16^2\max\{\eps^2,1\}$.
+Suppose that, for all $a \in [k]$,
+\begin{align*}
+  N_a := \frac{n D}{d_a} \geq C \frac{d_a}{\eps^2}.
+\end{align*}
+Then, with probability at least $1 - 2 \sum_{a=1}^k e^{-N_a \eps^2/2C}$ we have that
+\begin{align*}
+  \norm{\nabla_a f_{\rv}}_{\op} \leq \eps/\sqrt{d_a}
+\end{align*}
+for all $a\in[k]$, and hence $\norm{\nabla f_{\rv}}^2 \leq k \eps^2$.
+\end{prop}
+
+To prove this we will need a standard result in matrix concentration.
+Recall that $\nabla_a f_{\samp} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}$ by \cref{lem:gradient}.
+Recall from the discussion below \cref{def:single marginal} that $\rho^{(a)}$ is distributed as $Y Y^T / \norm{Y}_F^2$, where $Y$ is a $d_a \times N_a$ matrix with independent Gaussian entries.
+The following result bounds the singular values of such random matrices.
+
+\begin{theorem}[Corollary 5.35 of \cite{vershynin2010introduction}]\label{cor:vershynin}
+Let $Y \in \R^{d \times N}$ have independent standard Gaussian entries.
+Then, for $t \geq 0$, the following occurs with probability at least $1 - 2 \exp(-t^{2}/2)$:
+\begin{align*}
+  \sqrt{N} - \sqrt{d} - t \leq s_{\min}(Y) \leq s_{\max}(Y) \leq \sqrt{N} + \sqrt{d} + t,
+\end{align*}
+where $s_{\min}$ and $s_{\max}$ denote the smallest and largest singular value, respectively (we allow for singular values that are zero).
+\end{theorem}
+
+\begin{proof}[Proof of \cref{prop:gradient-bound}]
+We first consider a fixed $a\in[k]$ and later take a union bound.
+Let $d = d_a$ and $N = N_a = n D/d_a$.
+Again, $\nabla_a f_{\rv} = \sqrt{d_a} \rho^{(a)} - I_a/\sqrt{d_a}$ where $\rho^{(a)}$ is distributed as $Y Y^T/\|Y\|_F^2$, where $Y$ is a $d \times N$ matrix with independent Gaussian entries.
+By \cref{cor:vershynin}, we have the following with $\leq 2 \exp(-t^2/2)$ failure probability:
+\begin{align*}
+  \sqrt{N} \left( 1 -  \frac{\sqrt{d} + t }{\sqrt{N}}  \right)\leq s_{\min}(Y) \leq s_{\max}(Y) \leq  \sqrt{N} \left( 1 + \frac{\sqrt{d} + t }{\sqrt{N}} \right).
+\end{align*}
+Let $t = \sqrt{N} \eps / \sqrt{C}$.
+Because $d \leq N \eps^2 / C$, this shows that all singular values are in $\sqrt{N} \left( 1 \pm 2\eps/\sqrt{C} \right)$.
+It follows that the eigenvalues of $YY^T$ are in $N \left( 1 \pm 8\eps/\sqrt{C} \right)$.
+Since there are at most $d \leq N$ nonzero eigenvalues, this implies in turn that the eigenvalues of $Y Y^T/\|Y\|_F^2$ are in
+\begin{align*}
+\frac {\left( 1 \pm 8\eps/\sqrt{C} \right)} {d \left( 1 \pm 8\eps/\sqrt{C} \right)} \subseteq \frac1d \left( 1 \pm 16\eps/\sqrt{C} \right) \subseteq \frac1d \left( 1 \pm \eps \right),
+\end{align*}
+Thus,
+$\norm{\nabla_a f_{\rv}}_{\op} \leq \eps/\sqrt{d_a}$
+with failure probability at most $2 \exp(-N \eps^2/2C)$.
+Applying the union bound over $[k]$ completes the proof of the proposition.
+% Next, observe that $\|Y\|_F^2$ is a $\chi^2$-distribution with $Nd$ degrees of freedom, and thus satisfies
+% \begin{align*}
+%   \norm Y_F^2 - Nd \leq tNd
+% \end{align*}
+% with failure probability at most $e^{-Ndt^2/18}$ for $t \in [0,3]$~\cite[(2.44)]{W19}.
+% WAS: $\| Y\|_F^2 - Nd \leq t N d$ with probability $1 - 2e^{- Nd t^2/8}$ for $t \leq 1$ \cite{W19}.
+% Thus
+  % $$\lambda_1(\rho^{\{a\}}), \lambda_2(\rho^{\{a\}}) \in  \cN(1 \pm c \cdot \eps)/ Nd(1 \pm c \cdot \eps) \in \frac{1}{d}(1 \pm \eps)$$
+% with probability $1 - 2 e^{- c N \eps^2}- 2 e^{- c Nd \eps^2} = 1 - 4 e^{- N\eps^2},$ provided $c$ is small enough.
+\end{proof}
+
+It will also be convenient to have bounds on the norm of $X$; because $\|X\|_F^2$ is simply a sum of $\chi$-square random variables, the next proposition follows from standard concentration bounds (e.g. \cite{W19}).
+\begin{prop}[Norm of $X$]\label{prp:xnorm}
+Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where $D=d_1\cdots{}d_k$. For $t \leq c$,
+$$ (1 - t) nD \leq \|X\|_F^2 \leq (1 + t)nD$$ with probability $2e^{-t^2 nD/8}$.
+\end{prop}
+
+% Both $\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a$ and $\| \samp\|_F^2 - Nd_a \leq .5 N d_a$ hold with probability \CF{blah}$. Now  $$ \|\rho^{\{a\}} - I_a/d_a\|_{op} \leq \|\rho^{\{a\}} - N I_{d_a}/ \|\samp\|_F\|_{op} + $$
+
+
+%Provided $c$ is small enough we then have
+ %$$\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a.$$
+
+
+% Next, observe that $\|\samp\|_F^2$ is a $\chi$-squared distribution with $Nd_a$ degrees of freedom, and thus satisfies $\| \samp\|_F^2 - Nd_a \leq .5 N d_a$ with probability $1 - 2e^{- c N d_a}$. Both $\|Y Y^\dagger - N I\|_{op} \leq  c N/\log d_a$ and $\| \samp\|_F^2 - Nd_a \leq .5 N d_a$ hold with probability \CF{blah}$. Now  $$ \|\rho^{\{a\}} - I_a/d_a\|_{op} \leq \|\rho^{\{a\}} - N I_{d_a}/ \|\samp\|_F\|_{op} + $$
+
+
+
+%-----------------------------------------------------------------------------
+\subsection{Strong convexity}\label{subsec:strong-convex}
+%-----------------------------------------------------------------------------
+We now prove our main strong convexity result, \cref{thm:ball-convexity}, in order to carry out step~\cref{it:convexity} of the plan from \cref{subsec:proof-sketch}. The theorem states that, with high probability, $f_X$ is strongly convex for $Z$ sufficiently close to the identity.
+
+%\begin{theorem}\label{thm:ball-convexity}There is $c> 0$ such that the following holds: with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, the function $f_{\rv}$ is $1/2$-strongly convex at all points $Z\in \PD$ with $\sum_{i = 1}^n \|\log Z_a\|_{op} < c/k.$\end{theorem}
+
+
+\begin{theorem}\label{thm:ball-convexity} There are constants $C,c>0$ such that the following holds. For $n \geq C k^2 d_1^2/D$, with probability at least $1 - k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$, $f$ is $1/2$-strongly convex at any point $Z \in \SPD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$.
+\end{theorem}
+
+
+\cref{thm:ball-convexity} follows straightforwardly from a bound on the convexity \emph{at} the origin,  \cref{thm:tensor-convexity} , and a bound on how the Hessian changes away from the origin, \cref{convexRobustness}. We assemble these results to prove \cref{thm:ball-convexity} at the end of this subsection. %\CF{Shall I actually prove theorem 9? yeah, I think so.}
+
+Similarly as for the gradient, we can compute the components of the Hessian in terms of a partial trace, as in the following definition and lemma.
+
+\begin{definition}[Partial trace for two-body marginals]
+For $\rho \in \PD_D$ and $a \neq b\in[k]$, let $\rho^{(ab)} \in \PD_{d_a \times d_b}$ denote the \emph{partial trace} defined by the condition that
+\begin{align*}
+  \tr \rho^{(ab)} (Y \ot Z) = \tr \rho Y_a Z_b,
+\end{align*}
+for all $d_a \times d_a$ matrices $Y$ and $d_b \times d_b$ matrices $Z$, where, as before, we write~$Y_a = (I_1 \ot \cdots \ot I_{a-1} \ot Y \ot I_{a+1} \ot \cdots \ot I_k)$ and similarly for $Z_b$. %\CF{does partial trace really need to be defined twice?}
+\end{definition}
+
+\noindent
+This definition is consistent with \cref{def:single marginal} in the sense that $\tr \rho^{(ab)} (Y \ot I) = \tr \rho^{(a)} Y$ and $\tr \rho^{(ab)} (I \ot Z) = \tr \rho^{(b)} Z$ for all $\rho$, $Y$, $Z$.
+
+\begin{lemma}[Riemannian Hessian]\label{lem:hessian}
+Let $\rho = \sum_{i=1}^n \samp_i \samp_i^T / \norm{\samp}_2^2$.
+Then the Riemannian Hessian $\nabla^2 f_{\samp}$ at the identity is given by \CF{fix $Y_a$ notation}
+\begin{align*}
+ \frac{1}{d_a} \langle Y,  \left( \nabla^2_{aa} f_{\samp} \right) Y \rangle
+&=  \tr \rho^{(a)} Y^2 - \bigl(\tr Y \rho^{(a)}\bigr)^2 \\
+  \frac1{\sqrt{d_a d_b}} \langle Y,  \left( \nabla^2_{ab} f_{\samp} \right) Z \rangle
+&= \tr \rho^{(ab)} \left( Y \ot Z \right) - \bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr)
+\end{align*}
+for all $a\neq b\in[k]$ and traceless symmetric $d_a\times d_a$ matrices $Y$, $d_b\times d_b$ matrices~$Z$.
+\end{lemma}
+\begin{proof}
+  Let $F_{\samp}(\Theta) = \tr \rho \, \Theta$ as in the proof of \cref{lem:gradient}.
+  Then,
+  \begin{align*}
+   \langle Y,  \left( \nabla^2_{aa} F_{\samp} \right) Y \rangle
+  &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{(s+t)\sqrt{d_a}  Y_a} \\
+  &= \partial_{s=0} \partial_{t=0} \tr \rho^{(a)} e^{(s+t)  \sqrt{d_a}Y}
+  = d_a \tr \rho^{(a)} Y^2,
+  \end{align*}
+  while for $a\neq b$ we have
+  \begin{align*}
+    \langle Y,  \left( \nabla^2_{ab} F_{\samp} \right) Z \rangle
+  &= \partial_{s=0} \partial_{t=0} \tr \rho \, e^{s \sqrt{d_a}Y_a + t \sqrt{d_b} Z_b} \\
+  &= \partial_{s=0} \partial_{t=0} \tr \rho^{(ab)} \left( e^{s \sqrt{d_a}  Y} \ot e^{t \sqrt{d_b} Z} \right)\\
+  &= \sqrt{d_a d_b} \tr \rho^{(ab)} \left( Y \ot Z \right).
+  \end{align*}
+  %Since $f_{\samp}(\Theta) = \log F_{\samp}(\Theta) + \log \norm{\samp}_2^2$, we have
+  Since $f_{\samp}(\Theta) = \log F_{\samp}(\Theta)$ \CF{deleted a term; please see commented text to check}, we have
+  \begin{align*}
+    \braket{Y, (\nabla^2 f_{\samp}) Z}
+  &= \frac{\braket{Y, (\nabla^2 F_{\samp}) Z}}{F_{\samp}(I)} - \frac{\braket{Y, \nabla F_{\samp}} \braket{\nabla F_{\samp}, Z}}{F_{\samp}(I)^2} \\
+  &= \frac{\braket{Y, (\nabla^2 F_{\samp}) Z}}{F_{\samp}(I)} - \braket{Y, \nabla f_{\samp}} \braket{\nabla f_{\samp}, Z}.
+  \end{align*}
+  % \begin{align*}
+  %   \nabla^2 f_{\samp}
+  % = \frac {\nabla^2 F_{\samp}} {F_{\samp}(I)} - \frac{\nabla F_{\samp} \braket{\nabla F_{\samp}, \cdot}_{\vec d}}{F_{\samp}(I)^2}
+  % = \frac {\nabla^2 F_{\samp}} {F_{\samp}(I)} - \nabla f_{\samp} \braket{\nabla f_{\samp}, \cdot}_{\vec d},
+  % \end{align*}
+  % where $\dagger$ denotes the adjoint with respect to the inner product $\braket{\cdot,\cdot}_{\vec d}$.
+  Since $F_{\samp}(I)=1$, plugging in the above formulas and using \cref{lem:gradient} for the gradient completes the proof.
+  % Indeed,
+  % \begin{align*}
+  %   \frac1{d_a} \tr Y (\nabla^2_{aa} f_{\samp}) Y
+  % = \frac1{d_a} \tr Y (\nabla^2_{aa} F_{\samp}) Y - \frac1{d_a} \tr Y (\nabla_a f_{\samp}) \frac1{d_a} \tr Y (\nabla_a f_{\samp})
+  % = \tr \rho^{(a)} Y^2 - (\tr Y \rho^{(a)})^2
+  % \end{align*}
+  % and
+  % \begin{align*}
+  %   \frac1{d_a} \tr Y (\nabla^2_{ab} f_{\samp}) Z
+  % = \frac1{d_a} \tr Y (\nabla^2_{ab} F_{\samp}) Z - \frac1{d_a} \tr Y (\nabla_a f_{\samp}) \frac1{d_b} \tr Z (\nabla_b f_{\samp})
+  % = \tr \rho^{(ab)} \left( Y \ot Z \right) - (\tr Y \rho^{(a)})(\tr Z \rho^{(b)})
+  % \end{align*}
+\end{proof}
+
+%\MW{Explain that this looks like $\frac1{\norm \samp_2^2} \sum_i \samp_i \ot \samp_i - \dots$ if we think of \dots}
+%\CF{most important part of hessian is this $\rho^{ab}$ part ( a channel), discuss that there are three ways to look at it: partial trace, channel (cpm), and natural representation. Cite Pisier in channel form. In appendix prove by translating to channel}
+
+
+
+
+
+
+
+We now state our strong convexity result at the identity:
+
+%\begin{theorem}\label{thm:tensor-convexity-old}Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples is $N \geq k^2 \max_{a=1}^k d_a^2 / D$. Then, with probability at least $1 - 1/{\color{red}\poly(D)}$ \TODO{propagate from \cref{cor:off-diag-hess}} ,$$ (1 - (k - 1) \lambda - k \eps^2 - \eps) I \preceq \nabla^2 f_{\rv} \preceq (1 + (k - 1) \lambda + k \eps^2 + \eps) I.$$ $$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq (k - 1) \lambda + k \eps^2 + \eps $$ In particular, $f_{\rv}$ is $\Omega(1)$ strongly convex with probability \TODO{propagate from \cref{cor:off-diag-hess}} \end{theorem}
+
+\begin{theorem}[Strong convexity]\label{thm:tensor-convexity} There is an absolute constant $C$ such that the following holds. Let $\rv = (\rv_1,\dots,\rv_n)$ be independent standard Gaussian random variables in $\R^D$, where the number of samples $n$ is at least $C k d_{\max}^2/D$ for $k \geq 2$. Then we have
+%$$ I/2 \preceq  \nabla^2 f_{\rv} \preceq 2I.$$
+$$ \|\nabla^{2} f_{\rv} - I\|_{op} \leq 1/4$$
+with probability $1 - k^2 \left(\frac {kd_{\min}}{\sqrt{nD}}\right)^{ \Omega(d_{\min})}.$
+%In particular, $f_{\rv}$ is $3/4$-strongly convex at the identity.
+\end{theorem}
+
+
+
+The most interesting part of the Hessian is the quadratic form $Y,Z \mapsto \tr \rho^{(ab)} \left( Y \ot Z \right) = \langle Y, \tr_b \rho^{(ab)} \left(I \ot Z\right) \rangle$ appearing in the off-diagonal blocks. For a general state $\rho \in \PD(d_1, d_2)$, the linear map $\Phi:\mat(d_2) \to \mat(d_1)$ corresponding to the bilinear form above, or
+$$\Phi: Z \mapsto \tr_2 \rho \left(I \ot Z\right),$$
+ is known as a \emph{completely positive map} or quantum operation. 
+ 
+ 
+ 
+ If $\rho = \sum_{i = 1}^N x_i x_i^T$ for $x_i \in \R^{d_1 \ot d_2}$, then we have the following two equivalent ways to write the corresponding completely positive map, which we call $\Phi_{\samp}$:
+\begin{align} \Phi_{\samp}(Z) = \sum_{i = 1}^N x_i Z x_i^\dagger = \left(\sum_{i = 1}^N x_i \ot x_i\right) Z.\label{eq:quantum-channel}\end{align}
+Here $x_i$ are viewed as $d_1 \times d_2$ matrices and $x_i^\dagger$ is the matrix transpose. In our proof of strong convexity, we will show that strong convexity follows if all the completely positive maps $\Phi$ arising from the partial traces $\rho^{(a,b)}$ are good \emph{quantum expanders}. 
+%The quantum expansion we need will then follow from a result of Pisier. 
+
+\begin{definition}[Quantum expansion] Let $\Phi:\mat(d_1) \to \mat(d_2)$ be a completely positive map (c.f. \cref{eq:quantum-channel}).
+\begin{enumerate}
+\item Say $\Phi$ is \emph{$\eps$-doubly balanced} if
+\begin{align*}
+\|d_2 \Phi(I_{d_1})/\tr \Phi(I_{d_1})  - I_{d_2} \|_{op}& \leq \eps\\
+\textrm{and }\|d_1 \Phi^*(I_{d_2})/\tr \Phi(I_{d_1})  - I_{d_1}  \|_{op} & \leq \eps,
+\end{align*}
+\item $\Phi$ is an \emph{$(\eps, \lambda)$-quantum expander} if $\Phi$ is $\eps$-doubly balanced and
+$$\|\Phi\|_0 \leq \frac{1-\lambda}{\sqrt{d_1d_2}} \tr \Phi(I_{d_2}).$$
+\end{enumerate}
+A $(0, \lambda)$-quantum expander is called a $\lambda$-quantum expander.
+\end{definition}
+
+
+%for $\rho = \rho^{(a,b)}$ is a good \emph{quantum expander}, which or rather that $\Phi_{\samp}$ has a small operator norm on the traceless symmetric matrices. 
+
+
+
+Quantum expanders play an important role in quantum information theory and quantum computation \TODO{cite}. For us, their purpose will be the following lemma allowing us to translate quantum expansion properties into strong convexity.
+
+\begin{lemma}\label{lem:expansion-convexity} Let $\samp \in (\R^{d_1} \ot \dots \ot \R^{d_k})^n$, and $\rho = \frac{1}{\|x\|^2} \sum_{i = 1}^n \samp_i \samp_i^T$. Define $\Phi^{ab}:\mat (d_b) \to \mat(d_a)$ by 
+$$ \Phi^{ab}: Z \mapsto \tr_b \rho^{(a,b)} \left(I \ot Z\right).$$
+If $\Phi^{ab}$ is an $(\eps, \lambda)$-quantum expander for every $a < b \in [k]$, then 
+$$ \|\nabla^2 f_\samp - I\| \leq (k-1)( \lambda + \eps^2) + \eps + \eps^2.$$
+\end{lemma}
+Before proving this lemma, it is helpful to observe the following, which follows immediately from \cref{lem:gradient} and the fact that $\Phi^{ab}(I_{d_b}) = \rho^{(a)}$ and $(\Phi^{ab})^*(I_{d_a}) = \rho^{(b)}$. 
+\begin{obs}\label{obs:doubly-gradient}
+$\Phi^{ab}(I_{d_b})$ is doubly balanced for all $a<b \in [k]$ if and only if 
+$$\sqrt{d_a} \| \nabla_a f\| \leq \eps.$$
+for all $a \in [k]$.
+\end{obs}
+The proof of \cref{lem:expansion-convexity} also uses a basic bound on the semidefiniteness of matrices.
+\begin{lemma}\label{lem:block-matrix}
+Let $M$ be a square, symmetric block matrix with blocks $M_{ab}$ of dimension $d_a \times d_b$ for $a,b \in [k]$. Then 
+$$ \bigoplus_{a \in [k]} \left(M_{aa} - I \cdot \sum_{b \neq a} \|M_{ab}\|_{op}\right) \preceq M \preceq \bigoplus_{a \in [k]} \left(M_{aa} + I \cdot \sum_{b \neq a} \|M_{ab}\|_{op}\right) .$$
+\end{lemma}
+\begin{proof}
+We first prove the lower bound on $M$. We use the inequality for block matrices
+\begin{align}\begin{bmatrix} 0 & K \\ K^{*} & 0 \end{bmatrix} \succeq - \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix}\label{eq:psd-bound}\end{align} for any $A,B \succeq 0$ such that $\|A^{-1/2} K B^{-1/2}\|_{op} \leq 1,$ which may be proved by computing Schur complements. By changing basis it can be shown that this inequality also holds with $\| \cdot \|_{op}$ replaced by $\|\cdot\|_0$. We will sequentially apply this inequality to each $2\times 2$ principal block submatrix until we are left with a block diagonal matrix. 
+%By the final bound in \cref{cor:off-diag-hess} with $c = 1/25$, with probability $1 - 2k^2 \left(\frac {\sqrt{nD}}{kd_1}\right)^{ - \Omega(d_1)}$ we have $\|\nabla^2_{ab} f_{\rv}\|_0 \leq 1/25k$ for all $a,b \in [k]$ and $\|\nabla^2_{aa}f - I\|_0 \leq \sqrt{1/25k}$ for all $a \in [k]$. 
+
+We first apply the inequality to the upper-left block two-by-two matrix. By our bound on $\|M_{12}\|_{op}$, we may take
+   $A = \|M_{12}\|_{op} I_{d_1\times d_1}$, $B = \|M_{12}\|_{op} I_{d_2\times d_2}$ to find that
+   \begin{align*}
+M \succeq \begin{bmatrix}
+M_{11}-  \|M_{12}\|_{op} I & 0 & \hdots &  M_{1k} \\
+0 & M_{11} - \|M_{12}\|_{op} I & \ddots & \vdots \\
+\vdots & \ddots & \ddots & \vdots\\
+M_{k1} & \hdots &  \hdots & M_{kk}\\
+  \end{bmatrix}.\end{align*}
+ Applying this for all $a < b$ yields the result. The inequality \cref{eq:psd-bound} also applies with the signs and inequalities reversed; applying this inequality for all $a < b$ yields the upper bound on $M$. \end{proof}
+ 
+ \begin{proof}[Proof of \cref{lem:expansion-convexity}]  We apply \cref{lem:block-matrix} with $M = \nabla^2_f$. By a change of basis, \cref{lem:block-matrix} also applies with $\| \cdot \|_{op}$ replaced by $\|\cdot \|_0$ and $\preceq$ with respect to the inner product on $\H$. We will need to supply bounds on $\|\nabla_{ab}^2 f\|_{0}$ and $\| \nabla_{aa}^2 f - I \|_{0}$ for $a \neq b$. First we bound the off-diagonal terms. 
+
+Recall from \cref{lem:hessian} that the off-diagonal blocks of the Hessian are defined by
+\begin{align}\frac1{\sqrt{d_a d_b}} \langle Y,  \left( \nabla^2_{ab} f_{\samp} \right) Z \rangle
+= \tr \rho^{(ab)} \left( Y \ot Z \right) - \bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr).\label{eq:grad-off-diag}\end{align}
+thus $\nabla^2_{ab} f_{\samp} = \sqrt{d_a d_b} \Phi^{ab} - T$, where $T:Z \mapsto \sqrt{d_a d_b} \rho^{(a)} \tr \rho^{(b)} Z.$ We have $\|\Phi^{ab}\|_{0} \leq \lambda,$ and noting that 
+$\rho^{(a)} = \Phi^{ab}(I_{d_b})$, we have $d_a \rho^{(a)} - I_{d_a} \leq \eps, $ so for all traceless $Y,Z$ we have
+\begin{align} \sqrt{d_a d_b} |(\tr Y  \rho^{(a)})\bigl(\tr Z \rho^{(b)}\bigr)| \leq \left( \frac{\eps \|Y\|_{1}}{\sqrt{d_{a}}} \right) \left( \frac{\eps \|Z\|_{1}}{\sqrt{d_{b}}} \right) \leq \eps^2 \|Z\|_F\|Y\|_F \label{eq:second-term-hess}\end{align}
+and so $\|T\|_0 \leq \eps^2$. Thus $\|\nabla^2_{ab} f_{\samp}\| \leq \lambda + \eps^2$. 
+
+We next bound $\nabla_{aa}^2 f_\samp$. Recall again from \cref{lem:hessian} that the diagonal blocks of the Hessian are given by \begin{align}
+ \langle Y,  \left( \nabla^2_{aa} f_{\samp} \right) Y \rangle=  d_a \tr \rho^{(a)} Y^2 - d_a \bigl(\tr Y \rho^{(a)}\bigr)^2.\label{eq:on-diag-hess-ii}
+\end{align}
+Reusing the calculation in \cref{eq:second-term-hess} shows that the second term of the right-hand-side of \cref{eq:on-diag-hess-ii} is at most $\eps^2\|Y\|_F^2.$ Similarly, the $\eps$-balancedness of $\Phi^{ab}$ implies $ |\tr (d_a \rho^{(a)}  - I_a)Y^2| \leq \eps \tr Y^2$, or that the first term of \cref{eq:on-diag-hess-ii} is in $(1 \pm \eps) \|Y\|_F^2$. Hence $\|\nabla_{aa}^2 f_\samp - I\|_0 \leq \eps^2 + \eps$. The bound follows from \cref{lem:block-matrix}. 
+ \end{proof}
+
+
+We are concerned with $\Phi^{ab}$ where $\rv$ is a random Gaussian.  Like random graphs, it is known that random completely positive maps, namely those $\Phi_\samp$ obtained by choosing $x_i$ from various well-behaved distributions, yield good quantum expanders. Pisier showed the following result when $x_i$ are chosen from a standard Gaussian. 
+
+%We show that, restricted to the traceless matrices, this quadratic form is small. More precisely, we bound the operator norm of the map $T: Z \mapsto \tr_2 \rho^{(ab)} \left(I \ot Z\right)$ restricted to the traceless symmetric matrices. Such maps are called \emph{quantum channels}, and we will revisit their properties later \CF{where? or earlier?}. The operator norm condition we desire for $T_{\rho}$ is equivalent to $T_{\rho}$ being a good \emph{quantum expander} - this led Pisier to bound the operator norm of $T_{\rho}$ for random $\rho$. \CF{one-sentence motivation of quantum expanders?}
+
+\begin{theorem}[\cite{pisier2012grothendieck, P14}]\label{thm:hess-pisier} Let $X = (X_1, \dots, X_N)$ be a tuple of standard Gaussians on $(\R^{d_1}\ot \R^{d_2})^n$. Then for all $t >0$, with failure probability at most $t^{-\Omega(d_{1} + d_{2})}$, the random completely positive map $\Phi_X$ satisfies 
+$$\frac{1}{nD}\|\Phi_{X}\|_0 \leq t^{2} \frac{d_{1}+d_{2}}{\sqrt{d_{1} d_{2} nD}}$$ on traceless symmetric matrices. \CF{I got rid of the big O on the displayed bound...is this ok to be absorbed into the probability? I also got rid of $t > 1$ because the result vacuously holds if $t < 1$. Can \AR{} help?}\end{theorem} 
+
+%\CF{relate theorem 14 to quantum expansion; something like if $\|\Phi\|_0 = \lambda$ then $\Phi$ is $\lambda - C \eps$ quantum expander when balanced and if $\Phi$ is an $\eps$-balanced quantum expander then $\|\Phi\|_0$ has operator norm $\lambda - C \eps$}.
+
+Pisier's actual result is slightly different; \cref{thm:hess-pisier} is essentially Theorem~16.6 in~\cite{pisier2012grothendieck}, together with a standard symmetrization trick (e.g., Proof of Lemma~4.1 in~\cite{P14}). We present the details in \cref{sec:pisier}. 
+
+The operator $\Phi^{ab}$ is nearly of the form of $\Phi_{\rv}$ in \cref{thm:hess-pisier}, but it is normalized differently. Indeed, we can compute that $\Phi^{(a,b)}$ is distributed as $\frac{1}{\|X\|_F^2}\Phi_{X}$ for $X$ a tuple of $n D/d_a d_b$ many i.i.d. $d_b \times d_a $ standard Gaussian matrices. As $\|X\|_F^2$ is a sum of $\chi$-square random variables and can easily be controlled by standard concentration bounds, \cref{thm:tensor-convexity} follows easily.
+
+\begin{proof}[Proof of \cref{thm:tensor-convexity}] By \cref{lem:expansion-convexity}, it is enough to prove that $\Phi^{ab}$ is a $(1/\sqrt{20k}, 1/20k)$-quantum expander for all $a < b \in [k]$ with the desired failure probability. 
+
+Firstly, we describe an event that implies $\Phi^{ab}$ are $\eps:=1/\sqrt{20k}$-balanced. By \cref{obs:doubly-gradient}, this is equivalent to the condition $\sqrt{d_a} \norm{\nabla_a f_{\rv}}_{\op} \leq \eps$ for all $a \in [k]$. By \cref{prop:gradient-bound}, this occurs with failure probability at most $k e^{-D n \eps^2/2Cd_{\max}} = k e^{ - c D n / k d_{\max}}$ provided $n \geq C  d_{\max}^2 k/n D$. 
+
+Secondly, we describe events that imply $\sqrt{d_a d_b} \|\Phi^{ab}\|_0 \leq 1/20k:=\lambda$, the other condition needed for $(\eps, \lambda)$-quantum expansion. Recall from above that $\Phi^{ab}$ is distributed as $\frac{1}{\|X\|_F^2}\Phi_{X}$ for $X$ a tuple of $n D/d_a d_b$ many i.i.d. $d_b \times d_a $ standard Gaussian matrices. By \cref{thm:hess-pisier} with $t^2 = \frac {\lambda \sqrt{nD}}{d_a + d_b}$, the operator norm of $\sqrt{d_a d_b} \Phi$ restricted to $\smallSym^0_{d_b}$ is $O(\lambda n D /\|X\|_F^2 )$
+with probability $(\lambda \sqrt{nD}/(d_a + d_b))^{ - \Omega(d_a + d_b)} \leq (\lambda \sqrt{nD} /d_{\min})^{ - \Omega(d_{\min})}$. $\|X\|_F^2$ is $\Theta(nD)$ with failure probability $e^{ -\Omega(nD)} $ by \cref{prp:xnorm}.
+
+By the union bound, $\Phi^{ab}$ is an $(\eps, \lambda)$-quantum expander with failure probability $$O\left(k e^{ - c D n / k d_{\max}} + e^{ -\Omega(nD)} + k^2 ( \sqrt{nD} /2k d_{\min})^{ - \Omega(d_{\min})}\right); $$
+due to our assumption on $n$ the final term dominates and so the failure probability is $k^2 (  k d_{\min}/\sqrt{nD})^{\Omega(d_{\min})}$.
+\end{proof}
+
+
+
+
+
+ 
+
+
+%\begin{corollary}\label{cor:off-diag-hess} For traceless symmetric matrices $Y \in \Sym^0_{d_a}$, $Z \in \Sym^0_{d_a}$, we have
+%$O \left( \frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}} \right)$
+
+%$$ \langle Y,  \left( \nabla^2_{ab} f_{\samp} \right) Z \rangle
+%= O (\lambda)
+%$$
+%\TODO{Akshay, please make the rhs $O(\lambda)$ and then adjust the failure probability accordingly}
+%with probability $1 - \exp( - \Omega \left( (d_{a} + d_{b}) \log \frac{ \lambda \sqrt{n D} }{d_{a} + d_{b}}  \right) ) \geq 1 - \exp( - \Omega(d_{a} + d_{b}) )$ for $\lambda^{2} n D \gg \max_{a} d_{a}^{2}$.
+%\AR{In particular we get $\|\nabla^{2}_{ab} f\|_{op} \approx \frac{d_{a} + d_{b}}{\sqrt{n D}}$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}))$; as well as $\|\nabla^{2}_{ab} f\|_{op} \approx \frac{d_{a} + d_{b}}{\sqrt{D}}$ with failure probability $\leq \exp(-\Omega(d_{a} + d_{b}) \log n)$ }
+%\end{corollary}
+
+
+
+%$$\bigl(\tr Y \rho^{(a)}\bigr)\bigl(\tr Z \rho^{(b)}\bigr)$$
+
+
+
+We now show our second strong convexity result, namely that if our function is strongly convex at the origin then it is also strongly convex in an operator norm ball about the origin. The proof is given in the appendix.
+
+
+%\CF{Akshay: $\sum_{a} \|\delta_{a}\|_{op} = \|\delta\|_{op}.$}
+%\CF{say stronger condition}
+\begin{theorem} \label{convexRobustness}
+There is a constant $c>0$ such that the following holds. If $f_{\samp}$ is $\alpha$-strongly convex at $I$; and for every $a \in [k]$ we have $\|d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a}\|_{op} = \|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$; and $\sum_{a} \|\delta_{a}\|_{op} \leq c$: then $f$ at $e^{\delta} := \otimes_{a} e^{\delta_{a}}$ is $\geq (\alpha - k C \|\delta\|_{op})$-strongly convex for some universal constant $C$.
+\end{theorem}
+
+%-----------------------------------------------------------------------------
+\subsection{Proof of \cref{thm:tensor-frobenius}}
+%-----------------------------------------------------------------------------
+We are now ready to prove the main result of this section according to the plan outlined in \cref{subsec:proof-sketch}.
+\TODO{restate it here?}
+
+\begin{proof}[Proof of \cref{thm:tensor-frobenius}]By \cref{it:reduce} in \cref{subsec:proof-sketch}, it is enough to prove the theorem assuming $\Theta = I$. We first show that the minimizer of $f_\rv$ exists and is close to $I$ with high probability, and then use this to show that the minimizer of $\ell_\rv$ is also close.  Set $\delta = \eps/\sqrt{k d_k}$ and let $c$ be a constant. Consider the following three events.
+\begin{enumerate}
+\item\label{it:grad-bd} $\|(\nabla f_\rv)_{a}\|_{op} \leq \frac{\delta}{\sqrt{d_{a}}}$ for all $a \in [k]$,
+\item\label{it:sc-ball} $f_\rv$ is $1/2$ strongly convex at any point $\Theta$ such that $\sum_a \|\log \Theta_a\|_{op} \leq  c.$
+\item\label{it:norm-bd} $\| \rv\|_F^2 \in (1 \pm k \eps/\sqrt{d_k}) nD.$
+\end{enumerate}
+We now show that these events occur with failure probability $$k^2 \left(\sqrt{nD} / kd_1 \right)^{ - \Omega(d_1)} + O(k e^{ - nD \eps^2 / k d_k^2}).$$ Indeed, by our first assumption on $\eps$, we have $N_a \geq C d_a/\delta^2$ for all $a \in [k]$, we so we may apply \cref{prop:gradient-bound} to conclude \cref{it:grad-bd} occurs with failure probability $O\left( \sum_a \exp ( - N_a \delta^2)\right)$.
+By \cref{thm:ball-convexity}, if $c$ is a small enough absolute constant then \cref{it:sc-ball} occurs with failure probability at most $k^2 \left(\sqrt{nD} / kd_1 \right)^{ - \Omega(d_1)}$. By \cref{prp:xnorm} with $t = k \eps/\sqrt{d_k}$, \cref{it:norm-bd} occurs with failure probability $2e^{- k nD \eps^2/8 d_k},$ which is dominated by the failure probability for \cref{it:grad-bd}. By the union bound, all three items hold with the desired failure probability. Let $\samp$ be a sample satisfying all three items.
+
+
+We seek to apply \cref{lem:convex-ball} with $\lambda = 1/2$, so we must find the radius of the largest geodesic ball in the region of $1/2$-strong convexity of $f_\samp$. Thus if we set $\kappa = c/\sqrt{d_1}$ we will have that $f_\samp$ is $1/2$-strongly convex on the $\kappa$-ball by \cref{it:sc-ball}, because for $\Theta \in B_\kappa(I)$ we have
+$$ \sum_a \|\log \Theta_a\|_{op} \leq \sqrt{d_1} d(I, \Theta) \leq c.$$
+Next we must verify that $\|\nabla f\| < \kappa/2$. By \cref{it:grad-bd} we have
+\[  \|\nabla f\|_F^{2} = \sum_{a} \|(\nabla f)_{a}\|_{F}^{2} \leq \sum_{a} d_a \|(\nabla f)_{a}\|_{op}^{2} \leq  k \delta^{2} \]
+%\CF{new cite theorem 9}
+
+%By \cref{thm:tensor-convexity}, with failure probability $\CF{1/poly(D)}$ we have that $f$ is $1-o_{d}(1)$ strongly convex at $I$. Because $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq \delta \leq c$, by \cref{convexRobustness} there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $\Theta$ such that $\sum_a \|\log \Theta_a\|_{op} \leq  c$ for all $a \in [k]$. \CF{end old}
+
+By \cref{lem:convex-ball}, provided $\sqrt{k} \delta \leq c/\sqrt{d_k}$, which holds by our definition of $\delta$ and our second assumption on $\eps$, there is an optimizer $\widehat{\Theta}$ in a geodesic $2 \sqrt{k} \delta$-ball about $I$. We now use this bound on geodesic distance to bound error in $D_F$ for the individual Kronecker factors. By our choice of $\kappa$ and because $\widehat{\Theta}$ is in the $\kappa$ ball, $\|\log \widehat{\Theta}_a\|_{op} \leq c$ and so $\|I_a - \widehat{\Theta}_a\|_F = O( \| \log \widehat{\Theta}_a\|_F) \leq \sqrt{d_a} d(I, \widehat{\Theta}) \leq 2\delta \sqrt{ k d_a}.$ Applying $\delta = \eps /\sqrt{k d_k}$ yields $\| I_a - \widehat{\Theta}_a\|_F \leq 2\eps \sqrt{ d_a/d_k}$.
+
+We have shown that the minimizer $\widehat{\Theta}$ of $f_\samp$ is close to $I$, but it remains to show that the minimizer $\Theta'$ of $\ell_\samp$ exists and is close to $I$. For this, recall that if $f_\samp$ has the unique minimizer $\widehat{\Theta} \in \SPD$, then $\ell_\samp$ is minimized at $\Theta':= \alpha^{1/k}  \widehat{\Theta}$ where $\alpha:= n D e^{ - f_\samp(\widehat{\Theta})}$. We now show that $\alpha$ is very close to $1$. By \cref{lem:convex-ball}, $f_\samp(\widehat{\Theta}) \geq f_\samp(0) - k\delta^2$. We have $f(0) \geq f_\samp(0) = \log\| \samp\|^2_F$, and by \cref{it:norm-bd} we have $\| \samp\|_F^2 \in (1 \pm t) nD$ with $t = k \eps/\sqrt{\delta_1}$. Thus we have $\alpha \in [(1-t),  (1+t) e^{k \delta^2}]$, or $\alpha^{1/k} \in [1 \pm  O(\eps/\sqrt{d_k})]$ by our choice of $t$. By the approximate triangle inequality for $D_F$ \CF{insert and cite}, $D_F( \Theta'_a; I_a) = O(D_F(\widehat{\Theta}_a; I_a) + D_F(\alpha^{1/k} I_a; I_a)) = O(\eps \sqrt{d_a/d_k})$. The reparametrization $\eps \leftarrow \eps \sqrt{d_k^{3/2}/ n D}$ completes the proof. \TODO{check reparametrization}
+\end{proof}
+
+\section{Improvements for the matrix normal model}\label{sec:matrix-normal-ii}
+
+
+
+We now prove \cref{thm:matrix-normal}, an improvement to \cref{thm:tensor-frobenius} in the case $k=2$. The results for $k = 2$ are stronger in that \CF{enumerate or emph} the MLE can be shown to be close to the truth in operator norm rather than the looser Frobenius norm, the errors are tight for the individual factors, and that the failure probability is inverse exponential in the number of samples rather than inverse polynomial.
+
+The proof plan is similar to that in \cref{subsec:proof-sketch}, but to work directly with quantum expansion instead of strong convexity. In particular, the quantum expansion of the operators $\Phi^{ab}$ defined in \cref{lem:expansion-convexity}. Because $k = 2$ there is only one operator $\Phi^{12}$ to consider, which we call $\Phi$. In the matrix normal model $X$ is a sample of $n$ i.i.d. Gaussian vectors in $\R^{d_1} \ot \R^{d_2}$, and $\Phi$ is the random operator
+\begin{align}\Phi:Z \mapsto \frac{1}{\|X\|_F^2} \sum_{i = 1}^n X_i Z X_i^\dagger,\label{eq:matrix-normal-operator}\end{align}
+where $X_i^\dagger$ denotes the transpose of $X_i$ viewed as a $d_1\times d_2$ matrix. 
+
+Our main tool is a bound by \CF{KLR} using a very similar notion as \emph{spectral gap}. $\Phi$ has spectral gap $ \lambda$ if it satisfies the condition 
+\begin{align}\sigma_2(\Phi) \leq \frac{(1 - \lambda)}{\sqrt{d_1d_2}} \tr \Phi(I_{d_2}).\label{eq:spectral-gap}
+\end{align}
+It is known (Lemma A.3 in \cite{FM20}) that $(\eps, 1 - \lambda)$-quantum expansion implies spectral gap $(\lambda - O(\eps))$ , so the notions are equivalent for our purposes. 
+
+%$\sigma_1(\Phi) = \langle I_{d_1}/\sqrt{d_1}, \Phi(I_{d_1}/\sqrt{d_2}) \rangle$
+
+
+\begin{theorem}[\CF{KLR}]\label{thm:klr} There is a constant $c > 0$ such that the following holds for all $d_1 \leq d_2$.
+If $\Phi$ is $\eps$-doubly balanced and has spectral gap $\lambda$ for $\eps \leq c \lambda^2/\log d_1$, then the maximum likelihood estimator $(\widehat{\Theta}_1, \widehat{\Theta}_2) \in \SL_{d_1}\times \SL_{d_2}$ is unique and satisfies
+$$\| \widehat{\Theta}_1 - I_{d_1}\|_{op}, \| \widehat{\Theta}_2 - I_{d_2}\|_{op} \leq \frac{\eps \log d_1}{\lambda}.$$
+\end{theorem}
+
+\cref{thm:klr}, along with what we've shown so far, already implies a preliminary version of \cref{thm:matrix-normal}. In the proof of \cref{thm:tensor-convexity}, we've already shown that $\Phi$ is an $(\eps \sqrt{d_2/n d_1}, 1 - c)$-quantum expander with failure probability 
+$$O(e^{ - \Omega( d_2 \eps^2)}) + (\sqrt{nD}/{d_1})^{ - \Omega(d_1)}.$$ 
+
+This immediately implies that the above failure probability holds for \cref{thm:matrix-normal} with the bound replaced by
+\begin{align*}
+  D_{\op}(\widehat{\Theta}_a \Vert \Theta_a) = O\left(\eps \sqrt{\frac{d_{2}}{n d_1}} \log d_1\right).
+\end{align*}
+One of the results of this section is the following theorem, which shows that the expansion constant $\lambda$ of $\Phi$ can be made constant with inverse exponential failure probability, albeit with a worse constant. 
+
+\begin{theorem}\label{thm:operator-cheeger}
+There are absolute constants $ C > 0, 1 > \lambda > 0$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then $\Phi$ is an $(\eps \sqrt{d_2/n d_1}, 1 - \lambda)$-quantum expander, with failure probability $O(e^{ - \Omega( d_1 \eps^2)}).$ 
+\end{theorem}
+%The above theorem follows from a slightly different result, which is identical to the above theorem except the condition ``$(1-c)$-quantum expander" is replaced by $\|\Phi\|_0 \leq 1 - c$. Applying \cref{lem:block-matrix} to $\nabla^2 f$ with this bound on $\|\Phi\|_0 = \|\nabla^2_{12} f\|_{0}$ improves \cref{thm:tensor-convexity}, and consequently also \cref{thm:ball-convexity}, as follows. 
+This also improves our result on strong convexity, which will be useful in the analysis of the flip-flop algorithm. By \cref{lem:expansion-convexity}, and the consequent improvement to \cref{thm:ball-convexity}, we have the following.
+\begin{corollary}\label{cor:matrix-convexity} There are absolute constants $c, C$ such that the following holds for all $d_1 \leq d_2$. Suppose $n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $. Then with failure probability $O(e^{ - \Omega( d_1 \eps^2)}),$ $f$ is $c$-strongly convex at any point $Z \in \SPD$ such that $\sum_a \|\log Z_a\|_{op} \leq c$ for all $a \in [k]$.
+\end{corollary}
+
+We will prove \cref{thm:operator-cheeger} in the appendix using techniques similar to \cite{FM20} using Cheeger's inequality. 
+
+\subsection{Proof of \cref{thm:matrix-normal}}
+We now use \cref{thm:operator-cheeger} as well as some more refined concentration inequalities to prove \cref{thm:matrix-normal}. The additional concentration is required to obtain the tighter bounds on the lower-dimensional factor $\Theta_1$, where $d_1 \leq d_2$.
+
+We first sketch the proof of the implied Frobenius error bound. The idea of the proof is to apply one step of flip-flop algorithm, a step which normalizes the larger marginal of $\rho$. This has the effect of making the second component of $\nabla f_\samp$ equal to zero, and we will show that the first component enjoys the same concentration exploited in \cref{prop:gradient-bound} even with the step of flip-flop - thus the total gradient has become smaller. Using \cref{convexRobustness} to control the change induced in the minimal eigenvalue of the Hessian by the first step of the flip-flop and applying \cref{lem:convex-ball} results in an error bound proportional to the new gradient after flip-flop, which gives us the tighter bound. To obtain the relative spectral error bound, we employ a similar strategy but with \cref{thm:klr} instead of \cref{lem:convex-ball}. 
+
+We now discuss the concentration bound. For $\Phi$ as in \cref{eq:matrix-normal-operator}, we can right-multiply $X_i$ by the result of one step of the flip-flop algorithm on the larger factor $\Theta_2$. Explicitly, the new random variable $Y$ is given by
+$Y_i = \frac{1}{\sqrt{d_i}} X_i \Phi^*(I_{d_1})^{-1/2} = \frac{1}{\sqrt{d_i}}  X_i (\sum_{i = 1}^n X_i^\dagger X_i)^{-1/2}.$ \CF{argh, this is mildly wrong, because $\Phi$ was already normalized to be tracial.}
+
+The result gives rise to a new operator $\tilde{\Phi}$ which satisfies 
+\begin{align} \tilde{\Phi}(I_{d_2}) = \frac{1}{d_2}\sum_{i} X_{i} \left( \sum_{j}  X_{i}^{\dagger} X_{i}\right)^{-1} X_{i}^\dagger \textrm{ and } \tilde{\Phi}^*(I_{d_1}) = \frac{1}{d_2} I_{d_2}.   \label{eq:one-step}\end{align}
+where again $\dagger$ denotes $d_1\times d_2$ matrix transpose.
+\begin{lemma}[Concentration after flip-flop]\label{lem:flipflop-concentration}
+If $X$ is an $n$-tuple of i.i.d. standard Gaussians on $\R^{d_1}\ot \R^{d_2}$, $n \geq d_2/d_1$ and $\eps> 0$ is at least a large enough absolute constant $C$, then for $\tilde{\Phi}$ as in \cref{eq:one-step} we have
+$$\|d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op} \leq \eps \sqrt{ \frac{d_1}{nd_2}},$$
+ with probability $1 - \exp(- \Omega( \eps^2 d_{1})).$ In particular, the condition above implies $\tilde{\Phi}$ is $\eps \sqrt{ \frac{d_1}{nd_2}}$-balanced.
+\end{lemma}
+The proof of this lemma uses a result of \cite{hayden2006aspects} on the inner product of two random projections, combined with a standard net argument. The details can be found in \cref{sec:flipflop-concentration}. With this bound in hand, we may now prove \cref{thm:matrix-normal}.
+
+\CF{still need to make this work for the actual MLE, not the $\SL$ one...; maybe just say the argument is analogous to avoid tedium?}
+\begin{proof}[Proof of \cref{thm:matrix-normal}] As discussed in \cref{subsec:proof-sketch}, it is enough to prove \cref{thm:matrix-normal} under the assumption $\Theta_a = I_{d_a}$ for $a \in \{1,2\}$. By \cref{thm:operator-cheeger}, provided 
+$$n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps_0^{-2}\} $$
+ with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)})$ the operator $\Phi$ is a $(\eps_0  \sqrt{{d_2}/{n d_1}},1-\lambda)$-quantum expander. By \cref{lem:flipflop-concentration}, $\tilde{\Phi}$ is $\eps_0 \sqrt{{d_1}/{n d_2}}$-balanced with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)});$ by the union bound both events occur with probability $1 - O(e^{ - \Omega( d_1 \eps_0^2)});$ condition on both events.
+ 
+We now use a lemma relating the quantum expansion of $\tilde{\Phi}$ and $\Phi$; this is analogous to \cref{convexRobustness} guaranteeing the strong convexity of $f$ in a neighborhood of the origin. The operator $\tilde{\Phi}$ is a \emph{scaling} of $\Phi$, that is $\tilde{\Phi}(X) = g^\dagger \Phi( h X h^\dagger) g$ for some $g \in \GL(d_1), h \in \GL(d_2)$. In our case case $h = \frac{1}{\sqrt{d_2}}\Phi^*(I_{d_2})^{-1/2}$ and $g = I_{d_1}$. By Lemma 4.4 in \cite{FM20}, if $\|h^\dagger h - I_{d_1}\|_{op} \leq \delta$,  then $\tilde{\Phi}$ is an $(\eps \sqrt{d_2/n d_1} + O(\delta), 1 - \lambda + O(\delta))$-quantum expander. Fortunately, $h^\dagger h$ is bounded by the balancedness of $\Phi$: $h^\dagger h - I = (d_2 \Phi^*(I_{d_1}))^{-1} - I_{d_2}$. By the balancedness of $\Phi$ we already know that $\|d_2 \Phi^*(I_{d_1}) - I_{d_2}\|_{op} \leq \eps_0 \sqrt{d_2/n d_1}$; provided $\eps_0 \sqrt{d_2/nd_1} \leq 1/2$ we have $\|(d_2 \Phi^*(I_{d_1}))^{-1} - I_{d_2}\|_{op} = O( \eps_0 \sqrt{d_2/n d_1})$. Thus $\tilde{\Phi}$ is an $(\eps_0 \sqrt{d_1 / n d_2}, 1 - \lambda/2)$-quantum expander provided $c'$ is small enough compared to $c$.
+ 
+By our choice of $n$, we have $\eps \sqrt{d_1/nd_2} \leq c\lambda^2\log d_1$ if we take $\eps_0 = \eps/\log(d_1)$ for $\eps \leq c\lambda^2$. By \cref{thm:klr}, the MLE $\Theta'_1, \Theta'_2$ for the tuple $y_i =  x_i \Phi^*(I_{d_1})^{-1/2}/\sqrt{d_1}$ satisfies 
+\begin{gather*} \| \Theta'_1 - I_{d_1}\|_{op}, \| \Theta'_2 - I_{d_2}\|_{op} \leq C \eps_0 \sqrt{\frac{d_1}{n d_2}} \log d_1 = O\left(\eps \sqrt{\frac{d_1}{n d_2}}\right).\end{gather*}
+By the equivariance discussed in \cref{it:reduce}, the MLE $\htheta_1 = \Theta'_1$ and $\htheta_2 = \frac{1}{d_2}\Phi^*(I_{d_2})^{-1/2}\Theta'_2\Phi^*(I_{d_2})^{-1/2}.$ The bound on $D_{op}(\htheta_1||I_{d_1})$ follows immediately. For $\htheta_2$, by invariance of the relative spectral error we have 
+\begin{align*}D_{op}(\htheta_2|| I_{d_2}) = D_{op} (\Theta_2 || d_2\Phi^*(I_{d_2})) &= O( D_{op}(\Theta_2 || I_{d_2}) + D_{op}(d_2\Phi^*(I_{d_2})|| I_{d_2}))\\
+& = O\left(\eps \sqrt{\frac{d_2}{n d_1}}\right),
+\end{align*} where the penultimate inequality is by the approximate triangle inequality and approximate symmetry for the relative spectral error \CF{cite}. Our choice $\eps_0 = \eps/\log(d_1)$ gives the failure probability $e^{- \Omega(\eps^2 d_1)/\log^2 d_1}$. By setting the constant $C$ in the statement of the theorem large enough compared to $1/\lambda, 1/c$, all the constraints will be satisfied.
+\end{proof}
+
+
+
+
+
+
+
+
+
+%=============================================================================
+\section{Convergence of flip-flop algorithms}
+%=============================================================================
+In this section we prove that the flip-flop algorithms for the matrix and tensor normal models converge quickly to the MLE estimator with high probability. We begin by stating the flip-flop algorithm and then...
+
+\begin{Algorithm}
+\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
+
+\textbf{Output}: $\otheta \in \SPD$ such that $D_F(\htheta_a; \otheta_a) < \eps$, for each $a \in [k]$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
+
+\textbf{Algorithm}:
+\begin{enumerate}
+\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$, and $\delta = \dfrac{\eps^2}{16 d_k^{3/2}}$.
+\item\label{it:flip-flop step 2} For $t=1,\dots,T = 12 k d_k \cdot \log(k/\delta^2)$, repeat the following:
+%we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
+\begin{itemize}
+\item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \ldots, \otheta_k)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \ldots, \otheta_k)$, and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest.
+\item
+If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\left( \bigotimes_{a =1}^k \otheta_a \right)^{-1}$ and return.
+% S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
+\item Otherwise, set $\otheta_a \leftarrow \otheta_a^{1/2} (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$.
+\end{itemize}
+\end{enumerate}
+\caption{Tensor flip-flop algorithm}\label{alg:flip-flop}
+\end{Algorithm}
+
+Before we analyze the convergence of the flip-flop algorithms for the tensor and matrix normal models, we discuss the straightforward generalizations of convergence of general descent methods whenever the objective function is strongly geodesically convex.
+
+The next lemma shows that any descent method which manages to decrease the value of the function with respect to the gradient...
+The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
+
+\begin{lemma}\label{lem:descent-sublevel-set}
+	Let $f : \SPD \rightarrow \R$ be $\lambda$-strongly geodesically convex in a sublevel set containing $x_0$, $\norm{\nabla f(x_0)}_F^2 \leq 1$ and $\alpha > 0$ be a constant.
+	If $\{x_k\}$ is a descent sequence which satisfies
+	$$ f(x_{k+1}) \leq f(x_k) - \alpha \cdot \min\{1,  \norm{\nabla f(x_k)}^2_F \} $$
+	then in $T$ iterations we must have an element $x_t$ with $t\leq T$ such that
+	$$ \norm{\nabla f(x_t)}^2_F \leq 2^{-T \alpha \lambda}.   $$
+\end{lemma}
+
+\begin{proof}
+	Let $f^*$ be the minimum value of the function $f$ and let $S$ be the sublevel set of $f$ containing $x_0$ over which $f$ is $\lambda$-strongly geodesically convex. Since $\{x_k\}$ is a descent sequence, we know that each $x_k \in S$.
+
+	Since $f$ is $\lambda$-strongly geodesically convex in $S$, we have
+	$$ f^* \geq f(x) - \frac{1}{2\lambda} \cdot \norm{\nabla f(x)}_F^2 $$
+	for any $x \in S$.
+
+	If $\norm{\nabla f(x_k)}_F^2 \leq \varepsilon \leq 1$, then we will show that in $\ell \leq 1/\alpha \lambda$ steps we must have an element $x_{k+\ell}$ such that $\norm{\nabla f(x_{k + \ell})}_F^2 \leq \varepsilon/2$. This is enough to conclude the proof of the lemma, as with this claim we see that we half the squared norm of the gradient at every sequence of $1/\alpha \lambda$ steps.
+
+	To see this, assume that $\norm{\nabla f(x_{k+\ell})}_F^2 \geq \varepsilon/2$ for $0 \leq \ell \leq m$. Then, from our descent property we have
+	$$ f(x_{k+1}) \leq f(x_k) - \alpha \cdot \norm{\nabla f(x_k)}^2_F \leq f(x_k) - \alpha \cdot \varepsilon/2$$
+	and in particular $f(x_{k + m}) \leq f(x_k) - m \cdot \alpha \cdot \varepsilon/2$.
+
+	On the other hand, our assumption that $\norm{\nabla f(x_k)}_F^2 \leq \varepsilon$, together with strong geodesic convexity of $f$ and minimality of $f^*$ imply
+	$$ f(x_{k}) - \frac{\varepsilon}{2\lambda} \leq f(x_{k}) - \frac{1}{2\lambda} \cdot \norm{\nabla f(x_k)}_F^2 \leq f^* \leq f(x_{k+m}) $$
+	and therefore we have
+	$$ f(x_{k}) - \frac{\varepsilon}{2\lambda} \leq f(x_{k + m}) \leq f(x_k) - m \cdot \alpha \cdot \varepsilon/2 $$
+	which implies $m \leq \frac{1}{\alpha \lambda}$. This concludes our proof.
+\end{proof}
+
+%-----------------------------------------------------------------------------
+\subsection{Tensor flip-flop convergence}
+%-----------------------------------------------------------------------------
+\begin{lemma}[Initial Conditions]\label{lem:tensor-initial-conditions}
+	There exist absolute constants $\Gamma, \gamma > 0$ such that the following holds.
+	When the number of samples $n \geq \Gamma \cdot k^2 \cdot d_1^2/D$, with probability at least $1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}$ we have that the following conditions hold:
+	\begin{enumerate}
+		\item $\norm{\nabla f_x(I)}_F \leq \dfrac{\gamma \cdot k}{8}$ % \dfrac{\lambda^2}{4 k}$
+		%\item $f_x$ is $\lambda$-strongly geodesically convex at a ball of radius $\lambda/k$ around $I$, that is: $B_{\lambda/k}(I) := \{ Z \in \smallSym \ \mid \ \norm{Z}_F \leq \lambda/k \}$.
+		\item $f_x$ is $\frac{1}{2}$-strongly geodesically convex at a ball of radius $\gamma \cdot k/2$ around $I$, that is: $B_{\gamma \cdot k/2}(I) := \{ Z \in \Sym \ \mid \ \norm{Z}_F \leq \gamma \cdot k/2 \}$.
+	\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+	The lemma follows from the observation that \cref{prop:gradient-bound} implies condition 1, and \cref{thm:ball-convexity} implies condition 2. So all we need to do is to check the parameters.
+
+	By \cref{thm:ball-convexity}, if we set $\gamma = c$ and if the number of samples $n \geq C k^2 d_1^2/D$, where $c, C > 0$ are the constants from \cref{thm:ball-convexity}, then with probability at most
+	$$k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)}$$
+	the second condition fails to hold.
+
+	By \cref{prop:gradient-bound} with parameter $\varepsilon = \frac{\gamma \sqrt{k}}{8}$, if the number of samples satisfies $n \geq \dfrac{2^{14} \cdot d_1^2}{\gamma^2 \cdot k \cdot D}$ then with probability at most
+	$$2 k \cdot \exp\left(- \frac{n k D \gamma^2}{2^{15} d_1}\right) = 2k \cdot e^{- \Omega(nkD/d_1)}$$
+	the first condition will fail to hold.
+
+	Letting $\Gamma = \max\{2^{14}/\gamma^2, C \}$, having $n \geq \Gamma k^2 d_1^2/D$ samples gives a sample upper bound that holds for both situations above.
+	Thus, by the union bound, with probability at most
+	$$ k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} + 2k \cdot e^{- \Omega(nkD/d_1)} $$
+	one of the conditions 1 or 2 will fail to hold. This concludes our proof.
+\end{proof}
+
+\begin{lemma}[Descent Lemma]\label{lem:tensor-descent-lemma}
+	If $\Theta, \Upsilon$ are successive scalings from the flip-flop algorithm, then we have:
+	$$ f_x(\Upsilon) \leq f_x(\Theta) - \dfrac{1}{6k d_k} \cdot \min\{1, \norm{\nabla f_x(\Theta)}_F^2\} $$
+\end{lemma}
+
+\begin{proof}
+	Let
+	$$\rho := \dfrac{\left( \bigotimes_{j=1}^k \Theta_j \right)^{1/2} \cdot \sum_{i=1}^n x_i x_i^\dagger \cdot \left( \bigotimes_{j=1}^k \Theta_j \right)^{1/2}}{\exp(f_x(\Theta))}.$$
+	Additionally, let $a \in [k]$ be such that $\nabla_a := \nabla_a f_x(\Theta)$ is largest. As $\Upsilon$ is the successive scaling, we have that $\Upsilon_b = \Theta_b$ when $b \neq a$ and
+	$$ \Upsilon_a = \det(\rho^{(a)})^{1/d_a} \cdot \Theta_a^{1/2} \cdot  (\rho^{(a)})^{-1} \cdot \Theta_a^{1/2} = \det(d_a \cdot \rho^{(a)})^{1/d_a} \cdot \Theta_a^{1/2} \cdot (d_a \cdot \rho^{(a)})^{-1} \cdot \Theta_a^{1/2}. $$
+	In particular, the above means that we can write $\bigotimes_{j=1}^k \Upsilon_j$ in the following way:
+	$$ \bigotimes_{j=1}^k \Upsilon_j = \det(d_a \cdot \rho^{(a)})^{1/d_a} \cdot E_{(a)} \cdot \bigotimes_{j=1}^k \Theta_j $$
+	where $E_{(a)} = I_1 \otimes \cdots \otimes I_{a-1} \otimes (d_a \cdot \rho^{(a)})^{-1} \otimes I_{a+1} \otimes \cdots \otimes I_k$.
+	Hence, we have:
+	\begin{align*}
+		f_x(\Upsilon) &= \log \sum_{i=1}^n \langle x_i , \bigotimes_{j=1}^k \Upsilon_j x_i \rangle \\
+		&= \log\left(\tr\left[ \bigotimes_{j=1}^k \Upsilon_j \cdot  \sum_{i=1}^n x_i x_i^\dagger  \right]\right) \\
+		&= \log\left(\tr\left[ \det(d_a \cdot \rho^{(a)})^{1/d_a} \cdot E_{(a)} \cdot \bigotimes_{j=1}^k \Theta_j \cdot  \sum_{i=1}^n x_i x_i^\dagger  \right]\right) \\
+		&= \log\left(\det(d_a \cdot \rho^{(a)})^{1/d_a} \right) +  \log\left(\tr\left[ \cdot E_{(a)} \cdot \bigotimes_{j=1}^k \Theta_j \cdot  \sum_{i=1}^n x_i x_i^\dagger  \right]\right) \\
+		&= \log\left(\det(d_a \cdot \rho^{(a)})^{1/d_a} \right) +  \log\left(\tr\left[ E_{(a)} \cdot \rho \right] \cdot \exp(f_x(\Theta)) \right) \\
+		&= f_x(\Theta) + \frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)})  +  \log\left(\tr\left[ E_{(a)} \cdot \rho \right] \right) \\
+		&= f_x(\Theta) + \frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)})  +  \log\left(\tr\left[ (d_a \rho^{(a)})^{-1} \cdot \rho^{(a)} \right] \right) \\
+		&= f_x(\Theta) + \frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)})
+	\end{align*}
+	Lemma 5.1 from~\cite{GGOW19} states that for any $d$-dimensional PSD matrix $Z$ of trace $d$, the following inequality holds:
+	$$ \log\det(Z) \leq \max\left\{- \dfrac{\norm{Z - I_d}_F^2}{6}, - \dfrac{1}{6} \right\}. $$
+	Since $\tr \rho^{(a)} = 1$, if $\norm{d_a \rho^{(a)} - I_a}_F \leq 1$ we obtain that:
+	\begin{align*}
+		\frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)}) &\leq - \dfrac{\norm{d_a \rho^{(a)} - I_a}_F^2}{6 d_a} \\
+		&= - \dfrac{\norm{\sqrt{d_a} \rho^{(a)} - \frac{1}{\sqrt{d_a}} I_a}_F^2}{6} = - \dfrac{\norm{\nabla_a}_F^2}{6} \leq - \dfrac{1}{6k} \cdot \norm{\nabla f_x(\Theta)}_F^2
+	\end{align*}
+	If $\norm{d_a \rho^{(a)} - I_a}_F > 1$, we have
+	\begin{align*}
+		\frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)}) &\leq - \dfrac{1}{6 d_a} \leq - \dfrac{1}{6 d_k}
+	\end{align*}
+\end{proof}
+
+\begin{lemma}[Inequality]\label{lem:inequality}
+	Let $0 < \delta < 1/8$ and $0 < x_1 , \ldots, x_n < e^{4 \delta}$ be such that $\prod_{i=1}^n x_i = 1$. Then, we have that
+	$$ \sum_{i=1}^n (x_i-1)^2 \leq 16 \delta n $$
+\end{lemma}
+
+\begin{proof}
+	Without loss of generality, we can assume that
+	$$0 < x_1 \leq \cdots \leq x_\ell \leq 1 \leq x_{\ell+1} \leq \cdots \leq x_n < e^{4\delta}. $$
+	Then, we have:
+	$$ \sum_{i=1}^n (x_i-1)^2 \leq \sum_{i=1}^\ell 2 - 2x_i + \sum_{i = \ell+1}^n 64 \delta^2. $$
+	Using that $\prod_{i=1}^n x_i = 1$ and $x_j < e^{4 \delta}$ for $j > \ell$, we get
+	$$e^{-4 \delta n } < e^{-4 \delta(n-\ell)} < \prod_{i=1}^\ell x_i \leq \left( \dfrac{\sum_{i=1}^\ell x_i}{\ell} \right)^\ell $$
+	which implies that $\displaystyle \sum_{i=1}^\ell x_i > \ell \cdot e^{-4 \delta n/\ell } \geq \ell (1- 4 \delta n /\ell)$, where the last inequality follows from $e^t \geq 1 + t$ for $t \leq 0$.
+
+	Putting everything together, we get
+	\begin{align*}
+		\sum_{i=1}^n (x_i-1)^2 &\leq \sum_{i=1}^\ell 2 - 2x_i + \sum_{i = \ell+1}^n 64 \delta^2 \\
+		&< 2 \ell - 2\ell (1-4 \delta n/\ell) + 64 \delta^2 \cdot (n - \ell) \\
+		&< 8 \delta n + 64 \delta^2 n = 8\delta n (1 + 8 \delta) \leq 16 \delta n
+	\end{align*}
+\end{proof}
+
+\begin{lemma}[Distance to Optimum]\label{lem:tensor-distance-opt}
+	Let $\htheta$ be the MLE estimator for $\Theta$, $\delta \in \R_+$ be a parameter such that
+	$0 < \delta < \left(8 \sum_{a=1}^k \sqrt{d_a} \right)^{-1}$ and $\otheta$ be a scaling which satisfies $\delta = \norm{\nabla f_x(\otheta)}_F$. Then, we have
+	$$ D_F(\htheta; \otheta) \leq \left( 16 \delta D \cdot \sum_{a=1}^k \sqrt{d_a} \right)^{1/2} $$
+	and for each component, we have
+	$$ D_F(\htheta_a, \otheta_a) \leq \left( 16 \delta d_a \cdot \sqrt{d_a} \right)^{1/2}. $$
+\end{lemma}
+
+\begin{proof}
+	Let $Z \in \Sym$ be such that $\htheta = \otheta^{1/2} \cdot \exp(\sqrt{\vec d} \cdot Z) \cdot \otheta^{1/2}$, and $\oZ = Z / \norm{Z}_F$.
+	Since
+	$$ D_F(\htheta, \otheta) = \norm{I_D - \otheta^{-1/2} \htheta \otheta^{-1/2}}_F = \norm{I_D - \exp(\sqrt{\vec d} \cdot Z)}_F $$
+	to prove a good bound on the distance it is enough to show that $\norm{Z}_F$ is small.
+	We will achieve this by using the strong geodesic convexity of $f_x$.
+
+	By our initial conditions, we know that $f_x$ is $1/2$-strongly geodesically convex.
+	Thus, we have that the function $g(t) = f_x(\exp_{\otheta} (t \oZ) )$ is $1/2$-strongly convex, $g(0) = \otheta$ and $g(\norm{Z}_F) = \htheta$, which implies:
+	$$ g(\norm{Z}_F) \geq g(0) + g'(0) \cdot \norm{Z}_F + \frac{\norm{Z}_F^2}{4}. $$
+	Since $\htheta$ is the MLE estimator, we have $g(\norm{Z}_F) \leq g(0)$, and by definition of
+	$g$ and Cauchy-Schwarz, we have that
+	$$ g'(0) = \langle \nabla f_x(\otheta), \oZ \rangle \geq - \norm{\nabla f_x(\otheta)}_F \norm{\oZ}_F = - \norm{\nabla f_x(\otheta)}_F. $$
+	Putting all the above together, we get
+	$$ \norm{Z}_F \leq 4 \cdot \norm{\nabla f_x(\otheta)}_F. $$
+	Setting $\delta = \norm{\nabla f_x(\otheta)}_F$, the above inequality implies that $Z_a \preceq 4 \delta I_a$ for each $a \in [k]$. This in turn yields
+	$$ \exp(\sqrt{\vec d} Z) \preceq \exp(\sqrt{\vec d} \cdot 4\delta (I_1, \dots, I_k)) =
+	\exp\left(4 \delta \cdot \sum_{a=1}^k \sqrt{d_a} \right) \cdot I_D. $$
+	Thus, the conditions of \cref{lem:inequality} apply to the eigenvalues of $\exp(\sqrt{\vec d} Z)$ and our distance function becomes:
+	$$ D_F(\htheta, \otheta) =  \norm{\exp(\sqrt{\vec d} Z) - I_D}_F \leq \left( 16 \delta D \cdot \sum_{a=1}^k \sqrt{d_a} \right)^{1/2}. $$
+	Analogously, since $\htheta_a = \otheta^{1/2}_a \exp(\sqrt{d_a} Z_a) \otheta^{1/2}_a$, we have that
+	$$ D_F(\htheta_a, \otheta_a) =  \norm{\exp(\sqrt{d_a} Z_a) - I_a}_F \leq \left( 16 \delta d_a \cdot \sqrt{d_a} \right)^{1/2}. $$
+\end{proof}
+
+\begin{theorem}[Restatement of \cref{thm:tensor-flipflop}]
+	If $\htheta$ denotes the MLE estimator for $\Theta$, then provided $n = \Omega(k^2 \cdot d_1^2/D)$, the flip-flop algorithm computes $\otheta$ with
+	$$ D_F(\htheta_a, \otheta_a) \leq \eps $$
+	in $O(k d_k \log(d_k/\eps))$ iterations with probability at least
+	$$ 1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}.$$
+\end{theorem}
+
+\begin{proof}
+	When the number of samples is $n = \Omega(k^2 \cdot d_1^2/D)$, with probability \\
+	$ 1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}$ we have that the hypothesis of \cref{lem:tensor-initial-conditions} applies, which implies that there exists a constant $\gamma > 0$ such that our objective function $f_x$ is $\frac{1}{2}$-strongly geodesically convex at a ball $B_{\gamma k/2}(I)$ and $\norm{\nabla f_x(I)}_F \leq \gamma k /8$.
+
+	By \cref{lem:tensor-descent-lemma} we have that each step of the flip-flop algorithm will decrease the value of the objective function in accordance with the requirements of \cref{lem:descent-sublevel-set}.
+
+	Thus, after $T = O( k d_k \log(d_k/\eps) )$ steps, \cref{lem:descent-sublevel-set} guarantees us that we will encounter a scaling $\otheta$ such that
+	$$ \norm{\nabla f_x(\otheta)}_F \leq \dfrac{\eps^2}{16 d_k^{3/2}}.$$
+	When we find such a gradient, \cref{lem:tensor-distance-opt} implies that for each $a \in [k]$, the component-wise distance from $\otheta$ to $\htheta$ is bounded by
+	$$ D_F(\htheta_a, \otheta_a) \leq \eps. $$
+\end{proof}
+
+%-----------------------------------------------------------------------------
+\subsection{Matrix flip-flop convergence}
+%-----------------------------------------------------------------------------
+\begin{Algorithm}
+\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^{d_1 \times d_2}$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
+
+\textbf{Output}: $\otheta \in \SPD$ such that $D_{\op}(\htheta_a; \otheta_a) < \eps$, for each $a \in \{1,2\}$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
+
+\textbf{Algorithm}:
+\begin{enumerate}
+\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in \{1,2\}$, and $\delta = \dfrac{\eps^2}{16 d_2^{3/2}}$.
+\item\label{it:flip-flop step 2} For $t=1,\dots,T = 24 d_2 \cdot \log(2/\delta^2)$, repeat the following:
+%we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
+\begin{itemize}
+\item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \otheta_2)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \otheta_2)$, and find the index $a \in \{1,2\}$ for which $\norm{\nabla_a}_{op}$ is non-zero.
+\item
+If $\norm{\nabla_a}_{op}^2 < \delta^2$, output $\left( \otheta_1 \otimes \otheta_2 \right)^{-1}$ and return.
+% S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
+\item Otherwise, set $\otheta_a \leftarrow \det(\rho^{(a)})^{1/d_a} \cdot \otheta_a^{1/2} \cdot (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$.
+\end{itemize}
+\end{enumerate}
+\caption{Matrix flip-flop algorithm}\label{alg:flip-flop}
+\end{Algorithm}
+
+\TODO{Proof of \cref{thm:matrix-flipflop}}
+
+
+\CF{prove that flip-flop works as soon as estimation in operator norm works. This goes by using KLR to show strong convexity holds in a ball about the optimizer}.
+
+
+%=============================================================================
+\section{Lower bounds}
+%=============================================================================
+One could hope that, for the purposes of estimating $\Theta_1$, having access to $X$ is like having access to $n D/d_1$ independent samples of a Gaussian with precision matrix $\Theta_1$. In particular, one could hope e.g. for an RMSE rate of $\sqrt{ d_1/ n d_2}$ for estimating $A$ in spectral norm in the matrix model. Here we show that this only holds if $d_2 \leq n d_1$; the rate cannot be better than $O(\sqrt{d_1/ n \min(n d_1, d_2)})$. Intuitively, this holds because we can choose $\Theta_2$ to have low rank and effectively zero out some entries of $X$. However, this does not quite work because $\Theta_2$ must be invertible - we have to instead choose $\Theta_2$ to be approximately equal to a random low rank matrix.
+%Here we show that our bounds for the matrix normal model are best possible for estimating the individual matrices $\Theta_a$. The bound for $\Theta_2$ is clearly best possible because it is what we would obtain even if $\Theta_1$ were known, but in fact even the bound on $\Theta_1$ is tight.
+
+\begin{theorem}Suppose $d_2 > n d_1$. Let $X$ denote a tuple of $n$ samples from the matrix normal model with precision matrices $\Theta_1, \Theta_2$. Let $Y$ be a tuple of $nd_1$ Gaussians with precision matrix $\Theta_1$. Let $\widehat{\Theta}_1$ be any estimator for $\Theta_1$. For every $\delta > 0$, there is a distribution on $\Theta_2$ and an estimator $\tilde{\Theta}$ such that the distribution of $\widehat{\Theta}_1(X)$ and the distribution of $\tilde{\Theta}(Y)$ differ by at most $\delta$ in total variation distance. In particular (see \cref{lem:dtv}), the minimax MSE for $\widehat{\Theta}_1$ can be no less than the minimax MSE for the precision matrix of a $d_1$ dimensional Gaussian with $nd_1$ samples; this holds as well for $\Theta_1$ to subsets such as sparse, etc. %\CF{I need to check this final conclusion; it might require some reasonable assumption like boundedness}
+\end{theorem}
+In the proof, one finds that the estimator $\tilde{\Theta}$ uses additional randomness - but by Yao's theorem the minimax MSE is unchanged when estimators with additional randomness are allowed.
+
+\begin{proof}
+If $d_2 \leq nd_1$, we are done. Assume $d_2 > n d_1$. Let $B$ be any $d_2\times d_2$ matrix such that the last $d_2 - nd_1$ columns are zero. Given access to the tuple $X$ of $n$ samples $\sqrt{\Sigma_1} X_i B^T$, where $X_i$ are i.i.d Gaussian $d_1\times d_2$ matrices, clearly $\widehat{\Theta}_2$ has access to at most $n d_1$ samples of the Gaussian on $\R^{d_1}$ with covariance matrix $\Sigma_1$ because $X_i B^T$ depends only on the first $d_1$ columns of each $X_i$.
+
+To lower bound the rates for estimating $\Theta_1$, we must supply \emph{invertible} $B$. Choose the first $nd_1$ columns of $B$ to uniformly at random among the collections of $nd_1$ orthonormal vectors in $\R^{d_2}$. Let the remaining entries be i.i.d uniform in $[-\delta, \delta]$ (the precise distribution of the remaining entries will not matter as long as they are small). Let $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ denote the resulting random variable with $B$ and $X$ chosen independently. If $\delta = 0$, then with access to the random variable $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ by the argument above $\widehat{\Theta}_1$ has access to at most $nd_1$ samples. However, we claim that as $\delta \to 0$, the distribution of $Y_\delta$ tends to that of $Y_0$ in total variation distance. Thus the distribution of $\widehat{\Theta}_1(Y_\delta)$ converges to that of $\widehat{\Theta}_1(Y_0)$ in total variation. Since $Y_0$ only depends on $nd_1$ samples to the Gaussian on $\R^{d_1}$ with precision matrix $\Theta_1$, which we call $Y$, we can let $\tilde{\Theta}(Y) = \widehat{\Theta}_1(Y_0)$.
+
+It remains to prove that $Y_\delta$ converges to $Y_0$ in total variation distance. First note that $Y_\delta = Y_0 + \delta Z$ where $Z_i = \sqrt{\Theta_1} X_i C^T$, where $C$ is a random matrix where the first columns are zero and the last $d_2 - n d_1$ columns have entries i.i.d uniform on $[-1, 1]$. Because of the zero patterns of $B$ and $C$, $Y_0$ and $Z$ are actually independent. If we can show that $Y_0$ has a density on $\R^{nd_1d_2}$, then $Y_0 + \delta Z$ converges to $Y_0$ in total variation because adding $\delta Z$ corresponds to convolving the density of $Y_0$, an $L_1$ function, by an approximate identity \CF{find reference}.
+
+By invertibility of $\Sigma_1$, it is enough to show that $Y_0$ has a density when $\Sigma_1 = I_1$. Now $X = (X_i B^T, \dots, X_n B^T)$. Consider the $nd_1$ random vectors that are the rows of $BX_i^T$. Because $B$ is supported only in its first $nd_1$ columns, the joint distribution of these random vectors may be obtained by sampling $n d_1$ independent standard Gaussian vectors $v_i$ on $\R^{nd_1}$ and then multiplying them by the $d_2 \times nd_1$ matrix $B'$ that is the restriction of $B$ to its first $nd_1$ columns. We have chosen $B'$ such that it is an isometry into a uniformly random subspace of $\R^{d_2}$ of dimension $nd_1$. Thus $Bv_i/\|v_i\|$ are $nd_1$ many independent, random unit vectors in $\R^{d_2}$. As $\|v_i\|$ are also independent, $B v_i$ are thus independent. The marginal $Bv_1$ has a density; one may sample it by choosing a uniformly random vector and then choosing the length $\|v_1\|$, hence the density is a product density in spherical coordinates. The joint density of the $Bv_i$ is then the product density of the marginal densities. \end{proof}
+
+In the conclusion of the lemma we needed to use that convergence in total variation of some estimator $\widehat{\Theta}_n$ to another, $\widehat{\Theta}$, implied that the former has minimax error at least that of the latter in any dissimilarity measure. This holds by applying the next lemma to the random variables $X_n = d_*( \widehat{\Theta}_n, \Theta)$ and $Y = d_*(\widehat{\Theta}, \Theta)$ where $d_*$ represents any nonnegative function. For example, we could take $d_*$ to be the Frobenius, spectral, Fischer-Rao, Kullback-Leibler or Mahalanobis ``distances".
+\CF{surely I can cite this next thing, I am just proving it for my own sanity}
+\begin{lemma}\label{lem:dtv}
+Suppose $X_n, Y$ are nonnegative random variables such that $X_n \to Y$ in $d_{TV}$. Then $$\limsup_{n\to \infty} \E X_n \geq \E Y.$$
+\end{lemma}
+\begin{proof}
+%If $X_n \to Y$, then the random variables $\|X_n - I\|\to  \|Y - I\|$ in total variation. Does convergence in total variation implies convergence in means?
+
+If the mean of $Y$ is bounded then we have Markov's inequality. Let $\eps > 0$; by the Dominated Convergence Theorem there is $\alpha$ large enough that $\E[Y 1_{Y \leq \alpha}] \geq \E[Y] - \eps$. Now we have
+ $$\E[X_n] \geq \E[X_n 1_{X_n \leq \alpha} ] \to \E[ Y 1_{Y \leq \alpha}] \geq \E[Y] - \eps.% \geq (\E[Y| Y \leq \alpha] - \delta)(1 - \delta - \eps).
+ $$
+ as $n \to \infty$, where the limit is deduced by H\"older's inequality. Letting $\eps \to 0$ completes the proof.\end{proof}
+%By H\"older's inequality, $\E[X_n 1_{X_n \leq \alpha}] \to \E[ Y 1_{Y \leq \alpha}]$ as $n \to \infty$. \end{proof}
+
+%This is possible because $\E[Y|Y\leq \alpha] = \E[Y 1_{Y \leq \alpha}]/ \Pr[Y \leq \alpha]$, and as $\alpha \to \infty$ the numerator converges to $\E[Y]$ by the dominated convergence theorem and the denominator converges to $1$ by Markov's inequality.
+
+
+
+%Then $\widehat{\Theta}_1$ is an estimator that has access to only $n d_1$ samples of a Gaussian.
+
+%=============================================================================
+\section{Numerics and regularization}\label{sec:numerics}
+%=============================================================================
+Here we show experimentally that, in some natural situations, the MLE performs better than regularized estimators. We also show that in the undersampled regime, a simpler regularizer can match and sometimes outperform the GLASSO-type estimators appearing in \CF{tsilig, zhou}. The estimator is closer to a shrinkage estimator as in \CF{cite goes, weisel, thresholding}, or to a rank penalty \CF{elaborate}, or to \CF{tang?}. Instead of the MLE, we consider the following penalized log-likelihood:
+
+\begin{align*}
+  \ell_{\samp}^\alpha(\Theta_1, \dots, \Theta_k)
+% = \frac n2 \log \det(\Theta/2\pi) - \sum_{i=1}^n \frac12 \braket{\samp_i, \Theta \samp_i} ~
+%  := \frac {n D} 2 \sum_{a = 1}^k \frac{1}{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i} + \alpha \prod_{i=1}^k \tr \Theta_a,
+  := \ell_{\samp}(\Theta_1, \dots, \Theta_k) + \alpha \prod_{i=1}^k \tr \Theta_a,
+\end{align*}
+where $\alpha$ is a parameter to be tuned. Set $\widehat{\Theta}^\alpha_x = \arg\min_{|\Theta|_1 =\dots =  |\Theta_k|} \ell^\alpha_\samp(\Theta)$.
+Observe the following:
+\begin{enumerate}
+\item If $\alpha > 0$, then $\widehat{\Theta}^\alpha_x$ exists uniquely for every $x$.
+\item $\widehat{\Theta}^\alpha_x$ is equal to $\widehat{\Theta}_{y}$ where $y$ is the tuple of $n + D$ vectors given by
+$$(x_1, \dots, x_n, \alpha e_{1\dots 1}, \dots, \alpha e_{d_1d_2 \dots d_k}).$$ Here $e_{i_1 \dots i_k}$ denotes the standard basis vector in $\R^{d_1d_2 \dots d_k}$. Thus the flip-flop estimator applied to the tuple $y$ converges to $\widehat{\Theta}^\alpha_x$.
+\item The function $\ell^\alpha_\samp$ is \CF{$\alpha?$}-geodesically strongly convex at the identity, and shares the same robustness properties as $\ell$. Thus for $\alpha$ large enough, flip-slop is guaranteed to converge linearly.
+\item $\widehat{\Theta}^\alpha_\samp$ is the maximum a posteriori probability (MAP) estimator for $\Theta$ assuming $\Theta$ is drawn from the Wishart prior with $D + 1$ degrees of freedom and $V = I/\alpha$. That is, $\Theta_1, \dots, \Theta_k$ are selected proportional to $e^{- \alpha \tr \Theta_1 \ot \dots \ot \Theta_k}.$ 
+\end{enumerate}
+%As in the unpenalized case, we will often consider the scale-invariant function $f^\alpha_x$ given by
+
+
+The flip-flop algorithm for this regularized estimator is nearly as simple as the unregularized flip-flop algorithm: see \cref{alg:reg-flip-flop}. Above we explained that it can be viewed as the flip-flop estimator for an augmented tuple of tensors $y$, but due to the special form of $y$ the iterations simplify significantly. The only modification is that a certain multiple of the identity is added in each flip-flop step.  \CF{I need to check all the normalizations carefully; may want to define $\rho \leftarrow \rho/nD$ and $\alpha \leftarrow \alpha/nD$.} 
+
+
+\begin{Algorithm}
+\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$ and a real number $\eps > 0$.  
+% where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation.
+
+\textbf{Output}: Regularized estimators $\otheta \in \SPD$.\\[.1ex]
+% such that $\| \nabla \ell^\alpha_x (\otheta)\|_F < \eps$. \\[.3ex]
+
+\textbf{Algorithm}:
+\begin{enumerate}
+\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$, and define $\otheta:= \otimes_a \otheta_a$.
+\item\label{it:flip-flop step 2} Repeat the following:
+%we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
+\begin{itemize}
+%\item Set $\otheta^1$
+\item Define $\otheta^a:= \otheta_{(a)}^{-1} \otheta$, the tensor product in which the $i^{th}$ factor is $\otheta_i$ except for the $a^{th}$ which is $I_{d_a}$. Define $\Upsilon_a :=\tr_{[k] \setminus a} \otheta^a \rho$. Let $$a = \arg\max_{i \in [k]} d_i   \left\| \otheta_i^{1/2} \Upsilon_i \otheta_i^{1/2}  + \alpha (\prod_j \tr \Theta_j) \Theta_i - I_{d_i}/d_i\right\|_F^2,$$ 
+i.e., the index $a$ for which $\|\nabla_a \ell^\alpha_{\samp}(\otheta)\|_F$ is largest. If $\|\nabla_a \ell^\alpha_\samp(\otheta)\|_F < \eps$, end loop and \textbf{return} $(\otheta_1, \dots, \otheta_a)$.  
+\item Set 
+$$\otheta_a = \frac{n D}{d_a}\left(\Upsilon_i + \alpha \left(\prod_{i \neq a} \tr \otheta_a\right) I_{d_a} \right)^{-1}.$$
+% $Y_a := \tr_{[k] \setminus a} \otheta_1 \ot \dots \ot \otheta_{a-1} \ot I_{d_a} \ot \otheta_{a+1} \ot \dots \ot \otheta_{d},$ 
+%\item If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\left( \bigotimes_{a =1}^k \otheta_a \right)^{-1}$ and return.
+% S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
+%\item Otherwise, set $\otheta_a \leftarrow \det(\rho^{(a)})^{1/d_a} (\rho^{(a)})^{-1} \cdot \otheta_a$.
+\end{itemize}
+\end{enumerate}
+\caption{Regularized flip-flop algorithm}\label{alg:reg-flip-flop}
+\end{Algorithm}
+
+We compare the performance of the estimator with Zhou's single step estimator \CF{cite gemini} for the matrix normal model. We find that when $\Theta_1$ is sparse and $\Theta_2$ is well-conditioned, Zhou's estimator obtains modest gains over the regularized Sinkhorn algorithm in Frobenius error. However, when $\Theta_2$ can be ill-conditioned, we find that the shrinkage estimator outperforms the lasso-type estimators. Both estimators require parameter tuning, so we compare throughout a plausible range of parameters for both estimators. We leave determination of the appropriate regularization parameters by cross-validation to future work. \CF{actually include the figures; maybe include an extra tantalizing one in the intro?}.
+
+
+
+
+
+
+%=============================================================================
+\section{Conclusion and open problems}
+%=============================================================================
+\TODO{$D_{op}$} for tensors??
+
+
+\begin{appendix}
+
+
+%One can calculate $$ H_{I, v}(\samp, \samp) = \langle w, \Pi(\samp)^2 w \rangle - \langle w, \Pi(\samp) w \rangle^2 $$ where $w = v/\|v\|$. We may calculate the Hessian $H_{P,v}$ using $H_{P, v} = H_{I, \sqrt{P}v}$.
+
+
+%=============================================================================
+\section{Pisier's proof of expansion}\label{sec:pisier}
+%=============================================================================
+We restate the theorem in language closer to Pisier's original:
+
+% Appendix - \url{https://arxiv.org/abs/1209.2059}
+% Theorem 16.6 - \url{https://arxiv.org/pdf/1101.4195.pdf}
+%\CF{at some point include a sentence about the setting of $\alpha_i$, maybe in the main body}
+%\CF{choose different letter for $n$}
+\begin{theorem}\label{thm:Pisier-expansion}
+Let $\Pi: \mat(m) \to \mat(m)$ denote the projection onto the traceless matrices, and $Y$ a tuple of i.i.d. standard Gaussians in $\mat(n,m)$. There are constants $c,C > 0$ such that for all $m \leq n$ we have
+\[ \left\| \left(\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i}\right) \circ \Pi \right\|_{op} \leq C t^{2} \|\alpha\|_{2} \left( \E \|Y\|_{op} \right)^{2} \]
+with probability at least $ 1- t^{-c(m+n)}$.
+\end{theorem}
+
+The relation to our desired expansion result follows from the following: for $Y \in \R^{n \times m}$ we have $Y \otimes Y : \R^{m \times m} \to \R^{n \times n}$, and so for $Z \in \mat(m)$: 
+\[ Y \otimes Y (\text{vec}(Z)) = \text{vec}( Y^{*} Z Y)      \]
+\cref{thm:hess-pisier} then follows as a corollary by choosing $\alpha \propto \vec{1}$ and standard results from Gaussian concentration. The proof of \cref{thm:Pisier-expansion} proceeds by a symmetrization trick, followed by the trace method. We will first state the necessary concentration results and then give the proof. Our setting required the result on rectangular matrices with strong error bounds, but we claim no originality.
+
+\begin{theorem}[\cite{P86}]
+We denote a random Gaussian matrix $Y \in \R^{m \times n}$ (for $m < n$) with $Y_{ij} \sim \mathcal{N}(0,1)$, we have the following bound
+\[ \E \|Y\|_{op} \leq \sqrt{m} + \sqrt{n} \]
+\end{theorem}
+
+
+\begin{theorem}[\cite{P86}]
+Let $Y$ be a standard Gaussian in a separable Banach space with norm $\|\cdot\|$. Then $\|Y\|$ is subGaussian with parameter $\sigma^{2} := \sup \{ \E \langle Y, \xi \rangle^{2} \mid \|\xi\|_{*} \leq 1 \}; $ that is
+\[ \Pr [ | \|Y\| - \E \|Y\| | \geq t ] \leq \exp \left( - \frac{\Omega(t^{2})}{\sigma^{2}} \right).   \]
+Another equivalent definition of sub-Gaussianity is
+\[ \forall p \geq 2: (\E \|Y\|^{p})^{\frac{1}{p}} \leq \E \|Y\| + O \left( \sqrt{\frac{p}{\sigma^{2}}} \right)   \]
+\end{theorem}
+
+\begin{theorem}[Non-commutative H\"older inequality]\label{thm:holder}
+For $p = 2^{m}$, we have the following (Holder's type) inequality
+\[ |\tr[\prod_{i=1}^{p} A_{i}]| \leq \prod_{i=1}^{p} \|A_{i}\|_{p}   \]
+\end{theorem}
+
+
+
+\begin{proof} [Proof of \cref{thm:Pisier-expansion}]
+We first begin by a standard symmetrization trick to linearize: if $Y$ is a standard Gaussian on $\mat(n,m)$, then by a straightforward calculation $\E (Y \otimes Y)\circ \Pi = 0$.
+
+%\[ \E (Y \otimes Y)\circ \Pi = vec(I_{n}) vec(I_{m})^{*} (I - \Pi) = 0  \]
+%then $\E Y \otimes Y (I-\Pi) = 0$ because for any $X \in \mat(m)$ we have
+%$$ \E Y \otimes Y (I-\Pi)X = \E (Y \ot Y) X - \frac{1}{m} (\tr X) \E (Y \ot Y)  I_m,$$ which is easily calculated to be zero.
+%\CF{I think $m$ and $n$ are switched below}
+%\[\E Y^{*} I_{m} Y = m I_{n} \implies \E Y \otimes Y (I-P) = vec(I_{n}) vec(I_{m})^{*} (I-\Pi) = 0\]
+Therefore we can add the a copy of the sum with new iid variables $\{Z_{i}\}$: using Jensen's inequality and the convexity of the operator norm, we have
+\[ \E_{Y} \left\|\left(\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i}\right) \circ \Pi\right\|_{op} \leq
+\E_{Y,Z} \left\|\left(\sum_{i=1}^{N} \alpha_{i} Y_{i} \otimes Y_{i}-\sum_{i=1}^{N} \alpha_{i} Z_{i} \otimes Z_{i}\right) \circ \Pi \right\|_{op}  \] Now note $(Y,Z)$ has the same distribution as $(\frac{Y+Z}{\sqrt{2}},\frac{Y-Z}{\sqrt{2}})$, so the right-hand-side of the above equation is
+\begin{align}\frac{1}{2}\E &\left\|\left(\sum_{i=1}^{N} \alpha_{i} (Y_{i}+Z_{i}) \otimes (Y_{i}+Z_{i})  - \sum_{i=1}^{N} \alpha_{i} (Y_{i}-Z_{i}) \otimes (Y_{i}-Z_{i})\right)\circ \Pi \right\|_{op}\nonumber \\
+& = \E \left\|\left(\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}  + \alpha_{i} Z_{i} \otimes Y_{i} \right) \circ \Pi \right\|_{op}  \nonumber\\
+& \leq 2 \E \left\|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}\right\|_{op}.   \label{eq:yz}
+\end{align}
+Note we've lost the projection, but the left and right operators are independent. Next we use the trace method to bound the expectation of \cref{eq:yz}; that is, we approximate the operator norm by the Schatten $p$-norm for a high enough $p$ and control these Schatten norms using concentration of moments of Gaussians.
+
+\begin{align*} \E \left\|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}\right\|_{2p}^{2p} & = \E \tr \left[ \left( \sum_{ij} \alpha_{i} \alpha_{j} Y_{i}^{*} Y_{j} \otimes Z_{i}^{*} Z_{j} \right)^{p} \right]  \\
+& = \sum_{\vec{i},\vec{j} \in [N]^{p}} \alpha^{\vec{i}} \alpha^{\vec{j}} \E \tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} \otimes Z_{i_{1}}^{*} Z_{j_{1}} ... Z_{i_{p}}^{*} Z_{j_{p}}  ]   \\
+& = \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{Y} \tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) (\E_{Z} \tr [ Z_{i_{1}}^{*} Z_{j_{1}} ... Z_{i_{p}}^{*} Z_{j_{p}} ] )
+\end{align*}
+Here we used independence of $(Y,Z)$. We eventually want to charge to $\E \|\sum_{i} \alpha_{i} Y_{i}\|_{op}$. First note that expectations of Gaussian monomials are non-zero and positive iff the polynomial is even. Therefore the coefficient $\alpha^{\vec{i}} \alpha^{\vec{j}}$ from all non-vanishing terms is a square, and in particular positive. So we can upper bound each term individually by the nc-Holder inequality (\cref{thm:holder}) to find:
+\[\E \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}\|_{2p}^{2p} \leq \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E_{Y} \tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) ( \E_{Z} \|Z_{i_{1}}^{*}\|_{2p} ... \|Z_{j_{p}}\|_{2p} )  \]
+
+We now consider the term $\E_{Z} \|Z_{i_{1}}^{*}\|_{2p} ... \|Z_{j_{p}}\|_{2p}$. Different indeces are independent, and for a repeated index we use Jensen's:
+\[ \forall k \leq 2p: \E \|Z_j\|_{2p}^{k} = \E (\|Z_j\|_{2p}^{2p})^{k/{2p}} \leq  ( \E \|Z_j\|_{2p}^{2p} )^{k/2p}  \]
+Thus, we can collect like terms:
+
+%\begin{claim}
+%For iid $\{Z_{i}\}$ and $\sum_{i} q_{i} = 2p$:
+%\[ \E \|Z_{1}\|_{2p}^{q_{1}} ... \|Z_{k}\|_{2p}^{q_{k}} \leq \prod_{i} (\E \|Z_{i}\|_{2p}^{q_{i} \cdot 2p/q_{i}} )^{q_{i}/2p} = \E \|Z\|_{2p}^{2p}    \]
+%\end{claim}
+
+\[ \E \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i}\|_{2p}^{2p}
+\leq \left( \E \|Z\|_{2p}^{2p} \right) \left( \sum_{\vec{i},\vec{j}} \alpha^{\vec{i}} \alpha^{\vec{j}} (\E \tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) \right) \]
+\[ = \left( \E \|Z\|_{2p}^{2p} \right) \left( \E \left\| \sum_{i} \alpha_{i} Y_{i} \right\|_{2p}^{2p} \right)
+= \left( \E \|Z\|_{2p}^{2p} \right) \left( \sum_{i} \alpha_{i}^{2} \right)^{p} \left( \E \|Y\|_{2p}^{2p} \right)    \]
+In the last step we used unitary invariance of the joint $\{Y_{i}\}$ distribution, i.e. that $\sum_{i} c_{i} Y_{i}$ has the same distribution as $\|c\|_{2} Y_{1}$.
+Finally we can bound $\|\cdot\|_{op}$ by the trace method. Assume wlog (by homogeneity) that $\|\alpha\|_{2} = 1$:
+\[ \E_{Y, Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} \|_{op}^{2p} \leq \E_{Y, Z} \|\sum_{i} \alpha_{i} Y_{i} \otimes Z_{i} \|_{2p}^{2p} \]
+\[ \leq ( \E \|Y\|_{2p}^{2p} )^{2} \leq ( m \E \|Y\|_{op}^{2p} )^{2} \leq m^{2} \left(\E \|Y\|_{op} + O(\sqrt{\frac{2p}{\sigma^{2}}})  \right)^{4p} \]
+Here we've used that $\|Y\|_{op}$ is subGaussian with parameter
+\[ \sigma^{2} = \sup_{\xi} \frac{ \E \langle Y, \xi \rangle^{2} }{\|\xi\|_{1}^{2}} = \E Y_{11}^{2} \sup_{\xi} \frac{ \|\xi\|_{F}^{2} }{\|\xi\|_{1}^{2} } = 1     \]
+So again assuming $\|\alpha\|_{2} = 1$, we can apply Markov's to get the bound:
+\[ \Pr[\|\sum_{i} \alpha_{i} Y_{i} \otimes Y_{i}\|_{op} \geq (2t \E \|Y\|_{op})^{2} ] \leq    \frac{m^{2} (\E\|Y\|_{op} + C \sqrt{p} )^{4p}}{(2t \E\|Y\|_{op})^{4p}}    \]
+Now we choose $C\sqrt{p} \leq \E \|Y\|_{op} = \sqrt{m} + \sqrt{n}$, i.e. $p = \left( \frac{\sqrt{m} + \sqrt{n}}{C} \right)^{2}$:
+\[ \leq \frac{m^{2} (2\E \|Y\|_{op})^{4p}}{(2t \E \|Y\|_{op})^{4p}} \leq \frac{m^{2}}{\exp(\frac{4 \log t}{C^{2}} (\sqrt{m} + \sqrt{n})^{2})}    \]
+The statement follows by $m \leq n$.
+\end{proof}
+
+%\CF{this section should be modified to be more free standing, i.e. not refer to things "above"}
+%We have shown above that the diagonal blocks $\nabla^{2}_{aa} f \approx I$ \CF{ I got rid of the $1/{d_a}$ factor to reflect \cref{lem:hessian}, and changed $I_{a}$ to $I$ because it's an $I$ on matrices not $\CC^{d_a}$, we should figure out how to denote it properly at some point}. Therefore to show strong convexity we would like to bound the off-diagonal blocks \CF{pick better letters for following expression}
+%\[ \forall X \perp I_{a},Y \perp I_{b}:  \langle \nabla^{2}_{ab} f, X \otimes Y \rangle \leq \lambda \frac{\|X\|_{F} \|Y\|_{F}}{\sqrt{d_{a} d_{b}}}   \]
+%\CF{based on new convention (see \cref{dfn:g-convexity,lem:hessian}) we may want to omit the denominator $\sqrt{d_{a} d_{b}}$ now.} \AR{I think it makes sense to implement our new notational convention in the corollary we use, but this proof is more clear if it's about standard Gaussian imo} Pisier's method of proof uses the trace method along with Gaussian concentration in Banach spaces.
+
+
+%\begin{corollary}
+%For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our $n$ samples give Kraus operators of the form $\frac{1}{\sqrt{nD}} Y$, and our off-diagonal operator is
+%\[ \sum_{i=1}^{nD/d_{a}d_{b}} \frac{1}{nD} Y_{i} \otimes Y_{i}   \]
+%The norm $\|\cdot\|_{0}$ on its restriction to $\Sym_{d_{b}}^{0} \to \Sym_{d_{a}}^{0}$ is less than the quantity in the theorem, which is on the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}}$ whp, so for constant expansion it suffices that $nD \gg \max_{a} d_{a}^{2}$
+%\end{corollary}
+
+
+%=============================================================================
+\section{Robustness Lemma}
+%=============================================================================
+We'll use an easy fact relating the exponential map and the operator norm.
+
+\begin{fact} For all symmetric $d\times d$ matrices $\delta $ such that $ \|\delta\|_{op} \leq \frac{1}{2}$, we have
+$$ \|e^{\delta} - I\|_{op} \leq \|\delta\|_{op} + \|\delta\|_{op}^{2} \leq 2 \|\delta\|_{op}.$$
+\end{fact}
+
+We will follow the structure presented in the last proof %by letting our input at the identity be represented by $x$ \CF{input at identity? use of "input" is in general imprecise}
+by showing each block of the Hessian only changes a small amount under perturbation $x' := e^{\delta} x$ for $\delta \in \Sym$. In particular we will give bounds on each block under each component-wise perturbation $x' := (e^{\delta_{b}})_{b} x$. Recall (c.f. \cref{lem:hessian}) that the $a^{th}$ diagonal block of the Hessian depends only on $\rho^a_{\samp}$. This motivates the next two lemmas quantifying the change of $\rho^{a}
+_{\samp}$ under perturbations. \CF{Akshay, will you use $\tr$ instead of $Tr$}
+
+
+Recall the definition of a quadratic form of the Hessian:
+\[ \langle Z, (\nabla^{2} f) Z \rangle = \langle Z, (\nabla^{2} F) Z \rangle + \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle     \]
+The second term is rank one, so the quadratic form is:
+\[ \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle = \left( \sum_{a} \sqrt{d_{a}} \langle \rho^{(a)}, Z_{a} \rangle   \right)^{2}       \]
+For the first term, we follow the same proof structure as $\cref{thm:tensor-convexity}$, and analyze diagonal and off-diagonal blocks separately:
+\[ \langle Z_{a}, \nabla^{2}_{aa} F Z_{a} \rangle = \langle d_{a} \rho^{(a)}, Z_{a}^{2} \rangle       \]
+\[ \langle Z_{a}, \nabla^{2}_{ba} Z_{b} \rangle = \langle \sqrt{d_{a} d_{b}} \rho^{(ab)}, Z_{a} \otimes Z_{b} \rangle   \]
+\cref{thm:tensor-convexity} gives good bounds on the Hessian of $\samp$; so in order to bound the Hessian at perturbation $\samp' := \prod_{a} (e^{\delta_{a}})_{a} \samp$, it is enough to bound the difference. By the above discussion then we will bound the difference of each of the terms (diagonal $\nabla^{2}_{aa} F$, off-diagonal $\nabla^{2}_{ba} F$, and rank one $(\nabla^{2} f - \nabla^{2} F)$) under each component-wise perturbation. Note all three terms involve only $\{\rho^{(a)}\}, \{\rho^{(ab)}\}$, so we prove perturbations on marginals in the following lemmas.
+
+\begin{lemma} \label{atoaaRobustness}
+For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{a})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$, if we denote $\samp' := (e^{\delta})_{a} \samp$ then
+\[ \|\rho_{\samp'}^{a} - \rho_{\samp}^{a}\|_{op} \leq 4.5 \|\delta\|_{op} \|\rho_{\samp}^{a}\|_{op}   . \]
+\end{lemma}
+\begin{proof} By definition, $\|\rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}\|_{op} = \sup_{\|Z\|_{1} \leq 1} \langle Z_{a}, \rho_{\samp'} - \rho_{\samp} \rangle $.
+
+
+Choose $\eta$ such that  $\|(e^{\delta})_{a} \samp\|_{2}^{-1} = \|\samp\|_{2}^{-1} (1 + \eta)$; note that $|\eta| = O(\|\delta\|_{op})$ provided $c$ is small enough. Letting $\delta' := (1+\eta)e^{\delta} - I_{a}$. Assuming without loss of generality that $\|Z\|_{1} = 1$, we have
+\[ | \langle Z_{a}, (I+\delta')_a \rho_{\samp} (I+\delta')_a - \rho_{\samp} \rangle | \]
+\[ \leq (2\|\delta'\|_{op} + \|\delta'\|_{op}^{2}) \|\rho^{(a)}\|_{op} \|Z\|_{1}    \]
+from which the lemma follows since
+\[ \|\delta\|_{op} \leq .05 \implies \|\delta'\|_{op} \leq |\eta| + (1+|\eta|)(\|\delta\|_{op} + \|\delta\|_{op}^{2}) \leq  2.1 \|\delta\|_{op} \]
+\end{proof}
+
+%\CF{ I think we should combine these lemmas into a single one with two items.}\AR{The proofs are different, and I like the similar structure for diagonal/off-diagonal blocks. It may clutter the statements more to combine. }
+\begin{lemma} \label{btoaaRobustness}
+For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{b})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$, if we denote $\samp' := (e^{\delta})_{a} \samp$ then for $b \neq a$:
+\[ \|\rho_{\samp'}^{a} - \rho_{\samp}^{a}\|_{op} \leq 9.5 \|\delta\|_{op} \|\rho_{\samp}^{a}\|_{op}      \]
+\end{lemma}
+\begin{proof}
+Choose $\eta$ such that $\|(e^{\delta})_{b} \samp\|_{2}^{-2} = (1+\eta) \|\samp\|_{2}^{-2}$; let $\delta' := (1+\eta)e^{2\delta} - I$.
+\[ \|\delta\|_{op} \leq .1 \implies |\eta| \leq 2\|\delta\|_{op} + 4\|\delta\|_{op}^{2}, \hspace{3mm} \|\delta'\|_{op} \leq (2+|\eta|)(2\|\delta\|_{op} + 4\|\delta\|_{op}^{2}) \leq 9.24 \|\delta\|_{op} \]
+We assume for now $Z \succeq 0$.
+\begin{align*} | \langle Z_{a}, (1+\eta) (e^{\delta})_{b} \rho_{\samp} (e^{\delta})_{b}^{*} - \rho_{\samp} \rangle|
+& = | \langle Z_{a} \otimes \delta'_{b}, \rho_{\samp} \rangle   |  \\
+&\leq \langle Z \otimes |\delta'|, \rho_{\samp}^{(ab)} \rangle
+\leq \|\delta'\|_{op} \langle Z, \rho_{\samp}^{(a)} \rangle
+\end{align*}
+Here in the first inequality we used that $\rho_{\samp} \succeq 0, Z \succeq 0$; and the last inequality was by definition of marginals.
+In general we decompose $Z = Z_{+} - Z_{-}$ and use the above to show
+\[ |\langle Z, \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)} \rangle| \leq \|\delta'\|_{op} (\|Z_{+}\|_{1} + \|Z_{-}\|_{1}) \|\rho_{\samp}^{(a)}\|_{op}     \]
+The lemma follows by noting $\|Z\|_{1} = \|Z_{+}\|_{1} + \|Z_{-}\|_{1}$ and $\|\delta\|_{op} \leq c$:
+\[ \|\delta'\|_{op} = \|(1+\eta) e^{2 \delta} - I\|_{op} \leq |\eta|(1 + 2 \|\delta\|_{op}) + 2\|\delta\|_{op} \leq O(\|\delta\|_{op})   \qedhere  \]
+\end{proof}
+
+This is already enough to prove a bound on the diagonal terms $\{\nabla^{2}_{aa} F\}$ and rank one term $(\nabla^{2} f - \nabla^{2} F)$.
+
+\begin{corollary} \label{diagRobustness}
+For input $\samp \in \R^{nD}$ such that $\|d_{a} \rho_{\samp}^{(a)}\|_{op} \leq 1 + \frac{1}{20}$; and perturbation $\delta := \sum_{b} (\delta_{b} \in \mat(d_{b}))_{b}$ such that $\|\delta\|_{op} = \sum_{b} \|\delta_{b}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
+\[ \|\nabla^{2}_{aa} F(e^{2\delta}) - \nabla^{2}_{aa} F(I)\|_{op} \leq 11 \|\delta\|_{op}     \]
+\end{corollary}
+%\CF{technically $f(e^{\delta})$ corresponds to $e^{\delta/2} \samp$}
+\begin{proof}
+Recall from the discussion after \cref{convexRobustness} that $\langle Y, \nabla^{2}_{aa} F_{\samp} Y \rangle = \langle d_{a} \rho_{\samp}^{(a)}, Y^{2} \rangle$. We treat the perturbation as the composition of $k$ perturbations;
+\[ \samp_{(0)}:=\samp \to \samp_{(1)}:= (e^{\delta_{1}})_1 \samp_{(0)} \to ... \to \samp_{(k)}:=(e^{\delta_{k}})_{k} \samp_{(k-1)} = \samp'  \]
+We can use $\cref{atoaaRobustness}$ to handle $e^{\delta_{a}}$ and $\cref{btoaaRobustness}$ for the rest:
+\begin{align*}
+ |\langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, Y^{2} \rangle|
+ &\leq \sum_{j=1}^{k} |\langle \rho_{\samp_{(j)}}^{(a)} - \rho_{\samp_{(j-1)}}^{(a)}, Y^{2} \rangle| \underset{\cref{atoaaRobustness},\;\cref{btoaaRobustness}}{\leq} \sum_{j=1}^{k}  9.5 \|\delta_{j}\|_{op} \|\rho_{\samp_{(j-1)}}^{(a)}\|_{op} \|Y^{2}\|_{1} \\
+& \leq \left( \prod_{j=1}^k (1+9.5 \|\delta_{j}\|_{op}) - 1 \right) \|\rho_{\samp}^{(a)}\|_{op} \|Y\|_{F}^{2} \\
+&\leq 10 \|\delta\|_{op} \|\rho_{\samp}^{(a)}\|_{op} \|Y\|_{F}^{2}.   \end{align*}
+The term in parenthesis is shown by induction, and in the inequality we used $\|\delta\|_{op} \leq \frac{1}{20}$. The final step follows by our initial condition on $\|d_{a} \rho_{\samp}^{(a)}\|_{op}$.
+\end{proof}
+
+\begin{corollary} \label{rankoneRobustness}
+For input $x \in \R^{nD}$ such that for all $a \in [k]$ such that $\|d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a}\|_{op} \leq \frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a} \in \mat(d_{a}))_{a}$ such that $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
+\[ \|(\nabla^{2} f_{\samp'} - \nabla^{2} F_{\samp'}) - (\nabla^{2} f_{\samp} - \nabla^{2} F_{\samp})\|_{op} \leq 1.5 k \|\delta\|_{op}     \]
+\end{corollary}
+\begin{proof}
+Recall again from the discussion after $\cref{convexRobustness}$ that $\langle Z, (\nabla^{2} F - \nabla^{2} f) Z \rangle = \left\langle \rho, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2}$. We use the same iterative strategy as $\cref{diagRobustness}$:
+\[    \left\langle \rho_{\samp'}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2} -  \left\langle \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle^{2}    \]
+\[ = \left\langle \rho_{\samp'} + \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle \left\langle \rho_{\samp'} - \rho_{\samp}, \sum_{a} \sqrt{d_{a}} (Z_{a})_{a}  \right\rangle  \]
+\[ = \left( \sum_{a} \langle (d_{a} \rho_{\samp'}^{(a)} - \tr[\rho_{\samp'}] I_{a}) + (d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a}) , d_{a}^{-1/2} Z_{a} \rangle \right) \left( \sum_{a} \sqrt{d_{a}} \langle \rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}, Z_{a} \rangle \right)     \]
+%\AR{Here I could use that $Z \perp I$ to get a constant factor improvement; need an assumption on $\nabla$; but it improves the overall constant by factor $\approx 2$}
+\[ \leq \left( \sum_{a} (2 + 10 \|\delta\|_{op}) \|d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a} \|_{op} \|d_{a}^{-1/2} Z_{a}\|_{1}   \right)
+\left( 10\|\delta\|_{op} \sum_{a} \sqrt{d_{a}} \| \rho_{\samp}^{(a)}\|_{op} \|Z_{a}\|_{1}   \right)    \]
+\[ \leq \left( \sum_{a} \frac{2 + 10 \|\delta\|_{op}}{20} \|Z_{a}\|_{F}  \right)
+\left( 10\|\delta\|_{op} \sum_{a} (1 + \frac{1}{20}) \|Z_{a}\|_{F} \right)
+\leq 1.5 k \|\delta\|_{op} \|Z\|^{2}      \]
+%\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s?} \CF{the norm is just the standard norm, there shouldn't be $d_a$'s}
+% The final step follows from the initial conditions on $\|d_{a} \rho_{a}\|_{op}, \|d_{b} \rho_{b}\|_{op}$.
+In the third line we used that $Z$ is traceless; in the last line we used our initial conditions on $\rho$; the last step was by Cauchy-Schwarz.
+\end{proof}
+
+The off-diagonal blocks $\{\nabla^{2}_{ba} F\}$ are only slightly more difficult as we need the following on bipartite marginals:
+
+\begin{lemma} \label{btoabRobustness}
+For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{c})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := (e^{\delta})_{c} \samp$, then for $c \in \{a,b\}$ we have
+\[ \sup_{Y \in \smallSym_{d_{a}}^{0}, Z \in \smallSym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq 4.5 \|\delta\|_{op} \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}}        \]
+Note that in the LHS, $Y,Z$ are traceless, whereas on the RHS they are general symmetric matrices.
+%\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 4.5 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}    \]
+\end{lemma}
+\begin{proof}
+%Recall from the discussion after $\cref{convexRobustness}$ that $\langle Y, (\nabla^{2}_{ab} F) Z \rangle = \sqrt{d_{a} d_{b}} \langle \rho^{(ab)}, Y \otimes Z \rangle$.
+By taking adjoints, we can assume w.l.o.g. that $c = b$. Let $R : \mat(d_{b}) \to \mat(d_{b})$ be defined as $R(Z) := (1+\eta)^{2} e^{\delta} Z e^{\delta}$ for $\eta$ defined by our normalization $\|(e^{\delta})_{b} \samp\|_{2}^{-1} =: (1+\eta) \|\samp\|_{2}^{-1}$.
+\[ |\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle| = |\langle \rho_{\samp}^{(ab)}, Y \otimes (R(Z) - Z) \rangle|  \]
+The subspace $\smallSym_{d_{b}}^{0}$ is not invariant under $R$, but we show $R \approx I$. Let $\delta' := (1+\eta) e^{\delta} - I$.
+\[ \|R(Z) - Z\|_{F} \leq 2 \|\delta' Z\|_{F} + \|\delta' Z \delta'\|_{F} \leq (2 \|\delta'\|_{op} + \|\delta'\|_{op}^{2}) \|Z\|_{F}    \]
+So we complete the proof using the fact that $Y,Z$ are traceless on the LHS of the inequality, and $\|\delta\|_{op} \leq \frac{1}{20}$ by the same calculation as in \cref{atoaaRobustness}.
+\end{proof}
+
+\begin{lemma} \label{ctoabRobustness}
+For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{c})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := (e^{\delta})_{c} \samp$, then for $c \not\in \{a,b\}$ we have
+\[ \sup_{Y \in \smallSym_{d_{a}}^{0}, Z \in \smallSym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq 19 \|\delta\|_{op} \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}}        \]
+%\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 19 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}    \]
+\end{lemma}
+\begin{proof}
+Define $\eta$ for normalization $\|(e^{\delta})_{c} \samp\|_{2}^{-1} =: (1+\eta) \|\samp\|_{2}^{-2}$, and let $\delta' := (1+\eta) e^{2 \delta} - I_{c}$. We will use a similar decomposition to lemma \cref{btoaaRobustness}, so first assume $Y,Z \succeq 0, \|Y\|_{F} = \|Z\|_{F} = 1$:
+%\[ \frac{1}{\sqrt{d_{a} d_{b}} } \langle Y, (\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}) Z \rangle = \langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes \delta' \rangle   \]
+\[ |\langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes \delta' \rangle| \leq \langle \rho_{\samp}^{(abc)}, Y \otimes Z \otimes |\delta'| \rangle \leq \|\delta'\|_{op} \langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle   \]
+Here we again used that $\rho_{\samp}^{(abc)} \succeq 0$. %We cannot bound this by $c_{0}$ as $Y \succeq 0$, but the RHS $c$ is sufficient.
+To finish the lemma we decompose $Y = Y_{+} - Y_{-}, Z = Z_{+} - Z_{-}$ and bound
+\[ |\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle| \leq \left( \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \right) \|\delta'\|_{op} \sum_{s,t \in \{+,-\}} \|Y_{s}\|_{F} \|Z_{t}\|_{F}   \]
+The summation we can bound by Cauchy Schwarz:
+\[ \leq (2\|Y_{+}\|_{F}^{2} + 2\|Y_{-}\|_{F}^{2})^{1/2} (2\|Z_{+}\|_{F}^{2} + 2\|Z_{-}\|_{F}^{2})^{1/2} = 2 \|Y\|_{F} \|Z\|_{F}     \]
+Using the the fact that the LHS is the $\sup$ over traceless matrices, as well as the same calculation from \cref{btoaaRobustness} using the condition $\|\delta\|_{op} \leq .05 \implies \|\delta'\| \leq 9.5 \|\delta\|_{op}$; we get the lemma.
+\end{proof}
+
+We need the following to translate to statements on the Hessian:
+
+\begin{definition}
+For operator $M : \mat(d_{b}) \to \mat(d_{a})$, we let $\|M\|_{0}$ denote the $F \to F$ norm of its restriction to the traceless subspaces $\smallSym^0_{d_b} \to \smallSym^0_{d_a}$
+\end{definition}
+
+\begin{lemma}[\cite{KLR19}] \label{inftyto2}
+$\|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}^{2} \leq \|d_{a} \rho_{\samp}^{(a)}\|_{op} \|d_{b} \rho_{\samp}^{(b)}\|_{op}$
+\end{lemma}
+%\begin{proof}This was already in KLR and we have two new proofs: one by convexity, and one by Riesz-Thorin. \AR{The proofs are in some other file, we can add it if we like}\end{proof}
+
+\begin{corollary} \label{offdiagRobustness}
+For input $\samp \in \R^{nD}$ such that $\|d_{a} \rho_{\samp}^{(a)}\|_{op}, \|d_{b} \rho_{\samp}^{(b)}\|_{op} \leq 1+\frac{1}{20}$; perturbation $\delta := \sum_{c} (\delta_{c} \in \mat(d_{c}))_{c}$ with $\|\delta\|_{op} = \sum_{c} \|\delta_{c}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
+%\[ \frac{1}{\sqrt{d_{a} d_{b}}} \|\nabla^{2}_{ab} f(e^{2 \delta}) - \nabla^{2}_{ab} f(I)\|_{op} \leq 100 \|\delta\|_{op} \sqrt{\|\rho_{\samp}^{(a)}\|_{op} \|\rho_{\samp}^{(b)}\|_{op}}     \]
+\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 21 \|\delta\|_{op}  \]
+\end{corollary}
+\begin{proof}
+This is just a translation of \cref{btoabRobustness},\cref{ctoabRobustness}:
+\[ \sup_{Y \in \smallSym_{d_{a}}^{0}, Z \in \smallSym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} = \frac{\|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0}}{\sqrt{d_{a} d_{b}} } \]
+\[ \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} = \frac{\|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}}{\sqrt{d_{a} d_{b}} }       \]
+Using the same iterative strategy as \cref{diagRobustness} we can show:
+\[ |\langle Y, (\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}) Z \rangle| \leq 20 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F} \|Y\|_{F} \|Z\|_{F}    \]
+We used \cref{btoabRobustness} for $\{a,b\}$ and \cref{ctoabRobustness} for the rest. The final step follows from $\cref{inftyto2}$ and the initial conditions on $\|d_{a} \rho_{a}\|_{op}, \|d_{b} \rho_{b}\|_{op}$.
+\end{proof}
+
+Now it is a simple matter of putting the three terms together.
+
+\begin{proof} [Proof of Theorem \cref{convexRobustness}]
+Recall the definition of a quadratic form of the Hessian:
+\[ \langle Z, (\nabla^{2} f) Z \rangle = \langle Z, (\nabla^{2} F) Z \rangle + \langle Z, (\nabla^{2} f - \nabla^{2} F) Z \rangle     \]
+\[ = \sum_{a} \langle Z_{a}, (\nabla^{2}_{aa} F) Z_{a} \rangle + \sum_{a \neq b} \langle Z_{a}, (\nabla^{2}_{ab} F) Z_{b} \rangle - \left( \sum_{a} \sqrt{d_{a}} \langle \rho^{(a)}, Z_{a} \rangle  \right)^{2}       \]
+Let $\{\samp'_{i} := e^{\delta} \samp\}$. Then by $\cref{diagRobustness}$ we have a bound on the diagonal blocks; by $\cref{offdiagRobustness}$ we have a bound on the off-diagonal blocks; and by $\cref{rankoneRobustness}$ we have a bound on the rank-one term.
+\[ \langle Z, (\nabla^2 f_{\samp'} - \nabla^{2} f_{\samp}) Z \rangle \leq \|\delta\|_{op} \left( 11 \sum_{a} \|Z_{a}\|_{F}^{2} + 21 \sum_{a \neq b} \|Z_{a}\|_{F} \|Z_{b}\|_{F} + 1.5 k \|Z\|^{2} \right)   \]
+\[ \leq (11 + 21(k-1) + 1.5 k) \|\delta\|_{op} \|Z\|^{2}    \]
+Note that this also gives a spectral upper bound for $\nabla^{2} f_{\samp'}$.
+%\AR{What norm are we using on $Z$ as a whole? Should I keep around the $d_{a}$'s? Also the constant is $50 k$ now, yay for better constants!}\CF{yay!}
+\end{proof}
+
+Finally we may prove \cref{thm:ball-convexity}.
+\begin{proof}[Proof of \cref{thm:ball-convexity}]
+By \cref{thm:tensor-convexity}, with failure probability $k^2 ({\sqrt{nD}}/{kd_1})^{ - \Omega(d_1)}$ we have that $f$ is $3/4$-strongly convex at $I$. By our bound on $n$,  \cref{prop:gradient-bound} applies and so $\|\sqrt{d_{a}} \nabla_{a} f_{\samp}\|_{op} \leq c$ with failure probability $\sum_a e^{ - \Omega(nD/d_a)})$. By our assumption on $n$ this is at most $k^2 ({\sqrt{nD}}/{kd_1})^{ - \Omega(d_1)}$. Conditioned on both bounds, by \cref{convexRobustness} there is a constant $c$ such that $f$ is $1/2$ strongly convex at any point $Z$ such that $\sum_a \|\log Z_a\|_{op} \leq  c$ for all $a \in [k]$. \end{proof}
+
+
+%$O\left( \sum_a e^{ - \Omega(nD/d_a)}\right)\leq k e^{- \Omega(nD/d_1)}$
+
+
+
+
+
+%\CF{make consistent with def 4, hessian}
+
+
+%=============================================================================
+\section{The Cheeger constant of a random operator}
+%=============================================================================
+
+To prove \cref{thm:operator-cheeger}, we first define the Cheeger constant of an operator $\Phi:\mat(d_1) \to \mat(d_2)$. This is similar to a concept defined in \cite{H07}.
+\begin{definition}
+Let $\Phi : \mat(d_1) \to \mat(d_2)$ be a completely positive map. The Cheeger constant $\ch(\Phi)$ of the weighted bipartite graph associated to $B$ is given by
+$$\ch(\Phi):=\min_{\Pi_1, \Pi_2: \vol(\Pi_1, \Pi_2) \leq \tr \Phi(I)} \phi(\Pi_1,\Pi_2)$$
+where $\Pi_1: \C^{d_1} \to \C^{d_1}$ and $\Pi_1: \C^{d_2} \to \C^{d_2}$ are orthogonal projections that are not both zero and the \emph{conductance} $\phi$ of the cut $\Pi_1, \Pi_2$ is defined to be
+$$\phi(\Pi_1,\Pi_2) := \frac{\cut(\Pi_1, \Pi_2)}{\vol(\Pi_1,\Pi_2)}$$
+where
+%$$ \vol(\Pi_1,\Pi_2):= \sum_{i \in T, j \in [d_2]} b_{ij} + \sum_{i \in [d_1], j \in S} b_{ij}\textrm{ and } \cut(S, T):= \sum_{i \not\in T, j  \in S} b_{ij} + \sum_{i \in T, j \not\in S} b_{ij}.$$
+$$ \vol(\Pi_1,\Pi_2):=
+\tr \Phi(\Pi_1) + \tr \Phi^*(\Pi_2)$$
+and $$ \cut(\Pi_1, \Pi_2):= \tr \Pi_2 \Phi(I_{d_1} - \Pi_1) + \tr (I_{d_2} - \Pi_2) \Phi(\Pi_1).$$
+\end{definition}
+
+We now cite bound on expansion in terms of the Cheeger constant. 
+%In that work only the bound on $\|\Phi\|_0$ is shown explicitly, but the paper also shows that the second bound follows from the first.
+%Recall the function $$f^{\Phi}:\samp \mapsto \frac{d_1}{d_2} \log\det(\Phi(\samp)) - \log\det (\samp).$$
+
+\begin{lemma} [\cite{FM20}, Remark 5.5]\label{lem:op-cheeger} There exist absolute constants $c, C$ such if $\eps < c \ch(\Phi)^2$ and $\Phi$ is $\eps$-balanced, then $\Phi$ is an
+$$ \left(\eps, \max\left\{1/2, 1 -  \ch(\Phi)^2 + C \frac{\eps}{\ch(\Phi)^2} \right\} \right)-\text{quantum expander}.$$
+\end{lemma}
+We proceed to bound the Cheeger constant of a random operator. The Cheeger constant of an operator is scale-invariant, so for convenience we let $\Phi$ have Kraus operators $\samp_1, \dots, \samp_n$, each drawn from $\cN(0,  I_{d_1} \ot I_{d_2}).$ Our main observation is the following.
+
+\begin{lemma}\label{fact:chi} Let $\Pi_1:\C^{d_1} \to \C^{d_1}, \Pi_2: \C^{d_2} \to \C^{d_2}$ be orthogonal projections, of rank $r_1, r_2$, respectively. Then $\cut(\Pi_1, \Pi_2), \vol(\Pi_1, \Pi_2), \vol(I_{d_1}, I_{d_2})$ is jointly distributed as
+$$ R_1, R_1 + 2R_2, 2R_1 + 2 R_2 + 2R_3$$ where
+$R_1, R_2, R_3$ are independent $\chi^2$ random variables with $F_1:=n r_1(d_2 - r_2) + n r_2(d_1-r_1), F_2:= n r_1r_2, F_3:= n(d_1 - r_1)(d_2 - r_2)$ degrees of freedom, respectively.
+\end{lemma}
+\begin{proof} As the distribution of $\Phi$ is invariant under the action of unitaries, the distribution of $\cut(\Pi_1, \Pi_2), \vol(\Pi_1, \Pi_2)$ depends only on the rank of $\Pi_1, \Pi_2$. Thus we may compute in the case that $\Pi_1, \Pi_2$ are coordinate projections, in which case one may verify the fact straightforwardly.
+\end{proof}
+
+
+ We show a sufficient condition for the Cheeger constant being bounded away from $1$ that is amenable to the previous distributional description.
+\begin{lemma}\label{lem:suff}
+Let $r_1, r_2$ not both zero be the ranks of projections $\Pi_1: \C^{d_1} \to \C^{d_1}, \Pi_2: \C^{d_2} \to \C^{d_2}$, and let $F_1:= n r_1(d_2 - r_2) + n r_2(d_1-r_1)$ and $F_2:=n r_1r_2.$ If
+\begin{itemize}
+\item for all $\Pi_1, \Pi_2$ such that $F_2 \geq (4/9) n d_1 d_2$ we have
+\begin{gather}\vol(\Pi_1, \Pi_2) \geq (1/2 - \delta) \vol(I_{d_1}, I_{d_2}),\label{eq:vol}\end{gather} and
+\item for all $\Pi_1, \Pi_2$ such that $F_2 < (4/9) n d_1 d_2$, we have
+\begin{gather} \vol(\Pi_1, \Pi_2) \leq (4/3 + \delta)(F_1 + 2 F_2) \textrm{ and } \cut(\Pi_1, \Pi_2) \geq (2/3 - \delta) F_1,\label{eq:cut} \end{gather}
+\end{itemize}
+then $\ch(\Phi) \geq 1/6 - O(\delta)$ for $\delta \leq c$.
+\end{lemma}
+\begin{proof} By the first assumption, it remains to show that $F_1/(F_1 + 2 F_2) \geq 1/3$ provided $F_2 < (4/9) n d_1 d_2$, or $r_1 r_2 < (4/9) d_1 d_2$. Indeed, if either $r_1 = 0$ or $r_2 = 0$, then $F_2 = 0$ and $F_1>0$ and the claim holds, else
+\begin{align*}F_1/(F_1 + 2 F_2) &= \frac{r_1 d_2 + r_2 d_1 - 2 r_1 r_2}{r_1 d_2 + r_2 d_1}\\
+ &= 1 -2 \sqrt\frac{ r_1 r_2}{d_1 d_2} \frac{1}{ \sqrt{ r_1 d_2/r_2 d_1} + \sqrt{r_2 d_1/ r_1 d_2}} \\
+ &\geq 1 - \sqrt{4/9} = 1/3.
+\end{align*}
+
+In the last inequality we used that $a + a^{-1} \geq 2$ for all $a \in \R_+$ and that $r_1 r_2 < (4/9) d_1 d_2$. \end{proof}
+
+
+Next we use this to show that for fixed $\Pi_1, \Pi_2$, with high probability the events in \cref{lem:suff} hold.
+\begin{lemma}\label{lem:probabilities}
+Let $r_1, r_2$ not both zero be the ranks of projections $\Pi_1: \C^{d_1} \to \C^{d_1}, \Pi_2: \C^{d_2} \to \C^{d_2}$, and let $F_1:= n r_1(d_2 - r_2) + n r_2(d_1-r_1)$ and $F_2 = n r_1 r_2$. Then
+\begin{itemize}
+\item if $F_2 \geq (4/9) n d_1 d_2$, then \cref{eq:vol} holds with $\delta = 0$ with probability at least $1 - e^{-\Omega( n d_1 d_2)}$.
+\item else, \cref{eq:cut} holds with $\delta = 0$ with probability at least $1 - e^{-\Omega( F_1)}$.
+\item Finally, $\vol(\Pi_1, \Pi_2) \geq \frac{1}{2}\tr \Phi(I_{d_1}) (d_1/d_2)$ with probability at least $1 - e^{- \Omega(n r_1 d_2 + n r_2 d_1)}$.
+\end{itemize}
+\end{lemma}
+
+
+\begin{proof}
+Recall from \cref{fact:chi} that, $\cut(\Pi_1, \Pi_2), \vol(\Pi_1, \Pi_2), \vol(I_{d_1}, I_{d_2})$ are jointly distributed as $R_1, R_1 + 2R_2, 2R_1 + 2R_2 + 2R_3$ for $R_1, R_2, R_3$ independent $\chi^2$ random variables with $F_1, F_2, F_3$ degrees of freedom, respectively. Thus it is enough to show that
+\begin{itemize}
+\item If $nr_1 r_2 \geq (4/9) n d_1 d_2$, then with probability $1 - e^{- \Omega( n d_1 d_2)}$ we have $R_2 > R_3$, and
+\item if $nr_1 r_2 \leq (2/3) n d_1 d_2$, then with probability $1 - e^{- \Omega(F_1)}$ we have $R_1 \geq (2/3) F_1$ and $R_1 + 2R_2 \leq (4/3) (F_1 + 2 F_2),$
+\item and with probability $1 - e^{- \Omega(F_1 + 2 F_2)}$, $R_1 + 2R_2 \geq (2/3) (F_1 + 2 F_2) = (2/3) n (r_1 d_2 + r_2 d_1)$ and $R_1 + R_2 + R_3 \leq (4/3)(F_1 + F_2 + F_3) = (4/3)n d_1 d_2$.
+\end{itemize}
+All three follow from standard results for concentration of $\chi^2$ random variables; see e.g. \cite{W19}. To prove the first item, first note that $F_1 + 2 F_2 \geq (4/3)(F_1 + F_2 + F_3)$, because
+\begin{align*}
+(F_1 + 2 F_2)/( F_1 + F_2 + F_3) &= \frac{r_1}{d_1} + \frac{r_2}{d_2}\\
+ &= \sqrt{ \frac{r_1 r_2}{d_1 d_2}}\left( \sqrt{ \frac{r_1 d_2}{r_2 d_1}} + \sqrt{ \frac{r_2 d_1}{r_1 d_2}}\right) \geq (2/3) \cdot 2 \geq 4/3.
+\end{align*}
+In particular, $F_2 \geq (2/3)(F_2 + F_3)$. Thus, with probability $1 - e^{- c F_2}$, $R_2 \geq (5/9) (F_2 + F_3)$ and $R_2 + R_3 \leq (10/9) (F _2 + F_3),$ so $R_2 > R_3$ with probability $1 - e^{- c F_2} \geq 1 - e^{- c n d_1 d_2}$. The second and third items are straightforward.
+\end{proof}
+
+Finally, we show using an epsilon net that the Cheeger constant is large for \emph{all} projections.
+\begin{lemma}[\cite{FM20}]\label{lem:net} There is a $\delta$-net $N$ of the rank $r$ orthogonal projections $\Pi: \C^d \to \C^d$ with $|N| = \exp(O(d r |\ln \delta|))$.
+\end{lemma}
+As a corollary, the number of pairs of projections $\Pi_1, \Pi_2$ of rank $r_1, r_2$ has a $\delta$-net of size on the order of $(r_1 d_1 + r_2 d_2) |\ln \delta|$.
+
+\begin{lemma}[A net suffices]\label{lem:net-suffices}
+Suppose $\|\Pi'_1 -\Pi_2\|_F, \|\Pi'_2 - \Pi_2\|_F \leq \delta$. Then
+\begin{align*} |\cut(\Pi_1, \Pi_2) - \cut(\Pi'_1, \Pi'_2)| \leq4\delta \tr \Phi(I_{d_1})\\
+\textrm{ and }|\vol(\Pi_1, \Pi_2) - \vol(\Pi'_1, \Pi'_2)| \leq 4\delta \tr \Phi(I_{d_1}).
+\end{align*}
+\end{lemma}
+\begin{proof}
+We first show the first inequality.
+\begin{align*}|\cut(\Pi'_1, \Pi'_2) - \cut(\Pi_1, \Pi_2)| & \leq |\tr \Pi'_2 \Phi(I_{d_1} - \Pi'_1) - \tr \Pi_2 \Phi(I_{d_1} - \Pi_1)|\\
+&  + |\tr (I_{d_2} - \Pi'_2) \Phi(\Pi'_2) - \tr (I_{d_2} - \Pi_2) \Phi(\Pi_2)|.
+\end{align*}
+We begin with the first term.
+\begin{align*}&|\tr \Pi'_2 \Phi(I_{d_1} - \Pi'_1) - \tr \Pi_2 \Phi(I_{d_1} - \Pi_1)|\\
+&= |\tr (\Pi'_2 - \Pi_2) \Phi(I_{d_1} - \Pi'_1) + \tr \Pi_2 \Phi(\Pi_1 - \Pi'_1)|\\
+&\leq \delta\| \Phi(I_{d_1} - \Pi'_1)\|_F + \delta\| \tr \Phi^*(\Pi_2)\|_F\\
+& \leq 2 \delta \tr \Phi(I_{d_1}).
+\end{align*}
+The second term follows by symmetry. The proof of the second inequality is similar.
+\end{proof}
+
+\begin{lemma}[Applying union bound]\label{lem:union}
+Let $d_1 < d_2$. Suppose $n \geq C \frac{d_2}{d_1} \log (d_2/d_1)$. Then $\ch(\Phi) = \Omega(1)$ with failure probability $O(e^{- \Omega(n d_1)})$.
+\end{lemma}
+\begin{proof} Let $\delta' \leq c d_1/d_2$. Let $\cN(r_1, r_2)$ be a $\delta'$-net for the pairs of projections of rank $r_1, r_2$, respectively, with $|\cN(r_1, r_2)| = e^{O((d_1r_1 + d_2 r_2) \log(1/\delta'))}$, and $N = \bigcup_{r_1, r_2} \cN(r_1, r_2)$. We claim that it is enough to show that with probability $\exp( - c n d_1 )$, for all $r_1, r_2$ not both zero we have
+\begin{enumerate}
+\item \cref{eq:vol} holds with $\delta = 0$ for every $\Pi_1,\Pi_2 \in \cN(r_1, r_2)$ when $r_1 r_2 \geq (4/9) d_1 d_2$,
+\item  and \cref{eq:cut} holds with $\delta =0$ for all $\Pi_1, \Pi_2 \in \cN(r_1, r_2)$ otherwise.
+\item $\vol(\Pi_1, \Pi_2) \geq \tr \Phi(I) (d_1/d_2)$.
+\end{enumerate}
+Let us check that the hypotheses of \cref{lem:suff} with $\delta \leq c$ are implied by these three items; this will imply that conditioned on the three items we have $\ch(\Phi) \geq \Omega(1)$. Because every pair $(\Pi'_1,\Pi'_2)$ of projections of ranks $r_1,r_2$ is most $\delta$ far from some element $(\Pi_1, \Pi_2)$ of $\cN(r_1,r_2)$, then by \cref{lem:net-suffices} (and the inequality $\vol(\Pi_1, \Pi_2) \geq \tr \Phi(I)(d_1/d_2)$) we have
+\begin{align*} (1 - 4 \delta'  \cdot d_2/d_1) \vol(\Pi_1, \Pi_2) \leq  \vol(\Pi_1', \Pi_2') \leq  (1 + 4 \delta'  \cdot d_2/d_1) \vol(\Pi_1, \Pi_2).\end{align*}
+By assumption, $4 \delta' \cdot d_2/d_1 \leq c$. This shows \cref{eq:vol} holds with $\delta \leq c$ when $r_1 r_2 \geq (4/9) d_1 d_2$. It remains to show that \cref{eq:cut} holds otherwise. Firstly, when $r_1 r_2 < (4/9) d_1 d_2$ we have
+\begin{gather} \vol(\Pi_1', \Pi_2') \leq (1 + c) \vol(\Pi_1, \Pi_2) \leq  (1 + c)(4/3)(F_1 + 2 F_2).\label{eq:not-net-9a}\end{gather}
+  Next, observe that
+$$  \cut(\Pi_1', \Pi_2') \geq \cut(\Pi_1, \Pi_2) - c \vol(\Pi_1, \Pi_2).$$
+In the proof of \cref{lem:suff} it is shown that if $r_1 r_2 < (4/9) d_1 d_2$ then $F_1 \geq \frac{1}{3} (F_1 + 2 F_2)$, in which case
+\begin{align}
+\cut(\Pi_1', \Pi_2') &\geq \cut(\Pi_1, \Pi_2) - c \vol(\Pi_1, \Pi_2) \geq \nonumber\\
+& \geq (2/3) F_1 -  c (4/3)(F_1 + 2 F_2) \geq (2/3 - c) F_1.\label{eq:not-net-9b}
+\end{align}
+
+Taken together, \cref{eq:not-net-9a,eq:not-net-9b} show that \cref{eq:cut} holds when $r_1 r_2 < (4/9) d_1 d_2$.
+
+We must next show that the three conditions hold with the desired probability. We show that for fixed $r_1, r_2$, each item holds with probability at least $1 - e^{n (r_1 d_2 + r_2 d_1)}$. The sum of $e^{-\Omega(n (r_1d_2 + r_2 d_1))}$ over all $0 \leq r_1 \leq d_1, 0 \leq r_2 \leq d_2$ apart from $r_1 = r_2 = 0$ is $O(e^{- \Omega( n d_1)})$, so the conditions hold for all $r_1, r_2$ with the desired probability. Note that by our choice of $n$ we have $(d_1r_1 + d_2 r_2) \log(1/\delta') \leq c n (r_1d_2 + r_2 d_1)$ for $r_1, r_2$ not both zero.
+
+We first bound the failure probability for the first item. By \cref{lem:probabilities}, if $r_1 r_2 \geq (4/9) d_1 d_2$ then \cref{eq:vol} holds for every $\Pi \in \cN(r_1, r_2)$ with probability
+\begin{align*}
+1 - |\cN(r_1, r_2)|e^{- \Omega( n d_1 d_2) } &= 1 - |\cN(r_1, r_2)| e^{ - \Omega(n (r_2d_1 + r_1d_2))}\\
+&= 1 - e^{ - \Omega(n (r_2d_1 + r_1d_2))}.
+\end{align*}
+
+Next we bound the probability for the second item. By \cref{lem:probabilities}, \cref{eq:cut} holds for fixed $\Pi \in \cN(r_1, r_2)$ with probability $1 - e^{-\Omega( F_1)}$, but as in the proof of \cref{lem:suff} we have $F_1 \geq \frac{1}{3} (F_1 + 2 F_2)$ when $r_1 r_2 < (4/9) d_1 d_2$, so $F_1 = \Omega(n (r_1d_2 + r_2 d_1))$. Now, by the union bound and the lower bound on $n$, \cref{eq:cut} holds for every element of $\cN(r_1, r_2)$ with probability $1 - |\cN(r_1,r_2)| e^{-\Omega(n (r_1d_2 + r_2 d_1)} = 1 - e^{-\Omega(n (r_1d_2 + r_2 d_1)}$.
+
+
+The third item holds with probability $1 - e^{-\Omega(n (r_1d_2 + r_2 d_1))}$ by \cref{lem:probabilities}, so by a similar application of the union bound and our choice of $n$ it holds for all elements of $\cN(r_1, r_2)$ with probability $1 - e^{-\Omega(n (r_1d_2 + r_2 d_1))}$. \end{proof}
+
+\begin{proof}[Proof of \cref{thm:operator-cheeger}]
+To prove \cref{thm:operator-cheeger}, we apply \cref{lem:op-cheeger} using \cref{prop:gradient-bound} to bound the balancedness of $\Phi$ and \cref{lem:union} to bound $\ch(\Phi)$. Indeed, $\|\nabla_a f\|_{op} \leq \eps_0$ for $a \in \{1,2\}$ if and only if $\Phi$ is $\eps_0$-balanced, so by \cref{prop:gradient-bound} the operator $\Phi$ is $\eps_0$-balanced with probability $1 -  e^{-\Omega(n d_1 \eps_0^2)} - e^{-\Omega(n d_2 \eps_0^2)} \geq 1 - 2e^{-\Omega(n d_1 \eps_0^2)}$ provided $n \geq C\eps_0^{-2} d_2/d_1 $. Setting $\eps_0 = \eps \sqrt{{d_2 }/{n d_1}}$ proves the balancedness claim. For the expansion, \cref{lem:union} shows $\ch(\Phi) = \Omega(1)$ with failure probability $O(e^{- \Omega(n d_1)}) = O(e^{- \Omega(d_2 \eps^2)})$. By \cref{lem:op-cheeger}, $\Phi$ is an $(\eps \sqrt{{d_2 }/{n d_1}}, 1 - \lambda)$-quantum expander for some absolute constant $\lambda$.
+\end{proof}
+
+
+
+%-----------------------------------------------------------------------------
+\section{Proof of concentration for matrix normal model}\label{sec:flipflop-concentration}
+%-----------------------------------------------------------------------------
+
+\begin{proof}[Proof of \cref{lem:flipflop-concentration}]
+For convenience we normalize slightly differently so that after applying one step of flip-flop to $X$ the new random variable $Y$ is given by
+$Y_i = X_i \Phi^*(I_{d_1})^{-1/2} =  X_i (\sum_{i = 1}^n X_i^\dagger X_i)^{-1/2}.$ Thus we need to bound the random matrix
+\begin{align} \sum_{i = 1}^n Y_i Y_i^{\dagger} - \frac{d_2}{d_1} I_{d_1} = \sum_{i = 1}^n X_{i} \left( \sum_{j}  X_{i}^{\dagger} X_{i}\right)^{-1} X_{i}^\dagger - \frac{d_2}{d_1} I_{d_1}.\label{eq:1marg}
+\end{align}
+Since we are interested in the spectral norm of \cref{eq:1marg}, we will consider the random variable $\langle \xi,  \sum_{i = 1}^n Y_i Y_i^{\dagger} \xi \rangle$ for a fixed unit vector $\xi \in \R^{d_1}$. We will show that this variable $\xi$ is highly concentrated, and apply a union bound over a net of the unit vectors. To show the concentration, we first cast $\langle \xi,  \sum_{i = 1}^n Y_i Y_i^{\dagger} \xi \rangle$ as the inner product between a random orthogonal projection and a fixed one.
+
+ Considering $Y_i$ as a $d_1 \times d_2$ matrix, we can consider $Y$ as an $n d_1 \times d_2$ matrix by vertically concatenating the $Y_i$. By definition of the flip-flop step, $Y^\dagger Y = \sum Y_i^\dagger Y = I_{d_2}$, so the columns of $Y$ are an orthonormal basis of $\R^{n d_1}$. Here $\dagger$ denotes transpose for $nd_1 \times d_2$ matrices. In fact, the columns of $Y$ are a \emph{uniformly random} orthonormal basis of a $d_2$ dimensional subspace $\R^{n d_1}$; that is, they are a uniformly random element of the Steifel manifold. Thus, $Y Y^\dagger$ is a uniformly random rank $d_2$ orthonormal projection on $\R^{n d_1}$. We can now write 
+ $$ \langle \xi,  \sum_{i = 1}^n Y_i Y_i^{\dagger} \xi \rangle = \langle YY^\dagger,  \xi \xi^\dagger \ot I_{n} \rangle.$$
+The matrix $\xi \xi^{*} \otimes I_{n}$ is a rank $n$ projection on $\R^{n d_1}$. We use the following result on the inner product of random projections.
+
+\begin{theorem} [Lemma III.5 in \cite{hayden2006aspects}] Let $P$ be a uniformly random orthogonal projection of rank $a$ on $\R^{m}$ and let $Q$ be a fixed orthogonal projection of rank $b$ on $\R^{m}$. Then
+\[ \Pr \left[ \langle P, Q \rangle \not\in (1 \pm \eps) \frac{ab}{m} \right] = e^{ - \Omega( ab \eps^{2} ) }.  \]
+\end{theorem}
+We may apply the above theorem with $Q = \xi \xi^{*} \otimes I_{n}$, $m = n d_1$, $a = d_2$, and $b = n$ to obtain
+\begin{gather}\Pr\left[ \langle \xi,  \sum_{i = 1}^n Y_i Y_i^{\dagger} \xi \rangle \not\in (1 \pm \eps_0) \frac{d_2}{ d_1} \right] = e^{ - \Omega( n d_2 \eps_0^{2} ) }. \label{eq:fixed-concentration} \end{gather}
+Next we apply a standard net argument for the unit vectors over $\R^{nd_1}$. We use the following lemma. 
+\begin{lemma}[Lemma 5.4 \cite{vershynin2010introduction}]\label{lem:versh-net} Let $A$ be a symmetric $d\times d$ matrix, and let $\mathcal{N}_\delta$ be an $\delta$-net of $\S^{d-1}$ for some $\delta \in [0,1)$. Then 
+$$\|A\|_{op} \leq (1 - 2 \delta)^{-1} \sup_{\xi \in \mathcal{N}_\delta} | \langle \xi, A \xi \rangle|.$$ 
+\end{lemma}
+We apply the above lemma with $A = \sum_{i = 1}^n Y_i Y_i^{\dagger} - \frac{d_2}{d_1} I_{d_1}$ and $d = d_1$.
+Fix a net $\mathcal{N} = \mathcal{N}_\delta$ for $\delta = 1/4$; by standard packing bounds (e.g. Lemma 4.2 in \cite{vershynin2010introduction}) we may take $|\mathcal{N}| \leq 9^{d_1}$. By \cref{eq:fixed-concentration} and the union bound, with failure probability $9^{d_1} e^{- \Omega (n d_2 \eps_0^2)}$ we have that $|\langle \xi , A \xi \rangle| \leq \frac{d_2}{d_1} \eps_0$ for all $\xi \in \mathcal{N}$, and by \cref{lem:versh-net} this event implies $\|A\|_{op} \leq 2  \frac{d_2}{d_1} \eps_0$. 
+
+It remains to translate our bound on $A$ to our desired bound on $\tilde{\Phi}$. Recall that $A = \frac{d_2}{d_1} (d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}),$ so we have that $\|d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op} \leq 2 \eps_0$. Setting $\eps_0 = \eps \sqrt{\frac{d_1}{4n d_2}}$ yields the desired bound on $\|d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op}$, and provided $\eps$ is a large enough constant, the failure probability is $e^{ - \Omega(d_1) \eps^2}$.\end{proof}
+
+
+\end{appendix}
+
+
+
+%=============================================================================
+\section*{Acknowledgements}
+%=============================================================================
+This work was supported in part by NWO Veni grant no.~680-47-459 and NWO grant OCENW.KLEIN.267.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Supplementary Material, if any, should   %%
+%% be provided in {supplement} environment  %%
+%% with title and short description.        %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{supplement}
+%\stitle{???}
+%\sdescription{???.}
+%\end{supplement}
+
+\bibliographystyle{imsart-nameyear}
+\bibliography{refs}
+
+\end{document}
