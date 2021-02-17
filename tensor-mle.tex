@@ -1384,6 +1384,8 @@ consider the following two events:
 \end{enumerate}
 By our assumption~\eqref{eq:eps sqr assm}, both \cref{prop:gradient-bound,thm:ball-convexity} apply, with the former showing the first and the latter showing the second event; the desired success probability then follows from the union bound.
 
+
+
 %%%
 % {\color{blue}
 % To verify that \cref{prop:gradient-bound} applies, note that we wish to apply it with $\eps_{prop}$, where
@@ -1439,6 +1441,7 @@ By our assumption~\eqref{eq:eps sqr assm}, both \cref{prop:gradient-bound,thm:ba
 % \begin{align*}
 % k^2 \left( \frac{\sqrt{nD}}{k d_{\max}} \right)^{-\Omega(d_{\min})}
 % \end{align*}}
+% I think we need $\delta \leq r = c/\sqrt{ k d_{max}}$ to apply \cref{lem:convex-ball}. This is not guaranteed by $\delta^2 \leq 1/\max\{k, d_{max}}$.
 %%%
 
 By \cref{lem:convex-ball}, these two events in turn, together with our assumption on~$\delta$, imply the MLE~$\htheta$ exists, is unique, and has geodesic distance at most $\delta$ from $I_D$.
@@ -1556,16 +1559,14 @@ Then, $\Phi_X$ is an $(\eps \sqrt{\frac{d_{\max}}{n d_{\min}}}, \lambda)$-quantu
 \end{theorem}
 
 We will prove \cref{thm:operator-cheeger} in \cref{app:cheeky} using techniques similar to \cite{FM20} using Cheeger's inequality.
-This also improves our result on strong convexity, which will be useful in the analysis of the flip-flop algorithm.
+This also improves our result on strong convexity (\cref{thm:ball-convexity}), which will be useful in the analysis of the flip-flop algorithm. Indeed, for $k = 2$, using \cref{thm:operator-cheeger} (in place of \cref{thm:hess-pisier}) with \cref{lem:expansion-convexity} in the proof of \cref{thm:tensor-convexity} improves the failure probability in \cref{thm:tensor-convexity} to $1 - e^{ - \Omega( d_{\min} \eps^2)}$. As in the proof of \cref{thm:ball-convexity}, combining this failure probability bound with \cref{convexRobustness} yields the next corollary. \CF{ok? I think instead of going into more detail, we'd restructure section 3 so we have a theorem like (expansion)->(convex in a ball). Otherwise things will get redundant}
 
 \begin{corollary}\label{cor:matrix-convexity}
 There are universal constants $C>0$ and $\lambda\in(0,1)$ such that the following holds.
 Let $x=(x_1,\dots,x_n)$ be independent standard Gaussian random variables in~$\R^{d_1d_2}$, where $n \geq C \frac{d_{\max}}{d_{\min}} \max\{\log \frac{d_{\max}}{d_{\min}}, \frac1{\eps^2} \}$.
 Then, with probability at least $1 - e^{ - \Omega( d_{\min} \eps^2)}$, the function~$f_x$ is $(1-\lambda)$-strongly convex at any point $\Theta\in\P$ such that $\norm{\log\Theta}_{\op} \leq c$.
 \end{corollary}
-\begin{proof}
-\MW{Missing. Can someone fill in?}
-\end{proof}
+
 
 
 %-----------------------------------------------------------------------------
@@ -1600,6 +1601,7 @@ By construction, it satisfies
 \quad\text{and}\quad
   \frac1{n D} \Phi^*_Y(I_{d_1}) = \frac{I_{d_2}}{d_2}.
 \end{align}
+Note that, by construction, $\Phi_Y^*(I_{d_1})$ is proportional to $I_{d_2}$ and $\tr \Phi_Y(I_{d_2}) = \|Y\|^2 = nD$. Thus $\Phi_Y$ is $\delta$-balanced if and only if $\|\frac{1}{nD} \Phi_Y(I_{d_2}) - \frac{1}{d_1} I_{d_1}\|_{op} \leq \delta.$ 
 
 \begin{lemma}[Concentration after flip-flop]\label{lem:flipflop-concentration}
 There is a universal constant $C>0$ such that the following holds.
@@ -1608,8 +1610,7 @@ If $n \geq \frac{d_2}{d_1}$ and $\eps\geq C$, then for $\Phi_Y$ as in \cref{eq:o
 \begin{align*}
   \norm*{\frac1{n D} \Phi_Y(I_{d_2}) - \frac{I_{d_1}}{d_1}}_{\op} \leq \eps \sqrt{\frac1{nD}}.
 \end{align*}
-In particular, the condition above implies that $\Phi_Y$ is $\eps \sqrt{ \frac{d_1}{nd_2}}$-balanced.
-\MW{I don't see why this follows (ignoring missing factors of 2). Do you assume that $\eps$ is small? Can you add this to the proof in the appendix?}
+By the remarks preceding the lemma, the above condition implies $\Phi_Y$ is $\eps \sqrt{\frac1{nD}}$-balanced.
 \end{lemma}
 
 The proof of this lemma uses a result of \cite{hayden2006aspects} on the overlap of two random projections, combined with a standard net argument.
@@ -2541,29 +2542,29 @@ To prove \cref{thm:operator-cheeger}, we apply \cref{lem:op-cheeger} using \cref
 %-----------------------------------------------------------------------------
 
 \begin{proof}[Proof of \cref{lem:flipflop-concentration}]
-For convenience we normalize slightly differently so that after applying one step of flip-flop to $X$ the new random variable $Y$ is given by
-$Y_i = X_i \Phi^*(I_{d_1})^{-1/2} =  X_i (\sum_{i = 1}^n X_i^\dagger X_i)^{-1/2}.$ Thus we need to bound the random matrix
-\begin{align} \sum_{i = 1}^n Y_i Y_i^{\dagger} - \frac{d_2}{d_1} I_{d_1} = \sum_{i = 1}^n X_i \left( \sum_{j}  X_i^{\dagger} X_i\right)^{-1} X_i^\dagger - \frac{d_2}{d_1} I_{d_1}.\label{eq:1marg}
+For convenience, we consider the differently normalized random variable $Z = Y/\sqrt{nd_1}$. Note that $Z$ satisfies
+$Z_i = X_i \Phi_X^*(I_{d_1})^{-1/2} =  X_i (\sum_{i = 1}^n X_i^\dagger X_i)^{-1/2}.$ Thus we need to bound the random matrix
+\begin{align} \sum_{i = 1}^n Z_i Z_i^{\dagger} - \frac{d_2}{d_1} I_{d_1} = \sum_{i = 1}^n X_i \left( \sum_{j}  X_i^{\dagger} X_i\right)^{-1} X_i^\dagger - \frac{d_2}{d_1} I_{d_1}.\label{eq:1marg}
 \end{align}
-Since we are interested in the spectral norm of \cref{eq:1marg}, we will consider the random variable $\langle \xi,  \sum_{i = 1}^n Y_i Y_i^{\dagger} \xi \rangle$ for a fixed unit vector $\xi \in \R^{d_1}$. We will show that this variable $\xi$ is highly concentrated, and apply a union bound over a net of the unit vectors. To show the concentration, we first cast $\langle \xi,  \sum_{i = 1}^n Y_i Y_i^{\dagger} \xi \rangle$ as the inner product between a random orthogonal projection and a fixed one.
+Since we are interested in the spectral norm of \cref{eq:1marg}, we will consider the random variable $\langle \xi,  \sum_{i = 1}^n Z_i Z_i^{\dagger} \xi \rangle$ for a fixed unit vector $\xi \in \R^{d_1}$. We will show that this variable $\xi$ is highly concentrated, and apply a union bound over a net of the unit vectors. To show the concentration, we first cast $\langle \xi,  \sum_{i = 1}^n Z_i Z_i^{\dagger} \xi \rangle$ as the inner product between a random orthogonal projection and a fixed one.
 
- Considering $Y_i$ as a $d_1 \times d_2$ matrix, we can consider $Y$ as an $n d_1 \times d_2$ matrix by vertically concatenating the $Y_i$. By definition of the flip-flop step, $Y^\dagger Y = \sum Y_i^\dagger Y = I_{d_2}$, so the columns of $Y$ are an orthonormal basis of $\R^{n d_1}$. Here $\dagger$ denotes transpose for $nd_1 \times d_2$ matrices. In fact, the columns of $Y$ are a \emph{uniformly random} orthonormal basis of a $d_2$ dimensional subspace $\R^{n d_1}$; that is, they are a uniformly random element of the Steifel manifold. Thus, $Y Y^\dagger$ is a uniformly random rank $d_2$ orthonormal projection on $\R^{n d_1}$. We can now write
- $$ \langle \xi,  \sum_{i = 1}^n Y_i Y_i^{\dagger} \xi \rangle = \langle YY^\dagger,  \xi \xi^\dagger \ot I_{n} \rangle.$$
+ Considering $Z_i$ as a $d_1 \times d_2$ matrix, we can consider $Z$ as an $n d_1 \times d_2$ matrix by vertically concatenating the $Z_i$. By definition of the flip-flop step, $Z^\dagger Z = \sum Z_i^\dagger Z_i = I_{d_2}$, so the columns of $Z$ are an orthonormal basis of $\R^{n d_1}$. Here $\dagger$ denotes transpose for $nd_1 \times d_2$ matrices. In fact, the columns of $Z$ are a \emph{uniformly random} orthonormal basis of a $d_2$ dimensional subspace $\R^{n d_1}$; that is, they are a uniformly random element of the Steifel manifold. Thus, $Z Z^\dagger$ is a uniformly random rank $d_2$ orthonormal projection on $\R^{n d_1}$. We can now write
+ $$ \langle \xi,  \sum_{i = 1}^n Z_i Z_i^{\dagger} \xi \rangle = \langle Z Z^\dagger,  \xi \xi^\dagger \ot I_{n} \rangle.$$
 The matrix $\xi \xi^{*} \otimes I_{n}$ is a rank $n$ projection on $\R^{n d_1}$. We use the following result on the inner product of random projections.
 
 \begin{theorem} [Lemma III.5 in \cite{hayden2006aspects}] Let $P$ be a uniformly random orthogonal projection of rank $a$ on $\R^{m}$ and let $Q$ be a fixed orthogonal projection of rank $b$ on $\R^{m}$. Then
 \[ \Pr \left[ \langle P, Q \rangle \not\in (1 \pm \eps) \frac{ab}{m} \right] = e^{ - \Omega( ab \eps^{2} ) }.  \]
 \end{theorem}
 We may apply the above theorem with $Q = \xi \xi^{*} \otimes I_{n}$, $m = n d_1$, $a = d_2$, and $b = n$ to obtain
-\begin{gather}\Pr\left[ \langle \xi,  \sum_{i = 1}^n Y_i Y_i^{\dagger} \xi \rangle \not\in (1 \pm \eps_0) \frac{d_2}{ d_1} \right] = e^{ - \Omega( n d_2 \eps_0^{2} ) }. \label{eq:fixed-concentration} \end{gather}
+\begin{gather}\Pr\left[ \langle \xi,  \sum_{i = 1}^n Z_i Z_i^{\dagger} \xi \rangle \not\in (1 \pm \eps_0) \frac{d_2}{ d_1} \right] = e^{ - \Omega( n d_2 \eps_0^{2} ) }. \label{eq:fixed-concentration} \end{gather}
 Next we apply a standard net argument for the unit vectors over $\R^{nd_1}$. We use the following lemma.
 \begin{lemma}[Lemma 5.4 \cite{vershynin2010introduction}]\label{lem:versh-net} Let $A$ be a symmetric $d\times d$ matrix, and let $\mathcal{N}_\delta$ be an $\delta$-net of $\S^{d-1}$ for some $\delta \in [0,1)$. Then
 $$\|A\|_{op} \leq (1 - 2 \delta)^{-1} \sup_{\xi \in \mathcal{N}_\delta} | \langle \xi, A \xi \rangle|.$$
 \end{lemma}
-We apply the above lemma with $A = \sum_{i = 1}^n Y_i Y_i^{\dagger} - \frac{d_2}{d_1} I_{d_1}$ and $d = d_1$.
+We apply the above lemma with $A = \sum_{i = 1}^n Z_i Z_i^{\dagger} - \frac{d_2}{d_1} I_{d_1}$ and $d = d_1$.
 Fix a net $\mathcal{N} = \mathcal{N}_\delta$ for $\delta = 1/4$; by standard packing bounds (e.g. Lemma 4.2 in \cite{vershynin2010introduction}) we may take $|\mathcal{N}| \leq 9^{d_1}$. By \cref{eq:fixed-concentration} and the union bound, with failure probability $9^{d_1} e^{- \Omega (n d_2 \eps_0^2)}$ we have that $|\langle \xi , A \xi \rangle| \leq \frac{d_2}{d_1} \eps_0$ for all $\xi \in \mathcal{N}$, and by \cref{lem:versh-net} this event implies $\|A\|_{op} \leq 2  \frac{d_2}{d_1} \eps_0$.
 
-\CF{the normalization is different now; fix.} It remains to translate our bound on $A$ to our desired bound on $\tilde{\Phi}$. Recall that $A = \frac{d_2}{d_1} (d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}),$ so we have that $\|d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op} \leq 2 \eps_0$. Setting $\eps_0 = \eps \sqrt{\frac{d_1}{4n d_2}}$ yields the desired bound on $\|d_1 \tilde{\Phi}(I_{d_2}) - I_{d_1}\|_{op}$, and provided $\eps$ is a large enough constant, the failure probability is $e^{ - \Omega(d_1) \eps^2}$.\end{proof}
+It remains to translate our bound on $A$ to our desired bound on $\Phi_Y$. Because $Z = Y/\sqrt{nd_1}$, $\Phi_Y = n d_1 \Phi_Z$. Thus $A = \frac{1}{nd_1}\Phi_Y(I_{d_2}) - \frac{d_2}{d_1} I_{d_1}$, so $\|\frac{1}{nD}\Phi_Y(I_{d_2}) - \frac{1}{d_1} I_{d_1}\|_{op} = \frac{1}{d_2} \|A\|_{op}$. Setting $\eps_0 = \eps \sqrt{\frac{d_1}{4n d_2}}$ shows $\|\frac{1}{nD}\Phi_Y(I_{d_2}) - \frac{1}{d_1} I_{d_1}\|_{op} \leq \frac{\eps}{\sqrt{n D}}$ with failure probability at most $9^{d_1} e^{- \Omega(d_1 \eps^2)}$, which is at most $e^{ - \Omega(d_1) \eps^2}$ provided $\eps$ is a large enough constant.\end{proof}
 
 
 \section{Relative error metrics}\label{sec:rel-error}
