@@ -1950,7 +1950,7 @@ We first explain how \cref{thm:Pisier-expansion}, along with the following estim
 \begin{equation}\label{eq:op norm bound}
   \E \norm{A}_{\op} \leq \sqrt{n} + \sqrt{m},
 \end{equation}
-implies \cref{thm:hess-pisier}. \AR{Removed $\Theta$}
+implies \cref{thm:hess-pisier}. \AR{Removed $\Theta$} \MW{I think we also need the other side to wrap up the proof.}
 
 \begin{proof}[Proof of \cref{thm:hess-pisier}]
 Choose $n=d_a$ and $m=d_b$.
@@ -1983,11 +1983,11 @@ Our setting required the result on rectangular matrices with strong error bounds
 The proof proceeds by a symmetrization trick, followed by the trace method.
 We will first state a necessary concentration result and then give the proof of \cref{thm:Pisier-expansion}.
 
-\begin{theorem}[Theorem 1.5 in \cite{P86}]\label{thm:banach conc}
-Let $A$ be a standard Gaussian in separable Banach space with norm $\|\cdot\|$.
+\begin{theorem}[Theorem~1.5 in \cite{P86}]\label{thm:banach conc}
+Let $A$ be a centered Gaussian random variable that takes values in a separable Banach space with norm $\|\cdot\|$.
 Then $\|A\|$ concentrates with parameter $\sigma^2 := \sup \{ \E \langle \xi, A \rangle^{2} \mid \|\xi\|_{*} \leq 1 \}$, where $\norm{\xi}_*$ denotes the dual norm.
-That is,
-\[ \Pr\Bigl( \abs[\big]{\norm A - \E \norm A} \geq t\Bigr) \leq \exp\Bigl( - \frac{\Omega(t^2)}{\sigma^{2}}\Bigr).   \]
+That is:
+\[ \forall t > 0 \colon \quad \Pr\Bigl( \abs[\big]{\norm A - \E \norm A} \geq t\Bigr) \leq 2 \exp\Bigl( - \frac{\Omega(t^2)}{\sigma^{2}}\Bigr).   \]
 Another equivalent definition of sub-Gaussianity (according to Lemma 5.5 of \cite{vershynin2010introduction}) \MW{add ref for equivalence} is
 \begin{equation}\label{eq:conc via moments}
   \forall p \geq 2 \colon \quad (\E \|A\|^{p})^{\frac{1}{p}} \leq \E \|A\| + O \left( \sqrt{\frac{p}{\sigma^{2}}} \right).
@@ -2019,7 +2019,7 @@ and hence, for any $p\geq1$,
   \E_{A} \norm*{\left( \sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^p
 \leq \E_{A,B} \norm*{\left( \sum_{i=1}^N A_i \otimes A_i - \sum_{i=1}^N B_i \otimes B_i \right) \circ \Pi}_{\op}^p
 \end{align*}
-by two applications of Jensen's inequality, as $\norm{\cdot}_{\op}^p$ is the composition of the norm $\norm{\cdot}_{op}$ with $x \to x^{p}$ which is monotone and convex on $\R_{+}$ \MW{(!)}.
+by Jensen's inequality, as $\norm{\cdot}_{\op}^p$ is convex as the composition of the norm $\norm{\cdot}_{\op}$ with the convex and nondecreasing function $x \to x^{p}$.
 Now note $(A_i,B_i)$ has the same distribution as $(\frac{A_i+B_i}{\sqrt2},\frac{A_i-B_i}{\sqrt2})$, so the right-hand side is equal to
 \begin{align*}
 &\quad \E \norm*{ \frac{1}{2} \left( \sum_{i=1}^N (A_i + B_i) \otimes (A_i + B_i) - \sum_{i=1}^N (A_i - B_i) \otimes(A_i - B_i) \right) \circ \Pi}_{\op}^p \\
@@ -2027,7 +2027,7 @@ Now note $(A_i,B_i)$ has the same distribution as $(\frac{A_i+B_i}{\sqrt2},\frac
 % \leq 2 \E \norm*{\left( \sum_{i=1}^N A_i \otimes B_i \right) \circ \Pi}_{\op}^p
 \leq 2^{p} \, \E \norm*{\sum_{i=1}^N A_i \otimes B_i}_{\op}^p
 \end{align*}
-Thus, we have proved that \MW{(we needed this bound for the $p$-th powers)}
+Thus, we have proved that
 \begin{align}\label{eq:symmetrization}
   \E \norm*{\left( \sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^p
 \leq 2^{p} \, \E \norm*{\sum_{i=1}^N A_i \otimes B_i}_{\op}^p.
@@ -2044,9 +2044,9 @@ For any $q\geq1$,
 &= \sum_{i, j \in [N]^q} \E \tr \left( A^T_{i_1} A_{j_1} \cdots A^T_{i_q} A_{j_q} \right) \E \tr \left( B^T_{i_1} B_{j_1} \cdots B^T_{i_q} B_{j_q} \right)
 \end{align*}
 where we used the independence of $\{A_i\}$ and $\{B_i\}$ in the last step.
-Now, the expectation of a (non-empty) monomial of independent standard Gaussian random variables vanishes unless each variable appears an even number of times, in which case it is positive.
-\MW{Remind me how we use the 2nd half of the preceding sentence?} \AR{I guess it is enough to say the expectation is non-negative always. It was there before because I did the proof with general coefficients $\vec{\alpha}$ in which case we needed to show any non-vanishing term has coefficient $\alpha$ to some even power so the coefficient is also positive. }
-Thus, whenever $\E \tr ( A^T_{i_1} A_{j_1} \cdots A^T_{i_q} A_{j_q} )$ is nonzero, it is positive, so we can upper bound the sum term by term as
+Now, the expectation of a monomial of independent standard Gaussian random variables is always nonnegative.
+% Now, the expectation of a (non-empty) monomial of independent standard Gaussian random variables vanishes unless each variable appears an even number of times, in which case it is positive.
+Thus the same is true for $\E \tr ( A^T_{i_1} A_{j_1} \cdots A^T_{i_q} A_{j_q} )$, so we can upper bound the sum term by term as
 \begin{align*}
 &\quad \sum_{i, j \in [N]^q} \E \tr \left( A^T_{i_1} A_{j_1} \cdots A^T_{i_q} A_{j_q} \right) \E \tr \left( B^T_{i_1} B_{j_1} \cdots B^T_{i_q} B_{j_q} \right) \\
 &\leq \sum_{i, j \in [N]^q} \E \tr \left( A^T_{i_1} A_{j_1} \cdots A^T_{i_q} A_{j_q} \right) \E \left( \norm{ B_{i_1} }_{2q} \norm{B_{j_1}}_{2q} \cdots \norm{ B_{i_q} }_{2q} \norm{B_{j_q}}_{2q} \right) \\
@@ -2065,7 +2065,7 @@ Accordingly, we have proved
 \leq N^q \left( \E\norm{A}_{2q}^{2q} \right)^2
 \leq N^q m^2 \Bigl( \E\norm{A}_{\op}^{2q} \Bigr)^2,
 \end{align}
-In the third inequality we used that $A \in \Mat(n,m)$ has rank $\leq m$, and therefore $\norm{A}_{2q}^{2q} \leq m \norm A_{\op}^{2q}$ \MW{note the $2q$'s power}.
+In the third inequality we used that $A \in \Mat(n,m)$ has rank $\leq m$, and therefore $\norm{A}_{2q}^{2q} \leq m \norm A_{\op}^{2q}$.
 To bound the right-hand side, we wish to apply \cref{thm:banach conc} for the Banach space $\Mat(n,m)$ with the operator norm~$\norm{\cdot}_{\op}$.
 Note that the dual norm is the trace norm~$\norm{\cdot}_1$, hence the concentration parameter can be estimated as
 \begin{align*}
@@ -2074,7 +2074,7 @@ Note that the dual norm is the trace norm~$\norm{\cdot}_1$, hence the concentrat
 = \sup \left\{ \norm\xi_F^2 \;\mid\; \norm{\xi}_1 \leq 1 \right\}
 \leq 1,
 \end{align*}
-where we first used that $\braket{\xi,A}$ is distributed the same as $\norm\xi_F A_{11}$ by orthogonal invariance \MW{Why is this not a completely general argument?} \AR{This seems like the most general way to give a sub-Gaussian parameter on a Banach space. Maybe there's a more direct version for operator norms, but I don't see it in Pisier}, and then that the trace norm dominates the Frobenius norm.
+where we first used that $\braket{\xi,A}$ is distributed the same as $\norm\xi_F A_{11}$ by orthogonal invariance, and then that the trace norm dominates the Frobenius norm.
 Thus, using \cref{eq:symmetrization,eq:op vs 2q,thm:banach conc}, we obtain for $q\geq1$,
 \begin{align*}
 \E \norm*{\left( \sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^{2q}
@@ -2084,7 +2084,6 @@ Thus, using \cref{eq:symmetrization,eq:op vs 2q,thm:banach conc}, we obtain for 
 \end{align*}
 where~$C>0$ is the universal constant from the big-$O$ notation in \cref{eq:conc via moments}.
 
-\MW{Please check if the proof is now correct (and there is no easier way):}
 Finally, we can use the Markov inequality to see that, for any~$C'>0$, the event
 \begin{align*}
   \norm*{\left(\sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op} \leq (C' t)^2 \sqrt{4 N} \bigl( \E \norm{A}_{\op} \bigr)^2
@@ -2095,7 +2094,8 @@ holds up to failure probability at most
 \leq % \frac{2 N^q m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(2C')^{4q} t^{4q} N^q \bigl( \E \norm{A}_{\op} \bigr)^{4q}} =
   \frac{m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(C' t)^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}}.
 \end{align*}
-Now we choose $q \in \mathbb{N}$ such that $C \sqrt{q} \leq \sqrt m + \sqrt n = \E \|A\|_{op}$, where the last equality is by \cref{eq:op norm bound}. \AR{Changed the choice of constant, hope you don't mind}
+\MW{I think this is buggy now (need to use $\Theta$ version of A.1). Also worry about $q\geq1$ (integer is not important I think).}
+Now we choose $q \in \mathbb{N}$ such that $C \sqrt{q} \leq \sqrt m + \sqrt n = \E \|A\|_{\op}$, where the last equality is by \cref{eq:op norm bound}. \AR{Changed the choice of constant, hope you don't mind}
 We can moreover choose~$C'\geq 2$ to be a universal constant.
 Then, the failure probability is bounded as follows:
 \begin{align*}
