@@ -1379,9 +1379,7 @@ consider the following two events:
 \item\label{it:grad-bd} $\norm{\nabla f_x}_F \leq \delta$.
 \item\label{it:sc-ball} $f_\rv$ is $\frac12$-strongly convex on the geodesic ball $B_r(I_D)$ of radius $r=\smash{\frac c{\sqrt{(k+1) d_{\max}}}}$.
 \end{enumerate}
-By our assumption~\eqref{eq:eps sqr assm}, if we choose the constant~$C>0$ large enough, both \cref{prop:gradient-bound,thm:ball-convexity} apply, with the former showing the first and the latter showing the second event; the desired success probability then follows from the union bound.
-
-By \cref{lem:convex-ball}, these two events, together with our assumption~\eqref{eq:eps sqr assm} (again for~$C>0$ large enough), imply the MLE~$\htheta$ exists, is unique, and has geodesic distance at most $2\delta$ from~$I_D$.
+By our assumption~\eqref{eq:eps sqr assm}, if we choose the constant~$C>0$ large enough, both \cref{prop:gradient-bound} (with the parameter $\eps$ in the proposition set to $\delta/\sqrt{ 82 \cdot k}$) and \cref{thm:ball-convexity} apply, with the former showing the first and the latter showing the second event. The desired success probability then follows from the union bound. By \cref{lem:convex-ball}, these two events, together with our assumption~\eqref{eq:eps sqr assm} (again for~$C>0$ large enough), imply the MLE~$\htheta$ exists, is unique, and has geodesic distance at most $2\delta$ from~$I_D$.
 
 We now show that $\htheta$ satisfies the desired bounds.
 Note that if $\htheta = \exp_{I_D}(H)$ for $H \in \H$, the equal-determinant Kronecker factors are given by $\htheta_a = \smash{e^{\frac{H_0}{d_a k}} e^{\sqrt{d_a} H_a}}$ for all~$a\in[k]$.
