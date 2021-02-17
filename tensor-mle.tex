@@ -1947,11 +1947,12 @@ For any~$t \geq 2$, with probability at least $1 - t^{-\Omega(m+n)}$,
 where $\Pi$ denotes the orthogonal projection onto the traceless subspace of $\R^m \ot \R^m$, that is, onto the orthogonal complement of $\vect(I_m)$.
 \end{theorem}
 
-We first explain how \cref{thm:Pisier-expansion}, along with the following estimate of the operator norm of a standard Gaussian $n \times m$ random matrix~$A$ (see Theorem 5.32 in \cite{vershynin2010introduction}),
+We first explain how \cref{thm:Pisier-expansion}, along with the following estimate of the operator norm of a standard Gaussian $n \times m$ random matrix~$A$ implies \cref{thm:hess-pisier}.
 \begin{equation}\label{eq:op norm bound}
-  \E \norm{A}_{\op} \leq \sqrt{n} + \sqrt{m},
+  \E \norm{A}_{\op} = \Theta(\sqrt{n} + \sqrt{m}). 
 \end{equation}
-implies \cref{thm:hess-pisier}. \AR{Removed $\Theta$} \MW{I think we currently also seem to use some kind of lower bound to wrap up.}
+The upper bound is from Theorem 5.32 in \cite{vershynin2010introduction}. We will show the lower bound later in this section when we discussed a few more properties of Gaussians. 
+\AR{Removed $\Theta$} \MW{I think we currently also seem to use some kind of lower bound to wrap up.}
 
 \begin{proof}[Proof of \cref{thm:hess-pisier}]
 Choose $n=d_a$ and $m=d_b$.
@@ -1994,6 +1995,31 @@ Another equivalent definition of sub-Gaussianity (according to Lemma 5.5 of \cit
   \forall p \geq 2 \colon \quad (\E \|A\|^{p})^{\frac{1}{p}} \leq \E \|A\| + O \left( \sqrt{\frac{p}{\sigma^{2}}} \right).
 \end{equation}
 \end{theorem}
+
+We calculate the sub-Gaussianity parameter for our setting below.
+
+\begin{lemma} \label{l:opNormSubG}
+Let $A$ be an $n \times m$ matrix with independent standard Gaussian entries. Then $\norm{A}_{\op}$ is sub-Gaussian with parameter $\sigma^{2} = 1$. 
+\end{lemma}
+\begin{proof}
+Note that the dual norm is the trace norm~$\norm{\cdot}_1$, hence the concentration parameter can be estimated as
+\begin{align*}
+  \sigma^2
+= \sup \left\{ \E \langle \xi, A \rangle^2 \;\mid\; \norm{\xi}_1 \leq 1 \right\}
+= \sup \left\{ \norm\xi_F^2 \;\mid\; \norm{\xi}_1 \leq 1 \right\}
+= 1,
+\end{align*}
+where we first used that $\braket{\xi,A}$ is distributed the same as $\norm\xi_F A_{11}$ by orthogonal invariance, and then that the trace norm dominates the Frobenius norm, with equality attained for example by $\xi = E_{11}$. 
+\end{proof}
+
+We can now also show the lower bound in \cref{eq:op norm bound}. The moment definition of sub-Gaussianity shows $\E \|A\|^{2} \leq \E \|A\| + O\left(\sqrt{\frac{p}{\sigma^{2}}} \right)$, so we continue
+\[ (\E \norm{A}_{\op})^{2} \geq \E \norm{A}_{\op}^{2} - C \sqrt{2} ,   \]
+where in the last step we substituted $p=2$ and $\sigma^{2} = 1$ by \cref{l:opNormSubG}. We can then lower bound the second moment simply assuming $n \geq m$:
+\[ \E \norm{A}_{\op}^{2} = \E \norm{A A^{T}}_{\op} \geq \norm{\E A A^{T}}_{\op} = n ,  \]
+where the first step is by definition of $\norm{\cdot}_{\op}$, the second is by Jensen's inequality, and the third step is because $\E A A^{T} = n I_{m}$. Therefore in total we have shown
+\[ \E \norm{A}_{\op} \geq \sqrt{ \E \norm{A}_{\op}^{2} - C' } = \Omega(\sqrt{n}) = \Omega(\sqrt{n} + \sqrt{m}) .   \]
+Here the lower bounds follow since $C'$ is a universal constant and $n \geq m$. 
+
 
 We will also use the H\"older inequality for the \emph{Schatten $p$-norm} $\norm{A}_p = (\tr(A^TA)^{\frac p2})^{\frac1p}$, where $p\geq1$:
 \begin{align}\label{eq:holder}
@@ -2067,15 +2093,7 @@ Accordingly, we have proved
 \leq N^q m^2 \Bigl( \E\norm{A}_{\op}^{2q} \Bigr)^2,
 \end{align}
 In the third inequality we used that $A \in \Mat(n,m)$ has rank $\leq m$, and therefore $\norm{A}_{2q}^{2q} \leq m \norm A_{\op}^{2q}$.
-To bound the right-hand side, we wish to apply \cref{thm:banach conc} for the Banach space $\Mat(n,m)$ with the operator norm~$\norm{\cdot}_{\op}$.
-Note that the dual norm is the trace norm~$\norm{\cdot}_1$, hence the concentration parameter can be estimated as
-\begin{align*}
-  \sigma^2
-= \sup \left\{ \E \langle \xi, A \rangle^2 \;\mid\; \norm{\xi}_1 \leq 1 \right\}
-= \sup \left\{ \norm\xi_F^2 \;\mid\; \norm{\xi}_1 \leq 1 \right\}
-\leq 1,
-\end{align*}
-where we first used that $\braket{\xi,A}$ is distributed the same as $\norm\xi_F A_{11}$ by orthogonal invariance, and then that the trace norm dominates the Frobenius norm.
+To bound the right-hand side, we wish to apply \cref{thm:banach conc} for the Banach space $\Mat(n,m)$ with the operator norm~$\norm{\cdot}_{\op}$. 
 Thus, using \cref{eq:symmetrization,eq:op vs 2q,thm:banach conc}, we obtain for $q\geq1$,
 \begin{align*}
 \E \norm*{\left( \sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^{2q}
