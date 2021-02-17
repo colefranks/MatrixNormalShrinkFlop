@@ -342,10 +342,10 @@ Recall also that $D = \prod_{i=1}^k d_a$.
 \CF{If we don't like the $\max\{k, d_{\max}\}$ in the bound for $\eps$ we can put the $e^{k \delta}$ back in the bound, but I think it is worth it.}
 
 \newcommand{\TensorFrob}[2]{%
-There are universal constants $C,c>0$ such that the following holds.
-Suppose \TODO{I think it is $k^2$}
+There is a universal constant~$C>0$ such that the following holds.
+Suppose
 \begin{#1}#2
-  1 \leq \eps^2 \leq \frac{nD}{C k d_{\max}^2 \max\{k, d_{\max}\}}.
+  1 \leq \eps^2 \leq \frac{nD}{C k^2 d_{\max}^2 \max\{k, d_{\max}\}}.
 \end{#1}
 Then the MLE~$\htheta = \htheta_1 \ot \cdots \ot \htheta_k$ for $n$ independent samples of the tensor normal model with precision matrix~$\Theta = \Theta_1 \ot \cdots \ot \Theta_k$ satisfies
 \begin{align*}
@@ -1369,82 +1369,19 @@ We restate the theorem for convenience.
 \begin{proof}
 By step~\ref{it:reduce} in \cref{subsec:proof-sketch}, it is enough to prove the theorem assuming $\Theta = I_D$.
 Assuming this, we now show that the minimizer of $f_\rv$ exists and is close to $\Theta = I_D$ with high probability.
-Let~$c$ be the minimum of~$1$ and the constant from \cref{thm:ball-convexity},
-and let $C$ be the maximum of~$25 \cdot 82$ and the constant from \cref{thm:ball-convexity}.
+Let~$c>0$ be the constants from \cref{thm:ball-convexity}.
 For
 \begin{equation}\label{eq:def delta}
-  \delta = \frac{\sqrt{Ck} \, d_{\max} }{\sqrt{nD}} \eps,
-\quad\text{which satisfies}\quad
-  \delta^2 \leq \frac1{\max\{k, d_{\max}\}},
+  \delta = \frac{\sqrt{82 k} \, d_{\max} }{\sqrt{nD}} \eps,
 \end{equation}
 consider the following two events:
 \begin{enumerate}
-\item\label{it:grad-bd} $\norm{\nabla f_x}_F \leq \frac\delta5$.
+\item\label{it:grad-bd} $\norm{\nabla f_x}_F \leq \delta$.
 \item\label{it:sc-ball} $f_\rv$ is $\frac12$-strongly convex on the geodesic ball $B_r(I_D)$ of radius $r=\smash{\frac c{\sqrt{(k+1) d_{\max}}}}$.
 \end{enumerate}
-By our assumption~\eqref{eq:eps sqr assm}, both \cref{prop:gradient-bound,thm:ball-convexity} apply, with the former showing the first and the latter showing the second event; the desired success probability then follows from the union bound.
+By our assumption~\eqref{eq:eps sqr assm}, if we choose the constant~$C>0$ large enough, both \cref{prop:gradient-bound,thm:ball-convexity} apply, with the former showing the first and the latter showing the second event; the desired success probability then follows from the union bound.
 
-
-
-%%%
-% {\color{blue}
-% To verify that \cref{prop:gradient-bound} applies, note that we wish to apply it with $\eps_{prop}$, where
-% \begin{align*}
-%   \sqrt{82 k \eps_{prop}^2} = \frac\delta5
-% \quad\Leftrightarrow\quad
-%   \eps_{prop} = \frac1{\sqrt{25 \cdot 82}} \frac{ \sqrt{C} d_{\max} }{\sqrt{nD}} \eps.
-% \end{align*}
-% Hence we need to verify the following conditions:
-% \begin{align*}
-%   \eps_{prop} < 1
-%   \quad\text{and}\quad
-%   n \geq \frac{d_{\max}^2}{D \eps_{prop}^2}
-% \end{align*}
-% These are equivalent to
-% \begin{align*}
-%   \frac1{\sqrt{25 \cdot 82}} \frac{ \sqrt{C} d_{\max} }{\sqrt{nD}} \eps \leq 1
-%   \Leftrightarrow
-%   \eps^2 \leq 25 \cdot 82 \frac{nD}{C d^2_{\max}}.
-% \end{align*}
-% and
-% \begin{align*}
-%   n \geq \frac{d_{\max}^2}{D \eps_{prop}^2}
-%   \Leftrightarrow
-%   \eps_{prop}^2 \geq \frac{d_{\max}^2}{Dn}
-%   \Leftrightarrow
-%   \eps^2 \geq \frac{25 \cdot 82}C.
-% \end{align*}
-% The first condition is clearly implied by the upper bound in~\eqref{eq:eps sqr assm}.
-% The second condition is implied by the lower bound in~\eqref{eq:eps sqr assm} (and using that $C\geq 25 \cdot 82$).
-% This \cref{prop:gradient-bound} applies and event~1 holds with failure probability
-% \begin{align*}
-%   2(k+1)e^{-\eps_{prop}^2 \frac{nD}{8d_{\max}}}
-% = 2(k+1)e^{-\frac{ \frac{C}{25\cdot82} d_{\max}^2 }{nD} \eps^2 \frac{nD}{8d_{\max}}}
-% = k e^{-\Omega(\eps^2 d_{\max})}
-% \end{align*}
-% %%%
-% For \cref{thm:ball-convexity} we simply need that
-% \begin{align*}
-%   n \geq C_{thm} k \frac{d_{\max}^2}D
-% \end{align*}
-% (by the comment below the theorem).
-% This follows from our assumption, since
-% \begin{align*}
-%   \frac{nD}{Ck d_{\max} \max\{k, d_{\max}\}} \geq 1
-% \Leftrightarrow
-%   n \geq C k \frac{d_{\max}^2 \max\{k, d_{\max}\}}{D}
-% \Rightarrow
-%   n \geq C k \frac{d_{\max}^2}{D}.
-% \end{align*}
-% (since $C \geq C_{thm}$).
-% Thus \cref{thm:ball-convexity} applies and event~2 holds with failure probability
-% \begin{align*}
-% k^2 \left( \frac{\sqrt{nD}}{k d_{\max}} \right)^{-\Omega(d_{\min})}
-% \end{align*}}
-% I think we need $\delta \leq r = c/\sqrt{ k d_{max}}$ to apply \cref{lem:convex-ball}. This is not guaranteed by $\delta^2 \leq 1/\max\{k, d_{max}}$.
-%%%
-
-By \cref{lem:convex-ball}, these two events in turn, together with our assumption on~$\delta$, imply the MLE~$\htheta$ exists, is unique, and has geodesic distance at most $\delta$ from $I_D$.
+By \cref{lem:convex-ball}, these two events, together with our assumption~\eqref{eq:eps sqr assm} (again for~$C>0$ large enough), imply the MLE~$\htheta$ exists, is unique, and has geodesic distance at most $2\delta$ from~$I_D$.
 
 We now show that $\htheta$ satisfies the desired bounds.
 Note that if $\htheta = \exp_{I_D}(H)$ for $H \in \H$, the equal-determinant Kronecker factors are given by $\htheta_a = \smash{e^{\frac{H_0}{d_a k}} e^{\sqrt{d_a} H_a}}$ for all~$a\in[k]$.
@@ -1455,14 +1392,14 @@ Thus,
 = \frac{\abs{H_0}^2}{d_a k^2} + \norm{\sqrt{d_a} H_a}_F^2 \\
 &\leq d_a \left( \abs{H_0}^2 + \norm{H_a}_F^2 \right)
 \leq d_a \norm H_F^2
-\leq d_a \delta^2.
+\leq 4 d_a \delta^2.
 \end{align*}
-By \cref{eq:def delta}, $d_a \delta^2 \leq 1$, so we have
+Our assumption~\eqref{eq:eps sqr assm} implies (again choosing $C$ large enough) that $4 d_a \delta^2 \leq 1$, so we obtain
 \begin{align*}
   D_F(\htheta_a\Vert I_a)
 = \norm{I_a - \htheta_a}_F
 \leq 2 \norm{\log\htheta_a}_F
-\leq 2 \sqrt{d_a} \, \delta
+\leq 4 \sqrt{d_a} \, \delta
 = O\left( \sqrt k \, \frac{\sqrt{d_a} \, d_{\max} }{\sqrt{nD}} \eps \right),
 \end{align*}
 which establishes the first bound.
@@ -1473,9 +1410,8 @@ The second now follows easily by a telescoping sum:
 % &= \sum_{a=1}^k \sqrt{d_{a+1}\cdots d_k} \norm{\htheta_1}_F \cdots \norm{\htheta_{a-1}}_F \norm{I_{d_a} - \htheta_a}_F \\
 &\leq 2 \sqrt{D} \sum_{a=1}^k (1 + 2\delta)^{a-1} \delta
 \leq 2 k e^{2\delta k} \sqrt{D} \delta
-= O\left( {\color{red}e^{2\delta k}} k^{3/2} \frac{d_{\max} }{\sqrt{n}} \eps \right)
+= O\left( k^{3/2} \frac{d_{\max} }{\sqrt{n}} \eps \right).
 \end{align*}
-\MW{Bound $\delta k$ once we agree on it. I think we can just change $k$ to $k^2$ inside the $\max$?}
 \end{proof}
 
 
@@ -1495,7 +1431,7 @@ Our main tool is a bound by \cite{KLR19} which uses the notion of a \emph{spectr
 
 \begin{definition}[Spectral gap]
 Let $\Phi\colon\Mat(d_b) \to \Mat(d_a)$ be a completely positive map.
-Say $\Phi$ has spectral gap $\gamma$ if
+Say $\Phi$ has \emph{spectral gap} $\gamma$ if
 \begin{align}\label{eq:spectral-gap}
   \sigma_2(\Phi) \leq (1 - \gamma) \frac{\tr \Phi(I_{d_b})}{\sqrt{d_a d_b}}
 \end{align}
@@ -1518,7 +1454,7 @@ If the completely positive map $\Phi^{(12)}$ defined in \cref{eq:hessian channel
 \begin{align*}
   \max \{ \norm{P_1 - I_{d_1}}_{\op}, \norm{P_2 - I_{d_2}}_{\op} \} = O\Bigl(\frac{\eps \log d_{\min}}\gamma\Bigr).
 \end{align*}
-Moreover, $f_x(P_1, P_2) \geq (1 - \frac{4 \eps^2}{\lambda}) \frac{\|x\|^2}{nD}$. 
+Moreover, $f_x(P_1, P_2) \geq (1 - \frac{4 \eps^2}{\lambda}) \frac{\|x\|^2}{nD}$. \MW{XX}
 \end{theorem}
 
 \begin{corollary}
