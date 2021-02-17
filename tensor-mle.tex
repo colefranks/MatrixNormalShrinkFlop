@@ -1534,7 +1534,7 @@ $\|\htheta_2 - I_{d_2} \|_{op} = O(\eps^2 \log d_{\min}/\gamma).$ \end{proof}
 
 % the MLE $\htheta = \htheta_1 \ot \htheta_2$ for $\Theta=I_{d_1} \ot I_{d_2}$ satisfies
 % where the Kronecker factors $\htheta_1$, $\htheta_2$ are chosen such that $\det\htheta_1=\det\htheta_2$.
-\CF{look ok?}
+\CF{look ok? I believe we only ever need to apply this for vectors with the desired norm, so the assumption $\|x\| = \sqrt{nD}$ doesn't hurt and  makes things cleaner.}
 
 \MW{Once this is done I will check the following bounds:}
 {\color{red}\Cref{lem:fm20,thm:klr}, along with what we have shown so far, already implies a preliminary version of \cref{thm:matrix-normal}.
