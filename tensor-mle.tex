@@ -2011,11 +2011,11 @@ For any~$t \geq 2$, with probability at least $1 - t^{-\Omega(m+n)}$,
 where $\Pi$ denotes the orthogonal projection onto the traceless subspace of $\R^m \ot \R^m$, that is, onto the orthogonal complement of $\vect(I_m)$.
 \end{theorem}
 
-We first explain how \cref{thm:Pisier-expansion}, along with the following estimate of the operator norm of a standard Gaussian $n \times m$ random matrix~$A$ (see \MW{add ref} in \cite{P86}),
+We first explain how \cref{thm:Pisier-expansion}, along with the following estimate of the operator norm of a standard Gaussian $n \times m$ random matrix~$A$ (see Theorem 5.32 in \cite{vershynin2010introduction}),
 \begin{equation}\label{eq:op norm bound}
-  \E \norm{A}_{\op} = \Theta(\sqrt{n} + \sqrt{m}),
+  \E \norm{A}_{\op} \leq \sqrt{n} + \sqrt{m},
 \end{equation}
-implies \cref{thm:hess-pisier}.
+implies \cref{thm:hess-pisier}. \AR{Removed $\Theta$}
 
 \begin{proof}[Proof of \cref{thm:hess-pisier}]
 Choose $n=d_a$ and $m=d_b$.
@@ -2048,12 +2048,12 @@ Our setting required the result on rectangular matrices with strong error bounds
 The proof proceeds by a symmetrization trick, followed by the trace method.
 We will first state a necessary concentration result and then give the proof of \cref{thm:Pisier-expansion}.
 
-\begin{theorem}[\MW{add ref} in \cite{P86}]\label{thm:banach conc}
+\begin{theorem}[Theorem 1.5 in \cite{P86}]\label{thm:banach conc}
 Let $A$ be a standard Gaussian in separable Banach space with norm $\|\cdot\|$.
 Then $\|A\|$ concentrates with parameter $\sigma^2 := \sup \{ \E \langle \xi, A \rangle^{2} \mid \|\xi\|_{*} \leq 1 \}$, where $\norm{\xi}_*$ denotes the dual norm.
 That is,
 \[ \Pr\Bigl( \abs[\big]{\norm A - \E \norm A} \geq t\Bigr) \leq \exp\Bigl( - \frac{\Omega(t^2)}{\sigma^{2}}\Bigr).   \]
-Another equivalent definition of sub-Gaussianity is \MW{add ref for equivalence}
+Another equivalent definition of sub-Gaussianity (according to Lemma 5.5 of \cite{vershynin2010introduction}) \MW{add ref for equivalence} is
 \begin{equation}\label{eq:conc via moments}
   \forall p \geq 2 \colon \quad (\E \|A\|^{p})^{\frac{1}{p}} \leq \E \|A\| + O \left( \sqrt{\frac{p}{\sigma^{2}}} \right).
 \end{equation}
@@ -2081,21 +2081,21 @@ Then,
 \end{align*}
 and hence, for any $p\geq1$,
 \begin{align*}
-  \E \norm*{\left( \sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^p
-\leq \E \norm*{\left( \sum_{i=1}^N A_i \otimes A_i - \sum_{i=1}^N B_i \otimes B_i \right) \circ \Pi}_{\op}^p
+  \E_{A} \norm*{\left( \sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^p
+\leq \E_{A,B} \norm*{\left( \sum_{i=1}^N A_i \otimes A_i - \sum_{i=1}^N B_i \otimes B_i \right) \circ \Pi}_{\op}^p
 \end{align*}
-by Jensen's inequality and the convexity of $\norm{\cdot}_{\op}^p$ \MW{(!)}.
+by two applications of Jensen's inequality, as $\norm{\cdot}_{\op}^p$ is the composition of the norm $\norm{\cdot}_{op}$ with $x \to x^{p}$ which is monotone and convex on $\R_{+}$ \MW{(!)}.
 Now note $(A_i,B_i)$ has the same distribution as $(\frac{A_i+B_i}{\sqrt2},\frac{A_i-B_i}{\sqrt2})$, so the right-hand side is equal to
 \begin{align*}
-&\quad \frac12 \E \norm*{\left( \sum_{i=1}^N (A_i + B_i) \otimes (A_i + B_i) - \sum_{i=1}^N (A_i - B_i) \otimes(A_i - B_i) \right) \circ \Pi}_{\op}^p \\
+&\quad \E \norm*{ \frac{1}{2} \left( \sum_{i=1}^N (A_i + B_i) \otimes (A_i + B_i) - \sum_{i=1}^N (A_i - B_i) \otimes(A_i - B_i) \right) \circ \Pi}_{\op}^p \\
 &= \E \norm*{\left( \sum_{i=1}^N A_i \otimes B_i + \sum_{i=1}^N B_i \otimes A_i \right) \circ \Pi}_{\op}^p
 % \leq 2 \E \norm*{\left( \sum_{i=1}^N A_i \otimes B_i \right) \circ \Pi}_{\op}^p
-\leq 2 \, \E \norm*{\sum_{i=1}^N A_i \otimes B_i}_{\op}^p
+\leq 2^{p} \, \E \norm*{\sum_{i=1}^N A_i \otimes B_i}_{\op}^p
 \end{align*}
 Thus, we have proved that \MW{(we needed this bound for the $p$-th powers)}
 \begin{align}\label{eq:symmetrization}
   \E \norm*{\left( \sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^p
-\leq 2 \, \E \norm*{\sum_{i=1}^N A_i \otimes B_i}_{\op}^p.
+\leq 2^{p} \, \E \norm*{\sum_{i=1}^N A_i \otimes B_i}_{\op}^p.
 \end{align}
 Note that we have lost the projection and removed the dependencies.
 Next we use the trace method to bound the right-hand side of \cref{eq:symmetrization}.
@@ -2109,8 +2109,8 @@ For any $q\geq1$,
 &= \sum_{i, j \in [N]^q} \E \tr \left( A^T_{i_1} A_{j_1} \cdots A^T_{i_q} A_{j_q} \right) \E \tr \left( B^T_{i_1} B_{j_1} \cdots B^T_{i_q} B_{j_q} \right)
 \end{align*}
 where we used the independence of $\{A_i\}$ and $\{B_i\}$ in the last step.
-Now, a monomial of independent standard Gaussians random variables is nonnegative, and positive iff each variable appears an even number of times.
-\MW{Remind me how we use the 2nd half of the preceding sentence?}
+Now, the expectation of a (non-empty) monomial of independent standard Gaussian random variables vanishes unless each variable appears an even number of times, in which case it is positive.
+\MW{Remind me how we use the 2nd half of the preceding sentence?} \AR{I guess it is enough to say the expectation is non-negative always. It was there before because I did the proof with general coefficients $\vec{\alpha}$ in which case we needed to show any non-vanishing term has coefficient $\alpha$ to some even power so the coefficient is also positive. }
 Thus, whenever $\E \tr ( A^T_{i_1} A_{j_1} \cdots A^T_{i_q} A_{j_q} )$ is nonzero, it is positive, so we can upper bound the sum term by term as
 \begin{align*}
 &\quad \sum_{i, j \in [N]^q} \E \tr \left( A^T_{i_1} A_{j_1} \cdots A^T_{i_q} A_{j_q} \right) \E \tr \left( B^T_{i_1} B_{j_1} \cdots B^T_{i_q} B_{j_q} \right) \\
@@ -2139,39 +2139,39 @@ Note that the dual norm is the trace norm~$\norm{\cdot}_1$, hence the concentrat
 = \sup \left\{ \norm\xi_F^2 \;\mid\; \norm{\xi}_1 \leq 1 \right\}
 \leq 1,
 \end{align*}
-where we first used that $\braket{\xi,A}$ is distributed the same as $\norm\xi_F A_{11}$ by orthogonal invariance \MW{Why is this not a completely general argument?}, and then that the trace norm dominates the Frobenius norm.
+where we first used that $\braket{\xi,A}$ is distributed the same as $\norm\xi_F A_{11}$ by orthogonal invariance \MW{Why is this not a completely general argument?} \AR{This seems like the most general way to give a sub-Gaussian parameter on a Banach space. Maybe there's a more direct version for operator norms, but I don't see it in Pisier}, and then that the trace norm dominates the Frobenius norm.
 Thus, using \cref{eq:symmetrization,eq:op vs 2q,thm:banach conc}, we obtain for $q\geq1$,
 \begin{align*}
 \E \norm*{\left( \sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^{2q}
 % \leq 2 \E \norm*{\sum_{i=1}^N A_i \ot B_i}_{\op}^{2q}
-\leq 2 N^q m^2 \Bigl( \E\norm{A}_{\op}^{2q} \Bigr)^2
-\leq 2 N^q m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q},
+\leq 2^{2q} N^q m^2 \Bigl( \E\norm{A}_{\op}^{2q} \Bigr)^2
+\leq (4 N)^q m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q},
 \end{align*}
 where~$C>0$ is the universal constant from the big-$O$ notation in \cref{eq:conc via moments}.
 
 \MW{Please check if the proof is now correct (and there is no easier way):}
 Finally, we can use the Markov inequality to see that, for any~$C'>0$, the event
 \begin{align*}
-  \norm*{\left(\sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op} \leq (2C')^2 t^2 \sqrt{N} \bigl( \E \norm{A}_{\op} \bigr)^2
+  \norm*{\left(\sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op} \leq (C' t)^2 \sqrt{4 N} \bigl( \E \norm{A}_{\op} \bigr)^2
 \end{align*}
 holds up to failure probability at most
 \begin{align*}
-  \frac{\E \norm*{\left(\sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^{2q}}{\left( (2C')^2 t^2 \sqrt{N} \bigl( \E \norm{A}_{\op} \bigr)^2 \right)^{2q}}
+  \frac{\E \norm*{\left(\sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^{2q}}{\left( (C')^2 t^2 \sqrt{4 N} \bigl( \E \norm{A}_{\op} \bigr)^2 \right)^{2q}}
 \leq % \frac{2 N^q m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(2C')^{4q} t^{4q} N^q \bigl( \E \norm{A}_{\op} \bigr)^{4q}} =
-  \frac{2 m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(2C')^{4q} t^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}}.
+  \frac{m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(C' t)^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}}.
 \end{align*}
-Now we choose $q = (\sqrt m + \sqrt n)^2 \geq m + n$.
-In view of \cref{eq:op norm bound}, we can moreover choose~$C'\geq1$ to be a universal constant such that $C \sqrt q \leq C' \, \E \norm{A}_{\op}$.
-Then, the failure probability can be bounded as follows:
+Now we choose $q \in \mathbb{N}$ such that $C \sqrt{q} \leq \sqrt m + \sqrt n = \E \|A\|_{op}$, where the last equality is by \cref{eq:op norm bound}. \AR{Changed the choice of constant, hope you don't mind}
+We can moreover choose~$C'\geq 2$ to be a universal constant.
+Then, the failure probability is bounded as follows:
 \begin{align*}
-  \frac{2 m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(2C')^{4q} t^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}}
+  \frac{m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(C' t)^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}}
 \leq
 % \frac{2 m^2 \Bigl( (1 + C') \E\norm A_{\op} \Bigr)^{4q}}{(C')^{4q} t^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}} =
-2 m^2 \left( \frac{1 + C'}{2 C' t} \right)^{4q}
-\leq 2 m^2 t^{-4(m+n)}
+m^2 \left( \frac{2 \E\norm A_{\op}}{C' t \E\norm A_{\op}} \right)^{4q}
+\leq m^2 t^{-4q}
 = t^{-\Omega(m+n)}
 \end{align*}
-In the last step we used that $t\geq2$, so the prefactor can be absorbed at the cost of slightly changing the constant in the exponent.
+The first inequality was by choice of $C \sqrt{q} \leq \E\norm A_{\op}$. In the second inequality we used that $C' \geq 2$. In the final step we used the choice of $q \geq C^{-2} (\sqrt{m} + \sqrt{n})^{2} - 1 = \Omega(m + n)$, as well as the fact that $t\geq2$, so the prefactor can be absorbed at the cost of slightly changing the constant in the exponent.
 This concludes the proof.
 \end{proof}
 
