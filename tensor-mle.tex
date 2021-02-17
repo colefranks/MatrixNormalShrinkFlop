@@ -39,7 +39,7 @@
 \DeclareMathOperator{\cut}{cut}
 \DeclareMathOperator{\ch}{ch}
 
-\DeclareMathOperator{\mat}{Mat}
+\DeclareMathOperator{\Mat}{Mat}
 \DeclareMathOperator{\GL}{GL}
 \DeclareMathOperator{\tr}{Tr}
 \DeclareMathOperator{\rk}{rk}
@@ -261,7 +261,7 @@ Our regularizer has a Bayesian interpretation as coming from a Wishart prior for
 %-----------------------------------------------------------------------------
 \subsection{Notation}
 %-----------------------------------------------------------------------------
-We write $\mat(d)$ for the space of $d\times d$ matrices, $\PD(d)$ for the convex cone of $d\times d$ positive definite matrices; $\GL(d)$ denotes the group of invertible $d\times d$ matrices.
+We write $\Mat(d)$ for the space of $d\times d$ matrices, $\PD(d)$ for the convex cone of $d\times d$ positive definite matrices; $\GL(d)$ denotes the group of invertible $d\times d$ matrices.
 For a matrix $A$, $\norm{A}_{\op}$ denotes the operator norm, $\norm{A}_F = (\tr A^T A)^{\frac12}$ the Frobenius norm, and $\braket{A,B} = \tr A^T B$ for the Hilbert-Schmidt inner product.
 We extend these definitions to tuples $A=(A_0;A_1,\dots,A_k)$, where~$A_0\in\R$ and the $A_a$ for $a\in[k]$ are matrices and denote them by the same symbol, i.e., $\norm{A}_F = (\abs{A_0}^2 + \sum_{a=1}^k \norm{A_a}_F^2)^{1/2}$ and similarly for the inner product.
 \MW{Define $O, \Theta$ notation and say that for us this is always about universal constants.}
@@ -957,12 +957,12 @@ Again we caution the reader that $\nabla^2_{a0} f_x$ is a linear operator from t
 
 The most interesting part of the Hessian are the off-diagonal blocks for $a\neq b\in[k]$, which up an overall factor $\sqrt{d_a d_b}$ can be seen as the restrictions of the linear maps
 \begin{align}\label{eq:hessian channel}
-  \Phi^{(ab)} \colon \mat(d_b) \to \mat(d_a), \quad \braket{H, \Phi^{(ab)}(K)} &= \tr \rho^{(ab)} \left( H \ot K \right)
+  \Phi^{(ab)} \colon \Mat(d_b) \to \Mat(d_a), \quad \braket{H, \Phi^{(ab)}(K)} &= \tr \rho^{(ab)} \left( H \ot K \right)
 \end{align}
 to the traceless symmetric matrices.
 % For general $\omega \in \PD(d_1d_2)$, a linear map of the form
 % \begin{align*}
-%   \Phi \colon \mat(d_1) \to \mat(d_2), \quad \braket{H, \Phi(K)} = \tr \omega (H \ot K)
+%   \Phi \colon \Mat(d_1) \to \Mat(d_2), \quad \braket{H, \Phi(K)} = \tr \omega (H \ot K)
 % \end{align*}
 % is known as a \emph{completely positive map}.
 % If $\omega = \sum_{i=1}^N \vect(A_i) \vect(A_i)^T$ for $d_2\times d_1$ matrices~$A_1,\dots,A_N$, we have the following two equivalent ways to write the corresponding completely positive map, which we denote by $\Phi_A$:
@@ -973,19 +973,19 @@ to the traceless symmetric matrices.
 % \end{align}
 % Conversely, any linear map of this form is completely positive.
 % The matrices $A_1,\dots,A_N$ are known as Kraus operators of~$\Phi_A$.
-% We denote by $\Phi^*\colon\mat(d_2)\to\mat(d_1)$ the adjoint of a completely positive map~$\Phi$ with respect to the Hilbert-Schmidt inner product; this is again a completely positive map (with Kraus operators the transposes of the original Kraus operators).
+% We denote by $\Phi^*\colon\Mat(d_2)\to\Mat(d_1)$ the adjoint of a completely positive map~$\Phi$ with respect to the Hilbert-Schmidt inner product; this is again a completely positive map (with Kraus operators the transposes of the original Kraus operators).
 This is a special case of a \emph{completely positive map}, which is a linear map of the form
 \begin{align}\label{eq:def cp}
-  \Phi_A \colon \mat(d_b) \to \mat(d_a), \quad \Phi_A(X) = \sum_{i=1}^N A_i X A_i^T
+  \Phi_A \colon \Mat(d_b) \to \Mat(d_a), \quad \Phi_A(X) = \sum_{i=1}^N A_i X A_i^T
 \end{align}
 for $d_a\times d_b$ matrices $A_1,\dots,A_N$.
 To see the connection, note that since $\rho^{(ab)}$ is positive semidefinite, it can be written in the form $\sum_{i=1}^N \vect(A_i) \vect(A_i)^T$; then $\Phi^{(ab)} = \Phi_A$ follows.
 The matrices $A_1,\dots,A_N$ are known as \emph{Kraus operators}.
 \Cref{eq:def cp} can also be written as
-\begin{align*}
+\begin{align}\label{eq:vec rep}
   \vect(\Phi_A(X)) = \sum_{i=1}^N (A_i \ot A_i) \vect(X).
-\end{align*}
-We denote by $\Phi^*\colon\mat(d_a)\to\mat(d_b)$ the adjoint of a completely positive map~$\Phi$ with respect to the Hilbert-Schmidt inner product; this is again a completely positive map, with Kraus operators $A_1^T,\dots,A_N^T$.
+\end{align}
+We denote by $\Phi^*\colon\Mat(d_a)\to\Mat(d_b)$ the adjoint of a completely positive map~$\Phi$ with respect to the Hilbert-Schmidt inner product; this is again a completely positive map, with Kraus operators $A_1^T,\dots,A_N^T$.
 % \begin{align*}
 %   \braket{H, \Phi^{(ab)}(K)}
 % = \tr \rho^{(ab)} \left( H \ot K \right)
@@ -1008,7 +1008,7 @@ We denote by $\Phi^*\colon\mat(d_a)\to\mat(d_b)$ the adjoint of a completely pos
 In our proof of strong convexity, we will show that strong convexity follows if the completely positive maps $\Phi^{(ab)}$ are good \emph{quantum expanders}.
 
 \begin{definition}[Quantum expansion]
-Let $\Phi\colon\mat(d_b) \to \mat(d_a)$ be a completely positive map.
+Let $\Phi\colon\Mat(d_b) \to \Mat(d_a)$ be a completely positive map.
 Say $\Phi$ is \emph{$\eps$-doubly balanced} if
 \begin{align}\label{eq:doubly balanced}
   \norm*{\frac{\Phi(I_{d_b})}{\tr \Phi(I_{d_b})} - \frac{I_{d_a}}{d_a}}_{\op} \leq \frac\eps{d_a}
@@ -1210,11 +1210,9 @@ Using \cref{eq:baby norm bounds} we obtain the desired bound.
 
 We are concerned with $\Phi^{(ab)}$ that arise from random Gaussians.
 Just like random graphs can give rise to good expanders, it is known that random completely positive maps, namely~$\Phi$ constructed by choosing Kraus operators at random from various well-behaved distributions, yield good quantum expanders.
-Pisier showed the following result when the Kraus operators are chosen to be standard Gaussians.
-
+When the Kraus operators are chosen to be standard Gaussian we have the following result:
 
 \begin{theorem}[\cite{pisier2012grothendieck,P14}]\label{thm:hess-pisier}
-% There is a universal constant $C>0$ such that the following holds.
 Let $A_1,\dots,A_N$ be independent $d_a\times d_b$ random matrices with independent standard Gaussian entries.
 Then, for every $t \geq 2$, with probability at least~$1 - t^{-\Omega(d_a + d_b)}$, the completely positive map $\Phi_A$, defined as in \cref{eq:def cp}, satisfies
 \begin{align*}
@@ -1493,7 +1491,7 @@ The proof plan is similar to that in \cref{subsec:proof-sketch}, but to work dir
 Our main tool is a bound by \cite{KLR19} which uses the notion of a \emph{spectral gap}.
 
 \begin{definition}[Spectral gap]
-Let $\Phi\colon\mat(d_b) \to \mat(d_a)$ be a completely positive map.
+Let $\Phi\colon\Mat(d_b) \to \Mat(d_a)$ be a completely positive map.
 Say $\Phi$ has spectral gap $\gamma$ if
 \begin{align}\label{eq:spectral-gap}
   \sigma_2(\Phi) \leq (1 - \gamma) \frac{\tr \Phi(I_{d_b})}{\sqrt{d_a d_b}}
@@ -1651,6 +1649,7 @@ Before we analyze the convergence of the flip-flop algorithms for the tensor and
 
 The next lemma shows that any descent method which manages to decrease the value of the function with respect to the gradient...
 The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
+\MW{How about moving this to right after \cref{lem:convex-ball}, since it's also g-convexity general nonsense?}
 
 \begin{lemma}\label{lem:descent-sublevel-set}
 	Let $f : \SPD \rightarrow \R$ be $\lambda$-strongly geodesically convex in a sublevel set containing $x_0$, $\norm{\nabla f(x_0)}_F^2 \leq 1$ and $\alpha > 0$ be a constant.
@@ -1977,7 +1976,7 @@ We compare the performance of the estimator with Zhou's single step estimator \C
 %=============================================================================
 \section{Conclusion and open problems}
 %=============================================================================
-\TODO{$D_{op}$} for tensors??
+\TODO{$D_{op}$ for tensors?}
 
 
 \begin{appendix}
@@ -1985,110 +1984,179 @@ We compare the performance of the estimator with Zhou's single step estimator \C
 %=============================================================================
 \section{Pisier's proof of expansion}\label{sec:pisier}
 %=============================================================================
-The original theorem in \cite{P14} is in a slightly different language:
+In this appendix we discuss the proof of \cref{thm:hess-pisier}.
+Pisier's original theorem is proved in a slightly different language:
 
-\begin{definition}
-We denote $\Pi: \mat(m) \to \mat(m)$ as the orthogonal projection onto traceless matrices in $\mat(m)$.
-\end{definition}
-
-\begin{theorem}\label{thm:Pisier-expansion}
-Let $\{Y_{i}\}_{i \in [N]}$ be i.i.d. random matrices in $\mat(n,m)$ with i.i.d. standard Gaussian entries. There are constants $c,C > 0$ such that for any $t \geq 2$ we have the following norm bound with failure probability $\leq t^{-c(m+n)}$:
-\[ \left\| \left(\sum_{i=1}^{N} Y_{i} \otimes Y_{i }\right) \circ \Pi \right\|_{op} \leq C \sqrt{N} t^{2} \left( \E \|Y\|_{op} \right)^{2} \]
-Here the $Y$ on the right hand side is another i.i.d. standard gaussian matrix in $\mat(n,m)$
+\begin{theorem}[Pisier]\label{thm:Pisier-expansion}
+Let $A_1,\dots,A_N,A$ be independent $n \times m$ random matrices with independent standard Gaussian entries.
+For any~$t \geq 2$, with probability at least $1 - t^{-\Omega(m+n)}$,
+\begin{align*}
+  \norm*{\left(\sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}
+  \leq O\left( t^2 \sqrt{N} \bigl( \E \norm{A}_{\op} \bigr)^2 \right),
+\end{align*}
+where $\Pi$ denotes the orthogonal projection onto the traceless subspace of $\R^m \ot \R^m$, that is, onto the orthogonal complement of $\vect(I_m)$.
 \end{theorem}
 
-The relation to our desired expansion result follows from the following: for $Y \in \R^{n \times m}$ we have $Y \otimes Y : \R^{m \times m} \to \R^{n \times n}$, and so for $Z \in \mat(m)$:
-\[ Y \otimes Y (\text{vec}(Z)) = \text{vec}( Y^{*} Z Y)      \]
-Therefore the term we want to bound in \cref{thm:hess-pisier} is related as:
-\[ \|\Phi_{Y}\|_{0} := \sup_{Tr[H] = 0} \frac{\|\sum_{i \in [N]} Y_{i} H Y_{i}^{*}\|_{F}}{\|H\|_{F}} = \sup_{H \in \mat(m,m)} \frac{\left\| \left( \sum_{i} Y_{i} \otimes Y_{i} \right) \circ \Pi (\text{vec}(H)) \right\|_{2}}{\|\text{vec}(H)\|_{2}}      \]
-In the last equality we used $\|\Pi (\text{vec}(H))\|_{2} \leq \|\text{vec}(H)\|_{2}$ since $\Pi$ is an orthogonal projection. So \cref{thm:Pisier-expansion} reduces our problem to bounding the operator norm of a single random gaussian matrix $Y$, which is well understood:
+We first explain how \cref{thm:Pisier-expansion}, along with the following estimate of the operator norm of a standard Gaussian $n \times m$ random matrix~$A$ (see \MW{ref} in \cite{P86}),
+\begin{equation}\label{eq:op norm bound}
+  \E \norm{A}_{\op} = \Theta(\sqrt{n} + \sqrt{m}),
+\end{equation}
+implies \cref{thm:hess-pisier}.
 
-\begin{theorem}[\cite{P86}]
-We denote a random Gaussian matrix $Y \in \R^{m \times n}$ (for $m < n$) with $Y_{ij} \sim \mathcal{N}(0,1)$, we have the following bound
-\[ \E \|Y\|_{op} \leq \sqrt{m} + \sqrt{n} \]
+\begin{proof}[Proof of \cref{thm:hess-pisier}]
+Choose $n=d_a$ and $m=d_b$.
+Observe that
+\begin{align*}
+  \norm{\Phi_A}_0
+= \max_{\substack{H \text{ traceless symmetric} \\ \norm H_F=1}} \norm{\Phi(H)}_F
+% = \max_{\substack{H \text{ traceless symmetric} \\ \norm H_F \leq 1}} \norm{\Phi(H)}_F
+\leq %\max_{\substack{H \in \Mat(n,m) \\ \norm H_F \leq 1}} \norm{\Phi(\Pi(H))}_F =
+\max_{\substack{H \in \Mat(n,m) \\ \norm H_F = 1}} \norm{\Phi(\Pi(H))}_F
+= \norm{\Phi \circ \Pi}_{\op}.
+\end{align*}
+Here we identified $\Mat(m) \cong \R^m \ot \R^m$, so $\Pi$ identifies with the orthogonal projection onto the traceless matrices, and we used that $\norm{\Pi(H)}_F \leq \norm{H}_F$, since $\Pi$ is an orthogonal projection.
+Using \cref{eq:vec rep,thm:Pisier-expansion}, it follows that
+\begin{align*}
+  \norm{\Phi_A}_0 \leq O\left( t^2 \sqrt{N} \bigl( \E \norm{A}_{\op} \bigr)^2 \right),
+\end{align*}
+with the desired probability.
+Using \cref{eq:op norm bound}, we can bound the right-hand side operator norm,
+\begin{align*}
+  \bigl( \E \norm{Y}_{\op} \bigr)^2
+= O\left( \left( \sqrt{n} + \sqrt{m} \right)^2 \right)
+= O\left(n+m\right),
+\end{align*}
+which concludes the proof.
+\end{proof}
+
+In the remainder we discuss the proof of \cref{thm:Pisier-expansion}.
+Our setting required the result on rectangular matrices with strong error bounds, so we follow the proof in \cite{pisier2012grothendieck} with these minor modifications and claim no originality.
+The proof proceeds by a symmetrization trick, followed by the trace method.
+We will first state a necessary concentration result and then give the proof of \cref{thm:Pisier-expansion}.
+
+\begin{theorem}[\MW{ref} in \cite{P86}]\label{thm:banach conc}
+Let $A$ be a standard Gaussian in separable Banach space with norm $\|\cdot\|$.
+Then $\|A\|$ concentrates with parameter $\sigma^2 := \sup \{ \E \langle \xi, A \rangle^{2} \mid \|\xi\|_{*} \leq 1 \}$, where $\norm{\xi}_*$ denotes the dual norm.
+That is,
+\[ \Pr\Bigl( \abs[\big]{\norm A - \E \norm A} \geq t\Bigr) \leq \exp\Bigl( - \frac{\Omega(t^2)}{\sigma^{2}}\Bigr).   \]
+Another equivalent definition of sub-Gaussianity is \MW{ref for equivalence}
+\[ \forall p \geq 2: (\E \|A\|^{p})^{\frac{1}{p}} \leq \E \|A\| + O \left( \sqrt{\frac{p}{\sigma^{2}}} \right).  \]
 \end{theorem}
 
-Therefore \cref{thm:Pisier-expansion} implies the conclusion of \cref{thm:hess-pisier}:
-\[ \|\Phi_{Y}\|_{0} \leq C \sqrt{N} t^{2} (\sqrt{m} + \sqrt{n})^{2} \leq C' \sqrt{N} t^{2} (m + n)     \]
-
-% Need to bound $Tr[\Phi(I)]$ and then this simply gives the quantum expansion result $\|\Phi\|_{0} \leq \lambda \frac{Tr[\Phi(I)]}{\sqrt{mn}}$.
-
-\MW{Please explain this in more detail (since the point of having the appendix is as a service to the non-expert reader :-).}
-Our setting required the result on rectangular matrices with strong error bounds, so we follow the proof given in \cite{P14} with these minor modifications and claim no originality .The proof of \cref{thm:Pisier-expansion} proceeds by a symmetrization trick, followed by the trace method. We will first state the necessary concentration results and then give the proof.
-
-\begin{theorem}[\cite{P86}]
-Let $Y$ be a standard Gaussian in separable Banach space with norm $\|\cdot\|$. Then $\|Y\|$ concentrates  with parameter $\sigma^{2} := \sup \{ \E \langle Y, \xi \rangle^{2} \mid \|\xi\|_{*} \leq 1 \}$:
-\[ \Pr [ | \|Y\| - \E \|Y\| | \geq t ] \leq \exp \left( - \frac{\Omega(t^{2})}{\sigma^{2}} \right).   \]
-Another equivalent definition of sub-Gaussianity is
-\[ \forall p \geq 2: (\E \|Y\|^{p})^{\frac{1}{p}} \leq \E \|Y\| + O \left( \sqrt{\frac{p}{\sigma^{2}}} \right)   \]
-\end{theorem}
-
-\begin{theorem}[Non-commutative H\"older inequality]\label{thm:holder}
-For $p = 2^{m}$, we have the following (Holder's type) inequality
-\[ |\tr[\prod_{i=1}^{p} A_{i}]| \leq \prod_{i=1}^{p} \|A_{i}\|_{p}   \]
-\end{theorem}
-
+We will also use the H\"older inequality for the \emph{Schatten $p$-norm} $\norm{A}_p = (\tr(A^TA)^{\frac p2})^{\frac1p}$, where $p\geq1$:
+\begin{align}\label{eq:holder}
+  \abs*{\tr \prod_{i=1}^{p} A_i} \leq \prod_{i=1}^{p} \norm{A_i}_p,
+\end{align}
 
 \begin{proof} [Proof of \cref{thm:Pisier-expansion}]
-The operator we want to control ($\sum_{i} Y_{i} \otimes Y_{i} \circ \Pi$) has entries which are dependent in complicated ways. We first begin by a standard symmetrization trick to linearize. A single entry of $Y \otimes Y$ is either $g g'$ for two independent standard Gaussians, or $g^{2}$ for a single standard Gaussian. In expectation we have $\E g g' = 0, \E g^{2} = 1$, and so the expected matrix is
-\[ \E \sum_{i} Y_{i} \otimes Y_{i} = \{ N \delta_{u = u'} \delta_{v = v'} \}_{u,u' \in [n], v,v' \in [m]}    \]
-The above term can be rewritten as $N \text{vec}(I_{n}) \text{vec}(I_{m})^{*}$ and so after projection we have
-\[ \E \sum_{i} Y_{i} \otimes Y_{i} \circ \Pi = N N \text{vec}(I_{n}) \text{vec}(I_{m})^{*} \circ \Pi = 0 \]
-
-%\[ \E (Y \otimes Y)\circ \Pi = vec(I_{n}) vec(I_{m})^{*} (I - \Pi) = 0  \]
-%then $\E Y \otimes Y (I-\Pi) = 0$ because for any $X \in \mat(m)$ we have
-%$$ \E Y \otimes Y (I-\Pi)X = \E (Y \ot Y) X - \frac{1}{m} (\tr X) \E (Y \ot Y)  I_m,$$ which is easily calculated to be zero.
-%\CF{I think $m$ and $n$ are switched below}
-%\[\E Y^{*} I_{m} Y = m I_{n} \implies \E Y \otimes Y (I-P) = vec(I_{n}) vec(I_{m})^{*} (I-\Pi) = 0\]
-Therefore we can add a copy with new iid variables $\{Z_{i}\}$: using Jensen's inequality and the convexity of the operator norm, we have
-\[ \E_{Y} \left\|\left(\sum_{i=1}^{N} Y_{i} \otimes Y_{i}\right) \circ \Pi\right\|_{op} \leq
-\E_{Y,Z} \left\|\left(\sum_{i=1}^{N} Y_{i} \otimes Y_{i}-\sum_{i=1}^{N} Z_{i} \otimes Z_{i}\right) \circ \Pi \right\|_{op}  \] Now note $(Y,Z)$ has the same joint distribution as $(\frac{Y+Z}{\sqrt{2}},\frac{Y-Z}{\sqrt{2}})$, so the above equation is
-\begin{align}\frac{1}{2}\E &\left\|\left(\sum_{i=1}^{N} (Y_{i}+Z_{i}) \otimes (Y_{i}+Z_{i})  - \sum_{i=1}^{N} (Y_{i}-Z_{i}) \otimes (Y_{i}-Z_{i})\right)\circ \Pi \right\|_{op}\nonumber \\
-& = \E \left\|\left(\sum_{i} Y_{i} \otimes Z_{i}  + Z_{i} \otimes Y_{i} \right) \circ \Pi \right\|_{op}  \nonumber\\
-& \leq 2 \E \left\|\sum_{i} Y_{i} \otimes Z_{i}\right\|_{op}.   \label{eq:yz}
-\end{align}
-Note we've lost the projection, but removed many of the dependencies. Next we use the trace method to bound the expectation of \cref{eq:yz}; that is, we approximate the operator norm by the Schatten $p$-norm for a high enough $p$ and control these Schatten norms using concentration of moments of Gaussians.
-
+The operator we want to control has entries which are dependent in complicated ways.
+We first begin with a standard symmetrization trick to linearize (compare the proof of Lemma~4.1 in~\cite{P14}).
+A single entry of $A_i \otimes A_i$ is either a product $g g'$ of two independent standard Gaussians, or the square $g^2$ of a single standard Gaussian.
+In expectation, we have $\E g g' = 0, \E g^{2} = 1$, and so the expected matrix is
+\[ \E \left( \sum_{i=1}^N A_i \otimes A_i \right) = N \vect(I_n) \vect(I_m)^T. \]
+Accordingly, after projection we have
+\[ \E \left( \sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi = 0. \]
+Therefore we may add an independent copy:
+Let $B_1,\dots,B_N$ be independent $n\times m$ random matrices with standard Gaussian entries, that are also independent from~$A_1,\dots,A_N$.
+Then,
 \begin{align*}
-\E \left\|\sum_{i} Y_{i} \otimes Z_{i}\right\|_{2p}^{2p}
-& = \E \tr \left[ \left( \sum_{ij} Y_{i}^{*} Y_{j} \otimes Z_{i}^{*} Z_{j} \right)^{p} \right]  \\
-& = \sum_{\vec{i},\vec{j} \in [N]^{p}} \E \tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} \otimes Z_{i_{1}}^{*} Z_{j_{1}} ... Z_{i_{p}}^{*} Z_{j_{p}}  ]   \\
-& = \sum_{\vec{i},\vec{j}} (\E_{Y} \tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) (\E_{Z} \tr [ Z_{i_{1}}^{*} Z_{j_{1}} ... Z_{i_{p}}^{*} Z_{j_{p}} ] )
+  \left( \sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi
+= \E_B \left( \sum_{i=1}^N A_i \otimes A_i - \sum_{i=1}^N B_i \otimes B_i \right) \circ \Pi
 \end{align*}
-Here we used independence of $(Y,Z)$. We eventually want to charge to $\E \|\sum_{i} \alpha_{i} Y_{i}\|_{op}$. First note that expectations of Gaussian monomials are non-zero and positive iff the polynomial is even. % Therefore the coefficient $\alpha^{\vec{i}} \alpha^{\vec{j}}$ from all non-vanishing terms is a square, and in particular positive.
-So we can upper bound each term individually by the nc-Holder inequality (\cref{thm:holder}) to find:
-\[\E \|\sum_{i} Y_{i} \otimes Z_{i}\|_{2p}^{2p}
-\leq \sum_{\vec{i},\vec{j}} (\E_{Y} \tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] )
-( \E_{Z} \|Z_{i_{1}}^{*}\|_{2p} ... \|Z_{j_{p}}\|_{2p} )  \]
+and hence, for any $p\geq1$,
+\begin{align*}
+  \E \norm*{\left( \sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^p
+\leq \E \norm*{\left( \sum_{i=1}^N A_i \otimes A_i - \sum_{i=1}^N B_i \otimes B_i \right) \circ \Pi}_{\op}^p
+\end{align*}
+by Jensen's inequality and the convexity of $\norm{\cdot}_{\op}^p$ \MW{(!)}.
+Now note $(A_i,B_i)$ has the same distribution as $(\frac{A_i+B_i}{\sqrt2},\frac{A_i-B_i}{\sqrt2})$, so the right-hand side is equal to
+\begin{align*}
+&\quad \frac12 \E \norm*{\left( \sum_{i=1}^N (A_i + B_i) \otimes (A_i + B_i) - \sum_{i=1}^N (A_i - B_i) \otimes(A_i - B_i) \right) \circ \Pi}_{\op}^p \\
+&= \E \norm*{\left( \sum_{i=1}^N A_i \otimes B_i + \sum_{i=1}^N B_i \otimes A_i \right) \circ \Pi}_{\op}^p
+% \leq 2 \E \norm*{\left( \sum_{i=1}^N A_i \otimes B_i \right) \circ \Pi}_{\op}^p
+\leq 2 \, \E \norm*{\sum_{i=1}^N A_i \otimes B_i}_{\op}^p
+\end{align*}
+Thus, we have proved that
+\MW{We need the $2p$-th powers of this result\dots}
+\begin{align}\label{eq:symmetrization}
+  \E \norm*{\left( \sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^p
+\leq 2 \, \E \norm*{\sum_{i=1}^N A_i \otimes B_i}_{\op}^p.
+\end{align}
+Note that we have lost the projection and removed the dependencies.
+Next we use the trace method to bound the right-hand side of \cref{eq:symmetrization}.
+That is, we approximate the operator norm by the Schatten $p$-norm for a large enough $p$ and control these Schatten norms using concentration of moments of Gaussians (compare the proof of Theorem~16.6 in~\cite{pisier2012grothendieck}).
+For any $q\geq1$,
+\begin{align*}
+\E \norm*{\sum_{i=1}^N A_i \ot B_i}_{2q}^{2q}
+% = \E \tr \left( \sum_{i=1}^N A_i \ot B_i \right)^{2q}
+&= \E \tr \left( \sum_{i,j\in[N]} A_i^T A_j \ot B_i^T B_j \right)^q \\
+&= \sum_{i, j \in [N]^q} \E \tr \left( A^T_{i_1} A_{j_1} \cdots A^T_{i_q} A_{j_q} \ot B^T_{i_1} B_{j_1} \cdots B^T_{i_q} B_{j_q} \right) \\
+&= \sum_{i, j \in [N]^q} \E \tr \left( A^T_{i_1} A_{j_1} \cdots A^T_{i_q} A_{j_q} \right) \E \tr \left( B^T_{i_1} B_{j_1} \cdots B^T_{i_q} B_{j_q} \right)
+\end{align*}
+where we used the independence of $\{A_i\}$ and $\{B_i\}$ in the last step.
+Now, a monomial of independent standard Gaussians random variables is nonnegative, and positive iff each variable appears an even number of times.
+\MW{Remind me how we use the 2nd half of the preceding sentence? Isn't the trace just a sum of monomials and that is all we need?}
+Thus, whenever $\E \tr ( A^T_{i_1} A_{j_1} \cdots A^T_{i_q} A_{j_q} )$ is nonzero, it is positive, so we can upper bound the sum term by term as
+\begin{align*}
+&\quad \sum_{i, j \in [N]^q} \E \tr \left( A^T_{i_1} A_{j_1} \cdots A^T_{i_q} A_{j_q} \right) \E \tr \left( B^T_{i_1} B_{j_1} \cdots B^T_{i_q} B_{j_q} \right) \\
+&\leq \sum_{i, j \in [N]^q} \E \tr \left( A^T_{i_1} A_{j_1} \cdots A^T_{i_q} A_{j_q} \right) \E \left( \norm{ B_{i_1} }_{2q} \norm{B_{j_1}}_{2q} \cdots \norm{ B_{i_q} }_{2q} \norm{B_{j_q}}_{2q} \right) \\
+&\leq \sum_{i, j \in [N]^q} \E \tr \left( A^T_{i_1} A_{j_1} \cdots A^T_{i_q} A_{j_q} \right) \E \left( \norm{ B_1 }_{2q}^{2q} \right) \\
+&= \left( \E\norm{\sum_{i=1}^N A_i}_{2q}^{2q} \right) \left( \E \norm{ A }_{2q}^{2q} \right)
+= N^q \left( \E\norm{A}_{2q}^{2q} \right)^2
+\end{align*}
+In the first step we used H\"older's inequality~\eqref{eq:holder} for the Schatten norm.
+The second step holds since $\E\norm{B_i}_{2q}^k \leq (\E \norm{B_i}_{2q}^{2q})^{\frac k {2q}}$ by Jensen's inequality, so we can collect like terms together.
+Next, we used that the~$B_i$ have the same distribution as $A$.
+In the last step, we used that $\sum_i A_i$ has the same distribution as $\sqrt N A$.
+Accordingly, we have proved
+\begin{align}\label{eq:op vs 2q}
+\E \norm*{\sum_{i=1}^N A_i \ot B_i}_{\op}^{2q}
+\leq \E \norm*{\sum_{i=1}^N A_i \ot B_i}_{2q}^{2q}
+\leq N^q \left( \E\norm{A}_{2q}^{2q} \right)^2
+\leq N^q m^2 \Bigl( \E\norm{A}_{\op}^{2q} \Bigr)^2,
+\end{align}
+In the third inequality we used that $A \in \Mat(n,m)$ has rank $\leq m$, and therefore $\norm{A}_{2q}^{2q} \leq m \norm A_{\op}^{2q}$ \MW{note the $2q$'s power}.
+To bound the right-hand side, we wish to apply \cref{thm:banach conc} for the Banach space $\Mat(n,m)$ with the operator norm~$\norm{\cdot}_{\op}$.
+Note that the dual norm is the trace norm~$\norm{\cdot}_1$, hence the concentration parameter can be estimated as
+\begin{align*}
+  \sigma^2
+= \sup \left\{ \E \langle \xi, A \rangle^2 \;\mid\; \norm{\xi}_1 \leq 1 \right\}
+= \sup \left\{ \norm\xi_F^2 \;\mid\; \norm{\xi}_1 \leq 1 \right\}
+\leq 1,
+\end{align*}
+where we first used that $\braket{\xi,A}$ is distributed the same as $\norm\xi_F A_{11}$ by orthogonal invariance \MW{Why is this not a completely general argument?}, and then that the trace norm dominates the Frobenius norm.
+Thus, using \cref{eq:symmetrization,eq:op vs 2q,thm:banach conc}, we obtain for $q\geq1$,
+\begin{align*}
+\E \norm*{\left( \sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^{2q}
+% \leq 2 \E \norm*{\sum_{i=1}^N A_i \ot B_i}_{\op}^{2q}
+\leq 2 N^q m^2 \Bigl( \E\norm{A}_{\op}^{2q} \Bigr)^2
+\leq 2 N^q m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}.
+\end{align*}
+for some universal constant~$C>0$.
 
-We now consider the term $\E_{Z} \|Z_{i_{1}}^{*}\|_{2p} ... \|Z_{j_{p}}\|_{2p}$. Different indeces are independent, and for a repeated index we use Jensen's:
-\[ \forall k \leq 2p: \E \|Z_j\|_{2p}^{k} = \E (\|Z_j\|_{2p}^{2p})^{k/{2p}} \leq  ( \E \|Z_j\|_{2p}^{2p} )^{k/2p}  \]
-Thus, we can collect like terms:
-
-%\begin{claim}
-%For iid $\{Z_{i}\}$ and $\sum_{i} q_{i} = 2p$:
-%\[ \E \|Z_{1}\|_{2p}^{q_{1}} ... \|Z_{k}\|_{2p}^{q_{k}} \leq \prod_{i} (\E \|Z_{i}\|_{2p}^{q_{i} \cdot 2p/q_{i}} )^{q_{i}/2p} = \E \|Z\|_{2p}^{2p}    \]
-%\end{claim}
-
-\[ \E \|\sum_{i} Y_{i} \otimes Z_{i}\|_{2p}^{2p}
-\leq \left( \E \|Z\|_{2p}^{2p} \right) \left( \sum_{\vec{i},\vec{j}}
-(\E \tr [ Y_{i_{1}}^{*} Y_{j_{1}} ... Y_{i_{p}}^{*} Y_{j_{p}} ] ) \right) \]
-\[ = \left( \E \|Z\|_{2p}^{2p} \right)
-\left( \E \left\| \sum_{i} Y_{i} \right\|_{2p}^{2p} \right)
-= \left( \E \|Z\|_{2p}^{2p} \right) N^{p} \left( \E \|Y\|_{2p}^{2p} \right)    \]
-In the last step we used unitary invariance of the joint $\{Y_{i}\}$ distribution, i.e. that $\sum_{i} Y_{i}$ has the same distribution as $\sqrt{N} Y_{1}$.
-Finally we can use $\|\cdot\|_{op}$ is bounded by $\|\cdot\|_{2p}$:
-%Assume wlog (by homogeneity) that $\|\alpha\|_{2} = 1$:
-\[ N^{-p} \E_{Y, Z} \|\sum_{i} Y_{i} \otimes Z_{i} \|_{op}^{2p} \leq N^{-p} \E_{Y, Z} \|\sum_{i} Y_{i} \otimes Z_{i} \|_{2p}^{2p} \]
-\[ \leq ( \E \|Y\|_{2p}^{2p} )^{2} \leq ( m \E \|Y\|_{op}^{2p} )^{2} \leq m^{2} \left(\E \|Y\|_{op} + O(\sqrt{\frac{2p}{\sigma^{2}}})  \right)^{4p} \]
-In the third inequality we used that $Y \in \mat(n,m)$ is rank $\leq m$ and therefore $\|Y\|_{2p} \leq m \|Y\|_{op}$. In the final step we used that $\|Y\|_{op}$ is sub-Gaussian with parameter $\sigma^{2}$. Note the dual norm of $\|\cdot\|_{op}$ is $\|\cdot\|_{1}$.
-\[ \sigma^{2} = \sup_{\xi} \frac{ \E \langle Y, \xi \rangle^{2} }{\|\xi\|_{1}^{2}} = \E Y_{11}^{2} \sup_{\xi} \frac{ \|\xi\|_{F}^{2} }{\|\xi\|_{1}^{2} } = 1     \]
-Here we used that $\langle Y, \xi \rangle$ is distributed the same as $\|\xi\|_{F} Y_{11}$ by unitary invariance.
-So we can apply Markov's inequality to get the bound:
-\[ \Pr[\|\sum_{i} Y_{i} \otimes Y_{i}\|_{op} \geq (2t \E \|Y\|_{op})^{2} ] \leq    \frac{m^{2} (\E\|Y\|_{op} + C \sqrt{p} )^{4p}}{(2t \E\|Y\|_{op})^{4p}}    \]
-Now we choose $C\sqrt{p} \leq \E \|Y\|_{op} = \sqrt{m} + \sqrt{n}$, i.e. $p = \left( \frac{\sqrt{m} + \sqrt{n}}{C} \right)^{2}$:
-\[ \leq \frac{m^{2} (2\E \|Y\|_{op})^{4p}}{(2t \E \|Y\|_{op})^{4p}} \leq \frac{m^{2}}{\exp(\frac{4 \log t}{C^{2}} (\sqrt{m} + \sqrt{n})^{2})}    \]
-The statement follows since $t \geq 2$, so that the numerator $m^{2}$ is negligible (at the cost of a small constant in the exponent).
+\MW{Please check if the proof is now correct (and there is no easier way):}
+Finally, we can use the Markov inequality to see that, for any~$C'>0$, the event
+\begin{align*}
+  \norm*{\left(\sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op} \leq (2C')^2 t^2 \sqrt{N} \bigl( \E \norm{A}_{\op} \bigr)^2
+\end{align*}
+holds up to failure probability at most
+\begin{align*}
+  \frac{\E \norm*{\left(\sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^{2q}}{\left( (2C')^2 t^2 \sqrt{N} \bigl( \E \norm{A}_{\op} \bigr)^2 \right)^{2q}}
+\leq % \frac{2 N^q m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(2C')^{4q} t^{4q} N^q \bigl( \E \norm{A}_{\op} \bigr)^{4q}} =
+  \frac{2 m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(2C')^{4q} t^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}}.
+\end{align*}
+Now we choose $q = (\sqrt m + \sqrt n)^2 \geq m + n$.
+In view of \cref{eq:op norm bound}, we can moreover choose~$C'\geq1$ to be a universal constant such that $C \sqrt q \leq C' \, \E \norm{A}_{\op}$.
+Then, the failure probability can be bounded as follows:
+\begin{align*}
+  \frac{2 m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(2C')^{4q} t^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}}
+\leq
+% \frac{2 m^2 \Bigl( (1 + C') \E\norm A_{\op} \Bigr)^{4q}}{(C')^{4q} t^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}} =
+2 m^2 \left( \frac{1 + C'}{2 C' t} \right)^{4q}
+\leq 2 m^2 t^{-4(m+n)}
+= t^{-\Omega(m+n)}
+\end{align*}
+In the last step we used that $t\geq2$, so the prefactor can be absorbed at the cost of slightly changing the constant in the exponent.
 \end{proof}
 
 %\CF{this section should be modified to be more free standing, i.e. not refer to things "above"}
@@ -2099,7 +2167,7 @@ The statement follows since $t \geq 2$, so that the numerator $m^{2}$ is negligi
 
 %\begin{corollary}
 %For $Y \in \R^{d_{a} \times d_{b}}$ where $Y_{ij} \sim \mathcal{N}(0,1)$, our $n$ samples give Kraus operators of the form $\frac{1}{\sqrt{nD}} Y$, and our off-diagonal operator is
-%\[ \sum_{i=1}^{nD/d_{a}d_{b}} \frac{1}{nD} Y_{i} \otimes Y_{i}   \]
+%\[ \sum_{i=1}^{nD/d_{a}d_{b}} \frac{1}{nD} Y_i \otimes Y_i   \]
 %The norm $\|\cdot\|_{0}$ on its restriction to $\Sym_{d_{b}}^{0} \to \Sym_{d_{a}}^{0}$ is less than the quantity in the theorem, which is on the order $\frac{d_{a}+d_{b}}{\sqrt{d_{a} d_{b} nD}}$ whp, so for constant expansion it suffices that $nD \gg \max_{a} d_{a}^{2}$
 %\end{corollary}
 
@@ -2116,7 +2184,7 @@ $$ \|e^{\delta} - I\|_{op} \leq \|\delta\|_{op} + \|\delta\|_{op}^{2} \leq 2 \|\
 %by letting our input at the identity be represented by $x$ \CF{input at identity? use of "input" is in general imprecise}
 \cref{thm:tensor-convexity} gives good bounds on the Hessian of $\samp$; so in order to bound the Hessian at perturbation $\samp' := \prod_{a} (e^{\delta_{a}})_{a} \samp$, it is enough to bound the difference in the Hessian.
 %We will follow the structure presented in the proof of \cref{thm:tensor-convexity} by
-Therefore we will show each block of the Hessian only changes a small amount under perturbation $x' := e^{\delta} x$ for $\delta \in \Sym$. In particular we will give bounds on each block under each component-wise perturbation $x' := (e^{\delta})_{a} x$ for $\delta_{a} \in \mat(d_{a})$.
+Therefore we will show each block of the Hessian only changes a small amount under perturbation $x' := e^{\delta} x$ for $\delta \in \Sym$. In particular we will give bounds on each block under each component-wise perturbation $x' := (e^{\delta})_{a} x$ for $\delta_{a} \in \Mat(d_{a})$.
 %Recall (c.f. \cref{lem:hessian}) that the $a^{th}$ diagonal block of the Hessian depends only on $\rho^a_{\samp}$. This motivates the next two lemmas quantifying the change of $\rho^{a}_{\samp}$ under perturbations. \CF{Akshay, will you use $\tr$ instead of $Tr$}
 
 
@@ -2136,7 +2204,7 @@ Therefore in \cref{atoaaRobustness} and \cref{btoaaRobustness}, we will prove pe
 %By the above discussion then we will bound the difference of each under each component-wise perturbation. Note the terms involve $\{\rho^{(a)}\}, \{\rho^{(ab)}\}$, so we prove perturbations on marginals in the following lemmas.
 
 \begin{lemma} \label{atoaaRobustness}
-For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{a})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$, if we denote $\samp' := (e^{\delta})_{a} \samp$ then
+For input $\samp \in \R^{nD}$ and perturbation $\delta \in \Mat(d_{a})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$, if we denote $\samp' := (e^{\delta})_{a} \samp$ then
 \[ \|\rho_{\samp'}^{a} - \rho_{\samp}^{a}\|_{op} \leq 4.5 \|\delta\|_{op} \|\rho_{\samp}^{a}\|_{op}   . \]
 \end{lemma}
 \begin{proof} By definition, $\|\rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}\|_{op} = \sup_{\|Z\|_{1} \leq 1} \langle Z_{a}, \rho_{\samp'} - \rho_{\samp} \rangle $.
@@ -2151,7 +2219,7 @@ from which the lemma follows since
 
 %\CF{ I think we should combine these lemmas into a single one with two items.}\AR{The proofs are different, and I like the similar structure for diagonal/off-diagonal blocks. It may clutter the statements more to combine. }
 \begin{lemma} \label{btoaaRobustness}
-For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{b})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$, if we denote $\samp' := (e^{\delta})_{a} \samp$ then for $b \neq a$:
+For input $\samp \in \R^{nD}$ and perturbation $\delta \in \Mat(d_{b})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$, if we denote $\samp' := (e^{\delta})_{a} \samp$ then for $b \neq a$:
 \[ \|\rho_{\samp'}^{a} - \rho_{\samp}^{a}\|_{op} \leq 9.5 \|\delta\|_{op} \|\rho_{\samp}^{a}\|_{op}      \]
 \end{lemma}
 \begin{proof}
@@ -2174,7 +2242,7 @@ This is already enough to prove a bound on the constant and diagonal terms:
 %and rank one term $(\nabla^{2} f - \nabla^{2} F)$.
 
 \begin{corollary} \label{diagRobustness}
-For input $\samp \in \R^{nD}$ such that $\|d_{a} \rho_{\samp}^{(a)}\|_{op} \leq 1 + \frac{1}{20}$; and perturbation $\delta := \sum_{b} (\delta_{b} \in \mat(d_{b}))_{b}$ such that $\|\delta\|_{op} = \sum_{b} \|\delta_{b}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
+For input $\samp \in \R^{nD}$ such that $\|d_{a} \rho_{\samp}^{(a)}\|_{op} \leq 1 + \frac{1}{20}$; and perturbation $\delta := \sum_{b} (\delta_{b} \in \Mat(d_{b}))_{b}$ such that $\|\delta\|_{op} = \sum_{b} \|\delta_{b}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
 \[ \|\nabla^{2}_{aa} f(e^{2\delta}) - \nabla^{2}_{aa} f(I)\|_{op} \leq 11 \|\delta\|_{op}     \]
 \end{corollary}
 %\CF{technically $f(e^{\delta})$ corresponds to $e^{\delta/2} \samp$}
@@ -2191,7 +2259,7 @@ The term in parenthesis is shown by induction, and in the inequality we used $\|
 \end{proof}
 
 \begin{corollary} \label{constantRobustness}
-For input $\samp \in \R^{nD}$ such that $\tr[\rho_{\samp}] \leq 1 + \frac{1}{20}$ and $\|d_{a} \rho_{\samp}^{(a)}\|_{op} \leq 1 + \frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a} \in \mat(d_{a}))_{a}$ such that $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
+For input $\samp \in \R^{nD}$ such that $\tr[\rho_{\samp}] \leq 1 + \frac{1}{20}$ and $\|d_{a} \rho_{\samp}^{(a)}\|_{op} \leq 1 + \frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a} \in \Mat(d_{a}))_{a}$ such that $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
 \[ |\nabla^{2}_{00} f_{\samp'} - \nabla^{2}_{00} f_{\samp}| \leq 5 \|\delta\|_{op}     \]
 \[ \|\nabla^{2}_{0a} f_{\samp'} - \nabla^{2}_{0a} f_{\samp}\|_{op} \leq 11 \|\delta\|_{op}    \]
 %\AR{Not really op norm here, just traceless part. Is there a notation for this?}
@@ -2208,7 +2276,7 @@ In the final step we used our condition on $\|d_{a} \rho^{(a)}\|_{op} \leq 1 + \
 \end{proof}
 
 %\begin{corollary} \label{rankoneRobustness}
-%For input $x \in \R^{nD}$ such that for all $a \in [k]$ such that $\|d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a}\|_{op} \leq \frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a} \in \mat(d_{a}))_{a}$ such that $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
+%For input $x \in \R^{nD}$ such that for all $a \in [k]$ such that $\|d_{a} \rho_{\samp}^{(a)} - \tr[\rho_{\samp}] I_{a}\|_{op} \leq \frac{1}{20}$; and perturbation $\delta := \sum_{a} (\delta_{a} \in \Mat(d_{a}))_{a}$ such that $\|\delta\|_{op} = \sum_{a} \|\delta_{a}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
 %\[ \|(\nabla^{2} f_{\samp'} - \nabla^{2} F_{\samp'}) - (\nabla^{2} f_{\samp} - \nabla^{2} F_{\samp})\|_{op} \leq 1.5 k \|\delta\|_{op}     \]
 %\end{corollary}
 %\begin{proof}
@@ -2231,14 +2299,14 @@ In the final step we used our condition on $\|d_{a} \rho^{(a)}\|_{op} \leq 1 + \
 The off-diagonal blocks require the following lemma on bipartite marginals:
 
 \begin{lemma} \label{btoabRobustness}
-For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{c})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := (e^{\delta})_{c} \samp$, then for $c \in \{a,b\}$ we have
+For input $\samp \in \R^{nD}$ and perturbation $\delta \in \Mat(d_{c})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := (e^{\delta})_{c} \samp$, then for $c \in \{a,b\}$ we have
 \[ \sup_{Y \in \smallSym_{d_{a}}^{0}, Z \in \smallSym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq 4.5 \|\delta\|_{op} \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}}        \]
 Note that $\smallSym_{d}^{0}$ are traceless symmetric matrices, whereas $\smallSym_{d}$ are symmetric matrices.
 %\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 4.5 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}    \]
 \end{lemma}
 \begin{proof}
 %Recall from the discussion after $\cref{convexRobustness}$ that $\langle Y, (\nabla^{2}_{ab} F) Z \rangle = \sqrt{d_{a} d_{b}} \langle \rho^{(ab)}, Y \otimes Z \rangle$.
-By taking adjoints, we can assume w.l.o.g. that $c = b$. Let $R : \mat(d_{b}) \to \mat(d_{b})$ be defined as $R(Z) := (1+\eta)^{2} e^{\delta} Z e^{\delta}$ for $\eta$ defined by our normalization $\|(e^{\delta})_{b} \samp\|_{2}^{-1} =: (1+\eta) \|\samp\|_{2}^{-1}$.
+By taking adjoints, we can assume w.l.o.g. that $c = b$. Let $R : \Mat(d_{b}) \to \Mat(d_{b})$ be defined as $R(Z) := (1+\eta)^{2} e^{\delta} Z e^{\delta}$ for $\eta$ defined by our normalization $\|(e^{\delta})_{b} \samp\|_{2}^{-1} =: (1+\eta) \|\samp\|_{2}^{-1}$.
 \[ |\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle| = |\langle \rho_{\samp}^{(ab)}, Y \otimes (R(Z) - Z) \rangle|  \]
 The subspace $\smallSym_{d_{b}}^{0}$ is not invariant under $R$, but we show $R \approx I$. Let $\delta' := (1+\eta) e^{\delta} - I$.
 \[ \|R(Z) - Z\|_{F} \leq 2 \|\delta' Z\|_{F} + \|\delta' Z \delta'\|_{F} \leq (2 \|\delta'\|_{op} + \|\delta'\|_{op}^{2}) \|Z\|_{F}    \]
@@ -2246,7 +2314,7 @@ So we complete the proof using the fact that $Y,Z$ are traceless on the LHS of t
 \end{proof}
 
 \begin{lemma} \label{ctoabRobustness}
-For input $\samp \in \R^{nD}$ and perturbation $\delta \in \mat(d_{c})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := (e^{\delta})_{c} \samp$, then for $c \not\in \{a,b\}$ we have
+For input $\samp \in \R^{nD}$ and perturbation $\delta \in \Mat(d_{c})$ such that $\|\delta\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := (e^{\delta})_{c} \samp$, then for $c \not\in \{a,b\}$ we have
 \[ \sup_{Y \in \smallSym_{d_{a}}^{0}, Z \in \smallSym_{d_{b}}^{0}} \frac{\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}} \leq 19 \|\delta\|_{op} \sup_{Y \in \smallSym_{d_{a}}, Z \in \smallSym_{d_{b}}} \frac{\langle \rho_{\samp}^{(ab)}, Y \otimes Z \rangle}{\|Y\|_{F} \|Z\|_{F}}        \]
 %\[ \|\nabla^{2}_{ab} F_{\samp'} - \nabla^{2}_{ab} F_{\samp}\|_{0} \leq 19 \|\delta\|_{op} \|\nabla^{2}_{ab} F_{\samp}\|_{F \to F}    \]
 \end{lemma}
@@ -2265,7 +2333,7 @@ Using the the fact that the LHS is the $\sup$ over traceless matrices, as well a
 We need the following to translate to statements on the Hessian:
 
 \begin{definition}
-For operator $M : \mat(d_{b}) \to \mat(d_{a})$, we let $\|M\|_{0}$ denote the $F \to F$ norm of its restriction to the traceless subspaces $\smallSym^0_{d_b} \to \smallSym^0_{d_a}$
+For operator $M : \Mat(d_{b}) \to \Mat(d_{a})$, we let $\|M\|_{0}$ denote the $F \to F$ norm of its restriction to the traceless subspaces $\smallSym^0_{d_b} \to \smallSym^0_{d_a}$
 \end{definition}
 
 \begin{lemma}[\cite{KLR19}] \label{inftyto2}
@@ -2274,7 +2342,7 @@ $\|\nabla^{2}_{ab} f_{\samp}\|_{F \to F}^{2} \leq \|d_{a} \rho_{\samp}^{(a)}\|_{
 %\begin{proof}This was already in KLR and we have two new proofs: one by convexity, and one by Riesz-Thorin. \AR{The proofs are in some other file, we can add it if we like}\end{proof}
 
 \begin{corollary} \label{offdiagRobustness}
-For input $\samp \in \R^{nD}$ such that $\|d_{a} \rho_{\samp}^{(a)}\|_{op}, \|d_{b} \rho_{\samp}^{(b)}\|_{op} \leq 1+\frac{1}{20}$; perturbation $\delta := \sum_{c} (\delta_{c} \in \mat(d_{c}))_{c}$ with $\|\delta\|_{op} = \sum_{c} \|\delta_{c}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
+For input $\samp \in \R^{nD}$ such that $\|d_{a} \rho_{\samp}^{(a)}\|_{op}, \|d_{b} \rho_{\samp}^{(b)}\|_{op} \leq 1+\frac{1}{20}$; perturbation $\delta := \sum_{c} (\delta_{c} \in \Mat(d_{c}))_{c}$ with $\|\delta\|_{op} = \sum_{c} \|\delta_{c}\|_{op} \leq \frac{1}{20}$; if we denote $\samp' := e^{\delta} \samp$, then we have:
 %\[ \frac{1}{\sqrt{d_{a} d_{b}}} \|\nabla^{2}_{ab} f(e^{2 \delta}) - \nabla^{2}_{ab} f(I)\|_{op} \leq 100 \|\delta\|_{op} \sqrt{\|\rho_{\samp}^{(a)}\|_{op} \|\rho_{\samp}^{(b)}\|_{op}}     \]
 \[ \|\nabla^{2}_{ab} f_{\samp'} - \nabla^{2}_{ab} f_{\samp}\|_{0} \leq 21 \|\delta\|_{op}  \]
 \end{corollary}
@@ -2321,9 +2389,9 @@ Note that this also gives a spectral upper bound for $\nabla^{2} f_{\samp'}$.
 \section{The Cheeger constant of a random operator}\label{app:cheeky}
 %=============================================================================
 
-To prove \cref{thm:operator-cheeger}, we first define the Cheeger constant of an operator $\Phi:\mat(d_1) \to \mat(d_2)$. This is similar to a concept defined in \cite{H07}.
+To prove \cref{thm:operator-cheeger}, we first define the Cheeger constant of an operator $\Phi:\Mat(d_1) \to \Mat(d_2)$. This is similar to a concept defined in \cite{H07}.
 \begin{definition}
-Let $\Phi : \mat(d_1) \to \mat(d_2)$ be a completely positive map. The Cheeger constant $\ch(\Phi)$ of the weighted bipartite graph associated to $B$ is given by
+Let $\Phi : \Mat(d_1) \to \Mat(d_2)$ be a completely positive map. The Cheeger constant $\ch(\Phi)$ of the weighted bipartite graph associated to $B$ is given by
 $$\ch(\Phi):=\min_{\Pi_1, \Pi_2: \vol(\Pi_1, \Pi_2) \leq \tr \Phi(I)} \phi(\Pi_1,\Pi_2)$$
 where $\Pi_1: \C^{d_1} \to \C^{d_1}$ and $\Pi_1: \C^{d_2} \to \C^{d_2}$ are orthogonal projections that are not both zero and the \emph{conductance} $\phi$ of the cut $\Pi_1, \Pi_2$ is defined to be
 $$\phi(\Pi_1,\Pi_2) := \frac{\cut(\Pi_1, \Pi_2)}{\vol(\Pi_1,\Pi_2)}$$
@@ -2471,7 +2539,7 @@ To prove \cref{thm:operator-cheeger}, we apply \cref{lem:op-cheeger} using \cref
 \begin{proof}[Proof of \cref{lem:flipflop-concentration}]
 For convenience we normalize slightly differently so that after applying one step of flip-flop to $X$ the new random variable $Y$ is given by
 $Y_i = X_i \Phi^*(I_{d_1})^{-1/2} =  X_i (\sum_{i = 1}^n X_i^\dagger X_i)^{-1/2}.$ Thus we need to bound the random matrix
-\begin{align} \sum_{i = 1}^n Y_i Y_i^{\dagger} - \frac{d_2}{d_1} I_{d_1} = \sum_{i = 1}^n X_{i} \left( \sum_{j}  X_{i}^{\dagger} X_{i}\right)^{-1} X_{i}^\dagger - \frac{d_2}{d_1} I_{d_1}.\label{eq:1marg}
+\begin{align} \sum_{i = 1}^n Y_i Y_i^{\dagger} - \frac{d_2}{d_1} I_{d_1} = \sum_{i = 1}^n X_i \left( \sum_{j}  X_i^{\dagger} X_i\right)^{-1} X_i^\dagger - \frac{d_2}{d_1} I_{d_1}.\label{eq:1marg}
 \end{align}
 Since we are interested in the spectral norm of \cref{eq:1marg}, we will consider the random variable $\langle \xi,  \sum_{i = 1}^n Y_i Y_i^{\dagger} \xi \rangle$ for a fixed unit vector $\xi \in \R^{d_1}$. We will show that this variable $\xi$ is highly concentrated, and apply a union bound over a net of the unit vectors. To show the concentration, we first cast $\langle \xi,  \sum_{i = 1}^n Y_i Y_i^{\dagger} \xi \rangle$ as the inner product between a random orthogonal projection and a fixed one.
 
