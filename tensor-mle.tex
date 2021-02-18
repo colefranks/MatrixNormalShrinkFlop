@@ -1601,6 +1601,8 @@ The next lemma shows that any descent method which manages to decrease the value
 The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 \MW{How about moving this to right after \cref{lem:convex-ball}, since it's also g-convexity general nonsense? I might go ahead and move it (and proofread it as I do so).}
 
+\RMO{Sounds good to me. :) }
+
 \begin{lemma}\label{lem:descent-sublevel-set}
 	Let $f : \SPD \rightarrow \R$ be $\lambda$-strongly geodesically convex in a sublevel set containing $x_0$, $\norm{\nabla f(x_0)}_F^2 \leq 1$ and $\alpha > 0$ be a constant.
 	If $\{x_k\}$ is a descent sequence which satisfies
@@ -1642,24 +1644,29 @@ We are now ready to state the tensor flip-flop algorithm and prove its fast conv
 
 \textbf{Algorithm}:
 \begin{enumerate}
-\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$, and $\delta = \dfrac{\eps^2}{16 d_k^{3/2}}$.
+\item\label{it:flip-flop step 1} Set $\otheta_a = \dfrac{1}{d_a} \cdot I_a$ for each $a \in [k]$, and $\delta = \dfrac{\eps^2}{16 d_k^{3/2}}$.
 \item\label{it:flip-flop step 2} For $t=1,\dots,T = 12 k d_k \cdot \log(k/\delta^2)$, repeat the following:
 %we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
 \begin{itemize}
-\item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \ldots, \otheta_k)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \ldots, \otheta_k)$, and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest.
+\item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \ldots, \otheta_k)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \ldots, \otheta_k)$, and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest. 
+
+\vspace{5pt}
+
 \item
-If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\left( \bigotimes_{a =1}^k \otheta_a \right)^{-1}$ and return.
+If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\otheta$ and return.
 % S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
+
+\vspace{5pt}
+
 \item Otherwise, set $\otheta_a \leftarrow  \dfrac{\tr[\rho]}{d_a} \cdot \otheta_a^{1/2} (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$, where $\rho = \otheta^{1/2} \left( \sum_{i=1}^n x_ix_i^\dagger \right) \otheta^{1/2}.$
 \end{itemize}
 \end{enumerate}
 \caption{Tensor flip-flop algorithm}\label{alg:flip-flop}
 \end{Algorithm}
 
-
 \begin{lemma}[Initial Conditions]\label{lem:tensor-initial-conditions}
 	There exist absolute constants $\Gamma, \gamma > 0$ such that the following holds.
-	When the number of samples $n \geq \Gamma \cdot k^2 \cdot d_1^2/D$, with probability at least \CF{I think it may be $\sqrt{nD}$ in the numerator now} $1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}$ we have that the following conditions hold:
+	When the number of samples $n \geq \Gamma \cdot k^2 \cdot \dmax^2/D$, with probability at least $1 - k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)} - 2(k+1) \cdot e^{- \Omega(nk^2D/\dmax)}$ we have that the following conditions hold:
 	\begin{enumerate}
 		\item $\norm{\nabla f_x(I)}_F \leq \dfrac{\gamma \cdot k}{8}$ % \dfrac{\lambda^2}{4 k}$
 		%\item $f_x$ is $\lambda$-strongly geodesically convex at a ball of radius $\lambda/k$ around $I$, that is: $B_{\lambda/k}(I) := \{ Z \in \smallSym \ \mid \ \norm{Z}_F \leq \lambda/k \}$.
@@ -1684,20 +1691,45 @@ If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\left( \bigotimes_{a =1}^k \othet
 	one of the conditions 1 or 2 will fail to hold. This concludes our proof.
 \end{proof}
 
+
+\RMO{making the observation that this flip-flop keeps the trace of $\rho$ equals 1}
+
+\begin{prop}[Unit Trace]
+	Let $\Theta$ and $\Upsilon$ be successive scalings produced by the flip-flop algorithm. Then $\tr \Theta = \tr \Upsilon$.
+\end{prop}
+
+\begin{proof}
+	Let $\rho = \Theta^{1/2} \cdot \sum_{i=1}^n x_i x_i^\dagger \cdot \Theta^{1/2}$.
+	Since $\Upsilon$ is the successive scaling from $\Theta$, we have that
+	there is $a \in [k]$ such that 
+	$$\Upsilon_a = \dfrac{\tr \rho}{d_a} \cdot \Theta_a^{1/2} (\rho^{(a)})^{-1} \Theta_a^{1/2} $$
+	and $\Upsilon_b = \Theta_b$ for all $b \neq a$. Let $E_{(a)} = I_1 \otimes \cdots \otimes I_{a-1} \otimes (\rho^{(a)})^{-1} \otimes I_{a+1} \otimes \cdots \otimes I_k$.
+	Thus, we have:
+	\begin{align*}
+		\tr \Upsilon &= \tr\left[ \Upsilon^{1/2} \sum_{i=1}^n x_i x_i^\dagger \cdot \Upsilon^{1/2} \right] = \tr\left[ \Upsilon \sum_{i=1}^n x_i x_i^\dagger \right] \\
+		&= \tr\left[ \dfrac{\tr \rho}{d_a} \cdot \Theta^{1/2} E_{(a)} \Theta^{1/2} \cdot \sum_{i=1}^n x_i x_i^\dagger \right] = \dfrac{\tr \rho}{d_a} \cdot \tr\left[ E_{(a)} \rho \right] \\
+		&= \dfrac{\tr \rho}{d_a} \cdot \tr\left[ (\rho^{(a)})^{-1} \rho^{(a)} \right] = \tr \rho
+	\end{align*}
+\end{proof}
+
+Thus, since we started the flip-flop algorithm with a matrix of unit trace, the proposition above allows us to assume from now on that each scaling produced by the flip-flop algorithm will have unit trace. 
+In particular, we have that $\nabla_0 f_x(\Theta) = 0$ at each iteration.
+
 \begin{lemma}[Descent Lemma]\label{lem:tensor-descent-lemma}
 	If $\Theta, \Upsilon$ are successive scalings from the flip-flop algorithm, then we have:
-	$$ f_x(\Upsilon) \leq f_x(\Theta) - \dfrac{1}{6} \cdot \min\left\{ \dfrac{1}{\dmax} \ , \ \dfrac{\norm{\nabla f_x(\Theta)}_F^2}{k \cdot (1 + \nabla_0 f_x(\Theta))^2} \right\} $$
+	$$ f_x(\Upsilon) \leq f_x(\Theta) - \dfrac{1}{6} \cdot \min\left\{ \dfrac{1}{\dmax} \ , \ \dfrac{\norm{\nabla f_x(\Theta)}_F^2}{k} \right\} $$
 \end{lemma}
 
 \begin{proof}
 	Let
 	$$\rho := \Theta^{1/2} \cdot \left( \sum_{i=1}^n x_i x_i^\dagger \right) \cdot \Theta^{1/2}.$$
-	Additionally, let $a \in [k]$ be such that $\nabla_a := \nabla_a f_x(\Theta)$ has largest norm. As $\Upsilon$ is the successive scaling, we have that $\Upsilon_b = \Theta_b$ when $b \neq a$ and
-	$$ \Upsilon_a = \dfrac{\tr[\rho]}{d_a} \cdot \Theta_a^{1/2} \cdot (\rho^{(a)})^{-1} \cdot \Theta_a^{1/2}. $$
+	Additionally, let $a \in [k]$ be such that $\nabla_a := \nabla_a f_x(\Theta)$ has largest norm. 
+	As $\Upsilon$ is the successive scaling, and we are assuming that $\tr \rho =1$, we have that $\Upsilon_b = \Theta_b$ when $b \neq a$ and
+	$$ \Upsilon_a = \dfrac{1}{d_a} \cdot \Theta_a^{1/2} \cdot (\rho^{(a)})^{-1} \cdot \Theta_a^{1/2}. $$
 	%= \det(d_a \cdot \rho^{(a)})^{1/d_a} \cdot \Theta_a^{1/2} \cdot (d_a \cdot \rho^{(a)})^{-1} \cdot \Theta_a^{1/2}
 	In particular, the above means that we can write $\Upsilon$ in the following way:
 	$$ \Upsilon = \Theta^{1/2} \cdot  E_{(a)} \cdot \Theta^{1/2} $$
-	where $E_{(a)} = I_1 \otimes \cdots \otimes I_{a-1} \otimes \left( \dfrac{\tr[\rho]}{d_a} \cdot (\rho^{(a)})^{-1} \right) \otimes I_{a+1} \otimes \cdots \otimes I_k$.
+	where $E_{(a)} = I_1 \otimes \cdots \otimes I_{a-1} \otimes \left( \dfrac{1}{d_a} \cdot (\rho^{(a)})^{-1} \right) \otimes I_{a+1} \otimes \cdots \otimes I_k$.
 	Hence, we have:
 	\begin{align*}
 		f_x(\Upsilon) &= \dfrac{1}{nD} \sum_{i=1}^n \langle x_i , \Upsilon x_i \rangle - \dfrac{1}{D} \log \det(\Upsilon) \\
@@ -1706,16 +1738,16 @@ If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\left( \bigotimes_{a =1}^k \othet
 		&= \dfrac{1}{nD} \tr\left[  E_{(a)} \cdot \rho  \right] - \dfrac{1}{D} \left( \log \det(E_{(a)}) + \log\det(\Theta) \right) \\
 		&= \dfrac{1}{nD} \tr\left[ \dfrac{\tr \rho}{d_a} \cdot (\rho^{(a)})^{-1} \cdot \rho^{(a)}  \right] - \dfrac{1}{D} \left( \log \det(E_{(a)}) + \log\det(\Theta) \right) \\
 		&= f_x(\Theta) + \dfrac{1}{D} \cdot \log \det\left( E_{(a)}^{-1} \right) \\
-		&= f_x(\Theta) + \frac{1}{d_a} \cdot  \log\det\left( \dfrac{d_a}{\tr \rho } \cdot \rho^{(a)} \right)
+		&= f_x(\Theta) + \frac{1}{d_a} \cdot  \log\det\left( d_a \cdot \rho^{(a)} \right)
 	\end{align*}
 	Lemma 5.1 from~\cite{GGOW19} states that for any $d$-dimensional PSD matrix $Z$ of trace $d$, the following inequality holds:
 	$$ \log\det(Z) \leq \max\left\{- \dfrac{\norm{Z - I_d}_F^2}{6}, - \dfrac{1}{6} \right\}. $$
-	Since $\tr \rho^{(a)} = \tr \rho$, if $\norm{\dfrac{d_a}{\tr \rho} \rho^{(a)} - I_a}_F \leq 1$ we obtain that:
+	Since $\tr \rho^{(a)} = \tr \rho = 1$, if $\norm{d_a \rho^{(a)} - I_a}_F \leq 1$ we obtain that:
 	\begin{align*}
-		\frac{1}{d_a} \cdot  \log\det\left(\dfrac{d_a}{\tr \rho} \cdot \rho^{(a)} \right) &\leq - \dfrac{\norm{\dfrac{d_a}{\tr \rho} \cdot \rho^{(a)} - I_a}_F^2}{6 d_a} \\
-		&= - \dfrac{d_a \cdot \norm{ \rho^{(a)} - \frac{\tr \rho}{d_a} I_a}_F^2}{6 \cdot (\tr \rho)^2} = - \dfrac{\norm{\nabla_a}_F^2}{6 \cdot (\tr \rho)^2} \leq - \dfrac{\norm{\nabla f_x(\Theta)}_F^2}{6k \cdot (1 + \nabla_0 f_x(\Theta))^2}
+		\frac{1}{d_a} \cdot  \log\det\left(d_a \cdot \rho^{(a)} \right) &\leq - \dfrac{\norm{d_a \cdot \rho^{(a)} - I_a}_F^2}{6 d_a} \\
+		&= - \dfrac{d_a \cdot \norm{ \rho^{(a)} - \frac{\tr \rho}{d_a} I_a}_F^2}{6} = - \dfrac{\norm{\nabla_a}_F^2}{6} \leq - \dfrac{\norm{\nabla f_x(\Theta)}_F^2}{6k}
 	\end{align*}
-	If $\norm{\dfrac{d_a}{\tr \rho} \rho^{(a)} - I_a}_F > 1$, we have
+	If $\norm{d_a \cdot \rho^{(a)} - I_a}_F > 1$, we have
 	\begin{align*}
 		\frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)}) &\leq - \dfrac{1}{6 d_a} \leq - \dfrac{1}{6 \dmax}
 	\end{align*}
@@ -1746,15 +1778,15 @@ If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\left( \bigotimes_{a =1}^k \othet
 \begin{lemma}[Distance to Optimum]\label{lem:tensor-distance-opt}
 	Let $\htheta$ be the MLE estimator for $\Theta$, $\delta \in \R_+$ be a parameter such that
 	$0 < \delta < \left(8 \sum_{a=1}^k \sqrt{d_a} \right)^{-1}$ and $\otheta$ be a scaling which satisfies $\delta = \norm{\nabla f_x(\otheta)}_F$. Then, we have
-	$$ D_F(\htheta; \otheta) \leq \left( 16 \delta D \cdot \sum_{a=1}^k \sqrt{d_a} \right)^{1/2} $$
+	$$ D_F(\htheta \ || \ \otheta) \leq \left( 16 \delta D \cdot \sum_{a=1}^k \sqrt{d_a} \right)^{1/2} $$
 	and for each component, we have
-	$$ D_F(\htheta_a, \otheta_a) \leq \left( 16 \delta d_a \cdot \sqrt{d_a} \right)^{1/2}. $$
+	$$ D_F(\htheta_a \ || \ \otheta_a) \leq \left( 16 \delta d_a \cdot \sqrt{d_a} \right)^{1/2}. $$
 \end{lemma}
 
 \begin{proof}
 	Let $Z \in \Sym$ be such that $\htheta = \otheta^{1/2} \cdot \exp(\sqrt{\vec d} \cdot Z) \cdot \otheta^{1/2}$, and $\oZ = Z / \norm{Z}_F$.
 	Since
-	$$ D_F(\htheta, \otheta) = \norm{I_D - \otheta^{-1/2} \htheta \otheta^{-1/2}}_F = \norm{I_D - \exp(\sqrt{\vec d} \cdot Z)}_F $$
+	$$ D_F(\htheta \ || \ \otheta) = \norm{I_D - \otheta^{-1/2} \htheta \otheta^{-1/2}}_F = \norm{I_D - \exp(\sqrt{\vec d} \cdot Z)}_F $$
 	to prove a good bound on the distance it is enough to show that $\norm{Z}_F$ is small.
 	We will achieve this by using the strong geodesic convexity of $f_x$.
 
@@ -1770,14 +1802,14 @@ If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\left( \bigotimes_{a =1}^k \othet
 	$$ \exp(\sqrt{\vec d} Z) \preceq \exp(\sqrt{\vec d} \cdot 4\delta (I_1, \dots, I_k)) =
 	\exp\left(4 \delta \cdot \sum_{a=1}^k \sqrt{d_a} \right) \cdot I_D. $$
 	Thus, the conditions of \cref{lem:inequality} apply to the eigenvalues of $\exp(\sqrt{\vec d} Z)$ and our distance function becomes:
-	$$ D_F(\htheta, \otheta) =  \norm{\exp(\sqrt{\vec d} Z) - I_D}_F \leq \left( 16 \delta D \cdot \sum_{a=1}^k \sqrt{d_a} \right)^{1/2}. $$
+	$$ D_F(\htheta \ || \ \otheta) =  \norm{\exp(\sqrt{\vec d} Z) - I_D}_F \leq \left( 16 \delta D \cdot \sum_{a=1}^k \sqrt{d_a} \right)^{1/2}. $$
 	Analogously, since $\htheta_a = \otheta^{1/2}_a \exp(\sqrt{d_a} Z_a) \otheta^{1/2}_a$, we have that
-	$$ D_F(\htheta_a, \otheta_a) =  \norm{\exp(\sqrt{d_a} Z_a) - I_a}_F \leq \left( 16 \delta d_a \cdot \sqrt{d_a} \right)^{1/2}. $$
+	$$ D_F(\htheta_a \ || \ \otheta_a) =  \norm{\exp(\sqrt{d_a} Z_a) - I_a}_F \leq \left( 16 \delta d_a \cdot \sqrt{d_a} \right)^{1/2}. $$
 \end{proof}
 
 \begin{theorem}[Restatement of \cref{thm:tensor-flipflop}]
 	If $\htheta$ denotes the MLE estimator for $\Theta$, then provided $n = \Omega(k^2 \cdot d_1^2/D)$, the flip-flop algorithm computes $\otheta$ with
-	$$ D_F(\htheta_a, \otheta_a) \leq \eps $$
+	$$ D_F(\htheta_a \ || \ \otheta_a) \leq \eps $$
 	in $O(k d_k \log(d_k/\eps))$ iterations with probability at least
 	$$ 1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}.$$
 \end{theorem}
@@ -1791,7 +1823,7 @@ If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\left( \bigotimes_{a =1}^k \othet
 	Thus, after $T = O( k d_k \log(d_k/\eps) )$ steps, \cref{lem:descent-sublevel-set} guarantees us that we will encounter a scaling $\otheta$ such that
 	$$ \norm{\nabla f_x(\otheta)}_F \leq \dfrac{\eps^2}{16 d_k^{3/2}}.$$
 	When we find such a gradient, \cref{lem:tensor-distance-opt} implies that for each $a \in [k]$, the component-wise distance from $\otheta$ to $\htheta$ is bounded by
-	$$ D_F(\htheta_a, \otheta_a) \leq \eps. $$
+	$$ D_F(\htheta_a \ || \ \otheta_a) \leq \eps. $$
 \end{proof}
 
 %-----------------------------------------------------------------------------
