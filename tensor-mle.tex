@@ -2047,14 +2047,12 @@ where we first used that $\braket{\xi,A}$ is distributed the same as $\norm\xi_F
 We can now prove a lower bound that complements \cref{eq:op norm upper bound}.
 
 \begin{lemma}\label{lem:op norm lower bound}
-Let $A$ be an $n \times m$ matrix with independent standard Gaussian entries.
-Then, for $\max\{m,n\}$ large enough
+Let $n \geq m$ and $A$ be an $n \times m$ matrix with independent standard Gaussian entries. Then there is some universal constant $c > 0$ such that
 \begin{equation*}
-  \E \norm{A}_{\op} \geq \frac{1}{3} (\sqrt{n} + \sqrt{m}).
+  \E \norm{A}_{\op} \geq c (\sqrt{n} + \sqrt{m}).
 \end{equation*}
 \end{lemma}
 \begin{proof}
-Without loss of generality, we assume that $n \geq m$.
 The moment definition of sub-Gaussianity from \cref{thm:banach conc} shows for $p=2$ and $\sigma^{2} = 1$ (by \cref{l:opNormSubG}) that
 \[
   (\E \norm{A}_{\op}^{2})^{1/2} \leq \E \norm{A}_{\op} + C \sqrt{2}
@@ -2063,9 +2061,13 @@ The moment definition of sub-Gaussianity from \cref{thm:banach conc} shows for $
 where $C$ the universal constant in \cref{eq:conc via moments}.
 We can then lower bound the second moment
 \[ \E \norm{A}_{\op}^{2} = \E \norm{A A^{T}}_{\op} \geq \norm{\E A A^{T}}_{\op} = n ,  \]
-where the first step is by definition of $\norm{\cdot}_{\op}$, the second is by Jensen's inequality, and the third step is because $\E A A^{T} = n I_{m}$. Therefore in total we have shown
-\[ \E \norm{A}_{\op} \geq \sqrt{ n} - C\sqrt{2} \geq \frac{2}{3} \sqrt{n} \geq \frac{\sqrt{n} + \sqrt{m}}{3} . \]
-Here the lower bounds follow for $n = \max\{m,n\}$ large enough since $C$ is a universal constant.
+where the first step is by definition of $\norm{\cdot}_{\op}$, the second is by Jensen's inequality, and the third step is because $\E A A^{T} = n I_{m}$. Now if $n$ is large enough, i.e. $\sqrt{n} \geq 2 C$, then in total we can show
+\[ \E \norm{A}_{\op} \geq \sqrt{n} - C\sqrt{2} \geq \left(1 - \frac{1}{\sqrt{2}} \right) \sqrt{n} \geq \frac{\sqrt{n} + \sqrt{m}}{10} , \]
+where in the last step we used $n \geq m$. \AR{This is for small $n$, keep if you'd like} On the other hand, if $\sqrt{n} \leq 2 C$, then we can use the simpler bound
+\[ \E \norm{A}_{\op} \geq \E |\langle E_{ij}, A \rangle| = \sqrt{\frac{2}{\pi}} \geq \frac{1}{C} \sqrt{ \frac{n}{2 \pi} } \geq \frac{\sqrt{n} + \sqrt{m}}{6 C} , \]
+where we used that $\E |g| = \sqrt{2/\pi}$ for standard Gaussian $g$, and in the last step we used $n \geq m$. 
+
+Therefore, since $C$ is some absolute constant from \cref{eq:conc via moments}, in both cases we have $\E \norm{A}_{\op} = \Omega(\sqrt{n} + \sqrt{m}) $. 
 \end{proof}
 
 
@@ -2153,7 +2155,7 @@ where~$C>0$ is the universal constant from the big-$O$ notation in \cref{eq:conc
 
 Finally, we can use the Markov inequality to see that the event
 \begin{align*}
-  \norm*{\left(\sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op} \leq (2 t)^2 \sqrt{4 N} \bigl( \E \norm{A}_{\op} \bigr)^2
+  \norm*{\left(\sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op} \leq (2 t C')^2 \sqrt{4 N} \bigl( \E \norm{A}_{\op} \bigr)^2
 \end{align*}
 holds up to failure probability at most
 \begin{align*}
@@ -2174,6 +2176,38 @@ m^2 \left( \frac{2 \E\norm A_{\op}}{2 t \E\norm A_{\op}} \right)^{4q}
 = t^{-\Omega(m+n)}
 \end{align*}
 In the final step we used that $q = \Omega(m + n)$, as well as the fact that $t \geq 2$, so the prefactor $m^{2}$ can be absorbed at the cost of slightly changing the constant in the exponent.
+
+\AR{Second Version} Finally, we can use the Markov inequality to see that, for some large universal constant $C' \geq 1$ that we choose later, the event
+\begin{align*}
+  \norm*{\left(\sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op} \leq (C' t)^2 \sqrt{4 N} \bigl( \E \norm{A}_{\op} \bigr)^2
+\end{align*}
+holds up to failure probability at most
+\begin{align*}
+  \frac{\E \norm*{\left(\sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^{2q}}{\left( (C' t)^2 \sqrt{4 N} \bigl( \E \norm{A}_{\op} \bigr)^2 \right)^{2q}}
+\leq % \frac{2 N^q m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(2C')^{4q} t^{4q} N^q \bigl( \E \norm{A}_{\op} \bigr)^{4q}} =
+  \frac{m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(C' t)^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}}.
+\end{align*}
+We choose $q = \max\{1, C^{-2} (\E \norm{A}_{\op})^{2} \}$, which by \cref{lem:op norm lower bound} is $\Omega(m + n)$. If $\E \norm{A}_{\op} \leq C$, and therefore $q = 1$, then we can bound the failure probability as
+\begin{align*}
+  \frac{m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(C' t)^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}}
+\leq
+% \frac{2 m^2 \Bigl( (1 + C') \E\norm A_{\op} \Bigr)^{4q}}{(C')^{4q} t^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}} =
+m^2 \left( \frac{2 C}{C' t \E\norm A_{\op}} \right)^{4q}
+\leq m^2 t^{-4q}
+= t^{-\Omega(m+n)}
+\end{align*}
+The inequality follows by choosing $C'$ large enough, as $\E\norm A_{\op}$ is bounded below by a universal constant (according to the proof of \cref{lem:op norm lower bound}). In the final step we used that $q = \Omega(m + n)$, as well as the fact that $t \geq 2$, so the prefactor $m^{2}$ can be absorbed at the cost of slightly changing the constant in the exponent.
+
+On the other hand if $C \sqrt{q} \leq \E \norm{A}_{\op}$, then we bound the failure probability
+\begin{align*}
+  \frac{m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(C' t)^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}}
+\leq
+% \frac{2 m^2 \Bigl( (1 + C') \E\norm A_{\op} \Bigr)^{4q}}{(C')^{4q} t^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}} =
+m^2 \left( \frac{2 \E\norm A_{\op}}{C' t \E\norm A_{\op}} \right)^{4q}
+\leq m^2 t^{-4q}
+= t^{-\Omega(m+n)}
+\end{align*}
+Here the inequality follows by choosing $C' \geq 2$. In the final step we used that $q = \Omega(m + n)$, as well as the fact that $t \geq 2$, so the prefactor $m^{2}$ can be absorbed at the cost of slightly changing the constant in the exponent.
 % This concludes the proof.
 \end{proof}
 
