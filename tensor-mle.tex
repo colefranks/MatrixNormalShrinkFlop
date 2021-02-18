@@ -2162,8 +2162,8 @@ holds up to failure probability at most
   \frac{m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(2 t)^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}}.
 \end{align*}
 %\MW{I think this is buggy now. Also worry about $q\geq1$ (integer is not important I think).}
-We would like simultaneously $q \geq 1$ and $C \sqrt{q} \leq \E \norm A_{\op}$, so that the numerator in the trace method can be bounded. Therefore assuming $n = \max\{m,n\}$ is large enough for \cref{lem:op norm lower bound} to hold, we can choose $q = c(\sqrt{m} + \sqrt{n})^{2}$ for some small universal constant $c$ so that $q = \Omega(m + n)$. 
-\MW{say that $q\geq1$ for $n$ or $m$ large enough.}
+We would like simultaneously $q \geq 1$ and $C \sqrt{q} \leq \E \norm A_{\op}$, so that the numerator in the trace method can be bounded. Therefore assuming $n = \max\{m,n\}$ is large enough for \cref{lem:op norm lower bound} to hold, we can choose $q = c(\sqrt{m} + \sqrt{n})^{2}$ for some small universal constant $c$ so that $q = \Omega(m + n)$.
+\MW{big O decision time}
 Then, the failure probability is bounded as follows:
 \begin{align*}
   \frac{m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(2 t)^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}}
