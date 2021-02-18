@@ -1038,7 +1038,7 @@ Assuming $k\geq2$, the right-hand side is at most $k (\lambda + \eps)$.
 \end{lemma}
 \noindent
 It suffices to verify the hypothesis for $a<b$.
-Indeed, since $\tr \Phi(I_{d_a}) = \tr \Phi(I_{d_b})$, any $\Phi$ is an $(\eps,\lambda)$-quantum expander if and only if this is the case for the adjoint $\Phi^*$, and the adjoint of $\Phi^{(ab)}$ is~$\Phi^{(ba)}$.
+Indeed, since $\tr \Phi(I_{d_a}) = \tr \Phi(I_{d_b})$, any $\Phi$ is an $(\eps,\lambda)$-quantum expander if and only if this is the case for the adjoint $\Phi^*$, but note that the adjoint of~$\Phi^{(ab)}$ is~$\Phi^{(ba)}$.
 \begin{proof}
 We wish to bound the operator norm of $M = \frac{\nabla^2 f_\samp}{\tr \rho} - I_\H$, which we consider as a block matrix as in \cref{def:hess grad}.
 For this, we use the following basic estimate of the norm of a block matrix in terms of the norm of the matrix of blocks norms, i.e.,
@@ -1392,7 +1392,7 @@ Thus,
 \leq d_a \norm H_F^2
 \leq 4 d_a \delta^2.
 \end{align*}
-Our assumption~\eqref{eq:eps sqr assm} implies (again choosing $C$ large enough) that $4 d_a \delta^2 \leq \frac12$, so we obtain
+Our assumption~\eqref{eq:eps sqr assm} implies (again choosing $C$ large enough) that $4 d_a \delta^2 \leq 1$, so we obtain
 \begin{align*}
   D_F(\htheta_a\Vert I_a)
 = \norm{I_a - \htheta_a}_F
@@ -2183,6 +2183,7 @@ We'll use an easy fact relating the exponential map and the operator norm.
 
 \begin{fact} For all symmetric $d\times d$ matrices $\delta $ such that $ \|\delta\|_{op} \leq \frac{1}{2}$, we have
 $$ \|e^{\delta} - I\|_{op} \leq \|\delta\|_{op} + \|\delta\|_{op}^{2} \leq 2 \|\delta\|_{op}.$$
+\MW{Isn't $|e^x - 1| \leq 2|x|$ for $|x| \leq 1$?}
 \end{fact}
 
 %by letting our input at the identity be represented by $x$ \CF{input at identity? use of "input" is in general imprecise}
