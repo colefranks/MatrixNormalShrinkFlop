@@ -1392,7 +1392,7 @@ Thus,
 \leq d_a \norm H_F^2
 \leq 4 d_a \delta^2.
 \end{align*}
-Our assumption~\eqref{eq:eps sqr assm} implies (again choosing $C$ large enough) that $4 d_a \delta^2 \leq 1$, so we obtain
+Our assumption~\eqref{eq:eps sqr assm} implies (again choosing $C$ large enough) that $4 d_a \delta^2 \leq \frac12$, so we obtain
 \begin{align*}
   D_F(\htheta_a\Vert I_a)
 = \norm{I_a - \htheta_a}_F
@@ -1456,15 +1456,15 @@ Moreover, $f_x(P_1, P_2) \geq (1 - \frac{4 \eps^2}{\lambda}) \frac{\|x\|^2}{nD}$
 \end{theorem}
 
 \begin{corollary}
-There is a universal constant $C>0$ such that the following holds. Suppose $\|x\| = \sqrt{nD}$ and $0 \leq \eps, \lambda \leq 1$. If the completely positive map $\Phi^{(12)}$ defined in \cref{eq:hessian channel} is $\eps$-doubly balanced and has spectral gap~$\gamma$, where $\gamma^2 \geq C \eps \log d_{\min}.$ Then the MLE's $\htheta_1, \htheta_2$ satisfy 
+There is a universal constant $C>0$ such that the following holds. Suppose $\|x\| = \sqrt{nD}$ and $0 \leq \eps, \lambda \leq 1$. If the completely positive map $\Phi^{(12)}$ defined in \cref{eq:hessian channel} is $\eps$-doubly balanced and has spectral gap~$\gamma$, where $\gamma^2 \geq C \eps \log d_{\min}.$ Then the MLE's $\htheta_1, \htheta_2$ satisfy
 \begin{align*}
   \max \{ \norm{\htheta_1 - I_{d_1}}_{\op}, \norm{\htheta_2 - I_{d_2}}_{\op} \} = O\Bigl(\frac{\eps \log d_{\min}}\gamma\Bigr).
 \end{align*}
 \end{corollary}
 \begin{proof}
 To compute the MLE, we reparametrize by $\Theta_1 = P_1$ and $\Theta_2 = \lambda P_2$ where $P_1,P_2 \in \SPD(d_1) \times \SPD(d_2)$. Plugging this reparametrization into $f_x$ shows $\lambda, P_1, P_2$ solve
-$$\arg\max_{\lambda, P_1, P_2} \lambda f_x(P_1, P_2) - \log \lambda.$$ 
-In particular, the MLE $\htheta_1, \htheta_2$ exists uniquely if $f_x$ restricted to $\SPD(d_1) \times \SPD(d_2)$ has unique minimizers $P_1, P_2$. Such unique maximizers exist by \cref{thm:klr}. Given $P_1, P_2$, solving the simple one-dimensional optimization problem for $\lambda$ yields $\lambda = 1/f_x(P_1, P_2)$. We have $\htheta = P_1$, and 
+$$\arg\max_{\lambda, P_1, P_2} \lambda f_x(P_1, P_2) - \log \lambda.$$
+In particular, the MLE $\htheta_1, \htheta_2$ exists uniquely if $f_x$ restricted to $\SPD(d_1) \times \SPD(d_2)$ has unique minimizers $P_1, P_2$. Such unique maximizers exist by \cref{thm:klr}. Given $P_1, P_2$, solving the simple one-dimensional optimization problem for $\lambda$ yields $\lambda = 1/f_x(P_1, P_2)$. We have $\htheta = P_1$, and
 $$ \|\htheta_2 - I_{d_2} \|_{op} = \|\lambda P_2  - I_{d_2} \|_{op} \leq \lambda \|P_2 - I_{d_2}\| + |1 - \lambda|.$$
 By \cref{thm:klr}, $1 \leq \lambda \leq (1 + 4 \eps^2/\gamma)^{-1}.$ By our assumptions on $\gamma, \eps$, we have $\eps^2/\gamma \leq \eps/\gamma \leq \eps/\gamma^2$. Thus $\lambda = (1 + O(\eps^2/\gamma)) = O(1)$ if $C$ is large enough, and so
 $\|\htheta_2 - I_{d_2} \|_{op} = O(\eps^2 \log d_{\min}/\gamma).$ \end{proof}
@@ -1648,7 +1648,7 @@ We are now ready to state the tensor flip-flop algorithm and prove its fast conv
 \item\label{it:flip-flop step 2} For $t=1,\dots,T = 12 k d_k \cdot \log(k/\delta^2)$, repeat the following:
 %we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
 \begin{itemize}
-\item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \ldots, \otheta_k)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \ldots, \otheta_k)$, and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest. 
+\item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \ldots, \otheta_k)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \ldots, \otheta_k)$, and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest.
 
 \vspace{5pt}
 
@@ -1701,7 +1701,7 @@ If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\otheta$ and return.
 \begin{proof}
 	Let $\rho = \Theta^{1/2} \cdot \sum_{i=1}^n x_i x_i^\dagger \cdot \Theta^{1/2}$.
 	Since $\Upsilon$ is the successive scaling from $\Theta$, we have that
-	there is $a \in [k]$ such that 
+	there is $a \in [k]$ such that
 	$$\Upsilon_a = \dfrac{\tr \rho}{d_a} \cdot \Theta_a^{1/2} (\rho^{(a)})^{-1} \Theta_a^{1/2} $$
 	and $\Upsilon_b = \Theta_b$ for all $b \neq a$. Let $E_{(a)} = I_1 \otimes \cdots \otimes I_{a-1} \otimes (\rho^{(a)})^{-1} \otimes I_{a+1} \otimes \cdots \otimes I_k$.
 	Thus, we have:
@@ -1712,7 +1712,7 @@ If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\otheta$ and return.
 	\end{align*}
 \end{proof}
 
-Thus, since we started the flip-flop algorithm with a matrix of unit trace, the proposition above allows us to assume from now on that each scaling produced by the flip-flop algorithm will have unit trace. 
+Thus, since we started the flip-flop algorithm with a matrix of unit trace, the proposition above allows us to assume from now on that each scaling produced by the flip-flop algorithm will have unit trace.
 In particular, we have that $\nabla_0 f_x(\Theta) = 0$ at each iteration.
 
 \begin{lemma}[Descent Lemma]\label{lem:tensor-descent-lemma}
@@ -1723,7 +1723,7 @@ In particular, we have that $\nabla_0 f_x(\Theta) = 0$ at each iteration.
 \begin{proof}
 	Let
 	$$\rho := \Theta^{1/2} \cdot \left( \sum_{i=1}^n x_i x_i^\dagger \right) \cdot \Theta^{1/2}.$$
-	Additionally, let $a \in [k]$ be such that $\nabla_a := \nabla_a f_x(\Theta)$ has largest norm. 
+	Additionally, let $a \in [k]$ be such that $\nabla_a := \nabla_a f_x(\Theta)$ has largest norm.
 	As $\Upsilon$ is the successive scaling, and we are assuming that $\tr \rho =1$, we have that $\Upsilon_b = \Theta_b$ when $b \neq a$ and
 	$$ \Upsilon_a = \dfrac{1}{d_a} \cdot \Theta_a^{1/2} \cdot (\rho^{(a)})^{-1} \cdot \Theta_a^{1/2}. $$
 	%= \det(d_a \cdot \rho^{(a)})^{1/d_a} \cdot \Theta_a^{1/2} \cdot (d_a \cdot \rho^{(a)})^{-1} \cdot \Theta_a^{1/2}
@@ -1979,13 +1979,11 @@ For any~$t \geq 2$, with probability at least $1 - t^{-\Omega(m+n)}$,
 where $\Pi$ denotes the orthogonal projection onto the traceless subspace of $\R^m \ot \R^m$, that is, onto the orthogonal complement of $\vect(I_m)$.
 \end{theorem}
 
-We first explain how \cref{thm:Pisier-expansion}, along with the following estimate of the operator norm of a standard Gaussian $n \times m$ random matrix~$A$ implies \cref{thm:hess-pisier}.
-\begin{prop}\label{eq:op norm bound}
-\begin{equation}
-  \frac{1}{3} (\sqrt{n} + \sqrt{m}) \leq \E \norm{A}_{\op} \leq \sqrt{n} + \sqrt{m}. 
+We first explain how \cref{thm:Pisier-expansion}, along with the following estimate of the operator norm of a standard Gaussian $n \times m$ random matrix~$A$ (see Theorem~5.32 in \cite{vershynin2010introduction}),
+\begin{equation}\label{eq:op norm upper bound}
+  \E \norm{A}_{\op} \leq \sqrt{n} + \sqrt{m},
 \end{equation}
-\end{prop}
-The upper bound is from Theorem 5.32 in \cite{vershynin2010introduction}. We will show the lower bound later in this section when we discuss a few more properties of Gaussians. 
+implies \cref{thm:hess-pisier}.
 
 \begin{proof}[Proof of \cref{thm:hess-pisier}]
 Choose $n=d_a$ and $m=d_b$.
@@ -2004,7 +2002,7 @@ Using \cref{eq:vec rep,thm:Pisier-expansion}, it follows that
   \norm{\Phi_A}_0 \leq O\left( t^2 \sqrt{N} \bigl( \E \norm{A}_{\op} \bigr)^2 \right),
 \end{align*}
 with the desired probability.
-Using \cref{eq:op norm bound}, we can bound the right-hand side operator norm,
+Using \cref{eq:op norm upper bound}, we can bound the right-hand side operator norm,
 \begin{align*}
   \bigl( \E \norm{Y}_{\op} \bigr)^2
 = O\left( \left( \sqrt{n} + \sqrt{m} \right)^2 \right)
@@ -2023,7 +2021,7 @@ Let $A$ be a centered Gaussian random variable that takes values in a separable 
 Then $\|A\|$ concentrates with parameter $\sigma^2 := \sup \{ \E \langle \xi, A \rangle^{2} \mid \|\xi\|_{*} \leq 1 \}$, where $\norm{\xi}_*$ denotes the dual norm.
 That is:
 \[ \forall t > 0 \colon \quad \Pr\Bigl( \abs[\big]{\norm A - \E \norm A} \geq t\Bigr) \leq 2 \exp\Bigl( - \frac{\Omega(t^2)}{\sigma^{2}}\Bigr).   \]
-Another equivalent definition of sub-Gaussianity (according to Lemma 5.5 of \cite{vershynin2010introduction}) \MW{add ref for equivalence} is
+Another equivalent definition of sub-Gaussianity is (see Lemma~5.5 of \cite{vershynin2010introduction})
 \begin{equation}\label{eq:conc via moments}
   \forall p \geq 2 \colon \quad (\E \|A\|^{p})^{\frac{1}{p}} \leq \E \|A\| + O \left( \sqrt{\frac{p}{\sigma^{2}}} \right).
 \end{equation}
@@ -2031,9 +2029,10 @@ Another equivalent definition of sub-Gaussianity (according to Lemma 5.5 of \cit
 
 We calculate the sub-Gaussianity parameter for our setting below.
 
-\begin{lemma} \label{l:opNormSubG}
-Let $A$ be an $n \times m$ matrix with independent standard Gaussian entries. Then $\norm{A}_{\op}$ is sub-Gaussian with parameter $\sigma^{2} = 1$. 
-\end{lemma}
+\begin{corollary}\label{l:opNormSubG}
+Let $A$ be an $n \times m$ matrix with independent standard Gaussian entries.
+Then $\norm{A}_{\op}$ is sub-Gaussian with parameter $\sigma^{2} = 1$.
+\end{corollary}
 \begin{proof}
 Note that the dual norm is the trace norm~$\norm{\cdot}_1$, hence the concentration parameter can be estimated as
 \begin{align*}
@@ -2042,16 +2041,30 @@ Note that the dual norm is the trace norm~$\norm{\cdot}_1$, hence the concentrat
 = \sup \left\{ \norm\xi_F^2 \;\mid\; \norm{\xi}_1 \leq 1 \right\}
 = 1,
 \end{align*}
-where we first used that $\braket{\xi,A}$ is distributed the same as $\norm\xi_F A_{11}$ by orthogonal invariance, and then that the trace norm dominates the Frobenius norm, with equality attained for example by $\xi = E_{11}$. 
+where we first used that $\braket{\xi,A}$ is distributed the same as $\norm\xi_F A_{11}$ by orthogonal invariance, and then that the trace norm dominates the Frobenius norm, with equality attained for example by $\xi = E_{11}$.
 \end{proof}
 
-\begin{proof}[Proof of \cref{eq:op norm bound}]We can now also show the lower bound in \cref{eq:op norm bound}. The moment definition of sub-Gaussianity shows $\E \|A\|^{2} \leq \E \|A\| + O\left(\sqrt{\frac{p}{\sigma^{2}}} \right)$, so we continue
+We can now prove a lower bound that complements \cref{eq:op norm upper bound}.
+
+\begin{lemma}\label{lem:op norm lower bound}
+Let $A$ be an $n \times m$ matrix with independent standard Gaussian entries.
+Then:
+\begin{equation*}
+  \E \norm{A}_{\op} \geq \frac{1}{3} (\sqrt{n} + \sqrt{m}).
+\end{equation*}
+\end{lemma}
+\begin{proof}
+The moment definition of sub-Gaussianity shows $\E \|A\|^{2} \leq \E \|A\| + O\left(\sqrt{\frac{p}{\sigma^{2}}} \right)$ \MW{square root missing? also, already have to plug in $p=2$ here.}, so we continue
 \[ (\E \norm{A}_{\op})^{2} \geq \E \norm{A}_{\op}^{2} - C \sqrt{2} ,   \]
-where in the last step we substituted $p=2$ and $\sigma^{2} = 1$ by \cref{l:opNormSubG}. We can then lower bound the second moment simply assuming $n \geq m$:
+where in the last step we substituted $p=2$ and $\sigma^{2} = 1$ by \cref{l:opNormSubG}.
+\MW{say what $C$ is}
+We can then lower bound the second moment simply assuming $n \geq m$:
 \[ \E \norm{A}_{\op}^{2} = \E \norm{A A^{T}}_{\op} \geq \norm{\E A A^{T}}_{\op} = n ,  \]
 where the first step is by definition of $\norm{\cdot}_{\op}$, the second is by Jensen's inequality, and the third step is because $\E A A^{T} = n I_{m}$. Therefore in total we have shown
 \[ \E \norm{A}_{\op} \geq \sqrt{ \E \norm{A}_{\op}^{2} - C' } = \Omega(\sqrt{n}) = \Omega(\sqrt{n} + \sqrt{m}) .   \]
-Here the lower bounds follow since $C'$ is a universal constant and $n \geq m$.  \end{proof}
+Here the lower bounds follow since $C'$ is a universal constant \MW{what is $C'$? hasn't been defined yet} and $n \geq m$.
+\MW{how does this relate to the $1/3$ mentioned in the statement of the lemma?}
+\end{proof}
 
 
 We will also use the H\"older inequality for the \emph{Schatten $p$-norm} $\norm{A}_p = (\tr(A^TA)^{\frac p2})^{\frac1p}$, where $p\geq1$:
@@ -2126,7 +2139,7 @@ Accordingly, we have proved
 \leq N^q m^2 \Bigl( \E\norm{A}_{\op}^{2q} \Bigr)^2,
 \end{align}
 In the third inequality we used that $A \in \Mat(n,m)$ has rank $\leq m$, and therefore $\norm{A}_{2q}^{2q} \leq m \norm A_{\op}^{2q}$.
-To bound the right-hand side, we wish to apply \cref{thm:banach conc} for the Banach space $\Mat(n,m)$ with the operator norm~$\norm{\cdot}_{\op}$. 
+To bound the right-hand side, we wish to apply \cref{thm:banach conc} for the Banach space $\Mat(n,m)$ with the operator norm~$\norm{\cdot}_{\op}$.
 Thus, using \cref{eq:symmetrization,eq:op vs 2q,thm:banach conc}, we obtain for $q\geq1$,
 \begin{align*}
 \E \norm*{\left( \sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^{2q}
@@ -2147,8 +2160,8 @@ holds up to failure probability at most
   \frac{m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(2 t)^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}}.
 \end{align*}
 %\MW{I think this is buggy now. Also worry about $q\geq1$ (integer is not important I think).}
-Now we choose $q = c (\sqrt{m} + \sqrt{n})^{2}$ for small enough $c$ such that $C \sqrt{q} \leq \E \|A\|_{\op}$ (by \cref{eq:op norm bound}). \AR{Changed the choice of constant, hope \MW{} doesn't mind}
-%We can moreover choose~$C'\geq 2$ to be a universal constant.
+Now we choose $q = c (\sqrt{m} + \sqrt{n})^{2}$ for small enough $c$ such that $C \sqrt{q} \leq \E \|A\|_{\op}$ (by \cref{lem:op norm lower bound}).
+\MW{say that $q\geq1$ for $n$ or $m$ large enough.}
 Then, the failure probability is bounded as follows:
 \begin{align*}
   \frac{m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(2 t)^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}}
@@ -2158,8 +2171,8 @@ m^2 \left( \frac{2 \E\norm A_{\op}}{2 t \E\norm A_{\op}} \right)^{4q}
 \leq m^2 t^{-4q}
 = t^{-\Omega(m+n)}
 \end{align*}
-In the final step we used that $q = \Omega(m + n)$ by \cref{eq:op norm bound}, as well as the fact that $t \geq 2$, so the prefactor $m^{2}$ can be absorbed at the cost of slightly changing the constant in the exponent.
-This concludes the proof.
+In the final step we used that $q = \Omega(m + n)$, as well as the fact that $t \geq 2$, so the prefactor $m^{2}$ can be absorbed at the cost of slightly changing the constant in the exponent.
+% This concludes the proof.
 \end{proof}
 
 
@@ -2168,7 +2181,7 @@ This concludes the proof.
 %=============================================================================
 We'll use an easy fact relating the exponential map and the operator norm.
 
-\begin{fact} For all symmetric $d\times d$ matrices $\delta $ such that $ \|\delta\|_{op} \leq \frac{1}{2}$ \MW{why not $\leq1$?} \AR{Slightly worse constant (3 instead of 2) for $\delta \leq 1$ I think?}, we have
+\begin{fact} For all symmetric $d\times d$ matrices $\delta $ such that $ \|\delta\|_{op} \leq \frac{1}{2}$, we have
 $$ \|e^{\delta} - I\|_{op} \leq \|\delta\|_{op} + \|\delta\|_{op}^{2} \leq 2 \|\delta\|_{op}.$$
 \end{fact}
 
