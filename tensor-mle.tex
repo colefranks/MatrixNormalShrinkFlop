@@ -2047,22 +2047,21 @@ where we first used that $\braket{\xi,A}$ is distributed the same as $\norm\xi_F
 We can now prove a lower bound that complements \cref{eq:op norm upper bound}.
 
 \begin{lemma}\label{lem:op norm lower bound}
-Let $A$ be an $n \times m$ matrix with independent standard Gaussian entries.
-Then:
+Let $A$ be an $n \times m$ matrix with independent standard Gaussian entries and $n \geq m$ without loss of generality.
+Then for $n = \max\{m,n\}$ large enough
 \begin{equation*}
   \E \norm{A}_{\op} \geq \frac{1}{3} (\sqrt{n} + \sqrt{m}).
 \end{equation*}
 \end{lemma}
 \begin{proof}
-The moment definition of sub-Gaussianity shows $\E \|A\|^{2} \leq \E \|A\| + O\left(\sqrt{\frac{p}{\sigma^{2}}} \right)$ \MW{square root missing? also, already have to plug in $p=2$ here.}, so we continue
-\[ (\E \norm{A}_{\op})^{2} \geq \E \norm{A}_{\op}^{2} - C \sqrt{2} ,   \]
-where in the last step we substituted $p=2$ and $\sigma^{2} = 1$ by \cref{l:opNormSubG}.
-\MW{say what $C$ is}
-We can then lower bound the second moment simply assuming $n \geq m$:
+The moment definition of sub-Gaussianity from \cref{thm:banach conc} shows for $p=2$ and $\sigma^{2} = 1$ (by \cref{l:opNormSubG}) \MW{square root missing? also, already have to plug in $p=2$ here.}
+\[ (\E \norm{A}_{\op}^{2})^{1/2} \leq \E \norm{A}_{\op} + C \sqrt{2} \implies (\E \norm{A}_{\op} \geq (\E \norm{A}_{\op}^{2})^{1/2} - C \sqrt{2}    \]
+where $C$ the universal constant in \cref{thm:banach conc}. 
+We can then lower bound the second moment
 \[ \E \norm{A}_{\op}^{2} = \E \norm{A A^{T}}_{\op} \geq \norm{\E A A^{T}}_{\op} = n ,  \]
 where the first step is by definition of $\norm{\cdot}_{\op}$, the second is by Jensen's inequality, and the third step is because $\E A A^{T} = n I_{m}$. Therefore in total we have shown
-\[ \E \norm{A}_{\op} \geq \sqrt{ \E \norm{A}_{\op}^{2} - C' } = \Omega(\sqrt{n}) = \Omega(\sqrt{n} + \sqrt{m}) .   \]
-Here the lower bounds follow since $C'$ is a universal constant \MW{what is $C'$? hasn't been defined yet} and $n \geq m$.
+\[ \E \norm{A}_{\op} \geq \sqrt{ n} - C\sqrt{2} \geq \frac{2}{3} \sqrt{n} \geq \frac{\sqrt{n} + \sqrt{m}}{3} .   \]
+Here the lower bounds follow for $n = \max\{m,n\}$ large enough since $C$ is a universal constant \MW{what is $C'$? hasn't been defined yet}.
 \MW{how does this relate to the $1/3$ mentioned in the statement of the lemma?}
 \end{proof}
 
@@ -2160,7 +2159,7 @@ holds up to failure probability at most
   \frac{m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(2 t)^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}}.
 \end{align*}
 %\MW{I think this is buggy now. Also worry about $q\geq1$ (integer is not important I think).}
-Now we choose $q = c (\sqrt{m} + \sqrt{n})^{2}$ for small enough $c$ such that $C \sqrt{q} \leq \E \|A\|_{\op}$ (by \cref{lem:op norm lower bound}).
+We would like simultaneously $q \geq 1$ and $C \sqrt{q} \leq \E \norm A_{\op}$, so that the numerator in the trace method can be bounded. Therefore assuming $n = \max\{m,n\}$ is large enough for \cref{lem:op norm lower bound} to hold, we can choose $q = c(\sqrt{m} + \sqrt{n})^{2}$ for some small universal constant $c$ so that $q = \Omega(m + n)$. 
 \MW{say that $q\geq1$ for $n$ or $m$ large enough.}
 Then, the failure probability is bounded as follows:
 \begin{align*}
@@ -2181,9 +2180,9 @@ In the final step we used that $q = \Omega(m + n)$, as well as the fact that $t 
 %=============================================================================
 We'll use an easy fact relating the exponential map and the operator norm.
 
-\begin{fact} For all symmetric $d\times d$ matrices $\delta $ such that $ \|\delta\|_{op} \leq \frac{1}{2}$, we have
-$$ \|e^{\delta} - I\|_{op} \leq \|\delta\|_{op} + \|\delta\|_{op}^{2} \leq 2 \|\delta\|_{op}.$$
-\MW{Isn't $|e^x - 1| \leq 2|x|$ for $|x| \leq 1$?}
+\begin{fact} \label{f:expTaylor} For all symmetric $d\times d$ matrices $\delta $ such that $ \|\delta\|_{op} \leq 1$, we have
+$$ \|e^{\delta} - I\|_{op} \leq 2 \|\delta\|_{op}.$$
+\MW{Isn't $|e^x - 1| \leq 2|x|$ for $|x| \leq 1$?} \AR{Ya my bad I was being dumb}
 \end{fact}
 
 %by letting our input at the identity be represented by $x$ \CF{input at identity? use of "input" is in general imprecise}
@@ -2215,7 +2214,7 @@ For input $\samp \in \R^{nD}$ and perturbation $\delta \in \Mat(d_{a})$ such tha
 \begin{proof} By definition, $\|\rho_{\samp'}^{(a)} - \rho_{\samp}^{(a)}\|_{op} = \sup_{\|Z\|_{1} \leq 1} \langle Z_{a}, \rho_{\samp'} - \rho_{\samp} \rangle $.
 
 
-Choose $\eta$ such that  $\|(e^{\delta})_{a} \samp\|_{2}^{-1} = \|\samp\|_{2}^{-1} (1 + \eta)$; note that $|\eta| = O(\|\delta\|_{op})$ provided $c$ is small enough. Letting $\delta' := (1+\eta)e^{\delta} - I_{a}$. Assuming without loss of generality that $\|Z\|_{1} = 1$, we have
+Choose $\eta$ such that  $\|(e^{\delta})_{a} \samp\|_{2}^{-1} = \|\samp\|_{2}^{-1} (1 + \eta)$; note that $|\eta| = O(\|\delta\|_{op})$ by \cref{f:expTaylor} provided $c$ is small enough. Letting $\delta' := (1+\eta)e^{\delta} - I_{a}$. Assuming without loss of generality that $\|Z\|_{1} = 1$, we have
 \[ | \langle Z_{a}, (I+\delta')_a \rho_{\samp} (I+\delta')_a - \rho_{\samp} \rangle | \]
 \[ \leq (2\|\delta'\|_{op} + \|\delta'\|_{op}^{2}) \|\rho^{(a)}\|_{op} \|Z\|_{1}    \]
 from which the lemma follows since
@@ -2228,7 +2227,7 @@ For input $\samp \in \R^{nD}$ and perturbation $\delta \in \Mat(d_{b})$ such tha
 \[ \|\rho_{\samp'}^{a} - \rho_{\samp}^{a}\|_{op} \leq 9.5 \|\delta\|_{op} \|\rho_{\samp}^{a}\|_{op}      \]
 \end{lemma}
 \begin{proof}
-Choose $\eta$ such that $\|(e^{\delta})_{b} \samp\|_{2}^{-2} = (1+\eta) \|\samp\|_{2}^{-2}$; let $\delta' := (1+\eta)e^{2\delta} - I$.
+Choose $\eta$ such that $\|(e^{\delta})_{b} \samp\|_{2}^{-2} = (1+\eta) \|\samp\|_{2}^{-2}$; let $\delta' := (1+\eta)e^{2\delta} - I$. By by \cref{f:expTaylor} we have
 \[ \|\delta\|_{op} \leq .1 \implies |\eta| \leq 2\|\delta\|_{op} + 4\|\delta\|_{op}^{2}, \hspace{3mm} \|\delta'\|_{op} \leq (2+|\eta|)(2\|\delta\|_{op} + 4\|\delta\|_{op}^{2}) \leq 9.24 \|\delta\|_{op} \]
 We assume for now $Z \succeq 0$.
 \begin{align*} | \langle Z_{a}, (1+\eta) (e^{\delta})_{b} \rho_{\samp} (e^{\delta})_{b}^{*} - \rho_{\samp} \rangle|
@@ -2315,7 +2314,7 @@ By taking adjoints, we can assume w.l.o.g. that $c = b$. Let $R : \Mat(d_{b}) \t
 \[ |\langle \rho_{\samp'}^{(ab)} - \rho_{\samp}^{(ab)}, Y \otimes Z \rangle| = |\langle \rho_{\samp}^{(ab)}, Y \otimes (R(Z) - Z) \rangle|  \]
 The subspace $\smallSym_{d_{b}}^{0}$ is not invariant under $R$, but we show $R \approx I$. Let $\delta' := (1+\eta) e^{\delta} - I$.
 \[ \|R(Z) - Z\|_{F} \leq 2 \|\delta' Z\|_{F} + \|\delta' Z \delta'\|_{F} \leq (2 \|\delta'\|_{op} + \|\delta'\|_{op}^{2}) \|Z\|_{F}    \]
-So we complete the proof using the fact that $Y,Z$ are traceless on the LHS of the inequality, and $\|\delta\|_{op} \leq \frac{1}{20}$ by the same calculation as in \cref{atoaaRobustness}.
+So we complete the proof using the fact that $Y,Z$ are traceless on the LHS of the inequality, and $\|\delta\|_{op} \leq \frac{1}{20}$ by the same calculation as in \cref{atoaaRobustness} using by \cref{f:expTaylor}.
 \end{proof}
 
 \begin{lemma} \label{ctoabRobustness}
