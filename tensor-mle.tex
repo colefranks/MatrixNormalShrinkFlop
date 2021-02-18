@@ -2047,22 +2047,25 @@ where we first used that $\braket{\xi,A}$ is distributed the same as $\norm\xi_F
 We can now prove a lower bound that complements \cref{eq:op norm upper bound}.
 
 \begin{lemma}\label{lem:op norm lower bound}
-Let $A$ be an $n \times m$ matrix with independent standard Gaussian entries and $n \geq m$ without loss of generality.
-Then for $n = \max\{m,n\}$ large enough
+Let $A$ be an $n \times m$ matrix with independent standard Gaussian entries.
+Then, for $\max\{m,n\}$ large enough
 \begin{equation*}
   \E \norm{A}_{\op} \geq \frac{1}{3} (\sqrt{n} + \sqrt{m}).
 \end{equation*}
 \end{lemma}
 \begin{proof}
-The moment definition of sub-Gaussianity from \cref{thm:banach conc} shows for $p=2$ and $\sigma^{2} = 1$ (by \cref{l:opNormSubG}) \MW{square root missing? also, already have to plug in $p=2$ here.}
-\[ (\E \norm{A}_{\op}^{2})^{1/2} \leq \E \norm{A}_{\op} + C \sqrt{2} \implies (\E \norm{A}_{\op} \geq (\E \norm{A}_{\op}^{2})^{1/2} - C \sqrt{2}    \]
-where $C$ the universal constant in \cref{thm:banach conc}. 
+Without loss of generality, we assume that $n \geq m$.
+The moment definition of sub-Gaussianity from \cref{thm:banach conc} shows for $p=2$ and $\sigma^{2} = 1$ (by \cref{l:opNormSubG}) that
+\[
+  (\E \norm{A}_{\op}^{2})^{1/2} \leq \E \norm{A}_{\op} + C \sqrt{2}
+\implies \E \norm{A}_{\op} \geq (\E \norm{A}_{\op}^{2})^{1/2} - C \sqrt{2},
+\]
+where $C$ the universal constant in \cref{eq:conc via moments}.
 We can then lower bound the second moment
 \[ \E \norm{A}_{\op}^{2} = \E \norm{A A^{T}}_{\op} \geq \norm{\E A A^{T}}_{\op} = n ,  \]
 where the first step is by definition of $\norm{\cdot}_{\op}$, the second is by Jensen's inequality, and the third step is because $\E A A^{T} = n I_{m}$. Therefore in total we have shown
-\[ \E \norm{A}_{\op} \geq \sqrt{ n} - C\sqrt{2} \geq \frac{2}{3} \sqrt{n} \geq \frac{\sqrt{n} + \sqrt{m}}{3} .   \]
-Here the lower bounds follow for $n = \max\{m,n\}$ large enough since $C$ is a universal constant \MW{what is $C'$? hasn't been defined yet}.
-\MW{how does this relate to the $1/3$ mentioned in the statement of the lemma?}
+\[ \E \norm{A}_{\op} \geq \sqrt{ n} - C\sqrt{2} \geq \frac{2}{3} \sqrt{n} \geq \frac{\sqrt{n} + \sqrt{m}}{3} . \]
+Here the lower bounds follow for $n = \max\{m,n\}$ large enough since $C$ is a universal constant.
 \end{proof}
 
 
