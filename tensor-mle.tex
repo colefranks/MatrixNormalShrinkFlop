@@ -1644,16 +1644,22 @@ We are now ready to state the tensor flip-flop algorithm and prove its fast conv
 
 \textbf{Algorithm}:
 \begin{enumerate}
-\item\label{it:flip-flop step 1} Set $\otheta_a = \dfrac{1}{d_a} \cdot I_a$ for each $a \in [k]$, and $\delta = \dfrac{\eps^2}{16 d_k^{3/2}}$.
-\item\label{it:flip-flop step 2} For $t=1,\dots,T = 12 k d_k \cdot \log(k/\delta^2)$, repeat the following:
+\item\label{it:flip-flop step 1} Set $\otheta_a = \dfrac{1}{d_a} \cdot I_a$ for each $a \in [k]$, and $\delta = \dfrac{\eps^2}{16 k^2 \dmax^{3/2}}$.
+
+\vspace{5pt}
+
+\item\label{it:flip-flop step 2} For $t=1,\dots,T = 24 k \cdot \log(1/\delta)$, repeat the following:
 %we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
+
+\vspace{5pt}
+
 \begin{itemize}
 \item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \ldots, \otheta_k)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \ldots, \otheta_k)$, and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest.
 
 \vspace{5pt}
 
 \item
-If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\otheta$ and return.
+If $\norm{\nabla_a}_F < \delta$, output $\otheta$ and return.
 % S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
 
 \vspace{5pt}
@@ -1666,11 +1672,11 @@ If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\otheta$ and return.
 
 \begin{lemma}[Initial Conditions]\label{lem:tensor-initial-conditions}
 	There exist absolute constants $\Gamma, \gamma > 0$ such that the following holds.
-	When the number of samples $n \geq \Gamma \cdot k^2 \cdot \dmax^2/D$, with probability at least $1 - k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)} - 2(k+1) \cdot e^{- \Omega(nk^2D/\dmax)}$ we have that the following conditions hold:
+	When the number of samples $n \geq \Gamma \cdot k^2 \cdot \dmax^3/D$, with probability at least $1 - k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)} - 2k \cdot e^{- \Omega(nD/k \dmax^2)}$ we have that the following conditions hold:
 	\begin{enumerate}
-		\item $\norm{\nabla f_x(I)}_F \leq \dfrac{\gamma \cdot k}{8}$ % \dfrac{\lambda^2}{4 k}$
-		%\item $f_x$ is $\lambda$-strongly geodesically convex at a ball of radius $\lambda/k$ around $I$, that is: $B_{\lambda/k}(I) := \{ Z \in \smallSym \ \mid \ \norm{Z}_F \leq \lambda/k \}$.
-		\item $f_x$ is $\frac{1}{2}$-strongly geodesically convex at a ball of radius $\gamma \cdot k/2$ around $I$, that is: $B_{\gamma \cdot k/2}(I) := \{ Z \in \Sym \ \mid \ \norm{Z}_F \leq \gamma \cdot k/2 \}$.
+		\item $\norm{\nabla f_x(I)}_F \leq \dfrac{\gamma}{4 \sqrt{(k+1)\dmax}}$ 
+		\item $f_x$ is $\frac{1}{2}$-strongly geodesically convex at 
+		$B_r(I_D)$, where $r = \dfrac{\gamma}{\sqrt{(k+1) \dmax}}$
 	\end{enumerate}
 \end{lemma}
 
@@ -1681,18 +1687,21 @@ If $\norm{\nabla_a}_F^2 < \delta^2/k$, output $\otheta$ and return.
 	$$k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)}$$
 	the second condition fails to hold.
 
-	By \cref{prop:gradient-bound} with parameter $\varepsilon = \frac{\gamma \sqrt{k}}{8}$, if the number of samples satisfies $n \geq \dfrac{2^{14} \cdot d_1^2}{\gamma^2 \cdot k \cdot D}$ then with probability at most
-	$$2 k \cdot \exp\left(- \frac{n k D \gamma^2}{2^{15} d_1}\right) = 2k \cdot e^{- \Omega(nkD/d_1)}$$
+	By \cref{prop:gradient-bound} with parameter 
+	$\varepsilon = \frac{\gamma}{4 \sqrt{(k+1) \dmax}}$, 
+	if the number of samples satisfies 
+	$n \geq \dfrac{350 k^2 \dmax^3}{\gamma^2 \cdot D}$ then with probability at most
+	$$2 k \cdot \exp\left(- \frac{n D \gamma^2}{128 (k+1) \dmax^2}\right) = 2k \cdot e^{- \Omega(nD/k \dmax^2)}$$
 	the first condition will fail to hold.
 
-	Letting $\Gamma = \max\{2^{14}/\gamma^2, C \}$, having $n \geq \Gamma k^2 d_1^2/D$ samples gives a sample upper bound that holds for both situations above.
+	Letting $\Gamma = \max\{350/\gamma^2, C \}$, having $n \geq \Gamma k^2 \dmax^3/D$ samples gives a sample upper bound that holds for both situations above.
 	Thus, by the union bound, with probability at most
-	$$ k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} + 2k \cdot e^{- \Omega(nkD/d_1)} $$
+	$$ k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)} - 2k \cdot e^{- \Omega(nD/k \dmax^2)} $$
 	one of the conditions 1 or 2 will fail to hold. This concludes our proof.
 \end{proof}
 
 
-\RMO{making the observation that this flip-flop keeps the trace of $\rho$ equals 1}
+\RMO{making the observation that this flip-flop keeps the trace of $\rho$ equals 1 - this will help with the descent lemma (makes it simpler)}
 
 \begin{prop}[Unit Trace]
 	Let $\Theta$ and $\Upsilon$ be successive scalings produced by the flip-flop algorithm. Then $\tr \Theta = \tr \Upsilon$.
@@ -1808,20 +1817,23 @@ In particular, we have that $\nabla_0 f_x(\Theta) = 0$ at each iteration.
 \end{proof}
 
 \begin{theorem}[Restatement of \cref{thm:tensor-flipflop}]
-	If $\htheta$ denotes the MLE estimator for $\Theta$, then provided $n = \Omega(k^2 \cdot d_1^2/D)$, the flip-flop algorithm computes $\otheta$ with
+	If $\htheta$ denotes the MLE estimator for $\Theta$, then provided $n = \Omega(k^2 \cdot \dmax^3/D)$, the flip-flop algorithm computes $\otheta$ with
 	$$ D_F(\htheta_a \ || \ \otheta_a) \leq \eps $$
-	in $O(k d_k \log(d_k/\eps))$ iterations with probability at least
-	$$ 1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}.$$
+	in $O(k \log(k \dmax/\eps))$ iterations with probability at least
+	$$ 1 - k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)} - 2k \cdot e^{- \Omega(nD/k \dmax^2)}.$$
 \end{theorem}
 
 \begin{proof}
-	When the number of samples is $n = \Omega(k^2 \cdot d_1^2/D)$, with probability \\
-	$ 1 - k^2 \cdot \left( \dfrac{nD}{k d_1} \right)^{-\Omega(d_1)} - 2k \cdot e^{- \Omega(nkD/d_1)}$ we have that the hypothesis of \cref{lem:tensor-initial-conditions} applies, which implies that there exists a constant $\gamma > 0$ such that our objective function $f_x$ is $\frac{1}{2}$-strongly geodesically convex at a ball $B_{\gamma k/2}(I)$ and $\norm{\nabla f_x(I)}_F \leq \gamma k /8$.
+	When the number of samples is $n = \Omega(k^2 \cdot \dmax^3/D)$, with probability 
+	$$ 1 - k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)} - 2k \cdot e^{- \Omega(nD/k \dmax^2)}$$ 
+	we have that the hypothesis of \cref{lem:tensor-initial-conditions} applies, which implies that there exists a constant $\gamma > 0$ such that our objective function $f_x$ is $\frac{1}{2}$-strongly geodesically convex at a ball $B_r(I)$ for $r = \dfrac{\gamma}{\sqrt{(k+1)\dmax}}$ and $\norm{\nabla f_x(I)}_F \leq \dfrac{\gamma}{4 \sqrt{(k+1)\dmax}}$.
+	
+	This in turn implies that \cref{lem:convex-ball} applies, and therefore we have that the sublevel set $\{ \Upsilon \ \mid \ f(\Upsilon) \leq f(I_D)  \}$ is contained in the ball $B_r(I_D)$. 
 
-	By \cref{lem:tensor-descent-lemma} we have that each step of the flip-flop algorithm will decrease the value of the objective function in accordance with the requirements of \cref{lem:descent-sublevel-set}.
+	In particular, the above condition on the sublevel set implies that \cref{lem:tensor-descent-lemma} applies, and thus we have that each step of the flip-flop algorithm will decrease the value of the objective function in accordance with the requirements of \cref{lem:descent-sublevel-set}, with parameter $\alpha = 1/6k$.
 
-	Thus, after $T = O( k d_k \log(d_k/\eps) )$ steps, \cref{lem:descent-sublevel-set} guarantees us that we will encounter a scaling $\otheta$ such that
-	$$ \norm{\nabla f_x(\otheta)}_F \leq \dfrac{\eps^2}{16 d_k^{3/2}}.$$
+	Thus, after $T = 24k \log(1/\delta)$ steps, \cref{lem:descent-sublevel-set} guarantees us that we will encounter a scaling $\otheta$ such that
+	$$ \norm{\nabla f_x(\otheta)}_F \leq \delta = \dfrac{\eps^2}{16 k^2 \dmax^{3/2}}.$$
 	When we find such a gradient, \cref{lem:tensor-distance-opt} implies that for each $a \in [k]$, the component-wise distance from $\otheta$ to $\htheta$ is bounded by
 	$$ D_F(\htheta_a \ || \ \otheta_a) \leq \eps. $$
 \end{proof}
