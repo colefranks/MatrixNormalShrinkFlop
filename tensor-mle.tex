@@ -200,7 +200,7 @@ In both the matrix and tensor case, no estimator for the Kronecker factors has b
 Even characterizing the existence of the MLE for the matrix and tensor normal model has remained elusive until recently.
 \cite{amendola2020invariant} recently noted that the matrix normal and tensor MLEs are equivalent to algebraic problems about a group action called the \emph{left-right action} and the \emph{tensor action}, respectively.
 In the computer science literature these two problems are called \emph{operator} and \emph{tensor scaling}, respectively.
-Independently from \cite{amendola2020invariant}, it was pointed out by \cite{FM20} that the Tyler's M estimator for elliptical distributions (which arises as the matrix normal problem under the additional promise that~$\Sigma_2$ is diagonal) is a special case of operator scaling.
+Independently from \cite{amendola2020invariant}, it was pointed out by \cite{FM20} that the Tyler's M estimator for elliptical distributions (which is the MLE for the matrix normal model under the additional promise that~$\Sigma_2$ is diagonal) is a special case of operator scaling.
 Using the connection to the left-right action, exact sample size thresholds for the existence of the MLE were recently determined in \cite{derksen2020matrix} for the matrix normal model and subsequently for the tensor normal model in \cite{derksen2020tensor}.
 In the context of operator scaling, \cite{gurvits2004classical} showed much earlier that the flip-flop algorithm converges to the matrix normal MLE whenever it exists.
 Recently it was shown that the number of flip-flop steps to obtain a gradient of magnitude $\eps$ in the log-likelihood function for the tensor and matrix normal model is polynomial in the input size and~$1/\eps$ \citep{GGOW19,burgisser2017alternating,burgisser2019towards}.
@@ -212,39 +212,42 @@ Recently it was shown that the number of flip-flop steps to obtain a gradient of
 %-----------------------------------------------------------------------------
 \subsection{Our contributions}
 %-----------------------------------------------------------------------------
-We take a geodesically convex optimization approach to provide bounds to estimate the precision matrices without any assumptions on their structure.
-For the matrix normal model our rates are tight in every regime up to logarithmic factors, and for the tensor normal model our rates our tight if there are enough samples.
+We take a geodesically convex optimization approach to provide rigorous nonasymptotic guarantees for the estimation of the precision matrices, without any assumptions on their structure. For the matrix normal model we provide high probability bounds on the estimator that are tight up to logarithmic factors. For the tensor normal model, our bounds are tight in the regime where it is information-theoretically possible to recover the factors to constant Frobenius error with high probabilty.
+
+\CF{I've shifted away from rates and towards whp bounds, which we need to do unless we supply a tail bound.}
+
+%our rates are tight in every regime up to logarithmic factors, and for the tensor normal model our rates our tight assuming it is information-theoretically possible to recover the factors up to constant Frobenius error with high probability.
 
 In the current literature on matrix normal and tensor models, typically the estimators are assessed using Frobenius or spectral norm between the estimated parameter and the truth.
 However, neither of these metrics bound statistical dissimilarity measures of interest such as the total variation or Kullback-Leibler divergence between the true distribution and that corresponding to the estimated parameter, or the Fisher-Rao distance.
 
 Here we consider the \emph{relative Frobenius error} $D_F(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_F$ of the precision matrices, which is sometimes also called the \emph{Mahalanobis distance}.
-This is a natural dissimilarity measure on Gaussians because when any of~$D_F$, total variation distance, square of the KL-divergence, or Fisher-Rao distance is at most a small constant then they are all on the same order \CF{check, cite} \citep{barsov1987estimates}.
+This is a natural dissimilarity measure on Gaussians because when any of~$D_F$, total variation distance, square of the KL-divergence, or Fisher-Rao distance is at most a small constant then they are all on the same order \CF{check} \citep{barsov1987estimates}.
 We also consider the \emph{relative spectral error} $D_{\op}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_{\op}$.
 %The relative spectral error converges to zero in the regimes where the relative Frobenius error does not, and implies the Frobenius error bounds by the relation $D_{F} \leq \sqrt{d} D_{op}$.
 Both can be related to the usual norms by $\norm{A - B}_F \leq \norm{B}_{\op} \, D_F(A\Vert B)$ and $\norm{A  - B}_{\op} \leq \norm{B}_{\op} \, D_{\op}(A \Vert B)$.
 Though we caution that $D_F$ and $D_{\op}$ are not truly metrics, we will call them distances because they obey approximate symmetry and an approximate triangle inequality (see \cref{lem:triangle-ineq}).
 
-Our theoretical contributions are as follows:
+Informally, our theoretical contributions are as follows:
 \begin{enumerate}
-\item For the matrix normal model, if $n \geq C \max\{\frac{d_1}{d_2},\frac{d_2}{d_1}\} \log^2 \min\{d_1,d_2\}$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has mean square error (MSE) of $O( \max\{ \frac{d_1}{nd_2}, \frac{d_2}{nd_1} \} )$ in $D_{\op}$.
-As a corollary the MSE in $D_F$ is $O( \max \{ \frac{d_1^2}{nd_2}, \frac{d_2^2}{nd_1} \} )$.
+\item Consider the matrix normal model for $d_1 \leq d_2$. We show that for some $n_0 =\widetilde{O}( d_2/d_1)$, if $n \geq n_0$ then the MLE for the precision matrices $\Theta_1, \Theta_2$ has error $\widetilde{O}(\sqrt{{d_1}/{nd_2}})$ for $\Theta_1$ and $O(\eps \sqrt{{d_2}/{nd_a}})$ for $\Theta_2$ in $D_{\op}$ with probability $1 - O(e^{ - \Omega ( d_1)})$.
+%As a corollary the MSE in $D_F$ is $O( \max \{ \frac{d_1^2}{nd_2}, \frac{d_2^2}{nd_1} \} )$.
 % \item For the matrix normal model, if $n \geq C (\max\{d_1^2,d_2^2\}/d_1 d_2) \log^2 d_1$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has MSE $O( \max\{ d_1^2, d_2^2 \}/ (n d_1 d_2) )$ in $D_{\op}$.
 % As a corollary the MSE in $D_F$ is $O( \max \{ d_1^3, d_2^3 \} / (nd_1d_2) )$.
-\item For the tensor normal model, if $n \geq C \max\{d_i^3\}/ \prod_i d_i$, then the MLE for the precision matrices $\Theta_1, \dots, \Theta_k$ has MSE $O(\max \{ d_i^3 \} / (n \prod_i d_i ) )$ in $D_F$.
+\item In the tensor normal model, for some $n_0 = O_k( \max\{d_i^3\}/ \prod_i d_i)$, if $n \geq n_0$ then the MLE for the precision matrix $\Theta$ has error $O_k( \frac{d_{\max}}{\sqrt{n}} )$ in $D_F$. We also give a tight bound for the error of the largest kronecker factor $\Theta_i$.
 \item Under the same sample requirements as above in each case, the flip-flop algorithm converges exponentially quickly to the MLE with high probability.
 As a corollary, there is an algorithm to compute the MLE up to precision $\eps$ in $D_F$ or $D_{op}$ with expected runtime polynomial in the input size and~$\log\frac1\eps$.
 \end{enumerate}
-\CF{Mention $d_{TV}$ again.}
-\MW{Check that what is written above is the same as the results advertised in \cref{sec:main results}. Right now it isn't.}
+%\CF{Mention $d_{TV}$ again.}
+%\MW{Check that what is written above is the same as the results advertised in \cref{sec:main results}. Right now it isn't.}
 
-The first result is tight up to logarithmic factors, and the second result is tight.
-Without the restriction on $n$ in the first result, no estimator can have subconstant relative spectral error as the parameters grow, so we consider the restriction mild. Likewise for the second result no estimator can have subconstant relative Frobenius error without the restriction on $n$. This follows by known results on the Frobenius and operator norm error.
+We now discuss the tightness of our results. Our first result is tight up to logarithmic factors in the sense that it is information-theoretically impossible to obtain an error bound that is smaller by a polylogarithmic factor and holds with constant probability. For $n$ a polylogarithmic factor smaller than $n_0$, it is information-theoretically impossible to obtain any finite bound independent of $\Theta$ with high probability. Similarly, for the second result, provided $n \geq n_0$ it is impossible to obtain an error bound that is smaller than ours by a factor tending to infinity that holds with constant probability. For $n \ll n_0$, no constant error bound on the $D_F$ error of the largest Kronecker factor can hold with constant probability. These results follow by reduction to known results on the Frobenius and operator error for covariance estimation.
 
+\CF{really need to check all these claims; I think we should try to write down proofs for $D_F/D_{op}$ from the usual $F/{op}$ sources.}
 
 For interesting cases of the tensor normal model such as $d\times d \times d$ tensors we just require that $n$ is at least a large constant.
 For the matrix normal model, our first result removes the added constraint $n \geq C \max\{d_1,d_2\}$ in \cite{tsiligkaridis2013convergence}.
-For the tensor normal model we leave extending our MSE bounds for $D_{\op}$ as an open problem.
+We leave extending the $D_{\op}$ bounds for the matrix normal model to the tensor normal model as an open problem.
 
 To handle the undersampled case, we also introduce a regularized estimator that is much simpler to compute than the penalized regularizers introduced in \cite{tsiligkaridis2013convergence,sun2015nonconvex,zhou2014gemini}, and empirically has comparable to and sometimes better performance than existing regularizers.
 Our regularizer has a Bayesian interpretation as coming from a Wishart prior for the covariance, and is closer in spirit to the shrinkage estimators considered in \cite{goes2020robust}.
@@ -263,8 +266,9 @@ Our regularizer has a Bayesian interpretation as coming from a Wishart prior for
 %-----------------------------------------------------------------------------
 We write $\Mat(d)$ for the space of $d\times d$ matrices, $\PD(d)$ for the convex cone of $d\times d$ positive definite matrices; $\GL(d)$ denotes the group of invertible $d\times d$ matrices.
 For a matrix $A$, $\norm{A}_{\op}$ denotes the operator norm, $\norm{A}_F = (\tr A^T A)^{\frac12}$ the Frobenius norm, and $\braket{A,B} = \tr A^T B$ for the Hilbert-Schmidt inner product.
-We extend these definitions to tuples $A=(A_0;A_1,\dots,A_k)$, where~$A_0\in\R$ and the $A_a$ for $a\in[k]$ are matrices and denote them by the same symbol, i.e., $\norm{A}_F = (\abs{A_0}^2 + \sum_{a=1}^k \norm{A_a}_F^2)^{1/2}$ and similarly for the inner product.
-\MW{Define $O, \Theta$ notation and say that for us this is always about universal constants.}
+We extend these definitions to tuples $A=(A_0;A_1,\dots,A_k)$, where~$A_0\in\R$ and the $A_a$ for $a\in[k]$ are matrices and denote them by the same symbol, i.e., $\norm{A}_F = (\abs{A_0}^2 + \sum_{a=1}^k \norm{A_a}_F^2)^{1/2}$ and similarly for the inner product. For functions $f,g:S \to \R$ for any set $S$, we say $f = O(g)$ if there is a constant $C > 0$ independent of $x$ such that $f(x) \leq C g(x)$ for all $x \in S$, and similarly $f = \Omega(g)$ if there is a constant $c > 0$ independent of $x$ such that $f(x) \geq c g(x)$ for all $x \in S$. 
+%If the constant $C, c$ depends on another parameter $k$ we write $O_k, \Omega_k$, respectively.
+%\MW{Define $O, \Theta$ notation and say that for us this is always about universal constants.}
 
 %=============================================================================
 \section{Model and main results}\label{sec:main results}
@@ -338,9 +342,6 @@ Similarly, define the \emph{relative spectral error} as
 
 To state our results, and throughout this paper, we write $d_{\min} = \min_a d_a$, $d_{\max} = \max_a d_a$.
 Recall also that $D = \prod_{i=1}^k d_a$.
-
-\CF{If we don't like the $\max\{k, d_{\max}\}$ in the bound for $\eps$ we can put the $e^{k \delta}$ back in the bound, but I think it is worth it.}
-
 \newcommand{\TensorFrob}[2]{%
 There is a universal constant~$C>0$ such that the following holds.
 Suppose
@@ -361,22 +362,21 @@ where the Kronecker factors of $\htheta$ and $\Theta$ are chosen such that $\det
 \TensorFrob{equation}{\label{eq:eps sqr assm}}
 \end{theorem}
 
-The rate for the precision matrix~$\Theta_a$ with $d_a = d_{\max}$ matches that of \TODO{XXX} \CF{actually it looks wrong to me.}
+The error for the precision matrix~$\Theta_a$ with $d_a = d_{\max}$ matches that of the MLE for the precision matrix of a single Gaussian with $D/d_{\max}$ samples, which is the special case when all the other Kronecker factors are the identity. 
 
-In the case of matrix normal models $(k=2)$, we obtain a stronger result. In the following theorem we identify $\Theta_1, \Theta_2$ from $\Theta$ using the convention $\det \Theta_1 = 1$.
-\CF{$\eps$ at least some fixed constant?}
+For the matrix normal model $(k=2)$, we obtain a stronger result. In the following theorem we identify $\Theta_1, \Theta_2$ from $\Theta$ using the convention $\det \Theta_1 = 1$, and define the MLE's $\htheta_1, \htheta_2$ to be the minimizers of $f$ restricted to the subset $\{P \in \PD(d_1): \det P = 1\} \times \PD(d_2)$. 
 
 \newcommand{\MatrixSpec}{%
 There is a universal constant~$C>0$ with the following property.
-Suppose $d_1 \leq d_2$ and $n \geq C \frac{d_2}{d_1} \max \{\log \frac{d_2}{d_1},  \frac{\log^2 d_1}{\eps^2}\}$.
-
-Then the MLE $\htheta = \htheta_1 \ot \htheta_2$ for $n$ independent samples from the matrix normal model with precision matrix $\Theta = \Theta_1 \ot \Theta_2$ satisfies
+Suppose $d_1 \leq d_2$ and $n \geq C \frac{d_2}{d_1} \max \{\log \frac{d_2}{d_1},  \frac{\log^2 d_1}{\eps^2}\}$. Then the MLE $\htheta = \htheta_1 \ot \htheta_2$ for $n$ independent samples from the matrix normal model with precision matrix $\Theta = \Theta_1 \ot \Theta_2$ satisfies
 \begin{align*}
   D_{\op}(\widehat{\Theta}_1 \Vert \Theta_1) = O\left(\eps \sqrt{\frac{d_1}{nd_2}} \log d_1\right)
 \quad\text{and}\quad
 D_{\op}(\widehat{\Theta}_2 \Vert \Theta_2) = O\left(\eps \sqrt{\frac{d_2}{nd_1}}\right),
 \end{align*}
-where the Kronecker factors of $\htheta$ and $\Theta$ are chosen such that $\det\htheta_1 = \det\htheta_2$ and $\det\Theta_1 = \det\Theta_2$, with probability at least  $1 - O(e^{ - \Omega( d_1 \eps^2)})$.}
+with probability at least  $1 - O(e^{ - \Omega( d_1 \eps^2)})$. \CF{ I commented out your convention, because what I proved uses the convention above the lemma.}}
+
+%$\det\htheta_1 = \det\htheta_2$ and $\det\Theta_1 = \det\Theta_2$, with probability at least  $1 - O(e^{ - \Omega( d_1 \eps^2)})$.}
 
 \begin{theorem}[Matrix normal spectral error]\label{thm:matrix-normal}
 \MatrixSpec
@@ -399,8 +399,7 @@ If $d_F( \Upsilon^{-1}|| \overline{\Theta}_2) > \eps$, set $\overline{\Theta}_2 
 We can motivate this procedure by noting that if in the first step we already $\overline{\Theta}_2 = \Theta_2$, then $\frac{1}{n d_2} \sum_{i = 1}^n X_i \overline{\Theta}_2 X_i^T$ is simply a sum of outer products of $nd_2$ many independent random vectors with covariance $\Sigma_1 = \Theta_1^{-1}$; as such the inverse is a good estimator for $\Theta_1$.
 As we don't know $\Theta_2$, the flip-flop algorithm instead uses $\overline{\Theta}_2$ our current best guess.
 
-For the general tensor normal model, the flip flop algorithm cycles through the $k$~many dimensions, using the $a^\text{th}$ flattening of the samples~$x_i$ (which are just $X_i$ and $X_i^T$ in the matrix case) to update $\overline{\Theta}_a$ in the $a^\text{th}$ step.
-\CF{could be a bit more precise since it needs to choose one with large error.}
+For the general tensor normal model, in each step the flip flop algorithm chooses one of the dimensions $a \in [k]$ and uses the $a^\text{th}$ flattening of the samples~$x_i$ (which are just $X_i$ and $X_i^T$ in the matrix case) to update $\overline{\Theta}_a$.
 
 %-----------------------------------------------------------------------------
 \subsection{Results on the flip-flop algorithm}
