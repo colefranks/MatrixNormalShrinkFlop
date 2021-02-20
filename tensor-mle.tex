@@ -1593,7 +1593,107 @@ We have already shown that the first term is $O(\eps \sqrt{\frac{d_1}{n d_2}}).$
 \section{Convergence of flip-flop algorithms}
 %=============================================================================
 
-In this section we prove that the flip-flop algorithms for the matrix and tensor normal models converge quickly to the MLE estimator with high probability.
+In this section we prove that the flip-flop algorithms for the matrix and tensor normal models converge quickly to the MLE with high probability. 
+We begin by stating that a lemma that proves that when the gradient of the log-likelihood function is small, then it means we are close to the MLE.
+
+%\begin{lemma}[Inequality]\label{lem:inequality}
+%	Let $0 < \delta < 1/8$ and $0 < x_1 , \ldots, x_n < e^{4 \delta}$ be such that $\prod_{i=1}^n x_i = 1$. Then, we have that
+%	$$ \sum_{i=1}^n (x_i-1)^2 \leq 16 \delta n $$
+%\end{lemma}
+%
+%\RMO{Maybe move the proof of this inequality to the appendix? It is very marginal}
+%
+%\begin{proof}
+%	Without loss of generality, we can assume that
+%	$$0 < x_1 \leq \cdots \leq x_\ell \leq 1 \leq x_{\ell+1} \leq \cdots \leq x_n < e^{4\delta}. $$
+%	Then, we have:
+%	$$ \sum_{i=1}^n (x_i-1)^2 \leq \sum_{i=1}^\ell 2 - 2x_i + \sum_{i = \ell+1}^n 64 \delta^2. $$
+%	Using that $\prod_{i=1}^n x_i = 1$ and $x_j < e^{4 \delta}$ for $j > \ell$, we get
+%	$$e^{-4 \delta n } < e^{-4 \delta(n-\ell)} < \prod_{i=1}^\ell x_i \leq \left( \dfrac{\sum_{i=1}^\ell x_i}{\ell} \right)^\ell $$
+%	which implies that $\displaystyle \sum_{i=1}^\ell x_i > \ell \cdot e^{-4 \delta n/\ell } \geq \ell (1- 4 \delta n /\ell)$, where the last inequality follows from $e^t \geq 1 + t$ for $t \leq 0$.
+%
+%	Putting everything together, we get
+%	\begin{align*}
+%		\sum_{i=1}^n (x_i-1)^2 &\leq \sum_{i=1}^\ell 2 - 2x_i + \sum_{i = \ell+1}^n 64 \delta^2 \\
+%		&< 2 \ell - 2\ell (1-4 \delta n/\ell) + 64 \delta^2 \cdot (n - \ell) \\
+%		&< 8 \delta n + 64 \delta^2 n = 8\delta n (1 + 8 \delta) \leq 16 \delta n
+%	\end{align*}
+%\end{proof}
+
+\begin{lemma}[Gradient and distance to MLE]\label{lem:tensor-distance-opt}
+	Let $\htheta$ be the MLE for $\Theta$, $\delta, \lambda \in \R_+$ be  parameters such that
+	$0 < \delta < \lambda \dmax^{-1/2}/2$ and $\otheta$ be a scaling which satisfies $\delta = \norm{\nabla f_x(\otheta)}_F$. If $f_x$ is $\lambda$-geodesic convex over a geodesic ball containing $\htheta$ and $\otheta$, then for each component, we have
+%	$$ D_F(\htheta \ || \ \otheta) \leq \left( 16 \delta D \cdot \sum_{a=1}^k \sqrt{d_a} \right)^{1/2} $$
+	$$ D_{op}(\htheta_a \ || \ \otheta_a) \leq \sqrt{d_a} \cdot \frac{4\delta}{\lambda}  \ \ \text{ and } \ \ D_F(\htheta_a \ || \ \otheta_a) \leq d_a^{3/2} \cdot \frac{4\delta}{\lambda}. $$
+\end{lemma}
+
+\begin{proof}
+	Let $Z \in \Sym$ be such that $\htheta = \otheta^{1/2} \cdot \exp(\sqrt{\vec d} \cdot Z) \cdot \otheta^{1/2}$, and $\oZ = Z / \norm{Z}_F$.
+	Since
+	$$ D_F(\htheta_a \ || \ \otheta_a) = \norm{I_a - \otheta_a^{-1/2} \htheta_a \otheta_a^{-1/2}}_F = \norm{I_a - \exp(\sqrt{d_a} \cdot Z_a)}_F $$
+	and similarly
+	$$ D_{op}(\htheta_a \ || \ \otheta_a) = \norm{I_a - \exp(\sqrt{d_a} \cdot Z_a)}_{op} $$
+	to prove a good bound on the distance it is enough to show that $\norm{Z}_F$ is small.
+	We will achieve this by using the strong geodesic convexity of $f_x$.
+
+	Since $f_x$ is $\lambda$-strongly geodesically convex over geodesic ball containing $\htheta$ and $\otheta$,	we have that the function $g(t) = f_x(\exp_{\otheta} (t \oZ) )$ is $\lambda$-strongly convex, $g(0) = \otheta$ and $g(\norm{Z}_F) = \htheta$, which implies:
+	$$ g(\norm{Z}_F) \geq g(0) + g'(0) \cdot \norm{Z}_F + \lambda \cdot \frac{\norm{Z}_F^2}{2}. $$
+	Since $\htheta$ is the MLE estimator, we have $g(\norm{Z}_F) \leq g(0)$, and by definition of
+	$g$ and Cauchy-Schwarz, we have that
+	$$ g'(0) = \langle \nabla f_x(\otheta), \oZ \rangle \geq - \norm{\nabla f_x(\otheta)}_F \norm{\oZ}_F = - \norm{\nabla f_x(\otheta)}_F. $$
+	Putting all the above together, we get
+	$$ \norm{Z}_F \leq \frac{2}{\lambda} \cdot \norm{\nabla f_x(\otheta)}_F. $$
+	Setting $\delta = \norm{\nabla f_x(\otheta)}_F$, the above inequality implies that $- \frac{2\delta}{\lambda} I_a \preceq Z_a \preceq \frac{2\delta}{\lambda} I_a$ for each $a \in [k]$. This in turn, together with $\delta < \lambda \dmax^{-1/2}/2$, yields
+	$$ \exp(\sqrt{d_a} Z_a) \preceq \exp\left(\sqrt{d_a} \cdot \frac{2\delta}{\lambda} \cdot I_a \right) 
+	= e^{\sqrt{d_a} \cdot \frac{2\delta}{\lambda}} \cdot I_a 
+	\preceq \left(  1 + \sqrt{d_a} \cdot \frac{4\delta}{\lambda} \right) \cdot I_a, $$
+	And similarly, $\left(  1 - \sqrt{d_a} \cdot \frac{4\delta}{\lambda} \right) \cdot I_a \preceq \exp(\sqrt{d_a} Z_a)$.	
+	
+	Thus, our distances become:
+%	$$ D_F(\htheta \ || \ \otheta) =  \norm{\exp(\sqrt{\vec d} Z) - I_D}_F \leq \left( 16 \delta D \cdot \sum_{a=1}^k \sqrt{d_a} \right)^{1/2}. $$
+	$$ D_{op}(\htheta_a \ || \ \otheta_a) =  \norm{\exp(\sqrt{d_a} Z_a) - I_a}_{op} \leq \sqrt{d_a} \cdot \frac{4\delta}{\lambda}. $$
+	and 
+	$$ D_F(\htheta_a \ || \ \otheta_a) =  \norm{\exp(\sqrt{d_a} Z_a) - I_a}_F \leq d_a^{3/2} \cdot \frac{4\delta}{\lambda}. $$
+\end{proof}
+
+
+We can now describe the flip-flop algorithm.
+
+
+\begin{Algorithm}
+\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. \\ Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
+
+\textbf{Output}: $\otheta \in \SPD$ such that $D_F(\htheta_a \ || \ \otheta_a) < \eps$, for each $a \in [k]$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
+
+\textbf{Algorithm}:
+\begin{enumerate}
+\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$, and 
+$\delta = \dfrac{\eps^2}{16 k^2 \dmax^{3/2}}$.
+%$\delta = \dfrac{\eps^2}{16 k^2 \dmax^{3/2}}$. for tensor normal model
+
+\vspace{5pt}
+
+\item\label{it:flip-flop step 2} For $t=1,\dots,T = 24 k \cdot \log(1/\delta)$, repeat the following:
+%we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
+
+\vspace{5pt}
+
+\begin{itemize}
+\item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \ldots, \otheta_k)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \ldots, \otheta_k)$, and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest.
+
+\vspace{5pt}
+
+\item
+If $\norm{\nabla_a}_F < \delta$, output $\otheta$ and return.
+% S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
+
+\vspace{5pt}
+
+\item Otherwise, set $\otheta_a \leftarrow  \dfrac{\tr[\rho]}{d_a} \cdot \otheta_a^{1/2} (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$, where $\rho = \otheta^{1/2} \left( \sum_{i=1}^n x_ix_i^\dagger \right) \otheta^{1/2}.$
+\end{itemize}
+\end{enumerate}
+\caption{Flip-flop algorithm}\label{alg:flip-flop}
+\end{Algorithm}
 
 Before we analyze the convergence of the flip-flop algorithms for the tensor and matrix normal models, we discuss the straightforward generalization of convergence of general descent methods whenever the objective function is strongly geodesically convex.
 
@@ -1638,38 +1738,6 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 
 We are now ready to state the tensor flip-flop algorithm and prove its fast convergence to the MLE.
 
-\begin{Algorithm}
-\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. \\ Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
-
-\textbf{Output}: $\otheta \in \SPD$ such that $D_F(\htheta_a \ || \ \otheta_a) < \eps$, for each $a \in [k]$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
-
-\textbf{Algorithm}:
-\begin{enumerate}
-\item\label{it:flip-flop step 1} Set $\otheta_a = \dfrac{1}{d_a} \cdot I_a$ for each $a \in [k]$, and $\delta = \dfrac{\eps^2}{16 k^2 \dmax^{3/2}}$.
-
-\vspace{5pt}
-
-\item\label{it:flip-flop step 2} For $t=1,\dots,T = 24 k \cdot \log(1/\delta)$, repeat the following:
-%we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
-
-\vspace{5pt}
-
-\begin{itemize}
-\item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \ldots, \otheta_k)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \ldots, \otheta_k)$, and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest.
-
-\vspace{5pt}
-
-\item
-If $\norm{\nabla_a}_F < \delta$, output $\otheta$ and return.
-% S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
-
-\vspace{5pt}
-
-\item Otherwise, set $\otheta_a \leftarrow  \dfrac{\tr[\rho]}{d_a} \cdot \otheta_a^{1/2} (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$, where $\rho = \otheta^{1/2} \left( \sum_{i=1}^n x_ix_i^\dagger \right) \otheta^{1/2}.$
-\end{itemize}
-\end{enumerate}
-\caption{Tensor flip-flop algorithm}\label{alg:flip-flop}
-\end{Algorithm}
 
 \begin{lemma}[Initial Conditions]\label{lem:tensor-initial-conditions}
 	There exist absolute constants $\Gamma, \gamma > 0$ such that the following holds.
@@ -1761,60 +1829,6 @@ In particular, we have that $\nabla_0 f_x(\Theta) = 0$ at each iteration.
 	\begin{align*}
 		\frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)}) &\leq - \dfrac{1}{6 d_a} \leq - \dfrac{1}{6 \dmax}
 	\end{align*}
-\end{proof}
-
-\begin{lemma}[Inequality]\label{lem:inequality}
-	Let $0 < \delta < 1/8$ and $0 < x_1 , \ldots, x_n < e^{4 \delta}$ be such that $\prod_{i=1}^n x_i = 1$. Then, we have that
-	$$ \sum_{i=1}^n (x_i-1)^2 \leq 16 \delta n $$
-\end{lemma}
-
-\begin{proof}
-	Without loss of generality, we can assume that
-	$$0 < x_1 \leq \cdots \leq x_\ell \leq 1 \leq x_{\ell+1} \leq \cdots \leq x_n < e^{4\delta}. $$
-	Then, we have:
-	$$ \sum_{i=1}^n (x_i-1)^2 \leq \sum_{i=1}^\ell 2 - 2x_i + \sum_{i = \ell+1}^n 64 \delta^2. $$
-	Using that $\prod_{i=1}^n x_i = 1$ and $x_j < e^{4 \delta}$ for $j > \ell$, we get
-	$$e^{-4 \delta n } < e^{-4 \delta(n-\ell)} < \prod_{i=1}^\ell x_i \leq \left( \dfrac{\sum_{i=1}^\ell x_i}{\ell} \right)^\ell $$
-	which implies that $\displaystyle \sum_{i=1}^\ell x_i > \ell \cdot e^{-4 \delta n/\ell } \geq \ell (1- 4 \delta n /\ell)$, where the last inequality follows from $e^t \geq 1 + t$ for $t \leq 0$.
-
-	Putting everything together, we get
-	\begin{align*}
-		\sum_{i=1}^n (x_i-1)^2 &\leq \sum_{i=1}^\ell 2 - 2x_i + \sum_{i = \ell+1}^n 64 \delta^2 \\
-		&< 2 \ell - 2\ell (1-4 \delta n/\ell) + 64 \delta^2 \cdot (n - \ell) \\
-		&< 8 \delta n + 64 \delta^2 n = 8\delta n (1 + 8 \delta) \leq 16 \delta n
-	\end{align*}
-\end{proof}
-
-\begin{lemma}[Distance to Optimum]\label{lem:tensor-distance-opt}
-	Let $\htheta$ be the MLE estimator for $\Theta$, $\delta \in \R_+$ be a parameter such that
-	$0 < \delta < \left(8 \sum_{a=1}^k \sqrt{d_a} \right)^{-1}$ and $\otheta$ be a scaling which satisfies $\delta = \norm{\nabla f_x(\otheta)}_F$. Then, we have
-	$$ D_F(\htheta \ || \ \otheta) \leq \left( 16 \delta D \cdot \sum_{a=1}^k \sqrt{d_a} \right)^{1/2} $$
-	and for each component, we have
-	$$ D_F(\htheta_a \ || \ \otheta_a) \leq \left( 16 \delta d_a \cdot \sqrt{d_a} \right)^{1/2}. $$
-\end{lemma}
-
-\begin{proof}
-	Let $Z \in \Sym$ be such that $\htheta = \otheta^{1/2} \cdot \exp(\sqrt{\vec d} \cdot Z) \cdot \otheta^{1/2}$, and $\oZ = Z / \norm{Z}_F$.
-	Since
-	$$ D_F(\htheta \ || \ \otheta) = \norm{I_D - \otheta^{-1/2} \htheta \otheta^{-1/2}}_F = \norm{I_D - \exp(\sqrt{\vec d} \cdot Z)}_F $$
-	to prove a good bound on the distance it is enough to show that $\norm{Z}_F$ is small.
-	We will achieve this by using the strong geodesic convexity of $f_x$.
-
-	By our initial conditions, we know that $f_x$ is $1/2$-strongly geodesically convex.
-	Thus, we have that the function $g(t) = f_x(\exp_{\otheta} (t \oZ) )$ is $1/2$-strongly convex, $g(0) = \otheta$ and $g(\norm{Z}_F) = \htheta$, which implies:
-	$$ g(\norm{Z}_F) \geq g(0) + g'(0) \cdot \norm{Z}_F + \frac{\norm{Z}_F^2}{4}. $$
-	Since $\htheta$ is the MLE estimator, we have $g(\norm{Z}_F) \leq g(0)$, and by definition of
-	$g$ and Cauchy-Schwarz, we have that
-	$$ g'(0) = \langle \nabla f_x(\otheta), \oZ \rangle \geq - \norm{\nabla f_x(\otheta)}_F \norm{\oZ}_F = - \norm{\nabla f_x(\otheta)}_F. $$
-	Putting all the above together, we get
-	$$ \norm{Z}_F \leq 4 \cdot \norm{\nabla f_x(\otheta)}_F. $$
-	Setting $\delta = \norm{\nabla f_x(\otheta)}_F$, the above inequality implies that $Z_a \preceq 4 \delta I_a$ for each $a \in [k]$. This in turn yields
-	$$ \exp(\sqrt{\vec d} Z) \preceq \exp(\sqrt{\vec d} \cdot 4\delta (I_1, \dots, I_k)) =
-	\exp\left(4 \delta \cdot \sum_{a=1}^k \sqrt{d_a} \right) \cdot I_D. $$
-	Thus, the conditions of \cref{lem:inequality} apply to the eigenvalues of $\exp(\sqrt{\vec d} Z)$ and our distance function becomes:
-	$$ D_F(\htheta \ || \ \otheta) =  \norm{\exp(\sqrt{\vec d} Z) - I_D}_F \leq \left( 16 \delta D \cdot \sum_{a=1}^k \sqrt{d_a} \right)^{1/2}. $$
-	Analogously, since $\htheta_a = \otheta^{1/2}_a \exp(\sqrt{d_a} Z_a) \otheta^{1/2}_a$, we have that
-	$$ D_F(\htheta_a \ || \ \otheta_a) =  \norm{\exp(\sqrt{d_a} Z_a) - I_a}_F \leq \left( 16 \delta d_a \cdot \sqrt{d_a} \right)^{1/2}. $$
 \end{proof}
 
 \begin{theorem}[Restatement of \cref{thm:tensor-flipflop}]
