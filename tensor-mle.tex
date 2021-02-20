@@ -1601,33 +1601,34 @@ The next lemma shows that any descent method which manages to decrease the value
 The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 \MW{How about moving this to right after \cref{lem:convex-ball}, since it's also g-convexity general nonsense? I might go ahead and move it (and proofread it as I do so).}
 
-\RMO{Sounds good to me. :) }
+\RMO{Actually, let's leave it here, since my plan now, as you can see, is to do a generic analysis of flip-flop given geodesic convexity, and then plug-and play with the initial conditions. Then we already have a bunch of generic descent lemmas here anyways... But you tell me what you prefer :)  }
 
 \begin{lemma}\label{lem:descent-sublevel-set}
-	Let $f : \SPD \rightarrow \R$ be $\lambda$-strongly geodesically convex in a sublevel set containing $x_0$, $\norm{\nabla f(x_0)}_F^2 \leq 1$ and $\alpha > 0$ be a constant.
-	If $\{x_k\}$ is a descent sequence which satisfies
-	$$ f(x_{k+1}) \leq f(x_k) - \alpha \cdot \min\{1,  \norm{\nabla f(x_k)}^2_F \} $$
-	then in $T$ iterations we must have an element $x_t$ with $t\leq T$ such that
-	$$ \norm{\nabla f(x_t)}^2_F \leq 2^{-T \alpha \lambda}.   $$
+	Let $f : \SPD \rightarrow \R$ be $\lambda$-strongly geodesically convex in a sublevel set containing $x_0$, $\norm{\nabla f(x_0)}_F^2 \leq \nu \leq 1$ and $\alpha > 0$ be a constant.
+	If $\{x_t\}$ is a descent sequence which satisfies
+	$$ f(x_{t+1}) \leq f(x_t) - \alpha \cdot \min\{1,  \norm{\nabla f(x_t)}^2_F \} $$
+	then in $T$ iterations we must have an element $x_r$ with $r \leq T$ such that
+	$$ \norm{\nabla f(x_r)}^2_F \leq \nu \cdot 2^{- \frac{T}{\alpha \lambda}}.   $$
 \end{lemma}
 
 \begin{proof}
-	Let $f^*$ be the minimum value of the function $f$ and let $S$ be the sublevel set of $f$ containing $x_0$ over which $f$ is $\lambda$-strongly geodesically convex. Since $\{x_k\}$ is a descent sequence, we know that each $x_k \in S$.
+	Let $f^*$ be the minimum value of the function $f$ and let $S$ be the sublevel set of $f$ containing $x_0$ over which $f$ is $\lambda$-strongly geodesically convex. Since $\{x_t\}$ is a descent sequence, we know that each $x_t \in S$.
 
 	Since $f$ is $\lambda$-strongly geodesically convex in $S$, we have
 	$$ f^* \geq f(x) - \frac{1}{2\lambda} \cdot \norm{\nabla f(x)}_F^2 $$
-	for any $x \in S$.
+	for any $x \in S$, and in particular for any $x_t$ in our descent sequence.
 
-	If $\norm{\nabla f(x_k)}_F^2 \leq \varepsilon \leq 1$, then we will show that in $\ell \leq 1/\alpha \lambda$ steps we must have an element $x_{k+\ell}$ such that $\norm{\nabla f(x_{k + \ell})}_F^2 \leq \varepsilon/2$. This is enough to conclude the proof of the lemma, as with this claim we see that we half the squared norm of the gradient at every sequence of $1/\alpha \lambda$ steps.
+	If $\norm{\nabla f(x_t)}_F^2 \leq \varepsilon \leq 1$, then we will show that in $\ell \leq 1/\alpha \lambda$ steps we must have an element $x_{t+\ell}$ such that $\norm{\nabla f(x_{t + \ell})}_F^2 \leq \varepsilon/2$. This is enough to conclude the proof of the lemma, as with this claim we see that we half the squared norm of the gradient at every sequence of $1/\alpha \lambda$ steps.
 
-	To see this, assume that $\norm{\nabla f(x_{k+\ell})}_F^2 \geq \varepsilon/2$ for $0 \leq \ell \leq m$. Then, from our descent property we have
-	$$ f(x_{k+1}) \leq f(x_k) - \alpha \cdot \norm{\nabla f(x_k)}^2_F \leq f(x_k) - \alpha \cdot \varepsilon/2$$
-	and in particular $f(x_{k + m}) \leq f(x_k) - m \cdot \alpha \cdot \varepsilon/2$.
+	To see this, assume that $\norm{\nabla f(x_{t+\ell})}_F^2 \geq \varepsilon/2$ for $0 \leq \ell \leq m$. 
+	Then, from our descent property we have
+	$$ f(x_{t+a+1}) \leq f(x_{t+a}) - \alpha \cdot \norm{\nabla f(x_{t+a})}^2_F \leq f(x_{t+a}) - \alpha \cdot \varepsilon/2$$
+	and therefore $f(x_{t + m}) \leq f(x_t) - m \cdot \alpha \cdot \varepsilon/2$.
 
-	On the other hand, our assumption that $\norm{\nabla f(x_k)}_F^2 \leq \varepsilon$, together with strong geodesic convexity of $f$ and minimality of $f^*$ imply
-	$$ f(x_{k}) - \frac{\varepsilon}{2\lambda} \leq f(x_{k}) - \frac{1}{2\lambda} \cdot \norm{\nabla f(x_k)}_F^2 \leq f^* \leq f(x_{k+m}) $$
+	On the other hand, our assumption that $\norm{\nabla f(x_t)}_F^2 \leq \varepsilon$, together with strong geodesic convexity of $f$ and minimality of $f^*$ imply
+	$$ f(x_t) - \frac{\varepsilon}{2\lambda} \leq f(x_t) - \frac{1}{2\lambda} \cdot \norm{\nabla f(x_t)}_F^2 \leq f^* \leq f(x_{t+m}) $$
 	and therefore we have
-	$$ f(x_{k}) - \frac{\varepsilon}{2\lambda} \leq f(x_{k + m}) \leq f(x_k) - m \cdot \alpha \cdot \varepsilon/2 $$
+	$$ f(x_t) - \frac{\varepsilon}{2\lambda} \leq f(x_{t + m}) \leq f(x_t) - m \cdot \alpha \cdot \varepsilon/2 $$
 	which implies $m \leq \frac{1}{\alpha \lambda}$. This concludes our proof.
 \end{proof}
 
