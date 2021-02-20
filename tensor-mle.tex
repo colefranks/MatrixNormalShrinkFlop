@@ -1841,28 +1841,51 @@ In particular, we have that $\nabla_0 f_x(\Theta) = 0$ at each iteration.
 %-----------------------------------------------------------------------------
 \subsection{Matrix flip-flop convergence}
 %-----------------------------------------------------------------------------
-\begin{Algorithm}
-\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^{d_1 \times d_2}$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
 
-\textbf{Output}: $\otheta \in \SPD$ such that $D_{\op}(\htheta_a; \otheta_a) < \eps$, for each $a \in \{1,2\}$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
+We are now ready to state the matrix flip-flop algorithm and prove its fast convergence to the MLE. The proof strategy of this section is similar to the tensor normal model case, except that now we will bound the distance to the MLE in the operator norm. \RMO{I will write more stuff here later}
+
+\begin{Algorithm}
+\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^{d_1 \times d_2}$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. \\ 
+Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
+
+\textbf{Output}: $\otheta \in \SPD$ s.th. $D_{\op}(\htheta_a \ || \  \otheta_a) < \eps$, for $a \in \{1,2\}$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
 
 \textbf{Algorithm}:
 \begin{enumerate}
-\item\label{it:flip-flop step 1 matrix} Set $\otheta_a = I_a$ for each $a \in \{1,2\}$, and $\delta = \dfrac{\eps^2}{16 d_2^{3/2}}$.
+\item\label{it:flip-flop step 1 matrix} Set $\otheta_a = \dfrac{1}{d_a} I_a$ for each $a \in \{1,2\}$, and $\delta = \dfrac{\eps^2}{16 d_2^{3/2}}$.
+
+\vspace{5pt}
+
 \item\label{it:flip-flop step 2 matrix} For $t=1,\dots,T = 24 d_2 \cdot \log(2/\delta^2)$, repeat the following:
 %we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
+
+\vspace{5pt}
+
 \begin{itemize}
 \item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \otheta_2)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \otheta_2)$, and find the index $a \in \{1,2\}$ for which $\norm{\nabla_a}_{op}$ is non-zero.
+
+\vspace{5pt}
+
 \item
-If $\norm{\nabla_a}_{op}^2 < \delta^2$, output $\left( \otheta_1 \otimes \otheta_2 \right)^{-1}$ and return.
+If $\norm{\nabla_a}_{op} < \delta$, output $\otheta$ and return.
 % S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
-\item Otherwise, set $\otheta_a \leftarrow \det(\rho^{(a)})^{1/d_a} \cdot \otheta_a^{1/2} \cdot (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$.
+
+\vspace{5pt}
+
+\item Otherwise, set $\otheta_a \leftarrow \dfrac{\tr \rho}{d_a} \cdot \otheta_a^{1/2} \cdot (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$, where $\rho = \otheta^{1/2} \cdot \left( \sum_{i=1}^n x_i x_i^\dagger \right) \cdot \otheta^{1/2}$.
 \end{itemize}
 \end{enumerate}
 \caption{Matrix flip-flop algorithm}\label{alg:flip-flop matrix}
 \end{Algorithm}
 
-\TODO{Proof of \cref{thm:matrix-flipflop}}
+\begin{theorem}[Restatement of \cref{thm:matrix-flipflop}]
+Let $(\widehat{\Theta}_1,\widehat{\Theta}_2)$ denote the MLE for $(\Theta_1,\Theta_2)$.
+Given $n \geq \TODO{}$ samples of the matrix normal model, the flip-flop algorithm computes $(\overline{\Theta}_1,\overline{\Theta}_2)$ with
+\begin{align*}
+  D_{op}(\overline{\Theta}_a, \widehat{\Theta}_a) \leq \eps
+\end{align*}
+for $a\in\{1,2\}$ in $O(\TODO{\log(1/\eps)})$ iterations, with probability at least \TODO{}.
+\end{theorem}
 
 
 \CF{prove that flip-flop works as soon as estimation in operator norm works. This goes by using KLR to show strong convexity holds in a ball about the optimizer}.
