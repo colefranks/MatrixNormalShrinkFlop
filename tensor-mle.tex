@@ -1594,7 +1594,8 @@ We have already shown that the first term is $O(\eps \sqrt{\frac{d_1}{n d_2}}).$
 %=============================================================================
 
 In this section we prove that the flip-flop algorithms for the matrix and tensor normal models converge quickly to the MLE with high probability. 
-We begin by stating that a lemma that proves that when the gradient of the log-likelihood function is small, then it means we are close to the MLE.
+
+Before we formally state the flip-flop algorithm with the proper parameters, we need the following lemma that proves that when the gradient of the log-likelihood function is small, then it means we are close to the MLE.
 
 %\begin{lemma}[Inequality]\label{lem:inequality}
 %	Let $0 < \delta < 1/8$ and $0 < x_1 , \ldots, x_n < e^{4 \delta}$ be such that $\prod_{i=1}^n x_i = 1$. Then, we have that
@@ -1659,16 +1660,18 @@ We begin by stating that a lemma that proves that when the gradient of the log-l
 
 We can now describe the flip-flop algorithm.
 
+\RMO{it would be great to have a preprocessing of the input to assume that the initial trace is 1, so that we get $\nabla_0 f_x  = 0$. For now I will assume that trace is one because it simplifies the descent lemma.}
+
 
 \begin{Algorithm}
-\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. \\ Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
+\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. \\ Approximation parameter $0 < \eps < 1$, given in binary representation. \\[.3ex]
 
 \textbf{Output}: $\otheta \in \SPD$ such that $D_F(\htheta_a \ || \ \otheta_a) < \eps$, for each $a \in [k]$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
 
 \textbf{Algorithm}:
 \begin{enumerate}
 \item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$, and 
-$\delta = \dfrac{\eps^2}{16 k^2 \dmax^{3/2}}$.
+$\delta = \dfrac{\eps \lambda}{2 \dmax^{1/2}}$. \RMO{TODO: put the dependency on the strong convexity parameter, and remove the placeholder $\lambda$ here.}
 %$\delta = \dfrac{\eps^2}{16 k^2 \dmax^{3/2}}$. for tensor normal model
 
 \vspace{5pt}
@@ -1732,66 +1735,30 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 	which implies $m \leq \frac{1}{\alpha \lambda}$. This concludes our proof.
 \end{proof}
 
-%-----------------------------------------------------------------------------
-\subsection{Tensor flip-flop: algorithm and convergence}
-%-----------------------------------------------------------------------------
+The following proposition shows that the trace part of the log-likelihood remains unchanged by the flip-flop algorithm.
+Thus, the proposition below proves to us that $\nabla_0 f_x(\Theta)$ will remain unchanged at each iteration.
 
-We are now ready to state the tensor flip-flop algorithm and prove its fast convergence to the MLE.
-
-
-\begin{lemma}[Initial Conditions]\label{lem:tensor-initial-conditions}
-	There exist absolute constants $\Gamma, \gamma > 0$ such that the following holds.
-	When the number of samples $n \geq \Gamma \cdot k^2 \cdot \dmax^3/D$, with probability at least $1 - k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)} - 2k \cdot e^{- \Omega(nD/k \dmax^2)}$ we have that the following conditions hold:
-	\begin{enumerate}
-		\item $\norm{\nabla f_x(I)}_F \leq \dfrac{\gamma}{4 \sqrt{(k+1)\dmax}}$ 
-		\item $f_x$ is $\frac{1}{2}$-strongly geodesically convex at 
-		$B_r(I_D)$, where $r = \dfrac{\gamma}{\sqrt{(k+1) \dmax}}$
-	\end{enumerate}
-\end{lemma}
-
-\begin{proof}
-	The lemma follows from the observation that \cref{prop:gradient-bound} implies condition 1, and \cref{thm:ball-convexity} implies condition 2. So all we need to do is to check the parameters.
-
-	By \cref{thm:ball-convexity}, if we set $\gamma = c$ and if the number of samples $n \geq C k \dfrac{d_{\max}^2}{D}$, where $c, C > 0$ are the constants from \cref{thm:ball-convexity}, then with probability at most
-	$$k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)}$$
-	the second condition fails to hold.
-
-	By \cref{prop:gradient-bound} with parameter 
-	$\varepsilon = \frac{\gamma}{4 \sqrt{(k+1) \dmax}}$, 
-	if the number of samples satisfies 
-	$n \geq \dfrac{350 k^2 \dmax^3}{\gamma^2 \cdot D}$ then with probability at most
-	$$2 k \cdot \exp\left(- \frac{n D \gamma^2}{128 (k+1) \dmax^2}\right) = 2k \cdot e^{- \Omega(nD/k \dmax^2)}$$
-	the first condition will fail to hold.
-
-	Letting $\Gamma = \max\{350/\gamma^2, C \}$, having $n \geq \Gamma k^2 \dmax^3/D$ samples gives a sample upper bound that holds for both situations above.
-	Thus, by the union bound, with probability at most
-	$$ k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)} - 2k \cdot e^{- \Omega(nD/k \dmax^2)} $$
-	one of the conditions 1 or 2 will fail to hold. This concludes our proof.
-\end{proof}
-
-
-\RMO{making the observation that this flip-flop keeps the trace of $\rho$ equals 1 - this will help with the descent lemma (makes it simpler)}
-
-\begin{prop}[Unit Trace]
-	Let $\Theta$ and $\Upsilon$ be successive scalings produced by the flip-flop algorithm. Then $\tr \Theta = \tr \Upsilon$.
+\begin{prop}[Trace Invariance]
+	Let $\Theta$ and $\Upsilon$ be successive scalings produced by the flip-flop algorithm, and let $\rho_\Theta := \Theta^{1/2} \cdot \sum_{i=1}^n x_i x_i^\dagger \cdot \Theta^{1/2}$ and $\rho_\Upsilon := \Upsilon^{1/2} \cdot \sum_{i=1}^n x_i x_i^\dagger \cdot \Upsilon^{1/2}$. 
+	Then $\tr \rho_\Theta = \tr \rho_\Upsilon$.
 \end{prop}
 
 \begin{proof}
-	Let $\rho = \Theta^{1/2} \cdot \sum_{i=1}^n x_i x_i^\dagger \cdot \Theta^{1/2}$.
 	Since $\Upsilon$ is the successive scaling from $\Theta$, we have that
 	there is $a \in [k]$ such that
-	$$\Upsilon_a = \dfrac{\tr \rho}{d_a} \cdot \Theta_a^{1/2} (\rho^{(a)})^{-1} \Theta_a^{1/2} $$
-	and $\Upsilon_b = \Theta_b$ for all $b \neq a$. Let $E_{(a)} = I_1 \otimes \cdots \otimes I_{a-1} \otimes (\rho^{(a)})^{-1} \otimes I_{a+1} \otimes \cdots \otimes I_k$.
+	$$\Upsilon_a = \dfrac{\tr \rho_\Theta}{d_a} \cdot \Theta_a^{1/2} (\rho_\Theta^{(a)})^{-1} \Theta_a^{1/2} $$
+	and $\Upsilon_b = \Theta_b$ for all $b \neq a$. Let $E_{(a)} = I_1 \otimes \cdots \otimes I_{a-1} \otimes (\rho_\Theta^{(a)})^{-1} \otimes I_{a+1} \otimes \cdots \otimes I_k$.
 	Thus, we have:
 	\begin{align*}
-		\tr \Upsilon &= \tr\left[ \Upsilon^{1/2} \sum_{i=1}^n x_i x_i^\dagger \cdot \Upsilon^{1/2} \right] = \tr\left[ \Upsilon \sum_{i=1}^n x_i x_i^\dagger \right] \\
-		&= \tr\left[ \dfrac{\tr \rho}{d_a} \cdot \Theta^{1/2} E_{(a)} \Theta^{1/2} \cdot \sum_{i=1}^n x_i x_i^\dagger \right] = \dfrac{\tr \rho}{d_a} \cdot \tr\left[ E_{(a)} \rho \right] \\
-		&= \dfrac{\tr \rho}{d_a} \cdot \tr\left[ (\rho^{(a)})^{-1} \rho^{(a)} \right] = \tr \rho
+		\tr \rho_\Upsilon 
+		&= \tr\left[ \Upsilon^{1/2} \sum_{i=1}^n x_i x_i^\dagger \cdot \Upsilon^{1/2} \right] 
+		= \tr\left[ \Upsilon \sum_{i=1}^n x_i x_i^\dagger \right] \\
+		&= \tr\left[ \dfrac{\tr \rho_\Theta}{d_a} \cdot \Theta^{1/2} E_{(a)} \Theta^{1/2} \cdot \sum_{i=1}^n x_i x_i^\dagger \right] = \dfrac{\tr \rho_\Theta}{d_a} \cdot \tr\left[ E_{(a)} \rho_\Theta \right] \\
+		&= \dfrac{\tr \rho_\Theta}{d_a} \cdot \tr\left[ (\rho_\Theta^{(a)})^{-1} \rho_\Theta^{(a)} \right] = \tr \rho_\Theta
 	\end{align*}
 \end{proof}
 
-Thus, since we started the flip-flop algorithm with a matrix of unit trace, the proposition above allows us to assume from now on that each scaling produced by the flip-flop algorithm will have unit trace.
-In particular, we have that $\nabla_0 f_x(\Theta) = 0$ at each iteration.
+\RMO{Assuming trace is one for this next lemma - otherwise it gets a little ugly in the end.}
 
 \begin{lemma}[Descent Lemma]\label{lem:tensor-descent-lemma}
 	If $\Theta, \Upsilon$ are successive scalings from the flip-flop algorithm, then we have:
@@ -1800,7 +1767,7 @@ In particular, we have that $\nabla_0 f_x(\Theta) = 0$ at each iteration.
 
 \begin{proof}
 	Let
-	$$\rho := \Theta^{1/2} \cdot \left( \sum_{i=1}^n x_i x_i^\dagger \right) \cdot \Theta^{1/2}.$$
+	$$\rho := \dfrac{1}{nD} \cdot  \Theta^{1/2} \cdot \left( \sum_{i=1}^n x_i x_i^\dagger \right) \cdot \Theta^{1/2}.$$
 	Additionally, let $a \in [k]$ be such that $\nabla_a := \nabla_a f_x(\Theta)$ has largest norm.
 	As $\Upsilon$ is the successive scaling, and we are assuming that $\tr \rho =1$, we have that $\Upsilon_b = \Theta_b$ when $b \neq a$ and
 	$$ \Upsilon_a = \dfrac{1}{d_a} \cdot \Theta_a^{1/2} \cdot (\rho^{(a)})^{-1} \cdot \Theta_a^{1/2}. $$
@@ -1829,6 +1796,45 @@ In particular, we have that $\nabla_0 f_x(\Theta) = 0$ at each iteration.
 	\begin{align*}
 		\frac{1}{d_a} \cdot  \log\det(d_a \cdot \rho^{(a)}) &\leq - \dfrac{1}{6 d_a} \leq - \dfrac{1}{6 \dmax}
 	\end{align*}
+\end{proof}
+
+
+%-----------------------------------------------------------------------------
+\subsection{Tensor flip-flop: algorithm and convergence}
+%-----------------------------------------------------------------------------
+
+We are now ready to state the tensor flip-flop algorithm and prove its fast convergence to the MLE.
+
+
+\begin{lemma}[Initial Conditions]\label{lem:tensor-initial-conditions}
+	There exist absolute constants $\Gamma, \gamma > 0$ such that the following holds.
+	When the number of samples $n \geq \Gamma \cdot k^2 \cdot \dmax^3/D$, with probability at least $1 - k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)} - 2k \cdot e^{- \Omega(nD/k \dmax^2)}$ we have that the following conditions hold:
+	\begin{enumerate}
+		\item $|\nabla_0 f_x(I)| \leq \frac{\gamma}{100 k \dmax^{1/2}}$
+		\item $\norm{\nabla f_x(I)}_F \leq \dfrac{\gamma}{4 \sqrt{(k+1)\dmax}}$ 
+		\item $f_x$ is $\frac{1}{2}$-strongly geodesically convex at 
+		$B_r(I_D)$, where $r = \dfrac{\gamma}{\sqrt{(k+1) \dmax}}$
+	\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+	The lemma follows from the observation that \cref{prop:gradient-bound} implies condition 1, and \cref{thm:ball-convexity} implies condition 2. So all we need to do is to check the parameters.
+
+	By \cref{thm:ball-convexity}, if we set $\gamma = c$ and if the number of samples $n \geq C k \dfrac{d_{\max}^2}{D}$, where $c, C > 0$ are the constants from \cref{thm:ball-convexity}, then with probability at most
+	$$k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)}$$
+	the second condition fails to hold.
+
+	By \cref{prop:gradient-bound} with parameter 
+	$\varepsilon = \frac{\gamma}{100 k \dmax^{1/2}}$, 
+	if the number of samples satisfies 
+	$n \geq \dfrac{10^4 k^2 \dmax^3}{\gamma^2 \cdot D}$ then with probability at most
+	$$2 k \cdot \exp\left(- \frac{n D \gamma^2}{128 (k+1) \dmax^2}\right) = 2k \cdot e^{- \Omega(nD/k \dmax^2)}$$
+	the first two conditions will fail to hold.
+
+	Letting $\Gamma = \max\{350/\gamma^2, C \}$, having $n \geq \Gamma k^2 \dmax^3/D$ samples gives a sample upper bound that holds for both situations above.
+	Thus, by the union bound, with probability at most
+	$$ k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)} - 2k \cdot e^{- \Omega(nD/k \dmax^2)} $$
+	one of the conditions 1 or 2 will fail to hold. This concludes our proof.
 \end{proof}
 
 \begin{theorem}[Restatement of \cref{thm:tensor-flipflop}]
