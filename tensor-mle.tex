@@ -1538,7 +1538,7 @@ By construction, it satisfies
 \quad\text{and}\quad
   \frac1{n D} \Phi^*_Y(I_{d_1}) = \frac{I_{d_2}}{d_2}.
 \end{align}
-Note also that $\tr \Phi_Y(I_{d_2}) = \tr \Phi_Y^*(I_{d_1}) = \|Y\|^2 = nD$. Thus $\Phi_Y$ is $\delta$-doubly balanced if and only if $\|\frac{1}{nD} \Phi_Y(I_{d_2}) - \frac{1}{d_1} I_{d_1}\|_{op} \leq \delta$.
+Note also that $\tr \Phi_Y(I_{d_2}) = \tr \Phi_Y^*(I_{d_1}) = \|Y\|^2 = nD$. Thus $\Phi_Y$ is $\delta$-doubly balanced if and only if $\|\frac{1}{nD} \Phi_Y(I_{d_2}) - \frac{1}{d_1} I_{d_1}\|_{op} \leq \frac{\delta}{d_1}$.
 \MW{Isn't there a factor $1/d_1$ missing on the right?}
 
 \begin{lemma}[Concentration after flip-flop]\label{lem:flipflop-concentration}
@@ -1548,7 +1548,7 @@ If $n \geq \frac{d_2}{d_1}$ and $\eps\geq C$, then for $\Phi_Y$ as in \cref{eq:o
 \begin{align*}
   \norm*{\frac1{n D} \Phi_Y(I_{d_2}) - \frac{I_{d_1}}{d_1}}_{\op} \leq \eps \sqrt{\frac1{nD}}.
 \end{align*}
-By the remarks preceding the lemma, this condition implies $\Phi_Y$ is $\eps \sqrt{\frac1{nD}}$-doubly balanced.
+By the remarks preceding the lemma, this condition implies $\Phi_Y$ is $\eps \sqrt{\frac{d_1}{nd_2}}$-doubly balanced.
 \end{lemma}
 
 The proof of this lemma uses a result of \cite{hayden2006aspects} on the overlap of two random projections, combined with a standard net argument.
