@@ -2023,7 +2023,7 @@ We compare the performance of the estimator with Zhou's single step estimator \C
 \begin{appendix}
 
 %=============================================================================
-\section{Pisier's proof of expansion}\label{sec:pisier}
+\section{Pisier's proof of quantum expansion}\label{sec:pisier}
 %=============================================================================
 In this appendix we discuss the proof of \cref{thm:hess-pisier}.
 Pisier's original theorem is proved in a slightly different language:
@@ -2216,7 +2216,7 @@ Thus, using \cref{eq:symmetrization,eq:op vs 2q,thm:banach conc}, we obtain for 
 \end{align*}
 where~$C>0$ is the universal constant from the big-$O$ notation in \cref{eq:conc via moments}.
 
-Finally, we can use the Markov inequality to see that the event
+\textcolor{blue}{OLD: Finally, we can use the Markov inequality to see that the event
 \begin{align*}
   \norm*{\left(\sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op} \leq (2 t C')^2 \sqrt{4 N} \bigl( \E \norm{A}_{\op} \bigr)^2
 \end{align*}
@@ -2238,7 +2238,7 @@ m^2 \left( \frac{2 \E\norm A_{\op}}{2 t \E\norm A_{\op}} \right)^{4q}
 \leq m^2 t^{-4q}
 = t^{-\Omega(m+n)}
 \end{align*}
-In the final step we used that $q = \Omega(m + n)$, as well as the fact that $t \geq 2$, so the prefactor $m^{2}$ can be absorbed at the cost of slightly changing the constant in the exponent.
+In the final step we used that $q = \Omega(m + n)$, as well as the fact that $t \geq 2$, so the prefactor $m^{2}$ can be absorbed at the cost of slightly changing the constant in the exponent. }
 
 \AR{Second Version} Finally, we can use the Markov inequality to see that, for some large universal constant $C' \geq 1$ that we choose later, the event
 \begin{align*}
