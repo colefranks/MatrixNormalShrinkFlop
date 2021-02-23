@@ -1663,18 +1663,19 @@ Before we formally state the flip-flop algorithm with the proper parameters, we 
 
 We can now describe the flip-flop algorithm.
 
-\RMO{it would be great to have a preprocessing of the input to assume that the initial trace is 1, so that we get $\nabla_0 f_x  = 0$. For now I will assume that trace is one because it simplifies the descent lemma.}
+\RMO{Preprocessing the input to assume that the initial trace is 1, so that we get $\nabla_0 f_x  = 0$. This simplifies our descent lemma.}
 
 
 \begin{Algorithm}
-\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. \\ Approximation parameter $0 < \eps < 1$, given in binary representation. \\[.3ex]
+\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. \\ Approximation parameter $0 < \delta < 1$, given in binary representation. \\[.3ex]
 
-\textbf{Output}: $\otheta \in \SPD$ such that $D_F(\htheta_a \ || \ \otheta_a) < \eps$, for each $a \in [k]$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
+\textbf{Output}: $\otheta \in \SPD$ such that $\norm{\nabla_a f_x(\otheta)}_F \leq \delta$ for each $a \in [k]$ \\[.3ex]
 
 \textbf{Algorithm}:
 \begin{enumerate}
-\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$, and 
-$\delta = \dfrac{\eps \lambda}{2 \dmax^{1/2}}$. \RMO{TODO: put the dependency on the strong convexity parameter, and remove the placeholder $\lambda$ here.}
+\item\label{it:flip-flop preprocessing} Preprocess the input by scaling sample vectors $x_i$ by $\dfrac{1}{\tr \rho} \cdot x_i$, where $\rho = \dfrac{1}{nD} \cdot \sum_{i=1}^n x_i x_i^\dagger$
+
+\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$. 
 %$\delta = \dfrac{\eps^2}{16 k^2 \dmax^{3/2}}$. for tensor normal model
 
 \vspace{5pt}
@@ -1698,7 +1699,7 @@ If $\norm{\nabla_a}_F < \delta$, output $\otheta$ and return.
 \item Otherwise, set $\otheta_a \leftarrow  \dfrac{\tr[\rho]}{d_a} \cdot \otheta_a^{1/2} (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$, where $\rho = \otheta^{1/2} \left( \sum_{i=1}^n x_ix_i^\dagger \right) \otheta^{1/2}.$
 \end{itemize}
 \end{enumerate}
-\caption{Flip-flop algorithm}\label{alg:flip-flop}
+\caption{Generic flip-flop algorithm}\label{alg:flip-flop}
 \end{Algorithm}
 
 Before we analyze the convergence of the flip-flop algorithms for the tensor and matrix normal models, we discuss the straightforward generalization of convergence of general descent methods whenever the objective function is strongly geodesically convex.
@@ -1801,12 +1802,63 @@ Thus, the proposition below proves to us that $\nabla_0 f_x(\Theta)$ will remain
 	\end{align*}
 \end{proof}
 
+We now have all the lemmas we need to prove that, given appropriate initial conditions on the input samples, the flip-flop algorithm will converge quickly to the MLE.
+
+\begin{lemma}[Fast Convergence from Initial Conditions]\label{lem:fast-convergence-initial-generic}
+	Let $x_1, \ldots, x_n \in \R^D$ be samples satisfying the following conditions:
+	\begin{enumerate}
+		\item $|\nabla_0 f_x(I_D)| \leq 1$
+		\item $\norm{\nabla f_x (I_D)} \leq \dfrac{r}{4}$
+		\item $f_x$ is $\lambda$-strongly geodesically convex at $B_r(I_D)$
+	\end{enumerate}
+	Then, in $T = TODO$ iterations, \cref{alg:flip-flop} outputs an estimator $\otheta$ such that 
+	$$ D_F(\htheta \ || \ \otheta) \leq \eps $$
+\end{lemma}
+
 
 %-----------------------------------------------------------------------------
 \subsection{Tensor flip-flop: algorithm and convergence}
 %-----------------------------------------------------------------------------
 
 We are now ready to state the tensor flip-flop algorithm and prove its fast convergence to the MLE.
+
+\begin{Algorithm}
+\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. \\ Approximation parameter $0 < \eps < 1$, given in binary representation. \\[.3ex]
+
+\textbf{Output}: $\otheta \in \SPD$ such that $D_F(\htheta_a \ || \ \otheta_a) < \eps$, for each $a \in [k]$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
+
+\textbf{Algorithm}:
+\begin{enumerate}
+\item\label{it:flip-flop preprocessing} Preprocess the input by scaling sample vectors $x_i$ by $\dfrac{1}{\tr \rho} \cdot x_i$, where $\rho = \dfrac{1}{nD} \cdot \sum_{i=1}^n x_i x_i^\dagger$
+
+\item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$, and 
+$\delta = \dfrac{\eps \lambda}{2 \dmax^{1/2}}$. 
+%$\delta = \dfrac{\eps^2}{16 k^2 \dmax^{3/2}}$. for tensor normal model
+
+\vspace{5pt}
+
+\item\label{it:flip-flop step 2} For $t=1,\dots,T = 24 k \cdot \log(1/\delta)$, repeat the following:
+%we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
+
+\vspace{5pt}
+
+\begin{itemize}
+\item Compute each component of the gradient $\nabla f_{\samp}(\otheta_1, \ldots, \otheta_k)$, denoting $\nabla_a := \nabla_a f_{\samp}(\otheta_1, \ldots, \otheta_k)$, and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest.
+
+\vspace{5pt}
+
+\item
+If $\norm{\nabla_a}_F < \delta$, output $\otheta$ and return.
+% S\Bigl(\frac {I_{n_{k^{t}}}{n_{k^{t}}}} \big\Vert \rho^{t}_{k^{t}}\Bigr)$ is largest.
+
+\vspace{5pt}
+
+\item Otherwise, set $\otheta_a \leftarrow  \dfrac{\tr[\rho]}{d_a} \cdot \otheta_a^{1/2} (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$, where $\rho = \otheta^{1/2} \left( \sum_{i=1}^n x_ix_i^\dagger \right) \otheta^{1/2}.$
+\end{itemize}
+\end{enumerate}
+\caption{Tensor flip-flop algorithm}\label{alg:tensor-flip-flop}
+\end{Algorithm}
+
 
 
 \begin{lemma}[Initial Conditions]\label{lem:tensor-initial-conditions}
