@@ -238,7 +238,7 @@ Informally, our theoretical contributions are as follows:
 %As a corollary the MSE in $D_F$ is $O( \max \{ \frac{d_1^2}{nd_2}, \frac{d_2^2}{nd_1} \} )$.
 % \item For the matrix normal model, if $n \geq C (\max\{d_1^2,d_2^2\}/d_1 d_2) \log^2 d_1$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has MSE $O( \max\{ d_1^2, d_2^2 \}/ (n d_1 d_2) )$ in $D_{\op}$.
 % As a corollary the MSE in $D_F$ is $O( \max \{ d_1^3, d_2^3 \} / (nd_1d_2) )$.
-\item In the tensor normal model, for some $n_0 = O_k( \max\{d_i^3\}/ \prod_i d_i)$, if $n \geq n_0$ then the MLE for the precision matrix $\Theta$ has error $O_k( \frac{d_{\max}}{\sqrt{n}} )$ in $D_F$. We also give a tight bound for the error of the largest kronecker factor $\Theta_i$.
+\item In the tensor normal model, for some $n_0 = O_k( \max\{d_i^3\}/ \prod_i d_i)$, if $n \geq n_0$ then the MLE for the precision matrix $\Theta$ has error $O_k( \frac{d_{\max}}{\sqrt{n}} )$ in $D_F$ \MW{with probability \dots}. \MW{$O_k$ notation might not be clear} We also give a tight bound for the error of the largest Kronecker factor $\Theta_i$.
 \item Under the same sample requirements as above in each case, the flip-flop algorithm converges exponentially quickly to the MLE with high probability.
 As a corollary, there is an algorithm to compute the MLE up to precision $\eps$ in $D_F$ or $D_{op}$ with expected runtime polynomial in the input size and~$\log\frac1\eps$.
 \end{enumerate}
