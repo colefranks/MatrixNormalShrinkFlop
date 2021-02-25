@@ -226,7 +226,7 @@ In the current literature on matrix normal and tensor models, typically the esti
 However, neither of these metrics bound statistical dissimilarity measures of interest such as the total variation or Kullback-Leibler divergence between the true distribution and that corresponding to the estimated parameter, or the Fisher-Rao distance.
 
 Here we consider the \emph{relative Frobenius error} $D_F(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_F$ of the precision matrices, which is sometimes also called the \emph{Mahalanobis distance}.
-This is a natural dissimilarity measure on Gaussians because when any of~$D_F$, total variation distance, square of the KL-divergence, or Fisher-Rao distance is at most a small constant then they are all on the same order \CF{check} \citep{barsov1987estimates}.
+This is a natural dissimilarity measure on Gaussians because when any of~$D_F$, total variation distance, square of the KL-divergence, or Fisher-Rao distance is at most a small constant then they are all on the same order \CF{check} \citep{barsov1987estimates} \CF{mention that this is also called stein's loss and there is work (Ledoit-Wolf) on estimating the covariance matrix in Stein's loss)}.
 We also consider the \emph{relative spectral error} $D_{\op}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_{\op}$.
 %The relative spectral error converges to zero in the regimes where the relative Frobenius error does not, and implies the Frobenius error bounds by the relation $D_{F} \leq \sqrt{d} D_{op}$.
 Both can be related to the usual norms by $\norm{A - B}_F \leq \norm{B}_{\op} \, D_F(A\Vert B)$ and $\norm{A  - B}_{\op} \leq \norm{B}_{\op} \, D_{\op}(A \Vert B)$.
@@ -1970,6 +1970,28 @@ for $a\in\{1,2\}$ in $O(\TODO{\log(1/\eps)})$ iterations, with probability at le
 %=============================================================================
 \section{Lower bounds}
 %=============================================================================
+Here we discuss known lower bounds for estimating unstructured precision matrices (i.e., the case $k= 1$ of the tensor normal model). Afterwards we prove a new lower bound on the matrix normal model.
+\subsection{Lower bounds for relative Frobenius and operator error}
+Here we briefly recall and, for completeness, prove well-known lower bounds on the rates for estimating the precision matrix in the relative Frobenius and operator error from independent samples of a Gaussian. The lower bounds follow from Fano's method and the relationship between the relative Frobenius error and the relative entropy (which is proportional to Stein's loss).
+%\CF{define minimax rate}
+\begin{prop}[Relative Frobenius error]\label{prp:standard-lower}
+Consider any estimator $\htheta$ for the precision $\theta$. Then 
+\begin{align*}
+\sup_{\Theta \in \PD(d)} \E[ d_F(\htheta||\Theta)^2] &= \Omega(\frac{d^2}{n}).\\
+\text{ and } \sup_{\Theta \in \PD(d)} \E[ d_{op}(\htheta||\Theta)^2] &= \Omega(\frac{d}{n}).
+\end{align*}
+\end{prop}
+The proof uses Fano's method, summarized by the following lemma. \CF{cite something that isn't lecture notes??}
+\begin{lemma}[Local Fano's method]
+Let $P_i$ for $i \in [n]$ be a finite set of probability distributions on a set $\mathcal X$, and let $T: \mathcal X \to [n]$ be an estimator for $i$. Then 
+$$ \sup_i \Pr_{x \sim P_i}[T(x) \neq i] \geq 1 - \frac{ - \log 2 + \frac{1}{n^2}\sum_{i,j \in [n]} D_{KL}(P_i|| P_j)}{\log n}.$$
+\end{lemma}
+
+\begin{proof}[Proof of \cref{prp:standard-lower}]
+\end{proof}
+
+
+\subsection{Lower bounds for the matrix normal model}
 One could hope that, for the purposes of estimating $\Theta_1$, having access to $X$ is like having access to $n D/d_1$ independent samples of a Gaussian with precision matrix $\Theta_1$. In particular, one could hope e.g. for an RMSE rate of $\sqrt{ d_1/ n d_2}$ for estimating $A$ in spectral norm in the matrix model. Here we show that this only holds if $d_2 \leq n d_1$; the rate cannot be better than $O(\sqrt{d_1/ n \min(n d_1, d_2)})$. Intuitively, this holds because we can choose $\Theta_2$ to have low rank and effectively zero out some entries of $X$. However, this does not quite work because $\Theta_2$ must be invertible - we have to instead choose $\Theta_2$ to be approximately equal to a random low rank matrix.
 %Here we show that our bounds for the matrix normal model are best possible for estimating the individual matrices $\Theta_a$. The bound for $\Theta_2$ is clearly best possible because it is what we would obtain even if $\Theta_1$ were known, but in fact even the bound on $\Theta_1$ is tight.
 
@@ -2005,9 +2027,6 @@ If the mean of $Y$ is bounded then we have Markov's inequality. Let $\eps > 0$; 
 
 
 %Then $\widehat{\Theta}_1$ is an estimator that has access to only $n d_1$ samples of a Gaussian.
-
-
-\subsection{Lower bounds for relative Frobenius error.}
 
 %=============================================================================
 \section{Numerics and regularization}\label{sec:numerics}
