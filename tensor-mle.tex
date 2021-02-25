@@ -1975,19 +1975,40 @@ Here we discuss known lower bounds for estimating unstructured precision matrice
 Here we briefly recall and, for completeness, prove well-known lower bounds on the rates for estimating the precision matrix in the relative Frobenius and operator error from independent samples of a Gaussian. The lower bounds follow from Fano's method and the relationship between the relative Frobenius error and the relative entropy (which is proportional to Stein's loss).
 %\CF{define minimax rate}
 \begin{prop}[Relative Frobenius error]\label{prp:standard-lower}
-Consider any estimator $\htheta$ for the precision $\theta$. Then 
-\begin{align*}
-\sup_{\Theta \in \PD(d)} \E[ d_F(\htheta||\Theta)^2] &= \Omega(\frac{d^2}{n}).\\
-\text{ and } \sup_{\Theta \in \PD(d)} \E[ d_{op}(\htheta||\Theta)^2] &= \Omega(\frac{d}{n}).
-\end{align*}
+There is $c > 0$ such that the following holds. Let $X = X_{\Theta} \in \R^{dn}$ denote $n$ independent samples from a Gaussian with precision matrix $\Theta$. Consider any estimator $\htheta = \htheta(X)$ for the precision $\Theta$. 
+\begin{enumerate}
+\item Provided $d^2 \leq c n$, \CF{instead just say $\min \{d^2/n, c\}$?, and likewise for the other?}
+\begin{align}
+\sup_{\Theta \in \PD(d)} \E[ d_F(\htheta||\Theta)^2] = \Omega(\frac{d^2}{n}).\label{eq:df-lower}
+\end{align}
+and provided $d \leq c n$, 
+\item 
+ \begin{align}
+\sup_{\Theta \in \PD(d)} \E[ d_{op}(\htheta||\Theta)^2] = \Omega(\frac{d}{n}). \label{eq:dop-lower}
+\end{align}
+\end{enumerate}
 \end{prop}
-The proof uses Fano's method, summarized by the following lemma. \CF{cite something that isn't lecture notes??}
+The proof uses the local Fano's method, summarized by the following lemma. \CF{cite something that isn't lecture notes??}
 \begin{lemma}[Local Fano's method]
-Let $P_i$ for $i \in [n]$ be a finite set of probability distributions on a set $\mathcal X$, and let $T: \mathcal X \to [n]$ be an estimator for $i$. Then 
-$$ \sup_i \Pr_{x \sim P_i}[T(x) \neq i] \geq 1 - \frac{ - \log 2 + \frac{1}{n^2}\sum_{i,j \in [n]} D_{KL}(P_i|| P_j)}{\log n}.$$
+Let $\{P_i: i \in [m]\}$ be a finite set of probability distributions a set $\mathcal X$, and let $T: \mathcal X \to [m]$ be an estimator for $i$ from a sample of $P_i$. Then 
+$$ \max_{i\in [m]} \Pr_{x \sim P_i}[T(x) \neq i] \geq 1 - \frac{ - \log 2 + \frac{1}{m^2}\sum_{i,j \in [m]} D_{KL}(P_i|| P_j)}{\log m}.$$
 \end{lemma}
 
 \begin{proof}[Proof of \cref{prp:standard-lower}]
+We begin with \cref{eq:df-lower}. We begin by the standard reduction from estimation to testing; let $V_0$ be a $1$-packing of the Frobenius ball $B$ of radius $1$ in the $d\times d$ symmetric matrices, i.e. $B = \{A: A \text{ Symmetric}, \|A\|_F \leq 1\}$ of cardinality $m \geq 2^{d(d+1)/2}$, as guaranteed by the Gilbert-Varshamov bound. Let $V = I_d + \delta V_0 = \{I_d + \delta v: v \in V_0\}$, and write $V = \{\Theta_1, \dots, \Theta_m\}$. Assume $\delta \leq 1/2$, and let $P_i$ to be the distribution of $X(\Theta_i)$ on $\R^{dn}$, i.e $\mathcal{N}(0, \Theta^{-1}_i)^{\ot n}$. Define the estimator $T$ by 
+$$T(x) = \arg\min_{i \in [m]} \|\Theta_i - \htheta(x)\|_F,$$
+so that $\Pr[T(X) = i] \geq \Pr[\|\htheta -  \Theta_i\|_F \leq \delta/2]$ because $V$ is $\delta$-separated. In order to apply the local Fano's method, we use the well-known fact that $D_{KL}(P_i|| P_j) = n D_{KL}(\mathcal{N}(0, \Theta_i^{-1}), \mathcal{N}(0, \Theta_j^{-1}) = O(nD_{F}(\Theta_j || \Theta_i)^2)$ when $\Theta_i^{-1}\Theta_j$ has eigenvalues uniformly bounded away from zero \CF{cite barsanov}. This condition holds because $(I_d/2 \preceq \Theta_j, \Theta_j \preceq 3I_d/2)$ for $i,j \in [m]$ by our assumption that $\delta \leq 1/2$. The bound of \CF{cite barsanov} can be seen explicitly from the formula 
+$$D_{KL}(P_i|| P_j) = \frac{1}{2} \tr \Theta_i^{-1} \Theta_j - \frac{1}{2}\log\det(\Theta_i^{-1} \Theta_j) - \frac{d}{2} = \frac{1}{2} \sum_{i =1}^d (\lambda_i -1 -  \log \lambda_i)$$
+ where $\lambda_i \in [1/3, 3]$ are the eigenvalues of $\Theta_i^{-1} \Theta_j$ (or, equivalently, those of $\Theta_i^{-1/2} \Theta_j \Theta_i^{-1/2}$), and observing that $\lambda_i - 1 -\log\lambda_i = O( (\lambda_i - 1)^2)$ on $[1/3, 3]$. 
+ 
+ Moreover, for $i \in [m]$, we have $\|\Theta_i^{-1}\|_{op} \leq 2$ and so $D_F(\Theta_j|| \Theta_i) = O( \|\Theta_i - \Theta_j\|_F) = O(\delta).$ We now have $D_{KL}(P_i|| P_j) \leq C \delta^2$ for some absolute constant $C$. By Fano's lemma, 
+ $$\min_{i \in [m]} \Pr_{x \sim P_i}[T(X) =  i] \leq \frac{ - \log 2 + C n \delta^2}{d(d+1)(\log 2)/2 }.$$
+If $\delta^2 = c\min\{ \frac{d^2}{n}, \frac{1}{4}\}$, the right-hand side is bounded by $\frac{1}{2}$ and the assumption $\delta \leq 1/2$ is satisfied on the other hand, we showed $\Pr_{x \sim P_i}[T(X) =  i] \geq \Pr[\|\htheta -  \Theta_i\|_F \leq \delta/2]$. Thus, 
+$$\min_{i \in [m]} \Pr[ \|\htheta - \Theta_i\|_F \leq \delta/2] \leq 1/2.$$
+This implies the rate lower bound in $\|\cdot\|_F$. We now deduce the lower bound on $D_F(\htheta ||\Theta_i),$  \CF{continue.}
+
+
+
 \end{proof}
 
 
@@ -2000,7 +2021,9 @@ One could hope that, for the purposes of estimating $\Theta_1$, having access to
 In the proof, one finds that the estimator $\tilde{\Theta}$ uses additional randomness - but by Yao's theorem the minimax MSE is unchanged when estimators with additional randomness are allowed.
 
 \begin{proof}
-If $d_2 \leq nd_1$, we are done. Assume $d_2 > n d_1$. Let $B$ be any $d_2\times d_2$ matrix such that the last $d_2 - nd_1$ columns are zero. Given access to the tuple $X$ of $n$ samples $\sqrt{\Sigma_1} X_i B^T$, where $X_i$ are i.i.d Gaussian $d_1\times d_2$ matrices, clearly $\widehat{\Theta}_2$ has access to at most $n d_1$ samples of the Gaussian on $\R^{d_1}$ with covariance matrix $\Sigma_1$ because $X_i B^T$ depends only on the first $d_1$ columns of each $X_i$.
+%If $d_2 \leq nd_1$, we are done. Assume $d_2 > n d_1$. 
+
+Let $B$ be any $d_2\times d_2$ matrix such that the last $d_2 - nd_1$ columns are zero. Given access to the tuple $X$ of $n$ samples $\sqrt{\Sigma_1} X_i B^T$, where $X_i$ are i.i.d Gaussian $d_1\times d_2$ matrices, clearly $\widehat{\Theta}_2$ has access to at most $n d_1$ samples of the Gaussian on $\R^{d_1}$ with covariance matrix $\Sigma_1$ because $X_i B^T$ depends only on the first $d_1$ columns of each $X_i$.
 
 To lower bound the rates for estimating $\Theta_1$, we must supply \emph{invertible} $B$. Choose the first $nd_1$ columns of $B$ to uniformly at random among the collections of $nd_1$ orthonormal vectors in $\R^{d_2}$. Let the remaining entries be i.i.d uniform in $[-\delta, \delta]$ (the precise distribution of the remaining entries will not matter as long as they are small). Let $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ denote the resulting random variable with $B$ and $X$ chosen independently. If $\delta = 0$, then with access to the random variable $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ by the argument above $\widehat{\Theta}_1$ has access to at most $nd_1$ samples. However, we claim that as $\delta \to 0$, the distribution of $Y_\delta$ tends to that of $Y_0$ in total variation distance. Thus the distribution of $\widehat{\Theta}_1(Y_\delta)$ converges to that of $\widehat{\Theta}_1(Y_0)$ in total variation. Since $Y_0$ only depends on $nd_1$ samples to the Gaussian on $\R^{d_1}$ with precision matrix $\Theta_1$, which we call $Y$, we can let $\tilde{\Theta}(Y) = \widehat{\Theta}_1(Y_0)$.
 
