@@ -1808,12 +1808,24 @@ We now have all the lemmas we need to prove that, given appropriate initial cond
 	Let $x_1, \ldots, x_n \in \R^D$ be samples satisfying the following conditions:
 	\begin{enumerate}
 		\item $|\nabla_0 f_x(I_D)| \leq 1$
-		\item $\norm{\nabla f_x (I_D)} \leq \dfrac{r}{4}$
+		\item $\norm{\nabla f_x (I_D)}_F \leq \dfrac{r}{4} \leq 1$
 		\item $f_x$ is $\lambda$-strongly geodesically convex at $B_r(I_D)$
 	\end{enumerate}
-	Then, in $T = TODO$ iterations, \cref{alg:flip-flop} outputs an estimator $\otheta$ such that 
-	$$ D_F(\htheta \ || \ \otheta) \leq \eps $$
+	Then, in $T = \dfrac{12k\dmax}{\lambda} \cdot \log\left( \dfrac{4 \dmax^{3/2}}{\eps \lambda} \right)$ iterations, \cref{alg:flip-flop} outputs an estimator $\otheta$ such that $\forall \ a \in [k]$
+	$$ D_F(\htheta_a \ || \ \otheta_a) \leq \eps $$
 \end{lemma}
+
+\begin{proof}
+	The initial conditions above imply that \cref{lem:convex-ball} applies, and therefore we have that the sublevel set $\{ \Upsilon \ \mid \ f(\Upsilon) \leq f(I_D)  \}$ is contained in the ball $B_r(I_D)$. 
+
+	In particular, the above condition on the sublevel set implies that \cref{lem:tensor-descent-lemma} applies, and thus we have that each step of the flip-flop algorithm will decrease the value of the objective function in accordance with the requirements of \cref{lem:descent-sublevel-set}, with parameter $\alpha = 1/6k \dmax$.
+
+	Thus, after $T = \dfrac{12k\dmax}{\lambda} \cdot \log(1/\delta)$ steps, \cref{lem:descent-sublevel-set} guarantees us that we will encounter a scaling $\otheta$ such that
+	$$ \norm{\nabla f_x(\otheta)}_F \leq \delta.$$
+	Setting $\delta = \dfrac{\lambda \eps}{4 \dmax^{3/2}}$, when we find such a scaling with gradient $\leq \delta$, \cref{lem:tensor-distance-opt} implies that for each $a \in [k]$, the component-wise distance from $\otheta$ to $\htheta$ is bounded by
+	$$ D_F(\htheta_a \ || \ \otheta_a) \leq \eps. $$
+	This in particular implies that $D_{op}(\htheta_a \ || \ \otheta_a) \leq \eps$
+\end{proof}
 
 
 %-----------------------------------------------------------------------------
@@ -1832,13 +1844,11 @@ We are now ready to state the tensor flip-flop algorithm and prove its fast conv
 \item\label{it:flip-flop preprocessing} Preprocess the input by scaling sample vectors $x_i$ by $\dfrac{1}{\tr \rho} \cdot x_i$, where $\rho = \dfrac{1}{nD} \cdot \sum_{i=1}^n x_i x_i^\dagger$
 
 \item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$, and 
-$\delta = \dfrac{\eps \lambda}{2 \dmax^{1/2}}$. 
-%$\delta = \dfrac{\eps^2}{16 k^2 \dmax^{3/2}}$. for tensor normal model
+$\delta = \dfrac{\eps}{8 \dmax^{3/2}}$. 
 
 \vspace{5pt}
 
-\item\label{it:flip-flop step 2} For $t=1,\dots,T = 24 k \cdot \log(1/\delta)$, repeat the following:
-%we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
+\item\label{it:flip-flop step 2} For $t=1,\dots,T = 24 k \dmax \cdot \log(1/\delta)$, repeat the following:
 
 \vspace{5pt}
 
@@ -1904,14 +1914,7 @@ If $\norm{\nabla_a}_F < \delta$, output $\otheta$ and return.
 	$$ 1 - k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)} - 2k \cdot e^{- \Omega(nD/k \dmax^2)}$$ 
 	we have that the hypothesis of \cref{lem:tensor-initial-conditions} applies, which implies that there exists a constant $\gamma > 0$ such that our objective function $f_x$ is $\frac{1}{2}$-strongly geodesically convex at a ball $B_r(I)$ for $r = \dfrac{\gamma}{\sqrt{(k+1)\dmax}}$ and $\norm{\nabla f_x(I)}_F \leq \dfrac{\gamma}{4 \sqrt{(k+1)\dmax}}$.
 	
-	This in turn implies that \cref{lem:convex-ball} applies, and therefore we have that the sublevel set $\{ \Upsilon \ \mid \ f(\Upsilon) \leq f(I_D)  \}$ is contained in the ball $B_r(I_D)$. 
-
-	In particular, the above condition on the sublevel set implies that \cref{lem:tensor-descent-lemma} applies, and thus we have that each step of the flip-flop algorithm will decrease the value of the objective function in accordance with the requirements of \cref{lem:descent-sublevel-set}, with parameter $\alpha = 1/6k$.
-
-	Thus, after $T = 24k \log(1/\delta)$ steps, \cref{lem:descent-sublevel-set} guarantees us that we will encounter a scaling $\otheta$ such that
-	$$ \norm{\nabla f_x(\otheta)}_F \leq \delta = \dfrac{\eps^2}{16 k^2 \dmax^{3/2}}.$$
-	When we find such a gradient, \cref{lem:tensor-distance-opt} implies that for each $a \in [k]$, the component-wise distance from $\otheta$ to $\htheta$ is bounded by
-	$$ D_F(\htheta_a \ || \ \otheta_a) \leq \eps. $$
+Thus, by \cref{lem:fast-convergence-initial-generic}, we have that in $T = 24k \dmax \cdot \log(8 \dmax^{3/2}/\eps)$ steps the flip-flop algorithm converges to an estimator such that $D_F(\htheta_a \ || \ \otheta_a) \leq \eps$ for all $a \in [k]$. Thus, \cref{alg:tensor-flip-flop} will output a good estimator.
 \end{proof}
 
 %-----------------------------------------------------------------------------
@@ -1928,7 +1931,9 @@ Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
 
 \textbf{Algorithm}:
 \begin{enumerate}
-\item\label{it:flip-flop step 1 matrix} Set $\otheta_a = \dfrac{1}{d_a} I_a$ for each $a \in \{1,2\}$, and $\delta = \dfrac{\eps^2}{16 d_2^{3/2}}$.
+\item Preprocess input by scaling sample vectors $x_i$ to become $\dfrac{1}{\tr \rho} \cdot x_i$, where $\displaystyle \rho = \dfrac{1}{n d_1 d_2} \cdot \sum_{i=1}^n x_i x_i^\dagger$ 
+
+\item\label{it:flip-flop step 1 matrix} Set $\otheta_a = I_a$ for each $a \in \{1,2\}$, and $\delta = \dfrac{\eps \lambda}{8 \dmax^{3/2}}$.
 
 \vspace{5pt}
 
@@ -1953,6 +1958,19 @@ If $\norm{\nabla_a}_{op} < \delta$, output $\otheta$ and return.
 \end{enumerate}
 \caption{Matrix flip-flop algorithm}\label{alg:flip-flop matrix}
 \end{Algorithm}
+
+In the same spirit as in the tensor normal model case, all we need for \cref{alg:flip-flop matrix} to be correct is for our initial samples to satisfy the initial conditions of \cref{lem:fast-convergence-initial-generic}.
+
+\begin{lemma}[Initial Conditions Matrix Normal Model]\label{lem:matrix-normal-initial-conditions}
+There exist absolute constants $\Gamma, \gamma > 0$ such that the following holds.
+	When the number of samples $n \geq TODO$, with probability at least $TODO$ we have that the following conditions hold:
+	\begin{enumerate}
+		\item $|\nabla_0 f_x(I)| \leq \frac{\gamma}{100 k \dmax^{1/2}}$
+		\item $\norm{\nabla f_x(I)}_F \leq \dfrac{\gamma}{4 \sqrt{(k+1)\dmax}}$ 
+		\item $f_x$ is $\frac{1}{2}$-strongly geodesically convex at 
+		$B_r(I_D)$, where $r = \dfrac{\gamma}{\sqrt{(k+1) \dmax}}$
+	\end{enumerate}
+\end{lemma}
 
 \begin{theorem}[Restatement of \cref{thm:matrix-flipflop}]
 Let $(\widehat{\Theta}_1,\widehat{\Theta}_2)$ denote the MLE for $(\Theta_1,\Theta_2)$.
