@@ -381,7 +381,7 @@ D_{\op}(\widehat{\Theta}_2 \Vert \Theta_2) = O\left(\eps \sqrt{\frac{d_2}{nd_1}}
 with probability at least  $1 - O(e^{ - \Omega( d_1 \eps^2)})$. \CF{ I commented out your convention, because what I proved uses the convention above the lemma.}}
 
 %$\det\htheta_1 = \det\htheta_2$ and $\det\Theta_1 = \det\Theta_2$, with probability at least  $1 - O(e^{ - \Omega( d_1 \eps^2)})$.}
-
+\CF{I think the following needs to have an upper bound on $\eps$ as well.}
 \begin{theorem}[Matrix normal spectral error]\label{thm:matrix-normal}
 \MatrixSpec
 \end{theorem}
@@ -1990,19 +1990,18 @@ for $a\in\{1,2\}$ in $O(\TODO{\log(1/\eps)})$ iterations, with probability at le
 %=============================================================================
 Here we discuss known lower bounds for estimating unstructured precision matrices (i.e., the case $k= 1$ of the tensor normal model). Afterwards we prove a new lower bound on the matrix normal model.
 \subsection{Lower bounds for relative Frobenius and operator error}
-Here we briefly recall and, for completeness, prove well-known lower bounds on the rates for estimating the precision matrix in the relative Frobenius and operator error from independent samples of a Gaussian. The lower bounds follow from Fano's method and the relationship between the relative Frobenius error and the relative entropy (which is proportional to Stein's loss).
+Here we briefly recall and, for completeness, prove well-known lower bounds on the rates for estimating the precision matrix in the relative Frobenius and operator error from independent samples of a Gaussian. The lower bounds follow from Fano's method and the relationship between the relative Frobenius error and the relative entropy (which is proportional to Stein's loss). 
 %\CF{define minimax rate}
 \begin{prop}[Relative Frobenius error]\label{prp:standard-lower}
 There is $c > 0$ such that the following holds. Let $X = X_{\Theta} \in \R^{dn}$ denote $n$ independent samples from a Gaussian with precision matrix $\Theta$. Consider any estimator $\htheta = \htheta(X)$ for the precision $\Theta$. 
 \begin{enumerate}
-\item Provided $d^2 \leq c n$, \CF{instead just say $\min \{d^2/n, c\}$?, and likewise for the other?}
+\item 
 \begin{align}
-\sup_{\Theta \in \PD(d)} \E[ d_F(\htheta||\Theta)^2] = \Omega(\frac{d^2}{n}).\label{eq:df-lower}
+\sup_{\Theta \in \PD(d)} \E[ d_F(\htheta||\Theta)^2] = \Omega\left( \min \left\{\frac{d^2}{n},1\right\} \right) .\label{eq:df-lower}
 \end{align}
-and provided $d \leq c n$, 
 \item 
  \begin{align}
-\sup_{\Theta \in \PD(d)} \E[ d_{op}(\htheta||\Theta)^2] = \Omega(\frac{d}{n}). \label{eq:dop-lower}
+\sup_{\Theta \in \PD(d)} \E[ d_{op}(\htheta||\Theta)^2] = \Omega\left( \min \left\{\frac{d}{n},1\right\} \right). \label{eq:dop-lower}
 \end{align}
 \end{enumerate}
 \end{prop}
@@ -2019,16 +2018,23 @@ so that $\Pr[T(X) = i] \geq \Pr[\|\htheta -  \Theta_i\|_F \leq \delta/2]$ becaus
 $$D_{KL}(P_i|| P_j) = \frac{1}{2} \tr \Theta_i^{-1} \Theta_j - \frac{1}{2}\log\det(\Theta_i^{-1} \Theta_j) - \frac{d}{2} = \frac{1}{2} \sum_{i =1}^d (\lambda_i -1 -  \log \lambda_i)$$
  where $\lambda_i \in [1/3, 3]$ are the eigenvalues of $\Theta_i^{-1} \Theta_j$ (or, equivalently, those of $\Theta_i^{-1/2} \Theta_j \Theta_i^{-1/2}$), and observing that $\lambda_i - 1 -\log\lambda_i = O( (\lambda_i - 1)^2)$ on $[1/3, 3]$. 
  
- Moreover, for $i \in [m]$, we have $\|\Theta_i^{-1}\|_{op} \leq 2$ and so $D_F(\Theta_j|| \Theta_i) = O( \|\Theta_i - \Theta_j\|_F) = O(\delta).$ We now have $D_{KL}(P_i|| P_j) \leq C \delta^2$ for some absolute constant $C$. By Fano's lemma, 
+ Moreover, for $i \in [m]$, we have $\|\Theta_i^{-1}\|_{op} \leq 2$ and so $D_F(\Theta_j|| \Theta_i) = O( \|\Theta_i - \Theta_j\|_F) = O(\delta).$ We now have $D_{KL}(P_i|| P_j) \leq Cn \delta^2$ for some absolute constant $C$. By Fano's lemma, 
  $$\min_{i \in [m]} \Pr_{x \sim P_i}[T(X) =  i] \leq \frac{ - \log 2 + C n \delta^2}{d(d+1)(\log 2)/2 }.$$
-If $\delta^2 = c\min\{ \frac{d^2}{n}, \frac{1}{4}\}$, the right-hand side is bounded by $\frac{1}{2}$ and the assumption $\delta \leq 1/2$ is satisfied on the other hand, we showed $\Pr_{x \sim P_i}[T(X) =  i] \geq \Pr[\|\htheta -  \Theta_i\|_F \leq \delta/2]$. Thus, 
+If $\delta^2 = c\min\{ \frac{d^2}{n}, 1\}$, the right-hand side is bounded by $\frac{1}{2}$ and the assumption $\delta \leq 1/2$ is satisfied provided $c$ is a small enough absolute constant. On the other hand, we showed $\Pr_{x \sim P_i}[T(X) =  i] \geq \Pr[\|\htheta -  \Theta_i\|_F \leq \delta/2]$. Thus, 
 $$\min_{i \in [m]} \Pr[ \|\htheta - \Theta_i\|_F \leq \delta/2] \leq 1/2.$$
-This implies the rate lower bound in $\|\cdot\|_F$. We now deduce the lower bound on $D_F(\htheta ||\Theta_i),$  \CF{continue.}
+This implies the rate lower bound in $\|\cdot\|_F$. The bound on $D_F(\htheta ||\Theta_i)$ holds because $D_F(\htheta|| \Theta_i) \leq \|\Theta_i\|_{op} \| \Theta - \htheta\|_F \leq 3/2 \| \Theta - \htheta_i\|_F$, so we must have 
+$$\min_{i \in [m]} \Pr[ D_F(\htheta || \Theta_i) \leq \delta/3] \leq 1/2.$$
+To obtain the rate lower bound in $\| \cdot \|_{op},$ instead start with a packing $V_0$ of the unit operator norm ball of cardinality $m \geq 2^{d(d+1)/2}$. We modify the proof by bounding $D_{KL}(P_i || P_j) = O(n \| \Theta_i - \Theta_j\|_F^2) = O(n d \|\Theta_i - \Theta_j\|_{op}^2) \leq C nd \delta^2.$ Proceeding as before, we find that for $\delta = c \min \{\frac{d}{n}, 1\}$, 
+$$\min_{i \in [m]} \Pr[ \|\htheta - \Theta_i\|_{op} \leq \delta/2] \leq 1/2.$$
+The bound on $D_{op}(\htheta || \Theta_i)$ follows from the bound $D_{op}(\htheta|| \Theta_i) \leq \|\Theta_i\|_{op} \|\htheta - \Theta_j\|_{op} \leq 3/2 \|\htheta - \Theta_j\|_{op}$.  
+
+%we bound $D_{KL}(P_i|| P_j) \leq O(nD_{F}(\Theta_j || \Theta_i)^2)$ by $O (n d D_{op}(\Theta_j || \Theta_i)^2)$ 
+%Indeed, if $D_F (\htheta || \Theta_i) \leq \delta,$ for $\delta \leq 1/2$, then $ D_{op} (\htheta || \Theta_i) \leq 1/2$ and in particular $1/2 I_d \preceq \htheta \preceq 3/2 \Theta_i$, or $\|\htheta\|_{op} \leq  $\|\htheta - \Theta_i\|_F$.
+
 
 
 
 \end{proof}
-
 
 \subsection{Lower bounds for the matrix normal model}
 One could hope that, for the purposes of estimating $\Theta_1$, having access to $X$ is like having access to $n D/d_1$ independent samples of a Gaussian with precision matrix $\Theta_1$. In particular, one could hope e.g. for an RMSE rate of $\sqrt{ d_1/ n d_2}$ for estimating $A$ in spectral norm in the matrix model. Here we show that this only holds if $d_2 \leq n d_1$; the rate cannot be better than $O(\sqrt{d_1/ n \min(n d_1, d_2)})$. Intuitively, this holds because we can choose $\Theta_2$ to have low rank and effectively zero out some entries of $X$. However, this does not quite work because $\Theta_2$ must be invertible - we have to instead choose $\Theta_2$ to be approximately equal to a random low rank matrix.
