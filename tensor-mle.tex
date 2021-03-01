@@ -218,19 +218,14 @@ Recently it was shown that the number of flip-flop steps to obtain a gradient of
 %-----------------------------------------------------------------------------
 We take a geodesically convex optimization approach to provide rigorous nonasymptotic guarantees for the estimation of the precision matrices, without any assumptions on their structure. For the matrix normal model we provide high probability bounds on the estimator that are tight up to logarithmic factors. For the tensor normal model, our bounds are tight in the regime where it is information-theoretically possible to recover the factors to constant Frobenius error with high probabilty.
 
-\CF{I've shifted away from rates and towards whp bounds, which we need to do unless we supply a tail bound.}
-
 %our rates are tight in every regime up to logarithmic factors, and for the tensor normal model our rates our tight assuming it is information-theoretically possible to recover the factors up to constant Frobenius error with high probability.
 
 In the current literature on matrix normal and tensor models, typically the estimators are assessed using Frobenius or spectral norm between the estimated parameter and the truth.
 However, neither of these metrics bound statistical dissimilarity measures of interest such as the total variation or Kullback-Leibler divergence between the true distribution and that corresponding to the estimated parameter, or the Fisher-Rao distance.
 
-Here we consider the \emph{relative Frobenius error} $D_F(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_F$ of the precision matrices, which is sometimes also called the \emph{Mahalanobis distance}.
-This is a natural dissimilarity measure on Gaussians because when any of~$D_F$, total variation distance, square of the KL-divergence, or Fisher-Rao distance is at most a small constant then they are all on the same order \CF{check} \citep{barsov1987estimates} \CF{mention that this is also called stein's loss and there is work (Ledoit-Wolf) on estimating the covariance matrix in Stein's loss)}.
-We also consider the \emph{relative spectral error} $D_{\op}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_{\op}$.
+Here we consider the \emph{relative Frobenius error} $D_F(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_F$ of the precision matrices. It is natural to consider the relative Frobenius error rather because it is scale invariant, whereas the the Frobenius error is not. Moreover, the dissimilarity measures ~$D_F(\Theta_1, \Theta_2)$, total variation distance $d_{TV}(\mathcal{N}(0, \Theta_1^{-1}), \mathcal{N}(0, \Theta_2^{-1}))$, the square of the KL-divergence $d_{KL}(\mathcal{N}(0, \Theta_1^{-1}), \mathcal{N}(0, \Theta_2^{-1}))^2$, and the Fisher-Rao distance between $\Theta_1, \Theta_2$ all coincide ``locally.'' That is, if any of them is at most a small constant then they are all on the same order. Signicant work has been done on the estimation of precision and covariance matrices under such dissimilarity measures, e.g. the work on Ledoit and Wolf on Stein's loss (which is proportional to $d_{KL}$ for Gaussians) \cite{ledoit2018optimal}. To obtain the sharpest possible results, we also consider the \emph{relative spectral error} $D_{\op}(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_{\op}$, which has been studied in the context of spectral graph sparsification.
 %The relative spectral error converges to zero in the regimes where the relative Frobenius error does not, and implies the Frobenius error bounds by the relation $D_{F} \leq \sqrt{d} D_{op}$.
-Both can be related to the usual norms by $\norm{A - B}_F \leq \norm{B}_{\op} \, D_F(A\Vert B)$ and $\norm{A  - B}_{\op} \leq \norm{B}_{\op} \, D_{\op}(A \Vert B)$.
-Though we caution that $D_F$ and $D_{\op}$ are not truly metrics, we will call them distances because they obey approximate symmetry and an approximate triangle inequality (see \cref{lem:triangle-ineq}).
+The dissimilarity measure $d_F(A||B)$ (resp. $d_{op}(A||B)$) can be related to the usual norm $\|A - B\|_F$, (resp. $\|A - B\|_{op}$) by a constant factor assuming the largest singular vlaues of $B, B^{-1}$ are bounded by a constant. Though we caution that $D_F$ and $D_{\op}$ are not truly metrics, we will call them distances because they approximately (or ``locally'') obey symmetry and the triangle inequality. See \cref{sec:rel-error} for a discussion of these properties.
 
 Informally, our theoretical contributions are as follows:
 \begin{enumerate}
@@ -238,16 +233,14 @@ Informally, our theoretical contributions are as follows:
 %As a corollary the MSE in $D_F$ is $O( \max \{ \frac{d_1^2}{nd_2}, \frac{d_2^2}{nd_1} \} )$.
 % \item For the matrix normal model, if $n \geq C (\max\{d_1^2,d_2^2\}/d_1 d_2) \log^2 d_1$, then the MLE for the precision matrices $\Theta_1, \Theta_2$ has MSE $O( \max\{ d_1^2, d_2^2 \}/ (n d_1 d_2) )$ in $D_{\op}$.
 % As a corollary the MSE in $D_F$ is $O( \max \{ d_1^3, d_2^3 \} / (nd_1d_2) )$.
-\item In the tensor normal model, for some $n_0 = O_k( \max\{d_i^3\}/ \prod_i d_i)$, if $n \geq n_0$ then the MLE for the precision matrix $\Theta$ has error $O_k( \frac{d_{\max}}{\sqrt{n}} )$ in $D_F$ \MW{with probability \dots}. \MW{$O_k$ notation might not be clear} We also give a tight bound for the error of the largest Kronecker factor $\Theta_i$.
+\item In the tensor normal model, for $k$ fixed we show that for some $n_0 = O( \max\{d_i^3\}/ \prod_i d_i)$, if $n \geq n_0$ then the MLE for the precision matrix $\Theta$ has error $O( \frac{d_{\max}}{\sqrt{n}} )$ in $D_F$ with probability $1 - (n D /\max\{d_i\})^{-\Omega(\min\{d_i\})}$. We also give bounds for growing $k$ and a tight bound for the error of the largest Kronecker factor $\Theta_i$.
 \item Under the same sample requirements as above in each case, the flip-flop algorithm converges exponentially quickly to the MLE with high probability.
 As a corollary, there is an algorithm to compute the MLE up to precision $\eps$ in $D_F$ or $D_{op}$ with expected runtime polynomial in the input size and~$\log\frac1\eps$.
 \end{enumerate}
 %\CF{Mention $d_{TV}$ again.}
 %\MW{Check that what is written above is the same as the results advertised in \cref{sec:main results}. Right now it isn't.}
 
-We now discuss the tightness of our results. Our first result is tight up to logarithmic factors in the sense that it is information-theoretically impossible to obtain an error bound that is smaller by a polylogarithmic factor and holds with constant probability. For $n$ a polylogarithmic factor smaller than $n_0$, it is information-theoretically impossible to obtain any finite bound independent of $\Theta$ with high probability. Similarly, for the second result, provided $n \geq n_0$ it is impossible to obtain an error bound that is smaller than ours by a factor tending to infinity that holds with constant probability. For $n \ll n_0$, no constant error bound on the $D_F$ error of the largest Kronecker factor can hold with constant probability. These results follow by reduction to known results on the Frobenius and operator error for covariance estimation.
-
-\CF{really need to check all these claims; I think we should try to write down proofs for $D_F/D_{op}$ from the usual $F/{op}$ sources.}
+We now discuss the tightness of our results. Our first result is tight up to logarithmic factors in the sense that it is information-theoretically impossible to obtain an error bound that is smaller by a polylogarithmic factor and holds with constant probability. For $n$ a polylogarithmic factor smaller than $n_0$, it is information-theoretically impossible to obtain any finite bound independent of $\Theta$ with high probability. Similarly, for the second result, provided $n \geq n_0$ it is impossible to obtain an error bound that is smaller than ours by a factor tending to infinity that holds with constant probability. For $n \ll n_0$, no constant error bound on the $D_F$ error of the largest Kronecker factor can hold with constant probability. These results follow by reduction to known results on the Frobenius and operator error for covariance estimation; see \cref{sec:lower}.
 
 For interesting cases of the tensor normal model such as $d\times d \times d$ tensors we just require that $n$ is at least a large constant.
 For the matrix normal model, our first result removes the added constraint $n \geq C \max\{d_1,d_2\}$ in \cite{tsiligkaridis2013convergence}.
@@ -270,7 +263,7 @@ Our regularizer has a Bayesian interpretation as coming from a Wishart prior for
 %-----------------------------------------------------------------------------
 We write $\Mat(d)$ for the space of $d\times d$ matrices, $\PD(d)$ for the convex cone of $d\times d$ positive definite matrices; $\GL(d)$ denotes the group of invertible $d\times d$ matrices.
 For a matrix $A$, $\norm{A}_{\op}$ denotes the operator norm, $\norm{A}_F = (\tr A^T A)^{\frac12}$ the Frobenius norm, and $\braket{A,B} = \tr A^T B$ for the Hilbert-Schmidt inner product.
-We extend these definitions to tuples $A=(A_0;A_1,\dots,A_k)$, where~$A_0\in\R$ and the $A_a$ for $a\in[k]$ are matrices and denote them by the same symbol, i.e., $\norm{A}_F = (\abs{A_0}^2 + \sum_{a=1}^k \norm{A_a}_F^2)^{1/2}$ and similarly for the inner product. For functions $f,g:S \to \R$ for any set $S$, we say $f = O(g)$ if there is a constant $C > 0$ independent of $x$ such that $f(x) \leq C g(x)$ for all $x \in S$, and similarly $f = \Omega(g)$ if there is a constant $c > 0$ independent of $x$ such that $f(x) \geq c g(x)$ for all $x \in S$. 
+We extend these definitions to tuples $A=(A_0;A_1,\dots,A_k)$, where~$A_0\in\R$ and the $A_a$ for $a\in[k]$ are matrices and denote them by the same symbol, i.e., $\norm{A}_F = (\abs{A_0}^2 + \sum_{a=1}^k \norm{A_a}_F^2)^{1/2}$ and similarly for the inner product. For functions $f,g:S \to \R$ for any set $S$, we say $f = O(g)$ if there is a constant $C > 0$ independent of $x$ such that $f(x) \leq C g(x)$ for all $x \in S$, and similarly $f = \Omega(g)$ if there is a constant $c > 0$ independent of $x$ such that $f(x) \geq c g(x)$ for all $x \in S$. If $f = O(g)$ and $g = O(f)$ we write $f \asymp g$.
 %If the constant $C, c$ depends on another parameter $k$ we write $O_k, \Omega_k$, respectively.
 %\MW{Define $O, \Theta$ notation and say that for us this is always about universal constants.}
 
@@ -378,7 +371,7 @@ Suppose $d_1 \leq d_2$ and $n \geq C \frac{d_2}{d_1} \max \{\log \frac{d_2}{d_1}
 \quad\text{and}\quad
 D_{\op}(\widehat{\Theta}_2 \Vert \Theta_2) = O\left(\eps \sqrt{\frac{d_2}{nd_1}}\right),
 \end{align*}
-with probability at least  $1 - O(e^{ - \Omega( d_1 \eps^2)})$. \CF{ I commented out your convention, because what I proved uses the convention above the lemma.}}
+with probability at least  $1 - O(e^{ - \Omega( d_1 \eps^2)})$. }
 
 %$\det\htheta_1 = \det\htheta_2$ and $\det\Theta_1 = \det\Theta_2$, with probability at least  $1 - O(e^{ - \Omega( d_1 \eps^2)})$.}
 \CF{I think the following needs to have an upper bound on $\eps$ as well.}
@@ -1986,55 +1979,72 @@ for $a\in\{1,2\}$ in $O(\TODO{\log(1/\eps)})$ iterations, with probability at le
 
 
 %=============================================================================
-\section{Lower bounds}
+\section{Lower bounds}\label{sec:lower}
 %=============================================================================
 Here we discuss known lower bounds for estimating unstructured precision matrices (i.e., the case $k= 1$ of the tensor normal model). Afterwards we prove a new lower bound on the matrix normal model.
 \subsection{Lower bounds for relative Frobenius and operator error}
-Here we briefly recall and, for completeness, prove well-known lower bounds on the rates for estimating the precision matrix in the relative Frobenius and operator error from independent samples of a Gaussian. The lower bounds follow from Fano's method and the relationship between the relative Frobenius error and the relative entropy (which is proportional to Stein's loss). 
+Here we briefly recall and, for completeness, prove well-known lower bounds on the rates for estimating the precision matrix in the Frobenius and operator error from independent samples of a Gaussian. The lower bounds follow from Fano's method and the relationship between the Frobenius error and the relative entropy (which is proportional to Stein's loss). We then use these bounds to show bounds on the relative Frobenius and relative operator error. Informally, both bounds say that no estimator for a $d\times d$ precision matrix from $n$ samples can have accuracy smaller than $d^2/n$ (resp $d/n$) in Frobenius error or relative Frobenius error (resp. operator norm error or relative operator norm error) with probability more than $1/2$.
 %\CF{define minimax rate}
-\begin{prop}[Relative Frobenius error]\label{prp:standard-lower}
-There is $c > 0$ such that the following holds. Let $X = X_{\Theta} \in \R^{dn}$ denote $n$ independent samples from a Gaussian with precision matrix $\Theta$. Consider any estimator $\htheta = \htheta(X)$ for the precision $\Theta$. 
+
+
+\begin{prop}[Frobenius and operator error]\label{prp:standard-lower}
+There is $c > 0$ such that the following holds. Let $X = X_{\Theta} \in \R^{dn}$ denote $n$ independent samples from a Gaussian with precision matrix $\Theta$. Consider any estimator $\htheta = \htheta(X)$ for the precision $\Theta$, and let $B\subset \PD(d)$ denote the ball about $I_d$ of radius $1/2$ in the operator norm.
 \begin{enumerate}
-\item 
+\item Let $\delta^2 = c\min \left\{1,d^2/n\right\}$. Then
 \begin{align}
-\sup_{\Theta \in \PD(d)} \E[ d_F(\htheta||\Theta)^2] = \Omega\left( \min \left\{\frac{d^2}{n},1\right\} \right) .\label{eq:df-lower}
+\sup_{\Theta \in B} \Pr\left[ \| \htheta - \Theta\|_F \geq \delta\right] \geq \frac{1}{2}.\label{eq:frob-lower}
 \end{align}
-\item 
+\item Let $\delta^2 = c\min \left\{1,d/n\right\}$. Then
  \begin{align}
-\sup_{\Theta \in \PD(d)} \E[ d_{op}(\htheta||\Theta)^2] = \Omega\left( \min \left\{\frac{d}{n},1\right\} \right). \label{eq:dop-lower}
+\sup_{\Theta \in B} \Pr\left[ \| \htheta - \Theta\|_{op} \geq \delta\right] \geq \frac{1}{2}. \label{eq:op-lower}
 \end{align}
 \end{enumerate}
+As a consequence, we have 
+\begin{align*}\sup_{\Theta \in B}\E[\| \htheta - \Theta\|_F^2] &=\Omega\left( \min \left\{\frac{d^2}{n},1\right\}\right)\\
+\text{ and } \sup_{\Theta \in B}\E[\| \htheta - \Theta\|_{op}^2] &= \Omega\left( \min \left\{\frac{d}{n},1\right\}\right).\end{align*}
 \end{prop}
-The proof uses the local Fano's method, summarized by the following lemma. \CF{cite something that isn't lecture notes??}
-\begin{lemma}[Local Fano's method]
+The proof uses Fano's inequality with mutual information bounded by relative entropy, as in \cite{yang1999information}.
+\begin{lemma}[Fano's method]
 Let $\{P_i: i \in [m]\}$ be a finite set of probability distributions a set $\mathcal X$, and let $T: \mathcal X \to [m]$ be an estimator for $i$ from a sample of $P_i$. Then 
-$$ \max_{i\in [m]} \Pr_{x \sim P_i}[T(x) \neq i] \geq 1 - \frac{ - \log 2 + \frac{1}{m^2}\sum_{i,j \in [m]} D_{KL}(P_i|| P_j)}{\log m}.$$
+$$ \max_{i\in [m]} \Pr_{x \sim P_i}[T(x) \neq i] \geq 1 - \frac{ - \log 2 + \max_{i,j \in [m]} D_{KL}(P_i|| P_j)}{\log m}.$$
 \end{lemma}
 
 \begin{proof}[Proof of \cref{prp:standard-lower}]
-We begin with \cref{eq:df-lower}. We begin by the standard reduction from estimation to testing; let $V_0$ be a $1$-packing of the Frobenius ball $B$ of radius $1$ in the $d\times d$ symmetric matrices, i.e. $B = \{A: A \text{ Symmetric}, \|A\|_F \leq 1\}$ of cardinality $m \geq 2^{d(d+1)/2}$, as guaranteed by the Gilbert-Varshamov bound. Let $V = I_d + \delta V_0 = \{I_d + \delta v: v \in V_0\}$, and write $V = \{\Theta_1, \dots, \Theta_m\}$. Assume $\delta \leq 1/2$, and let $P_i$ to be the distribution of $X(\Theta_i)$ on $\R^{dn}$, i.e $\mathcal{N}(0, \Theta^{-1}_i)^{\ot n}$. Define the estimator $T$ by 
+We first prove \cref{eq:frob-lower}, the lower bound on estimation in the Frobenius norm. We begin by the standard reduction from estimation to testing; let $V_0$ be a $1$-packing of the Frobenius ball $B_F$ of radius $1$ in the $d\times d$ symmetric matrices, i.e. $B_F = \{A: A \text{ Symmetric}, \|A\|_F \leq 1\}$ of cardinality $m \geq 2^{d(d+1)/2}$, as guaranteed by the Gilbert-Varshamov bound. Let $0 \leq \delta \leq 1/2$, and let $V = I_d + \delta V_0 = \{I_d + \delta v: v \in V_0\}$. Write $V = \{\Theta_1, \dots, \Theta_m\}$. Note that $V$ is contained within the operator norm ball $B$.
+Let $P_i$ to be the distribution of $X(\Theta_i)$ on $\R^{dn}$, i.e $\mathcal{N}(0, \Theta^{-1}_i)^{\ot n}$. Define the estimator $T$ by 
 $$T(x) = \arg\min_{i \in [m]} \|\Theta_i - \htheta(x)\|_F,$$
-so that $\Pr[T(X) = i] \geq \Pr[\|\htheta -  \Theta_i\|_F \leq \delta/2]$ because $V$ is $\delta$-separated. In order to apply the local Fano's method, we use the well-known fact that $D_{KL}(P_i|| P_j) = n D_{KL}(\mathcal{N}(0, \Theta_i^{-1}), \mathcal{N}(0, \Theta_j^{-1}) = O(nD_{F}(\Theta_j || \Theta_i)^2)$ when $\Theta_i^{-1}\Theta_j$ has eigenvalues uniformly bounded away from zero \CF{cite barsanov}. This condition holds because $(I_d/2 \preceq \Theta_j, \Theta_j \preceq 3I_d/2)$ for $i,j \in [m]$ by our assumption that $\delta \leq 1/2$. The bound of \CF{cite barsanov} can be seen explicitly from the formula 
-$$D_{KL}(P_i|| P_j) = \frac{1}{2} \tr \Theta_i^{-1} \Theta_j - \frac{1}{2}\log\det(\Theta_i^{-1} \Theta_j) - \frac{d}{2} = \frac{1}{2} \sum_{i =1}^d (\lambda_i -1 -  \log \lambda_i)$$
- where $\lambda_i \in [1/3, 3]$ are the eigenvalues of $\Theta_i^{-1} \Theta_j$ (or, equivalently, those of $\Theta_i^{-1/2} \Theta_j \Theta_i^{-1/2}$), and observing that $\lambda_i - 1 -\log\lambda_i = O( (\lambda_i - 1)^2)$ on $[1/3, 3]$. 
- 
- Moreover, for $i \in [m]$, we have $\|\Theta_i^{-1}\|_{op} \leq 2$ and so $D_F(\Theta_j|| \Theta_i) = O( \|\Theta_i - \Theta_j\|_F) = O(\delta).$ We now have $D_{KL}(P_i|| P_j) \leq Cn \delta^2$ for some absolute constant $C$. By Fano's lemma, 
+so that $\Pr[T(X) = i] \geq \Pr[\|\htheta -  \Theta_i\|_F \leq \delta/2]$ because $V$ is $\delta$-separated. In order to apply the local Fano's method, we use the well-known fact that $D_{KL}(P_i|| P_j) = n D_{KL}(\mathcal{N}(0, \Theta_i^{-1}), \mathcal{N}(0, \Theta_j^{-1}) = O(nD_{F}(\Theta_j || \Theta_i)^2)$ when $\Theta_i^{-1}\Theta_j$ has eigenvalues uniformly bounded away from zero (\CF{cite barsanov}, see also \cref{sec:rel-error}). This condition holds because $I_d/2 \preceq \Theta_j, \Theta_j \preceq 3I_d/2$ for $i,j \in [m]$ by our assumption that $\delta \leq 1/2$. Moreover, for $i \in [m]$, we have $\|\Theta_i^{-1}\|_{op} \leq 2$ and so $D_F(\Theta_j|| \Theta_i) = O( \|\Theta_i - \Theta_j\|_F) = O(\delta).$ We now have $D_{KL}(P_i|| P_j) \leq Cn \delta^2$ for some absolute constant $C$. By Fano's lemma, 
  $$\min_{i \in [m]} \Pr_{x \sim P_i}[T(X) =  i] \leq \frac{ - \log 2 + C n \delta^2}{d(d+1)(\log 2)/2 }.$$
 If $\delta^2 = c\min\{ \frac{d^2}{n}, 1\}$, the right-hand side is bounded by $\frac{1}{2}$ and the assumption $\delta \leq 1/2$ is satisfied provided $c$ is a small enough absolute constant. On the other hand, we showed $\Pr_{x \sim P_i}[T(X) =  i] \geq \Pr[\|\htheta -  \Theta_i\|_F \leq \delta/2]$. Thus, 
 $$\min_{i \in [m]} \Pr[ \|\htheta - \Theta_i\|_F \leq \delta/2] \leq 1/2.$$
-This implies the rate lower bound in $\|\cdot\|_F$. The bound on $D_F(\htheta ||\Theta_i)$ holds because $D_F(\htheta|| \Theta_i) \leq \|\Theta_i\|_{op} \| \Theta - \htheta\|_F \leq 3/2 \| \Theta - \htheta_i\|_F$, so we must have 
-$$\min_{i \in [m]} \Pr[ D_F(\htheta || \Theta_i) \leq \delta/3] \leq 1/2.$$
-To obtain the rate lower bound in $\| \cdot \|_{op},$ instead start with a packing $V_0$ of the unit operator norm ball of cardinality $m \geq 2^{d(d+1)/2}$. We modify the proof by bounding $D_{KL}(P_i || P_j) = O(n \| \Theta_i - \Theta_j\|_F^2) = O(n d \|\Theta_i - \Theta_j\|_{op}^2) \leq C nd \delta^2.$ Proceeding as before, we find that for $\delta = c \min \{\frac{d}{n}, 1\}$, 
+Becuse $V \subset B$, this proves \cref{eq:frob-lower}. 
+To obtain \cref{eq:op-lower}, the lower bound in $\| \cdot \|_{op},$ instead start with a packing $V_0$ of the unit operator norm ball of cardinality $m \geq 2^{d(d+1)/2}$. We modify the proof by bounding $D_{KL}(P_i || P_j) = O(n \| \Theta_i - \Theta_j\|_F^2) = O(n d \|\Theta_i - \Theta_j\|_{op}^2) \leq C nd \delta^2.$ Proceeding as before, we find that for $\delta = c \min \{\frac{d}{n}, 1\}$, 
 $$\min_{i \in [m]} \Pr[ \|\htheta - \Theta_i\|_{op} \leq \delta/2] \leq 1/2.$$
-The bound on $D_{op}(\htheta || \Theta_i)$ follows from the bound $D_{op}(\htheta|| \Theta_i) \leq \|\Theta_i\|_{op} \|\htheta - \Theta_j\|_{op} \leq 3/2 \|\htheta - \Theta_j\|_{op}$.  
+Again, we have $\Theta_1, \dots, \Theta_m \in B$, so \cref{eq:op-lower} follows. \end{proof}
+We remark that the above proof shows the necessity of a scale-invariant dissimilarity measure to obtain error bounds that are independent of the ground truth precision matrix $\Theta$. Indeed, replacing the packing $V$ by $\kappa V$ for some $\kappa \to \infty$ shows that $\sup_{\Theta \in \kappa B} \Pr\left[ \| \htheta - \Theta\|_F \geq \kappa \delta \right] \geq \frac{1}{2}$. That is, no fixed bound can be obtained with probability $1/2$. 
 
-%we bound $D_{KL}(P_i|| P_j) \leq O(nD_{F}(\Theta_j || \Theta_i)^2)$ by $O (n d D_{op}(\Theta_j || \Theta_i)^2)$ 
-%Indeed, if $D_F (\htheta || \Theta_i) \leq \delta,$ for $\delta \leq 1/2$, then $ D_{op} (\htheta || \Theta_i) \leq 1/2$ and in particular $1/2 I_d \preceq \htheta \preceq 3/2 \Theta_i$, or $\|\htheta\|_{op} \leq  $\|\htheta - \Theta_i\|_F$.
+We now use the result just obtained to prove bounds on the relative Frobenius and operator error. Because $I_d/2 \preceq \Theta \preceq 3I_d/2$ for $\Theta \in B$, the bounds $\|\Theta - \htheta\|_F \leq \|\Theta\|_{op} D_F(\htheta|| \Theta)$ and $\|\Theta - \htheta\|_{op} \leq \|\Theta\|_{op} D_{op}(\htheta|| \Theta)$ together with \cref{prp:standard-lower} imply the following corollary.
+\begin{corollary}[Relative Frobenius and operator error]\label{prp:relative-lower}
+There is $c > 0$ such that the following holds for $X, \htheta, B$ be as in \cref{prp:standard-lower}.
+\begin{enumerate}
+\item Let $\delta^2 = c\min \left\{1,d^2/n\right\}$. Then
+\begin{align}
+\sup_{\Theta \in B} \Pr\left[ d_F(\htheta|| \Theta)  \geq \delta\right] \geq \frac{1}{2}.\label{eq:frob-lower}
+\end{align}
+\item Let $\delta^2 = c\min \left\{1,d/n\right\}$. Then
+ \begin{align}
+\sup_{\Theta \in B} \Pr\left[ d_{op}(\htheta|| \Theta) \geq \delta\right] \geq \frac{1}{2}. \label{eq:op-lower}
+\end{align}
+\end{enumerate}
+As a consequence, we have 
+\begin{align*}\sup_{\Theta \in B}\E[d_F(\htheta|| \Theta)^2] &=\Omega\left( \min \left\{\frac{d^2}{n},1\right\}\right)\\
+\text{ and } \sup_{\Theta \in B}\E[d_{op}(\htheta|| \Theta)^2] &= \Omega\left( \min \left\{\frac{d}{n},1\right\}\right).\end{align*}
+
+\end{corollary}
 
 
 
 
-\end{proof}
 
 \subsection{Lower bounds for the matrix normal model}
 One could hope that, for the purposes of estimating $\Theta_1$, having access to $X$ is like having access to $n D/d_1$ independent samples of a Gaussian with precision matrix $\Theta_1$. In particular, one could hope e.g. for an RMSE rate of $\sqrt{ d_1/ n d_2}$ for estimating $A$ in spectral norm in the matrix model. Here we show that this only holds if $d_2 \leq n d_1$; the rate cannot be better than $O(\sqrt{d_1/ n \min(n d_1, d_2)})$. Intuitively, this holds because we can choose $\Theta_2$ to have low rank and effectively zero out some entries of $X$. However, this does not quite work because $\Theta_2$ must be invertible - we have to instead choose $\Theta_2$ to be approximately equal to a random low rank matrix.
@@ -2787,7 +2797,18 @@ It remains to translate our bound on $A$ to our desired bound on $\Phi_Y$. Becau
 
 
 \section{Relative error metrics}\label{sec:rel-error}
-Here we state the approximate triangle inequality and approximate symmetry for our relative error metrics.
+
+In this section we discuss the properties of our relative error metrics $d_F, d_{op}$. First note that they can be related to the usual norms by following inequalities:
+\begin{align*}\|B^{-1}\|_{op}^{-1}D_F(A\Vert B)&\leq \norm{A - B}_F \leq \norm{B}_{\op} \, D_F(A\Vert B)\\
+\|B^{-1}\|_{op}^{-1} D_{op}(A\Vert B) &\leq \norm{A  - B}_{\op} \leq \norm{B}_{\op} \, D_{\op}(A \Vert B).
+\end{align*}
+
+
+
+
+
+
+Next we state the approximate triangle inequality, also called a \emph{local} triangle inequality in \cite{yang1999information}, and approximate symmetry for our relative error metrics.
 \begin{lemma}\label{lem:triangle-ineq}
 Let $A, B, C \in \PD(d)$. Let $D \in D_{op}, D_F$. Provided $D(A||B), D(B||C)$ are at most an absolute constant $c$, we have
 \begin{align}D(A||C) &= O(D(A||B) + D(B||C)),\label{eq:tri}\\
@@ -2795,9 +2816,24 @@ D(B||A) &= O(D(A||B))\label{eq:sym} \text{, and }\\
 D(A^{-1}||B^{-1}) &= O(D(A||B)).
 \end{align}
 \end{lemma}
-For $D_{op}$, the result is \cite[Lemma C.1]{FM20}. For $D_F$, the result holds because because $D_F(A|| B) = \Theta(d(A, B))$ if either is at most some absolute constant. Because $d(A, B)$ is a metric, it automatically satisfies \cref{eq:tri,eq:sym}. Furthermore, $d(A,B) = d(A^{-1}, B^{-1})$ by direct calculation. Thus the following holds.
+For $D_{op}$, the result is \cite[Lemma C.1]{FM20}. For $D_F$, the result holds because because $D_F(A|| B) = \Theta(d(A, B))$ if either is at most some absolute constant (shown below). Because $d(A, B)$ is a metric, it automatically satisfies \cref{eq:tri,eq:sym}. Furthermore, $d(A,B) = d(A^{-1}, B^{-1})$ by direct calculation. We next consider the relationship between $D_F$ and other dissimilarity measures in the statistics literature.
 
+\begin{prop}[Relationships between dissimilarity measures.] There is a constant $c > 0$ such that the following holds. If any of $D_F(\Theta_1|| \Theta_2)$, $d_{TV}(\mathcal{N}(0, \Theta_1^{-1}), \mathcal{N}(0, \Theta_2^{-1})$, $d_{KL}(\mathcal{N}(0, \Theta_1^{-1}) || \mathcal{N}(0, \Theta_2^{-1})$ or the Fisher-Rao distance $d(\Theta_1, \Theta_2)$ is at most $c$, then 
+$$ D_F(\Theta_1|| \Theta_2) \asymp  d_{TV}(\mathcal{N}(0, \Theta_1^{-1}), \mathcal{N}(0, \Theta_2^{-1})^2 \asymp d_{KL}(\mathcal{N}(0, \Theta_1^{-1}) || \mathcal{N}(0, \Theta_2^{-1}) \asymp d(\Theta_1, \Theta_2).$$
+\end{prop}
+\begin{proof}
+For the relationship between $D_F(\Theta_1|| \Theta_2)^2$ and the Fisher-Rao distance $d(\Theta_1, \Theta_2)^2$, observe that the former is $\sum_{i = 1}^d (\lambda_i - 1)^2$ and the latter is $\sum_{i = 1}^d (\log \lambda_i)^2$ for the eigenvalues $\lambda_i$ of $\Theta_2^{-1} \Theta_1$. The relationship follows because in any fixed interval not containing $0$, $\lambda-1 \asymp \log \lambda$.
 
+To relate $D_F$ to the total variation distance, we use the following bound from \cite{devroye2018total}:
+$$.01  \leq \frac{d_{TV}(\mathcal{N}(0, \Theta_1^{-1}), \mathcal{N}(0, \Theta_2^{-1})}{D_F(\Theta_1 || \Theta_2)} \leq 1.5.$$ 
+This implies that if either the numerator or denominator is a small enough constant, then they are on the same order. 
+
+Next we reason for the relative entropy. If $D_{KL}(\mathcal{N}(0, \Theta_1^{-1}), \mathcal{N}(0, \Theta_2^{-1}) \leq c$ or $D_{op}(\Theta_2 || \Theta_1) \leq 1/2$, then we have 
+$$D_{KL}(\mathcal{N}(0, \Theta_1^{-1}), \mathcal{N}(0, \Theta_2^{-1})  \asymp D_{F}(\Theta_2 || \Theta_1)^2.$$ This bound can be seen explicitly from the formula 
+\begin{align*}D_{KL}(\mathcal{N}(0, \Theta_1^{-1}), \mathcal{N}(0, \Theta_2^{-1}) &= \frac{1}{2} \tr \Theta_1^{-1} \Theta_2 - \frac{1}{2}\log\det(\Theta_1^{-1} \Theta_2) - \frac{d}{2}\\
+& = \frac{1}{2} \sum_{i =1}^d (\lambda_i -1 -  \log \lambda_i)
+\end{align*}
+ where $\lambda_i \in 1 \pm D_{op}(\Theta_2||\Theta_1)$ are the eigenvalues of $\Theta_1^{-1} \Theta_2$ and the fact that $\lambda - 1 -\log\lambda \asymp  (\lambda - 1)^2$ on $[1/2, 3/2]$. Choose $c$ small enough that $\frac{1}{2}(\lambda - 1 -\log\lambda) \leq c $ implies $\lambda \in [1/2, 3/2]$. Finally, there is some absolute constant $c$ such that $D_F(\Theta_1 || \Theta_2) \leq c$ or $d(\Theta_1, \Theta_2) \leq c$ then $D_F(\Theta_1 || \Theta_2) \asymp d(\Theta_1, \Theta_2)$.\end{proof}
 \end{appendix}
 
 
