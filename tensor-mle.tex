@@ -1452,7 +1452,7 @@ Moreover, $f_x(P_1, P_2) \geq (1 - \frac{4 \eps^2}{\lambda}) \frac{\|x\|^2}{nD}$
 \end{theorem}
 
 \begin{corollary}
-There is a universal constant $C>0$ such that the following holds. Suppose $\|x\| = \sqrt{nD}$ and $0 \leq \eps, \lambda \leq 1$. If the completely positive map $\Phi^{(12)}$ defined in \cref{eq:hessian channel} is $\eps$-doubly balanced and has spectral gap~$\gamma$, where $\gamma^2 \geq C \eps \log d_{\min}.$ Then the MLE's $\htheta_1, \htheta_2$ satisfy
+There is a universal constant $C>0$ such that the following holds. Suppose $\|x\| = \sqrt{nD}$ and $0 \leq \eps, \gamma \leq 1$. If the completely positive map $\Phi^{(12)}$ defined in \cref{eq:hessian channel} is $\eps$-doubly balanced and has spectral gap~$\gamma$, where $\gamma^2 \geq C \eps \log d_{\min}.$ Then the MLE's $\htheta_1, \htheta_2$ satisfy
 \begin{align*}
   \max \{ \norm{\htheta_1 - I_{d_1}}_{\op}, \norm{\htheta_2 - I_{d_2}}_{\op} \} = O\Bigl(\frac{\eps \log d_{\min}}\gamma\Bigr).
 \end{align*}
@@ -1492,7 +1492,7 @@ We will prove \cref{thm:operator-cheeger} in \cref{app:cheeky} using techniques 
 This also improves our result on strong convexity (\cref{thm:ball-convexity}), which will be useful in the analysis of the flip-flop algorithm. Indeed, for $k = 2$, using \cref{thm:operator-cheeger} (in place of \cref{thm:hess-pisier}) with \cref{lem:expansion-convexity} in the proof of \cref{thm:tensor-convexity} improves the failure probability in \cref{thm:tensor-convexity} to $1 - e^{ - \Omega( d_{\min} \eps^2)}$. As in the proof of \cref{thm:ball-convexity}, combining this failure probability bound with \cref{convexRobustness} yields the next corollary. \CF{ok? I think instead of going into more detail, we'd restructure section 3 so we have a theorem like (expansion)->(convex in a ball). Otherwise things will get redundant}
 
 \begin{corollary}\label{cor:matrix-convexity}
-There are universal constants $C>0$ and $\lambda\in(0,1)$ such that the following holds.
+There are universal constants $C, c > 0$ and $\lambda\in(0,1)$ such that the following holds.
 Let $x=(x_1,\dots,x_n)$ be independent standard Gaussian random variables in~$\R^{d_1d_2}$, where $n \geq C \frac{d_{\max}}{d_{\min}} \max\{\log \frac{d_{\max}}{d_{\min}}, \frac1{\eps^2} \}$.
 Then, with probability at least $1 - e^{ - \Omega( d_{\min} \eps^2)}$, the function~$f_x$ is $(1-\lambda)$-strongly convex at any point $\Theta\in\P$ such that $\norm{\log\Theta}_{\op} \leq c$.
 \end{corollary}
@@ -1907,7 +1907,10 @@ Thus, by \cref{lem:fast-convergence-initial-generic}, we have that in $T = 24k \
 \subsection{Matrix flip-flop convergence}
 %-----------------------------------------------------------------------------
 
-We are now ready to state the matrix flip-flop algorithm and prove its fast convergence to the MLE. The proof strategy of this section is similar to the tensor normal model case, except that now we will bound the distance to the MLE in the operator norm. \RMO{I will write more stuff here later}
+We are now ready to state the matrix flip-flop algorithm and prove its fast convergence to the MLE. 
+The proof strategy of this section is different from the tensor normal model case, as now, the number of samples is not large enough to guarantee that the initial conditions from \cref{lem:fast-convergence-initial-generic} will apply with high probability.
+
+Thus, we will first have to obtain a scaling... \RMO{write more later}
 
 \begin{Algorithm}
 \textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^{d_1 \times d_2}$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. \\ 
@@ -1917,8 +1920,6 @@ Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
 
 \textbf{Algorithm}:
 \begin{enumerate}
-\item Preprocess input by scaling sample vectors $x_i$ to become $\dfrac{1}{\tr \rho} \cdot x_i$, where $\displaystyle \rho = \dfrac{1}{n d_1 d_2} \cdot \sum_{i=1}^n x_i x_i^\dagger$ 
-
 \item\label{it:flip-flop step 1 matrix} Set $\otheta_a = I_a$ for each $a \in \{1,2\}$, and $\delta = \dfrac{\eps \lambda}{8 \dmax^{3/2}}$.
 
 \vspace{5pt}
@@ -1939,24 +1940,40 @@ If $\norm{\nabla_a}_{op} < \delta$, output $\otheta$ and return.
 
 \vspace{5pt}
 
-\item Otherwise, set $\otheta_a \leftarrow \dfrac{\tr \rho}{d_a} \cdot \otheta_a^{1/2} \cdot (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$, where $\rho = \otheta^{1/2} \cdot \left( \sum_{i=1}^n x_i x_i^\dagger \right) \cdot \otheta^{1/2}$.
+\item Otherwise, set $\otheta_a \leftarrow \dfrac{1}{d_a} \cdot \otheta_a^{1/2} \cdot (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$, where $\rho = \dfrac{1}{n d_1 d_2} \otheta^{1/2} \cdot \left( \sum_{i=1}^n x_i x_i^\dagger \right) \cdot \otheta^{1/2}$.
 \end{itemize}
 \end{enumerate}
 \caption{Matrix flip-flop algorithm}\label{alg:flip-flop matrix}
 \end{Algorithm}
 
-In the same spirit as in the tensor normal model case, all we need for \cref{alg:flip-flop matrix} to be correct is for our initial samples to satisfy the initial conditions of \cref{lem:fast-convergence-initial-generic}.
 
 \begin{lemma}[Initial Conditions Matrix Normal Model]\label{lem:matrix-normal-initial-conditions}
-There exist absolute constants $\Gamma, \gamma > 0$ such that the following holds.
-	When the number of samples $n \geq TODO$, with probability at least $TODO$ we have that the following conditions hold:
+There exist absolute constants $\Gamma, \gamma > 0$ and $\lambda \in (0,1)$ such that the following holds.
+	When the number of samples 
+	$$n \geq \Gamma \cdot \dfrac{\dmax}{\dmin} \cdot \max\left\{ \log \dfrac{\dmax}{\dmin}, \ \dfrac{\log^2 \dmin}{\varepsilon^2}  \right\},$$ 
+	with probability at least $TODO$ we have that the following conditions hold:
 	\begin{enumerate}
-		\item $|\nabla_0 f_x(I)| \leq \frac{\gamma}{100 k \dmax^{1/2}}$
-		\item $\norm{\nabla f_x(I)}_F \leq \dfrac{\gamma}{4 \sqrt{(k+1)\dmax}}$ 
-		\item $f_x$ is $\frac{1}{2}$-strongly geodesically convex at 
-		$B_r(I_D)$, where $r = \dfrac{\gamma}{\sqrt{(k+1) \dmax}}$
+		\item $|\nabla_0 f_x(I)| \leq \frac{\gamma}{100}$
+		\item The MLE's $\htheta_1, \htheta_2$ satisfy $\ \ \norm{\htheta_i - I_{d_i}}_{op} \leq \gamma/2, \ \ $ for $i \in \{1,2\}$
+		\item $f_x$ is $\lambda$-strongly geodesically convex at any $\Theta \in \SPD$ such that $\norm{\log \Theta}_{op} \leq \gamma$.
 	\end{enumerate}
 \end{lemma}
+
+\begin{proof}
+Condition 1 follows from \cref{prop:gradient-bound} with parameters...
+
+To obtain condition 2, Let $C_2 > 0$ and $\nu \in (0,1)$ be the universal constants from \cref{thm:operator-cheeger}.
+With the number of samples as above, so long as $\Gamma > C_2$, with probability $\geq 1 - e^{- \Omega(\dmin \varepsilon^2)}$ we obtain that 
+$\Phi_x$ is an $\left(\varepsilon \sqrt{\dfrac{\dmin}{n \dmax}}, \nu \right)$-quantum expander. Note that with our number of samples, we have
+$$ \varepsilon \sqrt{\dfrac{\dmin}{n \dmax}} \leq \dfrac{\varepsilon^2}{\sqrt{\Gamma} \cdot \log \dmin}.  $$
+If 
+
+Let $C_1, \gamma > 0, \eta \in (0,1)$ be the universal constants from \cref{cor:matrix-convexity}. 
+If $\Gamma > C_1$, then with probability 
+$\geq 1 - e^{- \Omega(\dmin \varepsilon^2)}$ we have that $f_x$ is
+$(1-\eta)$-strongly convex at $\Theta \in \SPD$ such that 
+$\norm{\log(\Theta)}_{op} \leq \gamma$. Setting $\lambda = 1-\eta$ we obtain condition 3.
+\end{proof}
 
 \begin{theorem}[Restatement of \cref{thm:matrix-flipflop}]
 Let $(\widehat{\Theta}_1,\widehat{\Theta}_2)$ denote the MLE for $(\Theta_1,\Theta_2)$.
