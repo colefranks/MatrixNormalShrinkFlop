@@ -1656,8 +1656,6 @@ Before we formally state the flip-flop algorithm with the proper parameters, we 
 
 We can now describe the flip-flop algorithm.
 
-\RMO{Preprocessing the input to assume that the initial trace is 1, so that we get $\nabla_0 f_x  = 0$. This simplifies our descent lemma.}
-
 
 \begin{Algorithm}
 \textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. \\ Approximation parameter $0 < \delta < 1$, given in binary representation. \\[.3ex]
@@ -1666,8 +1664,6 @@ We can now describe the flip-flop algorithm.
 
 \textbf{Algorithm}:
 \begin{enumerate}
-\item\label{it:flip-flop preprocessing} Preprocess the input by scaling sample vectors $x_i$ by $\dfrac{1}{\tr \rho} \cdot x_i$, where $\rho = \dfrac{1}{nD} \cdot \sum_{i=1}^n x_i x_i^\dagger$
-
 \item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$. 
 %$\delta = \dfrac{\eps^2}{16 k^2 \dmax^{3/2}}$. for tensor normal model
 
@@ -1689,7 +1685,7 @@ If $\norm{\nabla_a}_F < \delta$, output $\otheta$ and return.
 
 \vspace{5pt}
 
-\item Otherwise, set $\otheta_a \leftarrow  \dfrac{\tr[\rho]}{d_a} \cdot \otheta_a^{1/2} (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$, where $\rho = \otheta^{1/2} \left( \sum_{i=1}^n x_ix_i^\dagger \right) \otheta^{1/2}.$
+\item Otherwise, set $\otheta_a \leftarrow  \dfrac{1}{d_a} \cdot \otheta_a^{1/2} (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$, where $\rho = \dfrac{1}{nD} \cdot  \otheta^{1/2} \left( \sum_{i=1}^n x_ix_i^\dagger \right) \otheta^{1/2}.$
 \end{itemize}
 \end{enumerate}
 \caption{Generic flip-flop algorithm}\label{alg:flip-flop}
@@ -1732,33 +1728,33 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 	which implies $m \leq \frac{1}{\alpha \lambda}$. This concludes our proof.
 \end{proof}
 
-The following proposition shows that the trace part of the log-likelihood remains unchanged by the flip-flop algorithm.
-Thus, the proposition below proves to us that $\nabla_0 f_x(\Theta)$ will remain unchanged at each iteration.
+The following proposition shows that after the first step of the flip-flop algorithm, the trace part of the log-likelihood remains unchanged by the flip-flop algorithm.
+Thus, the proposition below proves that $\nabla_0 f_x(\Theta) = 0$ after the first iteration. Henceforth, we shall assume that the trace part of the log-likelihood function is 1.
 
-\begin{prop}[Trace Invariance]
-	Let $\Theta$ and $\Upsilon$ be successive scalings produced by the flip-flop algorithm, and let $\rho_\Theta := \Theta^{1/2} \cdot \sum_{i=1}^n x_i x_i^\dagger \cdot \Theta^{1/2}$ and $\rho_\Upsilon := \Upsilon^{1/2} \cdot \sum_{i=1}^n x_i x_i^\dagger \cdot \Upsilon^{1/2}$. 
-	Then $\tr \rho_\Theta = \tr \rho_\Upsilon$.
+\begin{prop}[Trace Invariance]\label{prop:trace-invariance}
+	Let $\Theta$ and $\Upsilon$ be successive scalings produced by the flip-flop algorithm, and let 
+	$$\rho_\Theta := \dfrac{1}{nD} \cdot \Theta^{1/2} \cdot \sum_{i=1}^n x_i x_i^\dagger \cdot \Theta^{1/2} \ \text{ and } \ \rho_\Upsilon := \dfrac{1}{nD} \cdot \Upsilon^{1/2} \cdot \sum_{i=1}^n x_i x_i^\dagger \cdot \Upsilon^{1/2}.$$ 
+	If $\tr \rho_\Theta = 1$, then $\tr \rho_\Upsilon = 1$.
 \end{prop}
 
 \begin{proof}
 	Since $\Upsilon$ is the successive scaling from $\Theta$, we have that
 	there is $a \in [k]$ such that
-	$$\Upsilon_a = \dfrac{\tr \rho_\Theta}{d_a} \cdot \Theta_a^{1/2} (\rho_\Theta^{(a)})^{-1} \Theta_a^{1/2} $$
+	$$\Upsilon_a = \dfrac{1}{d_a} \cdot \Theta_a^{1/2} (\rho_\Theta^{(a)})^{-1} \Theta_a^{1/2} $$
 	and $\Upsilon_b = \Theta_b$ for all $b \neq a$. Let $E_{(a)} = I_1 \otimes \cdots \otimes I_{a-1} \otimes (\rho_\Theta^{(a)})^{-1} \otimes I_{a+1} \otimes \cdots \otimes I_k$.
 	Thus, we have:
 	\begin{align*}
 		\tr \rho_\Upsilon 
-		&= \tr\left[ \Upsilon^{1/2} \sum_{i=1}^n x_i x_i^\dagger \cdot \Upsilon^{1/2} \right] 
-		= \tr\left[ \Upsilon \sum_{i=1}^n x_i x_i^\dagger \right] \\
-		&= \tr\left[ \dfrac{\tr \rho_\Theta}{d_a} \cdot \Theta^{1/2} E_{(a)} \Theta^{1/2} \cdot \sum_{i=1}^n x_i x_i^\dagger \right] = \dfrac{\tr \rho_\Theta}{d_a} \cdot \tr\left[ E_{(a)} \rho_\Theta \right] \\
-		&= \dfrac{\tr \rho_\Theta}{d_a} \cdot \tr\left[ (\rho_\Theta^{(a)})^{-1} \rho_\Theta^{(a)} \right] = \tr \rho_\Theta
+		&= \dfrac{1}{nD} \cdot \tr\left[ \Upsilon^{1/2} \sum_{i=1}^n x_i x_i^\dagger \cdot \Upsilon^{1/2} \right] 
+		= \dfrac{1}{nD} \cdot \tr\left[ \Upsilon \sum_{i=1}^n x_i x_i^\dagger \right] \\
+		&= \dfrac{1}{nD} \cdot \tr\left[ \dfrac{1}{d_a} \cdot \Theta^{1/2} E_{(a)} \Theta^{1/2} \cdot \sum_{i=1}^n x_i x_i^\dagger \right] 
+		= \dfrac{1}{d_a} \cdot \tr\left[ E_{(a)} \rho_\Theta \right] \\
+		&= \dfrac{1}{d_a} \cdot \tr\left[ (\rho_\Theta^{(a)})^{-1} \rho_\Theta^{(a)} \right] = 1
 	\end{align*}
 \end{proof}
 
-\RMO{Assuming trace is one for this next lemma - otherwise it gets a little ugly in the end.}
-
 \begin{lemma}[Descent Lemma]\label{lem:tensor-descent-lemma}
-	If $\Theta, \Upsilon$ are successive scalings from the flip-flop algorithm, then we have:
+	If $\Theta, \Upsilon$ are successive scalings from the flip-flop algorithm, such that $\nabla_0 f(\Theta) = \nabla_0 f(\Upsilon) = 0$, then we have:
 	$$ f_x(\Upsilon) \leq f_x(\Theta) - \dfrac{1}{6} \cdot \min\left\{ \dfrac{1}{\dmax} \ , \ \dfrac{\norm{\nabla f_x(\Theta)}_F^2}{k} \right\} $$
 \end{lemma}
 
@@ -1766,9 +1762,8 @@ Thus, the proposition below proves to us that $\nabla_0 f_x(\Theta)$ will remain
 	Let
 	$$\rho := \dfrac{1}{nD} \cdot  \Theta^{1/2} \cdot \left( \sum_{i=1}^n x_i x_i^\dagger \right) \cdot \Theta^{1/2}.$$
 	Additionally, let $a \in [k]$ be such that $\nabla_a := \nabla_a f_x(\Theta)$ has largest norm.
-	As $\Upsilon$ is the successive scaling, and we are assuming that $\tr \rho =1$, we have that $\Upsilon_b = \Theta_b$ when $b \neq a$ and
+	As $\Upsilon$ is the successive scaling, we have that $\Upsilon_b = \Theta_b$ when $b \neq a$ and
 	$$ \Upsilon_a = \dfrac{1}{d_a} \cdot \Theta_a^{1/2} \cdot (\rho^{(a)})^{-1} \cdot \Theta_a^{1/2}. $$
-	%= \det(d_a \cdot \rho^{(a)})^{1/d_a} \cdot \Theta_a^{1/2} \cdot (d_a \cdot \rho^{(a)})^{-1} \cdot \Theta_a^{1/2}
 	In particular, the above means that we can write $\Upsilon$ in the following way:
 	$$ \Upsilon = \Theta^{1/2} \cdot  E_{(a)} \cdot \Theta^{1/2} $$
 	where $E_{(a)} = I_1 \otimes \cdots \otimes I_{a-1} \otimes \left( \dfrac{1}{d_a} \cdot (\rho^{(a)})^{-1} \right) \otimes I_{a+1} \otimes \cdots \otimes I_k$.
@@ -1777,11 +1772,13 @@ Thus, the proposition below proves to us that $\nabla_0 f_x(\Theta)$ will remain
 		f_x(\Upsilon) &= \dfrac{1}{nD} \sum_{i=1}^n \langle x_i , \Upsilon x_i \rangle - \dfrac{1}{D} \log \det(\Upsilon) \\
 		&= \dfrac{1}{nD} \tr\left[ \Upsilon \cdot  \sum_{i=1}^n x_i x_i^\dagger  \right] - \dfrac{1}{D} \log \det(\Upsilon) \\
 		&= \dfrac{1}{nD} \tr\left[ \Theta^{1/2} \cdot  E_{(a)} \cdot \Theta^{1/2}  \cdot  \sum_{i=1}^n x_i x_i^\dagger  \right] - \dfrac{1}{D} \log \det(\Theta^{1/2} \cdot  E_{(a)} \cdot \Theta^{1/2}) \\
-		&= \dfrac{1}{nD} \tr\left[  E_{(a)} \cdot \rho  \right] - \dfrac{1}{D} \left( \log \det(E_{(a)}) + \log\det(\Theta) \right) \\
-		&= \dfrac{1}{nD} \tr\left[ \dfrac{\tr \rho}{d_a} \cdot (\rho^{(a)})^{-1} \cdot \rho^{(a)}  \right] - \dfrac{1}{D} \left( \log \det(E_{(a)}) + \log\det(\Theta) \right) \\
+		&= \tr\left[  E_{(a)} \cdot \rho  \right] - \dfrac{1}{D} \left( \log \det(E_{(a)}) + \log\det(\Theta) \right) \\
+		&= \tr\left[ \dfrac{1}{d_a} \cdot (\rho^{(a)})^{-1} \cdot \rho^{(a)}  \right] - \dfrac{1}{D} \left( \log \det(E_{(a)}) + \log\det(\Theta) \right) \\
 		&= f_x(\Theta) + \dfrac{1}{D} \cdot \log \det\left( E_{(a)}^{-1} \right) \\
 		&= f_x(\Theta) + \frac{1}{d_a} \cdot  \log\det\left( d_a \cdot \rho^{(a)} \right)
 	\end{align*}
+	Where in the second to last equality we used \cref{lem:gradient} and the assumption $\nabla_0 f(\Theta) = 0$ to get $\tr \rho = 1$. 
+	
 	Lemma 5.1 from~\cite{GGOW19} states that for any $d$-dimensional PSD matrix $Z$ of trace $d$, the following inequality holds:
 	$$ \log\det(Z) \leq \max\left\{- \dfrac{\norm{Z - I_d}_F^2}{6}, - \dfrac{1}{6} \right\}. $$
 	Since $\tr \rho^{(a)} = \tr \rho = 1$, if $\norm{d_a \rho^{(a)} - I_a}_F \leq 1$ we obtain that:
@@ -1800,8 +1797,7 @@ We now have all the lemmas we need to prove that, given appropriate initial cond
 \begin{lemma}[Fast Convergence from Initial Conditions]\label{lem:fast-convergence-initial-generic}
 	Let $x_1, \ldots, x_n \in \R^D$ be samples satisfying the following conditions:
 	\begin{enumerate}
-		\item $|\nabla_0 f_x(I_D)| \leq 1$
-		\item $\norm{\nabla f_x (I_D)}_F \leq \dfrac{r}{4} \leq 1$
+		\item $\norm{\nabla f_x (I_D)}_F < \dfrac{r \lambda}{2} \leq 1$
 		\item $f_x$ is $\lambda$-strongly geodesically convex at $B_r(I_D)$
 	\end{enumerate}
 	Then, in $T = \dfrac{12k\dmax}{\lambda} \cdot \log\left( \dfrac{4 \dmax^{3/2}}{\eps \lambda} \right)$ iterations, \cref{alg:flip-flop} outputs an estimator $\otheta$ such that $\forall \ a \in [k]$
@@ -1834,8 +1830,6 @@ We are now ready to state the tensor flip-flop algorithm and prove its fast conv
 
 \textbf{Algorithm}:
 \begin{enumerate}
-\item\label{it:flip-flop preprocessing} Preprocess the input by scaling sample vectors $x_i$ by $\dfrac{1}{\tr \rho} \cdot x_i$, where $\rho = \dfrac{1}{nD} \cdot \sum_{i=1}^n x_i x_i^\dagger$
-
 \item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$, and 
 $\delta = \dfrac{\eps}{8 \dmax^{3/2}}$. 
 
@@ -1856,7 +1850,7 @@ If $\norm{\nabla_a}_F < \delta$, output $\otheta$ and return.
 
 \vspace{5pt}
 
-\item Otherwise, set $\otheta_a \leftarrow  \dfrac{\tr[\rho]}{d_a} \cdot \otheta_a^{1/2} (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$, where $\rho = \otheta^{1/2} \left( \sum_{i=1}^n x_ix_i^\dagger \right) \otheta^{1/2}.$
+\item Otherwise, set $\otheta_a \leftarrow  \dfrac{1}{d_a} \cdot \otheta_a^{1/2} (\rho^{(a)})^{-1} \cdot \otheta_a^{1/2}$, where $\rho = \dfrac{1}{nD} \cdot \otheta^{1/2} \left( \sum_{i=1}^n x_ix_i^\dagger \right) \otheta^{1/2}.$
 \end{itemize}
 \end{enumerate}
 \caption{Tensor flip-flop algorithm}\label{alg:tensor-flip-flop}
@@ -1868,8 +1862,7 @@ If $\norm{\nabla_a}_F < \delta$, output $\otheta$ and return.
 	There exist absolute constants $\Gamma, \gamma > 0$ such that the following holds.
 	When the number of samples $n \geq \Gamma \cdot k^2 \cdot \dmax^3/D$, with probability at least $1 - k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)} - 2k \cdot e^{- \Omega(nD/k \dmax^2)}$ we have that the following conditions hold:
 	\begin{enumerate}
-		\item $|\nabla_0 f_x(I)| \leq \frac{\gamma}{100 k \dmax^{1/2}}$
-		\item $\norm{\nabla f_x(I)}_F \leq \dfrac{\gamma}{4 \sqrt{(k+1)\dmax}}$ 
+		\item $\norm{\nabla f_x(I)}_F < \dfrac{\gamma}{4 \sqrt{(k+1)\dmax}}$ 
 		\item $f_x$ is $\frac{1}{2}$-strongly geodesically convex at 
 		$B_r(I_D)$, where $r = \dfrac{\gamma}{\sqrt{(k+1) \dmax}}$
 	\end{enumerate}
@@ -1887,9 +1880,9 @@ If $\norm{\nabla_a}_F < \delta$, output $\otheta$ and return.
 	if the number of samples satisfies 
 	$n \geq \dfrac{10^4 k^2 \dmax^3}{\gamma^2 \cdot D}$ then with probability at most
 	$$2 k \cdot \exp\left(- \frac{n D \gamma^2}{128 (k+1) \dmax^2}\right) = 2k \cdot e^{- \Omega(nD/k \dmax^2)}$$
-	the first two conditions will fail to hold.
+	the first condition will fail to hold.
 
-	Letting $\Gamma = \max\{350/\gamma^2, C \}$, having $n \geq \Gamma k^2 \dmax^3/D$ samples gives a sample upper bound that holds for both situations above.
+	Letting $\Gamma = \max\{10^4/\gamma^2, C \}$, having $n \geq \Gamma k^2 \dmax^3/D$ samples gives a sample upper bound that holds for both situations above.
 	Thus, by the union bound, with probability at most
 	$$ k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)} - 2k \cdot e^{- \Omega(nD/k \dmax^2)} $$
 	one of the conditions 1 or 2 will fail to hold. This concludes our proof.
@@ -1898,7 +1891,7 @@ If $\norm{\nabla_a}_F < \delta$, output $\otheta$ and return.
 \begin{theorem}[Restatement of \cref{thm:tensor-flipflop}]
 	If $\htheta$ denotes the MLE estimator for $\Theta$, then provided $n = \Omega(k^2 \cdot \dmax^3/D)$, the flip-flop algorithm computes $\otheta$ with
 	$$ D_F(\htheta_a \ || \ \otheta_a) \leq \eps $$
-	in $O(k \log(k \dmax/\eps))$ iterations with probability at least
+	in $O(k \dmax \log(\dmax/\eps))$ iterations with probability at least
 	$$ 1 - k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)} - 2k \cdot e^{- \Omega(nD/k \dmax^2)}.$$
 \end{theorem}
 
