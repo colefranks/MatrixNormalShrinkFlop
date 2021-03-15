@@ -1975,6 +1975,9 @@ If $C_3, c_3 > 1$ are the universal constants from \cref{cor:klr}, so long as
 $\Gamma \geq \dfrac{4 C_3^2 c_3^2}{\gamma^2 (1-\nu)^4}$, we have that
 $\Phi_x^{(12)}$ has spectral gap $1 - \nu$ and it satisfies
 $$ C_3 \log \dmin \cdot \varepsilon \sqrt{\dfrac{\dmin}{n \dmax}} \leq C_3 \log \dmin \cdot  \dfrac{\varepsilon^2}{\sqrt{\Gamma} \cdot \log \dmin} \leq \dfrac{\varepsilon^2 \gamma (1-\nu)^2}{2} \leq (1-\nu)^2. $$
+
+\RMO{need to change the norm hypothesis in \cref{cor:klr} }
+
 Thus, the hypotheses of \cref{cor:klr} apply and we have that the MLE's $\htheta_1, \htheta_2$ satisfy: 
 $$ \norm{\htheta_i - I_{d_i}}_{op} \leq c_3 \cdot \varepsilon \sqrt{\dfrac{\dmin}{n \dmax}} \cdot \dfrac{\log \dmin}{1-\nu} \leq c_3 \cdot \dfrac{\varepsilon^2}{\sqrt{\Gamma} \cdot \log \dmin} \cdot \dfrac{\log \dmin}{1-\nu} \leq \dfrac{\gamma}{2}. $$
 
@@ -1988,17 +1991,34 @@ Thus, so long as $\Gamma \geq \max\left\{ C_1, C_2, \ \dfrac{4 C_3^2 c_3^2}{\gam
 $$ 1 - 6 e^{- \gamma^2 n \dmin/32} - e^{- \Omega(\dmin \varepsilon^2)} = 1 - e^{- \Omega(\dmin \varepsilon^2)}. $$
 \end{proof}
 
+To prove that flip-flop works once the initial conditions are satisfied, we need the following general lemma (\cite[Lemma 4.7]{FM20}) on strongly geodesically convex functions, which tells us that once our gradient is small then we must be inside a sublevel set of our function which is contained in a ball where our function is strongly convex. 
+
+\begin{lemma}[\cite{FM20}]
+Suppose that $f : \SPD \to \R$ is geodesically $\lambda$-strongly convex on the geodesic ball of radius $\kappa$ about $\theta$, and that $\nabla f(\theta) = 0$. 
+If $\norm{\nabla f(\Upsilon)}_F < \lambda \kappa/8$, then $\Upsilon$ is contained in a sublevel set of $f$ on which $f$ is geodesically $\lambda$-strongly convex.
+\end{lemma}
+
+\RMO{Should I put your proof here, Cole? It is not quite stated in the same setting as ours, but it is so close...}
+
+We are now ready to prove our main theorem of this subsection: it says that as soon as the estimation in operator norm works, then the flip-flop converges exponentially fast to the minimizer.
+
 \begin{theorem}[Restatement of \cref{thm:matrix-flipflop}]
-Let $(\widehat{\Theta}_1,\widehat{\Theta}_2)$ denote the MLE for $(\Theta_1,\Theta_2)$.
-Given $n \geq \TODO{}$ samples of the matrix normal model, the flip-flop algorithm computes $(\overline{\Theta}_1,\overline{\Theta}_2)$ with
+Let $(\widehat{\Theta}_1,\widehat{\Theta}_2)$ denote the MLE for $(\Theta_1,\Theta_2)$. There exists a universal constant $\Gamma > 0$ such that when given 
+$$n \geq \Gamma \cdot \dfrac{\dmax}{\dmin} \cdot \max\left\{ \log\left( \dfrac{\dmax}{\dmin} \right), \dfrac{\log^2 \dmin}{\varepsilon^2} \right\}$$ 
+samples in the matrix normal model, the flip-flop algorithm computes $(\overline{\Theta}_1,\overline{\Theta}_2)$ with
 \begin{align*}
   D_{op}(\overline{\Theta}_a, \widehat{\Theta}_a) \leq \eps
 \end{align*}
-for $a\in\{1,2\}$ in $O(\TODO{\log(1/\eps)})$ iterations, with probability at least \TODO{}.
+for $a\in\{1,2\}$ in $O(\TODO{\log(1/\eps)})$ iterations, with probability at least $1 - e^{- \Omega(\dmin \varepsilon^2)}$.
 \end{theorem}
 
+\begin{proof}
+If we take $\Gamma$ to be the universal constant according to \cref{lem:matrix-normal-initial-conditions}, with probability at least $1 - e^{- \Omega(\dmin \varepsilon^2)}$ we have that the conditions of \cref{lem:matrix-normal-initial-conditions} are satisfied.
 
-\CF{prove that flip-flop works as soon as estimation in operator norm works. This goes by using KLR to show strong convexity holds in a ball about the optimizer}.
+After we perform the first normalization step of the flip-flop algorithm, we obtain a scaling $\otheta$ such that $\nabla_0 f_x (\otheta) = 0$. 
+Moreover, after each subsequent step $\Upsilon$ we maintain that $\nabla_0 f_x (\Upsilon) = 0$.
+Thus, \Cref{lem:tensor-descent-lemma} applies and we obtain that 
+\end{proof}
 
 
 %=============================================================================
