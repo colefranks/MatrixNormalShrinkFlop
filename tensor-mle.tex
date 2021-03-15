@@ -1451,7 +1451,7 @@ If the completely positive map $\Phi^{(12)}$ defined in \cref{eq:hessian channel
 Moreover, $f_x(P_1, P_2) \geq (1 - \frac{4 \eps^2}{\lambda}) \frac{\|x\|^2}{nD}$. \MW{XX}
 \end{theorem}
 
-\begin{corollary}
+\begin{corollary}\label{cor:klr}
 There is a universal constant $C>0$ such that the following holds. Suppose $\|x\| = \sqrt{nD}$ and $0 \leq \eps, \gamma \leq 1$. If the completely positive map $\Phi^{(12)}$ defined in \cref{eq:hessian channel} is $\eps$-doubly balanced and has spectral gap~$\gamma$, where $\gamma^2 \geq C \eps \log d_{\min}.$ Then the MLE's $\htheta_1, \htheta_2$ satisfy
 \begin{align*}
   \max \{ \norm{\htheta_1 - I_{d_1}}_{\op}, \norm{\htheta_2 - I_{d_2}}_{\op} \} = O\Bigl(\frac{\eps \log d_{\min}}\gamma\Bigr).
@@ -1908,9 +1908,13 @@ Thus, by \cref{lem:fast-convergence-initial-generic}, we have that in $T = 24k \
 %-----------------------------------------------------------------------------
 
 We are now ready to state the matrix flip-flop algorithm and prove its fast convergence to the MLE. 
-The proof strategy of this section is different from the tensor normal model case, as now, the number of samples is not large enough to guarantee that the initial conditions from \cref{lem:fast-convergence-initial-generic} will apply with high probability.
+The proof strategy of this section is a bit different from the tensor normal model case, as now, the number of samples is not large enough to guarantee that the initial conditions from \cref{lem:fast-convergence-initial-generic} will apply with high probability.
 
-Thus, we will first have to obtain a scaling... \RMO{write more later}
+However, we can proceed as in~\cite{FM20} and use the results from~\cite{KLR19} to show that the MLE is in a constant ball (in operator norm) around the identity. 
+Then, using the fact that our log-likelihood is strongly geodesically convex around the MLE, we can use~\cite[Lemma 4.7]{FM20} to prove that any scaling with small gradient of the log-likelihood function will be close to the MLE.
+Thus, from our initial samples, after we apply flip-flop for a large enough number of iterations, we will obtain a scaling where the log-likelihood function is strongly geodesically convex in its sublevel set around the minimizer, and thereby we can now apply \cref{lem:descent-sublevel-set} and obtain a minimizer in $\log(1/\varepsilon)$ iterations.
+
+ 
 
 \begin{Algorithm}
 \textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^{d_1 \times d_2}$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. \\ 
@@ -1951,28 +1955,37 @@ If $\norm{\nabla_a}_{op} < \delta$, output $\otheta$ and return.
 There exist absolute constants $\Gamma, \gamma > 0$ and $\lambda \in (0,1)$ such that the following holds.
 	When the number of samples 
 	$$n \geq \Gamma \cdot \dfrac{\dmax}{\dmin} \cdot \max\left\{ \log \dfrac{\dmax}{\dmin}, \ \dfrac{\log^2 \dmin}{\varepsilon^2}  \right\},$$ 
-	with probability at least $TODO$ we have that the following conditions hold:
+	with probability at least $1 - e^{- \Omega(\dmin \varepsilon^2)}$ we have that the following conditions hold:
 	\begin{enumerate}
-		\item $|\nabla_0 f_x(I)| \leq \frac{\gamma}{100}$
+		\item $|\nabla_0 f_x(I)| \leq \frac{\gamma}{2}$
 		\item The MLE's $\htheta_1, \htheta_2$ satisfy $\ \ \norm{\htheta_i - I_{d_i}}_{op} \leq \gamma/2, \ \ $ for $i \in \{1,2\}$
 		\item $f_x$ is $\lambda$-strongly geodesically convex at any $\Theta \in \SPD$ such that $\norm{\log \Theta}_{op} \leq \gamma$.
 	\end{enumerate}
 \end{lemma}
 
 \begin{proof}
-Condition 1 follows from \cref{prop:gradient-bound} with parameters...
+By \cref{prop:gradient-bound}, so long as $\Gamma \geq 4/\gamma$, with probability $\geq 1 - 6 e^{- \gamma^2 n \dmin/32}$ we have that 
+$$ |\nabla_0 f_x(I)| \leq  \frac{\gamma}{2}. $$ 
 
 To obtain condition 2, Let $C_2 > 0$ and $\nu \in (0,1)$ be the universal constants from \cref{thm:operator-cheeger}.
 With the number of samples as above, so long as $\Gamma > C_2$, with probability $\geq 1 - e^{- \Omega(\dmin \varepsilon^2)}$ we obtain that 
 $\Phi_x$ is an $\left(\varepsilon \sqrt{\dfrac{\dmin}{n \dmax}}, \nu \right)$-quantum expander. Note that with our number of samples, we have
 $$ \varepsilon \sqrt{\dfrac{\dmin}{n \dmax}} \leq \dfrac{\varepsilon^2}{\sqrt{\Gamma} \cdot \log \dmin}.  $$
-If 
+If $C_3, c_3 > 1$ are the universal constants from \cref{cor:klr}, so long as 
+$\Gamma \geq \dfrac{4 C_3^2 c_3^2}{\gamma^2 (1-\nu)^4}$, we have that
+$\Phi_x^{(12)}$ has spectral gap $1 - \nu$ and it satisfies
+$$ C_3 \log \dmin \cdot \varepsilon \sqrt{\dfrac{\dmin}{n \dmax}} \leq C_3 \log \dmin \cdot  \dfrac{\varepsilon^2}{\sqrt{\Gamma} \cdot \log \dmin} \leq \dfrac{\varepsilon^2 \gamma (1-\nu)^2}{2} \leq (1-\nu)^2. $$
+Thus, the hypotheses of \cref{cor:klr} apply and we have that the MLE's $\htheta_1, \htheta_2$ satisfy: 
+$$ \norm{\htheta_i - I_{d_i}}_{op} \leq c_3 \cdot \varepsilon \sqrt{\dfrac{\dmin}{n \dmax}} \cdot \dfrac{\log \dmin}{1-\nu} \leq c_3 \cdot \dfrac{\varepsilon^2}{\sqrt{\Gamma} \cdot \log \dmin} \cdot \dfrac{\log \dmin}{1-\nu} \leq \dfrac{\gamma}{2}. $$
 
 Let $C_1, \gamma > 0, \eta \in (0,1)$ be the universal constants from \cref{cor:matrix-convexity}. 
 If $\Gamma > C_1$, then with probability 
 $\geq 1 - e^{- \Omega(\dmin \varepsilon^2)}$ we have that $f_x$ is
 $(1-\eta)$-strongly convex at $\Theta \in \SPD$ such that 
 $\norm{\log(\Theta)}_{op} \leq \gamma$. Setting $\lambda = 1-\eta$ we obtain condition 3.
+
+Thus, so long as $\Gamma \geq \max\left\{ C_1, C_2, \ \dfrac{4 C_3^2 c_3^2}{\gamma^2 (1-\nu)^4}  \right\}$, then all of the conditions above are satisfied on the required number of samples, and by a union bound all three events above happen with probability at least
+$$ 1 - 6 e^{- \gamma^2 n \dmin/32} - e^{- \Omega(\dmin \varepsilon^2)} = 1 - e^{- \Omega(\dmin \varepsilon^2)}. $$
 \end{proof}
 
 \begin{theorem}[Restatement of \cref{thm:matrix-flipflop}]
