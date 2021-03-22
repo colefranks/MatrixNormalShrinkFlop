@@ -1457,22 +1457,21 @@ Moreover, $f_x(P_1, P_2) \geq (1 - \frac{4 \eps^2}{\lambda}) \frac{\|x\|^2}{nD}$
 \end{theorem}
 
 \begin{corollary}\label{cor:klr}
-There is a universal constant $C>0$ such that the following holds. Suppose $\|x\| = \sqrt{nD}$ and $0 \leq \eps, \gamma \leq 1$. If the completely positive map $\Phi^{(12)}$ defined in \cref{eq:hessian channel} is $\eps$-doubly balanced and has spectral gap~$\gamma$, where $\gamma^2 \geq C \eps \log d_{\min}.$ Then the MLE's $\htheta_1, \htheta_2$ satisfy
+There is a universal constant $C>0$ such that the following holds. Suppose $\|x\| = \sqrt{nD}$ and $0 \leq \eps, \gamma \leq 1$. Suppose the completely positive map $\Phi^{(12)}$ defined in \cref{eq:hessian channel} is $\eps$-doubly balanced and has spectral gap~$\gamma$, where $\gamma^2 \geq C \eps \log d_{\min}.$ Further suppose that $\|x\|^2/nD = 1 + \delta$ where $|\delta| \leq .5$.  Then the MLE's $\htheta_1, \htheta_2$ satisfy
 \begin{align*}
-  \max \{ \norm{\htheta_1 - I_{d_1}}_{\op}, \norm{\htheta_2 - I_{d_2}}_{\op} \} = O\Bigl(\frac{\eps \log d_{\min}}\gamma\Bigr).
+  \max \{ \norm{\htheta_1 - I_{d_1}}_{\op}, \norm{\htheta_2 - I_{d_2}}_{\op} \} = O\Bigl(\delta + \frac{\eps \log d_{\min}}\gamma\Bigr).
 \end{align*}
 \end{corollary}
 \begin{proof}
 To compute the MLE, we reparametrize by $\Theta_1 = P_1$ and $\Theta_2 = \lambda P_2$ where $P_1,P_2 \in \SPD(d_1) \times \SPD(d_2)$. Plugging this reparametrization into $f_x$ shows $\lambda, P_1, P_2$ solve
 $$\arg\max_{\lambda, P_1, P_2} \lambda f_x(P_1, P_2) - \log \lambda.$$
 In particular, the MLE $\htheta_1, \htheta_2$ exists uniquely if $f_x$ restricted to $\SPD(d_1) \times \SPD(d_2)$ has unique minimizers $P_1, P_2$. Such unique maximizers exist by \cref{thm:klr}. Given $P_1, P_2$, solving the simple one-dimensional optimization problem for $\lambda$ yields $\lambda = 1/f_x(P_1, P_2)$. We have $\htheta = P_1$, and
-$$ \|\htheta_2 - I_{d_2} \|_{op} = \|\lambda P_2  - I_{d_2} \|_{op} \leq \lambda \|P_2 - I_{d_2}\| + |1 - \lambda|.$$
-By \cref{thm:klr}, $1 \leq \lambda \leq (1 + 4 \eps^2/\gamma)^{-1}.$ By our assumptions on $\gamma, \eps$, we have $\eps^2/\gamma \leq \eps/\gamma \leq \eps/\gamma^2$. Thus $\lambda = (1 + O(\eps^2/\gamma)) = O(1)$ if $C$ is large enough, and so
-$\|\htheta_2 - I_{d_2} \|_{op} = O(\eps^2 \log d_{\min}/\gamma).$ \end{proof}
+$$ \|\htheta_2 - I_{d_2} \|_{op} = \|\lambda P_2  - I_{d_2} \|_{op} \leq \lambda \|P_2 - I_{d_2}\|_{op} + |1 - \lambda|.$$
+By \cref{thm:klr}, $nD/\|x\|^2  \leq \lambda \leq (1 + 4 \eps^2/\gamma)^{-1} (nD/\|x\|^2).$ By our assumptions on $\gamma, \eps$, we have $\eps^2/\gamma \leq \eps/\gamma \leq \eps/\gamma^2$. Thus $\lambda = (1 + O(\eps^2/\gamma))(1+ O(\delta)) = (1 + O(\eps^2/\gamma +\delta)) = O(1)$ if $C$ is large enough, so $\lambda \|P_2 - I_{d_2}\|_{op} = O(\|P_2 - I_{d_2}\|_{op}) = O(\eps^2 \log d_{\min}/\gamma)$ by \cref{thm:klr}. $|1 - \lambda| = O(\eps^2/\gamma +\delta) = O(\eps^2 \log d_{\min}/\gamma)$. Combining these bounds completes the proof.\end{proof}
 
 % the MLE $\htheta = \htheta_1 \ot \htheta_2$ for $\Theta=I_{d_1} \ot I_{d_2}$ satisfies
 % where the Kronecker factors $\htheta_1$, $\htheta_2$ are chosen such that $\det\htheta_1=\det\htheta_2$.
-\CF{look ok? I believe we only ever need to apply this for vectors with the desired norm, so the assumption $\|x\| = \sqrt{nD}$ doesn't hurt and  makes things cleaner.}
+%\CF{look ok? I believe we only ever need to apply this for vectors with the desired norm, so the assumption $\|x\| = \sqrt{nD}$ doesn't hurt and  makes things cleaner.}
 
 \MW{Once this is done I will check the following bounds:}
 {\color{red}\Cref{lem:fm20,thm:klr}, along with what we have shown so far, already implies a preliminary version of \cref{thm:matrix-normal}.
@@ -1537,7 +1536,7 @@ By construction, it satisfies
   \frac1{n D} \Phi^*_Y(I_{d_1}) = \frac{I_{d_2}}{d_2}.
 \end{align}
 Note also that $\tr \Phi_Y(I_{d_2}) = \tr \Phi_Y^*(I_{d_1}) = \|Y\|^2 = nD$. Thus $\Phi_Y$ is $\delta$-doubly balanced if and only if $\|\frac{1}{nD} \Phi_Y(I_{d_2}) - \frac{1}{d_1} I_{d_1}\|_{op} \leq \frac{\delta}{d_1}$.
-\MW{Isn't there a factor $1/d_1$ missing on the right?}
+\MW{Isn't there a factor $1/d_1$ missing on the right?}\CF{still, or did I fix it?}
 
 \begin{lemma}[Concentration after flip-flop]\label{lem:flipflop-concentration}
 There is a universal constant $C>0$ such that the following holds.
