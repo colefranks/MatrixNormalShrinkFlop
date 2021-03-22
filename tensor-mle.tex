@@ -1978,7 +1978,7 @@ $\Gamma \geq \dfrac{4 C_3^2 c_3^2}{\gamma^2 (1-\nu)^4}$, we have that
 $\Phi_x^{(12)}$ has spectral gap $1 - \nu$ and it satisfies
 $$ C_3 \log \dmin \cdot \varepsilon \sqrt{\dfrac{\dmin}{n \dmax}} \leq C_3 \log \dmin \cdot  \dfrac{\varepsilon^2}{\sqrt{\Gamma} \cdot \log \dmin} \leq \dfrac{\varepsilon^2 \gamma (1-\nu)^2}{2} \leq (1-\nu)^2. $$
 
-\RMO{need to change the norm hypothesis in \cref{cor:klr} }
+\RMO{need to change the norm hypothesis in \cref{cor:klr} }\CF{this is done; check if what you need follows from that}
 
 Thus, the hypotheses of \cref{cor:klr} apply and we have that the MLE's $\htheta_1, \htheta_2$ satisfy: 
 $$ \norm{\htheta_i - I_{d_i}}_{op} \leq c_3 \cdot \varepsilon \sqrt{\dfrac{\dmin}{n \dmax}} \cdot \dfrac{\log \dmin}{1-\nu} \leq c_3 \cdot \dfrac{\varepsilon^2}{\sqrt{\Gamma} \cdot \log \dmin} \cdot \dfrac{\log \dmin}{1-\nu} \leq \dfrac{\gamma}{2}. $$
@@ -1993,14 +1993,14 @@ Thus, so long as $\Gamma \geq \max\left\{ C_1, C_2, \ \dfrac{4 C_3^2 c_3^2}{\gam
 $$ 1 - 6 e^{- \gamma^2 n \dmin/32} - e^{- \Omega(\dmin \varepsilon^2)} = 1 - e^{- \Omega(\dmin \varepsilon^2)}. $$
 \end{proof}
 
-To prove that flip-flop works once the initial conditions are satisfied, we need the following general lemma (\cite[Lemma 4.7]{FM20}) on strongly geodesically convex functions, which tells us that once our gradient is small then we must be inside a sublevel set of our function which is contained in a ball where our function is strongly convex. 
+To prove that flip-flop works once the initial conditions are satisfied, we need the following general lemma (\cite[Lemma 4.7]{FM20}) on strongly geodesically convex functions, which tells us that once our gradient is small then we must be inside a sublevel set of our function which is contained in a ball where our function is strongly convex. Though their lemma is stated for the manifold of positive definite matrices of determinant one, the proof works in an arbitrary Hadamard manifold (such as the manifold $\SPD$ considered here).
 
 \begin{lemma}[\cite{FM20}]
 Suppose that $f : \SPD \to \R$ is geodesically $\lambda$-strongly convex on the geodesic ball of radius $\kappa$ about $\theta$, and that $\nabla f(\theta) = 0$. 
 If $\norm{\nabla f(\Upsilon)}_F < \lambda \kappa/8$, then $\Upsilon$ is contained in a sublevel set of $f$ on which $f$ is geodesically $\lambda$-strongly convex.
 \end{lemma}
 
-\RMO{Should I put your proof here, Cole? It is not quite stated in the same setting as ours, but it is so close...}
+%\RMO{Should I put your proof here, Cole? It is not quite stated in the same setting as ours, but it is so close...}
 
 We are now ready to prove our main theorem of this subsection: it says that as soon as the estimation in operator norm works, then the flip-flop converges exponentially fast to the minimizer.
 
