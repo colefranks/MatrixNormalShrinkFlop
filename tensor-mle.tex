@@ -2113,7 +2113,7 @@ Intuitively, the above theorem holds because we can choose $\Sigma_2$ to zero ou
 \begin{lemma}\label{lem:reduce-lower}Suppose $d_2 > n d_1$. Let $X$ denote a tuple of $n$ samples from the matrix normal model with precision matrices $\Theta_1, \Theta_2$. Let $Y$ be a tuple of $n\min\{nd_1, d_2\}$ Gaussians on $\R^{d_1}$ with precision matrix $\Theta_1$. Let $\widehat{\Theta}_1$ be any estimator for $\Theta_1$. For every $\delta > 0$, there is a distribution on $\Theta_2$ and an estimator $\tilde{\Theta}$ such that the distribution of $\widehat{\Theta}_1(X)$ and the distribution of $\tilde{\Theta}(Y)$ differ by at most $\delta$ in total variation distance. 
 %In particular (see \cref{lem:dtv}), the minimax MSE for $\widehat{\Theta}_1$ can be no less than the minimax MSE for the precision matrix of a $d_1$ dimensional Gaussian with $nd_1$ samples; this holds as well for $\Theta_1$ to subsets such as sparse, etc. 
 \end{lemma}
-In the proof, one finds that the estimator $\tilde{\Theta}$ uses additional randomness - but by Yao's theorem the minimax MSE is unchanged when estimators with additional randomness are allowed.
+%In the proof, one finds that the estimator $\tilde{\Theta}$ uses additional randomness - but by Yao's theorem the minimax MSE is unchanged when estimators with additional randomness are allowed.
 
 \begin{proof}
 If $d_2 \leq nd_1$, then setting $\Theta_2 = I(d_2)$ shows that $\htheta_1$ has access to precisely $n d_2$ samples from a Gaussian $\R^{d_1}$ with precision matrix $\Theta_1$. Thus we may take $\tilde{\Theta} = \htheta_1$ in that case, completing the proof. The harder case is $d_2 > n d_1$. 
@@ -2130,7 +2130,7 @@ The above lemma combined with \cref{prp:relative-lower} immediately implies \cre
 \begin{proof}[Proof of \cref{thm:matrix-lower}] 
 %We begin with the proofs of \cref{it:frob-lower,it:op-lower}, as they imply the rate lower bounds. If $nd_1 \geq d_1$, then the bound follows immediately from \CF{finish}
 
-To show \cref{it:frob-lower}, let $\delta^2 \leq c\min \left\{1,\frac{d_1^2}{n \min \{n d_1, d_2\}}\right\}$. Let $\Theta_2$ be the distributed as in \cref{lem:reduce-lower} so that, as guaranteed by \cref{lem:reduce-lower} there is an estimator $\tilde{\Theta}$ be the estimator with access to a tuple $Y$ of $n \min \{n d_1, d_2\}$ samples of a Gaussian on $\R^{d_1}$ with precision matrix $\Theta_1$ satisfying $d_{TV} (\htheta_1(X), \tilde{\Theta}(Y)) \leq \delta_0$. \cref{prp:relative-lower} implies \begin{align*}
+To show \cref{it:frob-lower}, let $\delta^2 \leq c\min \left\{1,\frac{d_1^2}{n \min \{n d_1, d_2\}}\right\}$. Let $\Theta_2$ be the distributed as in \cref{lem:reduce-lower} so that, as guaranteed by \cref{lem:reduce-lower} there is an estimator $\tilde{\Theta}$ with access to a tuple $Y$ of $n \min \{n d_1, d_2\}$ samples of a Gaussian on $\R^{d_1}$ with precision matrix $\Theta_1$ satisfying $d_{TV} (\htheta_1(X), \tilde{\Theta}(Y)) \leq \delta_0$. \cref{prp:relative-lower} implies \begin{align*}
 \sup_{\Theta \in B} \Pr_Y\left[ d_F(\tilde{\Theta}|| \Theta_1)  \geq \delta\right] \geq \frac{1}{2}.
 \end{align*}
 On the other hand, the total variation distance bound implies 
@@ -2140,25 +2140,7 @@ On the other hand, the total variation distance bound implies
 Allowing $\delta_0 \to 0$ implies the theorem. The proof of \cref{it:op-lower} is similar.
 \end{proof}
 
-In the conclusion of the lemma we needed to use that convergence in total variation of some estimator $\widehat{\Theta}_n$ to another, $\widehat{\Theta}$, implied that the former has minimax error at least that of the latter in any dissimilarity measure. This holds by applying the next lemma to the random variables $X_n = d_*( \widehat{\Theta}_n, \Theta)$ and $Y = d_*(\widehat{\Theta}, \Theta)$ where $d_*$ represents any nonnegative function. For example, we could take $d_*$ to be the Frobenius, spectral, Fischer-Rao, Kullback-Leibler or Mahalanobis ``distances".
-\CF{surely I can cite this next thing, I am just proving it for my own sanity}
-\begin{lemma}\label{lem:dtv}
-Suppose $X_n, Y$ are nonnegative random variables such that $X_n \to Y$ in $d_{TV}$. Then $$\limsup_{n\to \infty} \E X_n \geq \E Y.$$
-\end{lemma}
-\begin{proof}
-%If $X_n \to Y$, then the random variables $\|X_n - I\|\to  \|Y - I\|$ in total variation. Does convergence in total variation implies convergence in means?
 
-If the mean of $Y$ is bounded then we have Markov's inequality. Let $\eps > 0$; by the Dominated Convergence Theorem there is $\alpha$ large enough that $\E[Y 1_{Y \leq \alpha}] \geq \E[Y] - \eps$. Now we have
- $$\E[X_n] \geq \E[X_n 1_{X_n \leq \alpha} ] \to \E[ Y 1_{Y \leq \alpha}] \geq \E[Y] - \eps.% \geq (\E[Y| Y \leq \alpha] - \delta)(1 - \delta - \eps).
- $$
- as $n \to \infty$, where the limit is deduced by H\"older's inequality. Letting $\eps \to 0$ completes the proof.\end{proof}
-%By H\"older's inequality, $\E[X_n 1_{X_n \leq \alpha}] \to \E[ Y 1_{Y \leq \alpha}]$ as $n \to \infty$. \end{proof}
-
-%This is possible because $\E[Y|Y\leq \alpha] = \E[Y 1_{Y \leq \alpha}]/ \Pr[Y \leq \alpha]$, and as $\alpha \to \infty$ the numerator converges to $\E[Y]$ by the dominated convergence theorem and the denominator converges to $1$ by Markov's inequality.
-
-
-
-%Then $\widehat{\Theta}_1$ is an estimator that has access to only $n d_1$ samples of a Gaussian.
 
 %=============================================================================
 \section{Numerics and regularization}\label{sec:numerics}

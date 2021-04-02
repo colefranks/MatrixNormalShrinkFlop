@@ -99,6 +99,22 @@
 
 \section{Old stuff}
 
+\subsection{Old lower bound lemma}
+
+In the conclusion of the lemma we needed to use that convergence in total variation of some estimator $\widehat{\Theta}_n$ to another, $\widehat{\Theta}$, implied that the former has minimax error at least that of the latter in any dissimilarity measure. This holds by applying the next lemma to the random variables $X_n = d_*( \widehat{\Theta}_n, \Theta)$ and $Y = d_*(\widehat{\Theta}, \Theta)$ where $d_*$ represents any nonnegative function. For example, we could take $d_*$ to be the Frobenius, spectral, Fischer-Rao, Kullback-Leibler or Mahalanobis ``distances".
+\CF{surely I can cite this next thing, I am just proving it for my own sanity}
+\begin{lemma}\label{lem:dtv}
+Suppose $X_n, Y$ are nonnegative random variables such that $X_n \to Y$ in $d_{TV}$. Then $$\limsup_{n\to \infty} \E X_n \geq \E Y.$$
+\end{lemma}
+\begin{proof}
+%If $X_n \to Y$, then the random variables $\|X_n - I\|\to  \|Y - I\|$ in total variation. Does convergence in total variation implies convergence in means?
+
+If the mean of $Y$ is bounded then we have Markov's inequality. Let $\eps > 0$; by the Dominated Convergence Theorem there is $\alpha$ large enough that $\E[Y 1_{Y \leq \alpha}] \geq \E[Y] - \eps$. Now we have
+ $$\E[X_n] \geq \E[X_n 1_{X_n \leq \alpha} ] \to \E[ Y 1_{Y \leq \alpha}] \geq \E[Y] - \eps.% \geq (\E[Y| Y \leq \alpha] - \delta)(1 - \delta - \eps).
+ $$
+ as $n \to \infty$, where the limit is deduced by H\"older's inequality. Letting $\eps \to 0$ completes the proof.\end{proof}
+
+
 \subsection{Different Inner Product}
 
 \begin{definition}
