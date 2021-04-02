@@ -2086,7 +2086,7 @@ As a consequence, we have
 
 
 \subsection{Lower bounds for the matrix normal model}
-One could hope that, for the purposes of estimating $\Theta_1$, having access to $X$ is like having access to $n D/d_1$ independent samples of a Gaussian with precision matrix $\Theta_1$. In particular, one could hope e.g. for an RMSE rate of $\sqrt{ d_1/ n d_2}$ for estimating $A$ in spectral norm in the matrix model. Here we show that this only holds if $d_2 \leq n d_1$. That is, the rate cannot be better than $O(\sqrt{d_1/ n \min(n d_1, d_2)})$. 
+One could hope that, for the purposes of estimating $\Theta_1$, having access to $X$ is like having access to $n D/d_1$ independent samples of a Gaussian with precision matrix $\Theta_1$. In particular, one could hope e.g. for an RMSE rate of $\sqrt{ d_1/ n d_2}$ for estimating $\Theta_1$ in spectral norm in the matrix model even if $d_2$ is very large. Here we show that, to the contrary, the rate cannot be better than $O(\sqrt{d_1/ n \min(n d_1, d_2)})$. 
 %Here we show that our bounds for the matrix normal model are best possible for estimating the individual matrices $\Theta_a$. The bound for $\Theta_2$ is clearly best possible because it is what we would obtain even if $\Theta_1$ were known, but in fact even the bound on $\Theta_1$ is tight.
 
 \begin{theorem}[Lower bound for matrix normal models]\label{thm:matrix-lower}
@@ -2106,7 +2106,7 @@ As a consequence, we have
 \text{ and } \sup_{\Theta_1 \in B, \Theta_2 \in \PD(d_2)}\E[d_{op}(\htheta_1|| \Theta_1)^2] &= \Omega\left( \min \left\{\frac{d_1}{n \min \{n d_1, d_2\}},1\right\}\right).\end{align*}
 \end{theorem}
 
-Intuitively, the above theorem holds because we can choose $\Sigma_2$ to zero out all but $nd_1$ columns of each $X_i$, reducing to the $n^2d_1$ sample case. However, this does not quite work because $\Sigma_2$ would not be invertible and hence the precision matrix $\Theta_2$ would not exist. We must instead choose $\Theta_2$ to be approximately equal to a random low rank matrix. The resulting construction allows us to deduce the same lower bounds for estimating $\Theta_1$ as the Gaussian case with at most $n\min \{d_2, n d_1\}$ independent samples.
+Intuitively, the above theorem holds because we can choose $\Sigma_2$ to zero out all but $nd_1$ columns of each $X_i$, which allows access to at most $n \cdot n d_1$ samples from a Gaussian with precision $\Theta_1$. However, this does not quite work because $\Sigma_2$ would not be invertible and hence the precision matrix $\Theta_2$ would not exist. We must instead choose $\Sigma_2$ to be approximately equal to a random low rank matrix. The resulting construction allows us to deduce the same lower bounds for estimating $\Theta_1$ as the Gaussian case with at most $n\min \{d_2, n d_1\}$ independent samples.
 
 
 
@@ -2120,7 +2120,7 @@ If $d_2 \leq nd_1$, then setting $\Theta_2 = I(d_2)$ shows that $\htheta_1$ has 
 
 Let $B$ be any $d_2\times d_2$ matrix such that the last $d_2 - nd_1$ columns are zero. Given access to the tuple $X$ of $n$ samples $\sqrt{\Sigma_1} X_i B^T$, where $X_i$ are i.i.d Gaussian $d_1\times d_2$ matrices, clearly $\widehat{\Theta}_2$ has access to at most $n^2 d_1$ samples of the Gaussian on $\R^{d_1}$ with precision matrix $\Theta_1$ because $X_i B^T$ depends only on the first $d_1$ columns of each $X_i$.
 
-However, we must supply \emph{invertible} $B$ in order for $\Theta_2 = (BB^T)^{-1}$ to exist. Choose the first $nd_1$ columns of $B$ to uniformly at random among the collections of $nd_1$ orthonormal vectors in $\R^{d_2}$. Let the remaining entries be i.i.d uniform in $[-\delta, \delta]$ (the precise distribution of the remaining entries will not matter as long as they are small). Let $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ denote the resulting random variable with $B$ and $X$ chosen independently. If $\delta = 0$, then, by the argument above, with access to the random variable $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ the estimator $\widehat{\Theta}_1$ has access to at most $n^2d_1$ samples of a Gaussian on $\R^{d_1}$ with precision matrix $\Theta_1$. We claim that as $\delta \to 0$, the distribution of $Y_\delta$ tends to that of $Y_0$ in total variation distance. Thus the distribution of $\widehat{\Theta}_1(Y_\delta)$ converges to that of $\widehat{\Theta}_1(Y_0)$ in total variation. Since $Y_0$ only depends on $n^2d_1$ samples to the Gaussian on $\R^{d_1}$ with precision matrix $\Theta_1$, which we call $Y$, defining $\tilde{\Theta}(Y) = \widehat{\Theta}_1(Y_0)$ proves the theorem. \CF{there's still a probability zero event that $B$ is not full rank; not an issue but we should resolve.}
+However, we must supply \emph{invertible} $B$ in order for $\Theta_2 = (BB^T)^{-1}$ to exist. Choose the first $nd_1$ columns of $B$ to uniformly at random among the collections of $nd_1$ orthonormal vectors in $\R^{d_2}$. Let the remaining entries be i.i.d uniform in $[-\delta, \delta]$ (the precise distribution of the remaining entries will not matter as long as they are small). Let $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ denote the resulting random variable with $B$ and $X$ chosen independently. If $\delta = 0$, then, by the argument above, with access to the random variable $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ the estimator $\widehat{\Theta}_1$ has access to at most $n^2d_1$ samples of a Gaussian on $\R^{d_1}$ with precision matrix $\Theta_1$. We claim that as $\delta \to 0$, the distribution of $Y_\delta$ tends to that of $Y_0$ in total variation distance. Thus the distribution of $\widehat{\Theta}_1(Y_\delta)$ converges to that of $\widehat{\Theta}_1(Y_0)$ in total variation. Since $Y_0$ only depends on $n^2d_1$ samples to the Gaussian on $\R^{d_1}$ with precision matrix $\Theta_1$, which we call $Y$, defining $\tilde{\Theta}(Y) = \widehat{\Theta}_1(Y_0)$ proves the theorem. \CF{there's still a probability zero event that $B$ is not full rank; not an issue I think, but we should resolve.}
 
 It remains to prove that $Y_\delta$ converges to $Y_0$ in total variation distance. First note that $Y_\delta = Y_0 + \delta Z$ where $Z_i = \sqrt{\Theta_1} X_i C^T$, where $C$ is a random matrix where the first columns are zero and the last $d_2 - n d_1$ columns have entries i.i.d uniform on $[-1, 1]$. Because of the zero patterns of $B$ and $C$ and the fact that the entries of $X$ are i.i.d., the random variables $Y_0$ and $Z$ are independent. If we can show that $Y_0$ has a density on $\R^{nd_1d_2}$, then $Y_0 + \delta Z$ converges to $Y_0$ in total variation because adding $\delta Z$ corresponds to convolving the density of $Y_0$, an $L_1$ function, by an approximate identity \CF{find reference}.
 
@@ -2145,7 +2145,12 @@ Allowing $\delta_0 \to 0$ implies the theorem. The proof of \cref{it:op-lower} i
 %=============================================================================
 \section{Numerics and regularization}\label{sec:numerics}
 %=============================================================================
-Here we show experimentally that, in some natural situations, the MLE performs better than regularized estimators. We also show that in the undersampled regime, a simpler regularizer can match and sometimes outperform the GLASSO-type estimators appearing in \CF{tsilig, zhou}. The estimator is closer to a shrinkage estimator as in \CF{cite goes, weisel, thresholding}, or to a rank penalty \CF{elaborate}, or to \CF{tang?}. Instead of the MLE, we consider the following penalized log-likelihood:
+
+In the undersampled regime, most effort so far has focused on the sparse case. Existing estimators, such as the Gemini estimator \cite{zhou2014gemini} and kGLASSO estimator \cite{tsiligkaridis2013convergence} work by adding a regularizer proportional to the $\ell_1$ norm of the precision matrices to encourage sparsity. We refer to these as GLASSO-type estimators.
+
+To handle cases which have structure but are not necessarily sparse, we propose a simple regularizer. We show experimentally that, under a natural generative model for \emph{dense} covariance matrices, our regularized estimator outperforms the GLASSO-type estimators appearing in \cite{tsiligkaridis2013convergence,zhou2014gemini}. We also show that, even without regularization, the MLE can outputerform Gemini when $\Theta_2$ is ill-conditioned even when $\Theta_1$ is sparse. Moreover, we observe that our regularized estimator is significantly faster to compute than the GLASSO-type estimators. All the estimators require parameter tuning, so we compare throughout a plausible range of parameters for both estimators. We leave determination of the appropriate regularization parameters by cross-validation for future work.
+
+ Our estimator is related to the shrinkage estimator as in \cite{goes2020robust} and the Frobenius penalty considered in \CF{tang}. Instead of the MLE, we consider the following penalized log-likelihood:
 
 \begin{align*}
   \ell_{\samp}^\alpha(\Theta_1, \dots, \Theta_k)
@@ -2153,19 +2158,19 @@ Here we show experimentally that, in some natural situations, the MLE performs b
 %  := \frac {n D} 2 \sum_{a = 1}^k \frac{1}{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i} + \alpha \prod_{i=1}^k \tr \Theta_a,
   := \ell_{\samp}(\Theta_1, \dots, \Theta_k) + \alpha \prod_{i=1}^k \tr \Theta_a,
 \end{align*}
-where $\alpha$ is a parameter to be tuned. Set $\widehat{\Theta}^\alpha_x = \arg\min_{|\Theta|_1 =\dots =  |\Theta_k|} \ell^\alpha_\samp(\Theta)$.
+where $\alpha$ is a parameter which must be tuned. Set $\widehat{\Theta}^\alpha_x = \arg\min_{|\Theta|_1 =\dots =  |\Theta_k|} \ell^\alpha_\samp(\Theta)$.
 Observe the following:
 \begin{enumerate}
 \item If $\alpha > 0$, then $\widehat{\Theta}^\alpha_x$ exists uniquely for every $x$.
 \item $\widehat{\Theta}^\alpha_x$ is equal to $\widehat{\Theta}_{y}$ where $y$ is the tuple of $n + D$ vectors given by
 $$(x_1, \dots, x_n, \alpha e_{1\dots 1}, \dots, \alpha e_{d_1d_2 \dots d_k}).$$ Here $e_{i_1 \dots i_k}$ denotes the standard basis vector in $\R^{d_1d_2 \dots d_k}$. Thus the flip-flop estimator applied to the tuple $y$ converges to $\widehat{\Theta}^\alpha_x$.
-\item The function $\ell^\alpha_\samp$ is \CF{$\alpha?$}-geodesically strongly convex at the identity, and shares the same robustness properties as $\ell$. Thus for $\alpha$ large enough, flip-slop is guaranteed to converge linearly.
+\item The function $\ell^\alpha_\samp$ is \CF{$\alpha?$}-geodesically strongly convex at the identity, and shares the same robustness properties as $\ell$. Thus for $\alpha$ large enough, flip-flop is guaranteed to converge linearly.
 \item $\widehat{\Theta}^\alpha_\samp$ is the maximum a posteriori probability (MAP) estimator for $\Theta$ assuming $\Theta$ is drawn from the Wishart prior with $D + 1$ degrees of freedom and $V = I/\alpha$. That is, $\Theta_1, \dots, \Theta_k$ are selected proportional to $e^{- \alpha \tr \Theta_1 \ot \dots \ot \Theta_k}.$
 \end{enumerate}
 %As in the unpenalized case, we will often consider the scale-invariant function $f^\alpha_x$ given by
 
 
-The flip-flop algorithm for this regularized estimator is nearly as simple as the unregularized flip-flop algorithm: see \cref{alg:reg-flip-flop}. Above we explained that it can be viewed as the flip-flop estimator for an augmented tuple of tensors $y$, but due to the special form of $y$ the iterations simplify significantly. The only modification is that a certain multiple of the identity is added in each flip-flop step.  \CF{I need to check all the normalizations carefully; may want to define $\rho \leftarrow \rho/nD$ and $\alpha \leftarrow \alpha/nD$.}
+The flip-flop algorithm for this regularized estimator is nearly as simple as the unregularized flip-flop algorithm: see \cref{alg:reg-flip-flop}. Above we explained that it can be viewed as the flip-flop estimator for an augmented tuple of tensors $y$, but due to the special form of $y$ one need not look at the entirety of $y$ to perform the iterations. The only modification is that a certain multiple of the identity is added in each flip-flop step.  \CF{I need to check all the normalizations carefully; may want to define $\rho \leftarrow \rho/nD$ and $\alpha \leftarrow \alpha/nD$.}
 
 
 \begin{Algorithm}
@@ -2195,7 +2200,20 @@ $$\otheta_a = \frac{n D}{d_a}\left(\Upsilon_i + \alpha \left(\prod_{i \neq a} \t
 \caption{Regularized flip-flop algorithm}\label{alg:reg-flip-flop}
 \end{Algorithm}
 
-We compare the performance of the estimator with Zhou's single step estimator \CF{cite gemini} for the matrix normal model. We find that when $\Theta_1$ is sparse and $\Theta_2$ is well-conditioned, Zhou's estimator obtains modest gains over the regularized Sinkhorn algorithm in Frobenius error. However, when $\Theta_2$ can be ill-conditioned, we find that the shrinkage estimator outperforms the lasso-type estimators. Both estimators require parameter tuning, so we compare throughout a plausible range of parameters for both estimators. We leave determination of the appropriate regularization parameters by cross-validation to future work. \CF{actually include the figures; maybe include an extra tantalizing one in the intro?}.
+\subsection{Spiked, dense covariances}
+
+Here we compare the performance of our regularized estimator with Zhou's single step estimator (Gemini) for the matrix normal model assuming $\Sigma_1, \Sigma_2$ are dense, spiked matrices. More precisely, $\Sigma_1, \Sigma_2$ are each a random rank one matrix plus a small multiple of the identity matrix. \cref{fig:spiked} was generated by setting $d_1 = 25, d_2 = 50$ and $n = 1$, for each choice of regularization parameter independently generating 10 different pairs $\Sigma_1 \sim I_{d_1} + 10 v_1v_1^T$ and $\Sigma_2 \sim I_{d_2} + 10 v_2v_2^T$ where the $v_i$ are standard $d_i$-dimensional Gaussian vectors, and then computing the relative error (Geodesic distance from the estimator to the truth divided by the Geodesic distance from the identity to the truth) for samples drawn from this distribution 10 times and averaging all 100 errors. \CF{For simplicity, before computing the geodesic distance we normalize all matrices to be in $\SL(d_i)$}. Note that with a single sample ($n = 1$) the MLE does not exist. 
+
+We observe that the Gemini estimator is never better than the ``trivial" estimator which simply always outputs the identity matrix. However, for a fairly broad range of regularizers, the Gemini does outperform the inverse of the the partial trace of the sample covariance matrix (the partial trace of the sample covariance matrix is an unbiased estimator of $\Sigma_1$). As expected, as the regularization parameter tends to zero Gemini becomes identical to the inverse of the the partial trace of the sample covariance matrix. \CF{explain that this is what Gemini for $\Theta_1$ is.} For a broad range of regularization parameters, our regularized estimator outperforms the trivial estimator.
+
+\begin{figure}
+\center\includegraphics[width=.7\textwidth]{"./code/zhou-comparison/GeoPlot"}
+\caption{Average error in geodesic distance with $d_1 = 25, d_2 = 50, n = 1$ for spiked dense covariance matrices. ``Gemini" refers to Zhou's Gemini estimator, ``RegSink" refers to our regularized estimator, ``Simple" refers to the partial trace of the sample covariance matrix, and ``Trivial" refers to the estimator that always outputs the identity matrix. \CF{actually do 10 runs/draws; right now it is 5}}\label{fig:spiked}
+\end{figure}
+ 
+ \subsection{Sparse, ill-conditioned inputs} \CF{ACTUALLY DO THIS PART}
+
+We compare the performance of the estimator with Zhou's single step estimator \cite{zhou2014gemini} for the matrix normal model. We find that when $\Theta_1$ is sparse and $\Theta_2$ is well-conditioned, Zhou's estimator obtains modest gains over the regularized Sinkhorn algorithm in Frobenius error. \CF{make a figure for this.} However, when $\Theta_2$ can be ill-conditioned, we find that the shrinkage estimator outperforms the lasso-type estimators. \CF{make a figure for this} Finally, we find that when $\Sigma_1$ and $\Sigma_2$ are sampled from ``spiked" models (each is equal to the identity plus a random, potentially dense, rank-one matrix), the regularized estimator performs substantially better than the lasso-type estimator. We also observe that the computational effort  
 
 
 
