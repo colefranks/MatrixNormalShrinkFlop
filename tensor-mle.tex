@@ -1457,7 +1457,9 @@ Moreover, $f_x(P_1, P_2) \geq (1 - \frac{4 \eps^2}{\lambda}) \frac{\|x\|^2}{nD}$
 \end{theorem}
 
 \begin{corollary}\label{cor:klr}
-There is a universal constant $C>0$ such that the following holds. Suppose $\|x\| = \sqrt{nD}$ and $0 \leq \eps, \gamma \leq 1$. Suppose the completely positive map $\Phi^{(12)}$ defined in \cref{eq:hessian channel} is $\eps$-doubly balanced and has spectral gap~$\gamma$, where $\gamma^2 \geq C \eps \log d_{\min}.$ Further suppose that $\|x\|^2/nD = 1 + \delta$ where $|\delta| \leq .5$.  Then the MLE's $\htheta_1, \htheta_2$ satisfy
+There is a universal constant $C>0$ such that the following holds. Suppose 
+%$\|x\| = \sqrt{nD}$ and 
+$0 \leq \eps, \gamma \leq 1$. Suppose the completely positive map $\Phi^{(12)}$ defined in \cref{eq:hessian channel} is $\eps$-doubly balanced and has spectral gap~$\gamma$, where $\gamma^2 \geq C \eps \log d_{\min}.$ Further suppose that $\|x\|^2/nD = 1 + \delta$ where $|\delta| \leq .5$.  Then the MLE's $\htheta_1, \htheta_2$ satisfy
 \begin{align*}
   \max \{ \norm{\htheta_1 - I_{d_1}}_{\op}, \norm{\htheta_2 - I_{d_2}}_{\op} \} = O\Bigl(\delta + \frac{\eps \log d_{\min}}\gamma\Bigr).
 \end{align*}
@@ -1914,7 +1916,7 @@ The proof strategy of this section is a bit different from the tensor normal mod
 
 However, we can proceed as in~\cite{FM20} and use the results from~\cite{KLR19} to show that the MLE is in a constant ball (in operator norm) around the identity. 
 Then, using the fact that our log-likelihood is strongly geodesically convex around the MLE, we can use~\cite[Lemma 4.7]{FM20} to prove that any scaling with small gradient of the log-likelihood function will be close to the MLE.
-Thus, from our initial samples, after we apply flip-flop for a large enough number of iterations, we will obtain a scaling where the log-likelihood function is strongly geodesically convex in its sublevel set around the minimizer, and thereby we can now apply \cref{lem:descent-sublevel-set} and obtain a minimizer in $\log(1/\varepsilon)$ iterations.
+Thus, from our initial samples, after we apply flip-flop for a large enough number of iterations, we will obtain a scaling where the log-likelihood function is strongly geodesically convex in its sublevel set around the minimizer, and thereby we can now apply \cref{lem:descent-sublevel-set} and obtain an $\varepsilon$-minimizer in $O(\log(1/\varepsilon))$ iterations.
 
  
 
@@ -1954,7 +1956,7 @@ If $\norm{\nabla_a}_{op} < \delta$, output $\otheta$ and return.
 
 
 \begin{lemma}[Initial Conditions Matrix Normal Model]\label{lem:matrix-normal-initial-conditions}
-There exist absolute constants $\Gamma, \gamma > 0$ and $\lambda \in (0,1)$ such that the following holds.
+There exist absolute constants $\Gamma > 0$ and $\gamma, \lambda \in (0,1]$ such that the following holds.
 	When the number of samples 
 	$$n \geq \Gamma \cdot \dfrac{\dmax}{\dmin} \cdot \max\left\{ \log \dfrac{\dmax}{\dmin}, \ \dfrac{\log^2 \dmin}{\varepsilon^2}  \right\},$$ 
 	with probability at least $1 - e^{- \Omega(\dmin \varepsilon^2)}$ we have that the following conditions hold:
@@ -1966,6 +1968,15 @@ There exist absolute constants $\Gamma, \gamma > 0$ and $\lambda \in (0,1)$ such
 \end{lemma}
 
 \begin{proof}
+We start by establishing condition 3, so that we may obtain the value of $\gamma$.
+
+\noindent Let $C_1, c_1 > 0, \eta \in (0,1)$ be the universal constants from \cref{cor:matrix-convexity}, and set $\gamma = \min\{1, c_1\}$. 
+If $\Gamma > C_1$, with probability 
+$\geq 1 - e^{- \Omega(\dmin \varepsilon^2)}$ we have that $f_x$ is
+$(1-\eta)$-strongly convex at $\Theta \in \SPD$ such that 
+$\norm{\log(\Theta)}_{op} \leq \gamma$. Setting $\lambda = 1-\eta$ we obtain condition 3.
+
+
 By \cref{prop:gradient-bound}, so long as $\Gamma \geq 4/\gamma$, with probability $\geq 1 - 6 e^{- \gamma^2 n \dmin/32}$ we have that 
 $$ |\nabla_0 f_x(I)| \leq  \frac{\gamma}{2}. $$ 
 
@@ -1978,16 +1989,8 @@ $\Gamma \geq \dfrac{4 C_3^2 c_3^2}{\gamma^2 (1-\nu)^4}$, we have that
 $\Phi_x^{(12)}$ has spectral gap $1 - \nu$ and it satisfies
 $$ C_3 \log \dmin \cdot \varepsilon \sqrt{\dfrac{\dmin}{n \dmax}} \leq C_3 \log \dmin \cdot  \dfrac{\varepsilon^2}{\sqrt{\Gamma} \cdot \log \dmin} \leq \dfrac{\varepsilon^2 \gamma (1-\nu)^2}{2} \leq (1-\nu)^2. $$
 
-\RMO{need to change the norm hypothesis in \cref{cor:klr} }\CF{this is done; check if what you need follows from that}
-
 Thus, the hypotheses of \cref{cor:klr} apply and we have that the MLE's $\htheta_1, \htheta_2$ satisfy: 
 $$ \norm{\htheta_i - I_{d_i}}_{op} \leq c_3 \cdot \varepsilon \sqrt{\dfrac{\dmin}{n \dmax}} \cdot \dfrac{\log \dmin}{1-\nu} \leq c_3 \cdot \dfrac{\varepsilon^2}{\sqrt{\Gamma} \cdot \log \dmin} \cdot \dfrac{\log \dmin}{1-\nu} \leq \dfrac{\gamma}{2}. $$
-
-Let $C_1, \gamma > 0, \eta \in (0,1)$ be the universal constants from \cref{cor:matrix-convexity}. 
-If $\Gamma > C_1$, then with probability 
-$\geq 1 - e^{- \Omega(\dmin \varepsilon^2)}$ we have that $f_x$ is
-$(1-\eta)$-strongly convex at $\Theta \in \SPD$ such that 
-$\norm{\log(\Theta)}_{op} \leq \gamma$. Setting $\lambda = 1-\eta$ we obtain condition 3.
 
 Thus, so long as $\Gamma \geq \max\left\{ C_1, C_2, \ \dfrac{4 C_3^2 c_3^2}{\gamma^2 (1-\nu)^4}  \right\}$, then all of the conditions above are satisfied on the required number of samples, and by a union bound all three events above happen with probability at least
 $$ 1 - 6 e^{- \gamma^2 n \dmin/32} - e^{- \Omega(\dmin \varepsilon^2)} = 1 - e^{- \Omega(\dmin \varepsilon^2)}. $$
@@ -2000,7 +2003,29 @@ Suppose that $f : \SPD \to \R$ is geodesically $\lambda$-strongly convex on the 
 If $\norm{\nabla f(\Upsilon)}_F < \lambda \kappa/8$, then $\Upsilon$ is contained in a sublevel set of $f$ on which $f$ is geodesically $\lambda$-strongly convex.
 \end{lemma}
 
-%\RMO{Should I put your proof here, Cole? It is not quite stated in the same setting as ours, but it is so close...}
+\RMO{Should I put your proof here, Cole? It is not quite stated in the same setting as ours, but it is so close...}
+
+Now the objective is simply to show that the flip-flop algorithm reaches a scaling with small enough gradient relatively quickly, which is given by the following lemma, which follows the analysis given by~\cite{GGOW19}:
+
+\begin{lemma}\label{lem:flip-flop-sinkhorn}
+Given $\delta >0$ and samples $x = (x_1, \ldots, x_n)$, let $f^* := \min_{\otheta \in \SPD} f_x(\otheta)$ be the minimizer of the log-likelihood function. The flip-flop algorithm, in at most 
+$$T = 24 \dmax \cdot  (f_x(I_D) - f^* + |\nabla_0 f_x(I)|) \cdot \dfrac{1}{\delta^2} \ \text{ iterations,}$$
+reaches a scaling $\otheta$ such that $\norm{\nabla f_x(\otheta)}_F < \delta$.
+\end{lemma} 
+\begin{proof}
+Let $\otheta^{(i)}$ be the scalings obtained by the flip-flop algorithm, where $\otheta^{(0)} = I_D$.
+After we perform the first normalization step of the flip-flop algorithm, we obtain a scaling $\otheta^{(1)}$ such that $\nabla_0 f_x (\otheta^{(1)}) = 0$. 
+By \cref{prop:trace-invariance}, after each subsequent step, that is $\otheta^{(i)}$ for $i \geq 2$, we maintain that $\nabla_0 f_x (\otheta^{(i)}) = 0$. 
+Thus, \Cref{lem:tensor-descent-lemma} applies and we obtain that 
+$$ f_x(\otheta^{(1)}) - f_x(\otheta^{(T)}) \geq \dfrac{1}{12 \dmax} \sum_{i=1}^{T-1} \min\{ 1 , \norm{\nabla f_x(\otheta^{(i)})}_F^2 \}. $$
+Let $\alpha^2 := \dfrac{1}{nD} \sum_{i=1}^n x_i^\dagger x_i$. 
+\Cref{lem:tensor-descent-lemma} and $\nabla_0 f_x(\alpha I) = 0$ imply $f_x(\alpha I_D) - f_x(\otheta^{(1)}) \geq 0$. 
+Moreover, since $f_x(I_D) - f_x(\otheta^{(1)}) = f_x(I_D) - f_x(\alpha I_D) + f_x(\alpha I_D) - f_x(\otheta^{(1)})$, we have
+$$ f_x(I_D) - f_x(\otheta^{(1)}) \geq f_x(I_D) - f_x(\alpha I_D) \geq - |\nabla_0 f_x(I)|. $$
+The above inequalities imply that 
+$$ f_x(I_D) - f^* \geq f_x(I_D) - f_x(\otheta) \geq - |\nabla_0 f_x(I)| + \dfrac{1}{12 \dmax} \sum_{i=1}^{T-1} \min\{ 1 , \norm{\nabla f_x(\otheta^{(i)})}_F^2 \}. $$
+Thus, for some $1 \leq t \leq T = 24 \dmax (f_x(I_D) - f^* + |\nabla_0 f_x(I)|) \cdot \dfrac{1}{\delta^2}$ steps, we must reach a scaling $\otheta^{(t)}$ such that $\norm{\nabla f_x(\otheta^{(t)})}_F^2 < \delta^2$.
+\end{proof}
 
 We are now ready to prove our main theorem of this subsection: it says that as soon as the estimation in operator norm works, then the flip-flop converges exponentially fast to the minimizer.
 
@@ -2010,12 +2035,18 @@ We are now ready to prove our main theorem of this subsection: it says that as s
 
 \begin{proof}
 If we take $\Gamma$ to be the universal constant according to \cref{lem:matrix-normal-initial-conditions}, with probability at least $1 - e^{- \Omega(\dmin \varepsilon^2)}$ we have that the conditions of \cref{lem:matrix-normal-initial-conditions} are satisfied.
-
-After we perform the first normalization step of the flip-flop algorithm, we obtain a scaling $\otheta$ such that $\nabla_0 f_x (\otheta) = 0$. 
-Moreover, after each subsequent step $\Upsilon$ we maintain that $\nabla_0 f_x (\Upsilon) = 0$.
-Thus, \Cref{lem:tensor-descent-lemma} applies and we obtain that 
+Thus, there exist constants $\lambda, \gamma \in (0, 1)$ such that:
+\begin{enumerate}
+	\item $|\nabla_0 f_x(I)| \leq \frac{\gamma}{2}$
+	\item The MLE's $\htheta_1, \htheta_2$ satisfy $\ \ \norm{\htheta_i - I_{d_i}}_{op} \leq \gamma/2, \ \ $ for $i \in \{1,2\}$
+	\item $f_x$ is $\lambda$-strongly geodesically convex at any $\Theta \in \SPD$ such that $\norm{\log \Theta}_{op} \leq \gamma$.
+\end{enumerate}
+In particular, we have that our function $f_x$ is lower bounded by 
+$$f^* := f_x(\htheta_1, \htheta_2) = 1 - \dfrac{1}{D} \log\det(\htheta_1 \otimes \htheta_2) \geq 1 - \dfrac{1}{D} \log\det((1+\gamma/2) I_D) \geq - \gamma/2,  $$
+and we also know that $f_x(I_D) = 1 + \nabla_0 f_x(I_D) \leq 1 + \gamma/2$.
+Thus, by \cref{lem:flip-flop-sinkhorn}, we know that in at most 
+$24 \dmax \cdot (1 + 3 \gamma/2) \cdot \left(\dfrac{16}{\lambda \gamma}\right)^2$ steps, we will find a scaling $\otheta$ with $\norm{\nabla f_x(\otheta)}_F^2 < \dfrac{\lambda \gamma}{16}$.
 \end{proof}
-
 
 %=============================================================================
 \section{Lower bounds}\label{sec:lower}
