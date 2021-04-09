@@ -423,7 +423,7 @@ samples in the matrix normal model, the flip-flop algorithm computes $(\overline
 \begin{align*}
   D_{op}(\overline{\Theta}_a, \widehat{\Theta}_a) \leq \eps
 \end{align*}
-for $a\in\{1,2\}$ in $O(\TODO{\log(1/\eps)})$ iterations, with probability at least $1 - e^{- \Omega(\dmin \varepsilon^2)}$.
+for $a\in\{1,2\}$ in $O\left(\dmax \log(\dmax/\varepsilon) \right)$ iterations, with probability at least $1 - e^{- \Omega(\dmin \varepsilon^2)}$.
 }
 
 \begin{theorem}[Matrix flip-flop]\label{thm:matrix-flipflop}
@@ -1710,7 +1710,7 @@ The proof of the lemma is the same as the one from~\cite[Lemma 4.8]{FM20}.
 	If $\{x_t\}$ is a descent sequence which satisfies
 	$$ f(x_{t+1}) \leq f(x_t) - \alpha \cdot \min\{1,  \norm{\nabla f(x_t)}^2_F \} $$
 	then in $T$ iterations we must have an element $x_r$ with $r \leq T$ such that
-	$$ \norm{\nabla f(x_r)}^2_F \leq \nu \cdot 2^{- \frac{T}{\alpha \lambda}}.   $$
+	$$ \norm{\nabla f(x_r)}^2_F \leq \nu \cdot 2^{- T \alpha \lambda}.   $$
 \end{lemma}
 
 \begin{proof}
@@ -1928,11 +1928,11 @@ Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
 
 \textbf{Algorithm}:
 \begin{enumerate}
-\item\label{it:flip-flop step 1 matrix} Set $\otheta_a = I_a$ for each $a \in \{1,2\}$, and $\delta = \dfrac{\eps \lambda}{8 \dmax^{3/2}}$.
+\item\label{it:flip-flop step 1 matrix} Let $\gamma, \lambda$ be the constants from \cref{lem:matrix-normal-initial-conditions}. Set $\otheta_a = I_a$ for each $a \in \{1,2\}$, and $\delta = \dfrac{\eps \lambda}{4 \sqrt{\dmax}}$.
 
 \vspace{5pt}
 
-\item\label{it:flip-flop step 2 matrix} For $t=1,\dots,T = 24 d_2 \cdot \log(2/\delta^2)$, repeat the following:
+\item\label{it:flip-flop step 2 matrix} For $t=1,\dots,T = 60 \dmax \cdot \left( \dfrac{16}{\lambda \gamma} \right)^2 + \dfrac{24 \dmax}{\lambda} \cdot \log(1/\delta)$, repeat the following:
 %we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
 
 \vspace{5pt}
@@ -1998,7 +1998,7 @@ $$ 1 - 6 e^{- \gamma^2 n \dmin/32} - e^{- \Omega(\dmin \varepsilon^2)} = 1 - e^{
 
 To prove that flip-flop works once the initial conditions are satisfied, we need the following general lemma (\cite[Lemma 4.7]{FM20}) on strongly geodesically convex functions, which tells us that once our gradient is small then we must be inside a sublevel set of our function which is contained in a ball where our function is strongly convex. Though their lemma is stated for the manifold of positive definite matrices of determinant one, the proof works in an arbitrary Hadamard manifold (such as the manifold $\SPD$ considered here).
 
-\begin{lemma}[\cite{FM20}]
+\begin{lemma}[\cite{FM20}]\label{lem:gradient-strong-convexity-fm}
 Suppose that $f : \SPD \to \R$ is geodesically $\lambda$-strongly convex on the geodesic ball of radius $\kappa$ about $\theta$, and that $\nabla f(\theta) = 0$. 
 If $\norm{\nabla f(\Upsilon)}_F < \lambda \kappa/8$, then $\Upsilon$ is contained in a sublevel set of $f$ on which $f$ is geodesically $\lambda$-strongly convex.
 \end{lemma}
@@ -2035,7 +2035,7 @@ We are now ready to prove our main theorem of this subsection: it says that as s
 
 \begin{proof}
 If we take $\Gamma$ to be the universal constant according to \cref{lem:matrix-normal-initial-conditions}, with probability at least $1 - e^{- \Omega(\dmin \varepsilon^2)}$ we have that the conditions of \cref{lem:matrix-normal-initial-conditions} are satisfied.
-Thus, there exist constants $\lambda, \gamma \in (0, 1)$ such that:
+Thus, there exist constants $\lambda, \gamma \in (0, 1]$ such that:
 \begin{enumerate}
 	\item $|\nabla_0 f_x(I)| \leq \frac{\gamma}{2}$
 	\item The MLE's $\htheta_1, \htheta_2$ satisfy $\ \ \norm{\htheta_i - I_{d_i}}_{op} \leq \gamma/2, \ \ $ for $i \in \{1,2\}$
@@ -2045,7 +2045,11 @@ In particular, we have that our function $f_x$ is lower bounded by
 $$f^* := f_x(\htheta_1, \htheta_2) = 1 - \dfrac{1}{D} \log\det(\htheta_1 \otimes \htheta_2) \geq 1 - \dfrac{1}{D} \log\det((1+\gamma/2) I_D) \geq - \gamma/2,  $$
 and we also know that $f_x(I_D) = 1 + \nabla_0 f_x(I_D) \leq 1 + \gamma/2$.
 Thus, by \cref{lem:flip-flop-sinkhorn}, we know that in at most 
-$24 \dmax \cdot (1 + 3 \gamma/2) \cdot \left(\dfrac{16}{\lambda \gamma}\right)^2$ steps, we will find a scaling $\otheta$ with $\norm{\nabla f_x(\otheta)}_F^2 < \dfrac{\lambda \gamma}{16}$.
+$60 \dmax \cdot \left(\dfrac{16}{\lambda \gamma}\right)^2$ steps, we will find a scaling $\otheta$ with $\norm{\nabla f_x(\otheta)}_F^2 < \dfrac{\lambda \gamma}{16}$.
+
+For the $\otheta$ we just obtained, \cref{lem:gradient-strong-convexity-fm} applies and therefore $f_x$ is $\lambda$-strongly convex in a ball that contains the sublevel set $\{ \Upsilon \ \mid \ f_x(\Upsilon) \leq f_x(\otheta) \}$. Henceforth, \cref{lem:descent-sublevel-set} applies with $\alpha = \dfrac{1}{12 \dmax}$ and in $T = \dfrac{24 \dmax}{\lambda} \log(1/\delta)$ steps we obtain a  $\otheta'$ such that $\norm{\nabla_x(\otheta')}_F \leq \delta$. Setting $\delta = \dfrac{\varepsilon \lambda}{4 \sqrt{\dmax}}$, \cref{lem:tensor-distance-opt} implies that $D_{op}(\htheta_a \ || \ \otheta_a') \leq \varepsilon$ for $a \in \{1, 2\}$.
+
+In particular, \cref{alg:flip-flop matrix} correctly returns a scaling $\varepsilon$-close to the MLE. The number of iterations follows from the above.
 \end{proof}
 
 %=============================================================================
