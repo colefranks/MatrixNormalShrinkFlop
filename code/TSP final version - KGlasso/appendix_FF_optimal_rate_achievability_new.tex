@@ -1,0 +1,445 @@
+\begin{IEEEproof}
+%Let us first establish some asymptotic notation. For random matrices $\bX_1$ and $\bX_2$ of same order:
+%\begin{equation*}
+%	\bX_1 \cong \bX_2 \Longrightarrow \nn\bX_1-\bX_2\nn_F = o_p\left( \sqrt{\frac{M_{p,f}^2 \log(M_{p,f})}{n}} \right)
+%\end{equation*}
+%as $p,f,n\to\infty$.
+
+As in the proof of Thm. 1 in \cite{EstCovMatKron}, let $\bB_* = \frac{\tr(\bA_0\bA_{init}^{-1})}{p} \bB_0$ and $\bA_* = (\frac{\tr(\bA_0\bA_{init}^{-1})}{p})^{-1} \bA_0$. Note that Assumption 1 implies that $\nn \bB_* \nn_2 = \Theta(1)$ and $\nn \bA_* \nn_2=\Theta(1)$ as $p,f\to\infty$.
+
+%For concreteness, we first present the result for $k=3$ iterations. Then, we generalize the analysis to $k\geq 3$ flip-flop iterations.
+For concreteness, we present the result for $k=3$ iterations. The analysis can be generalized to $k\geq 3$ iterations \cite{TsiligkaridisTSP}.
+
+Define intermediate error matrices:
+\begin{align*}
+	\tilde{\bB}^0 &= \hat{\bB}(\bA_{init}) - \bB_* \\
+	\tilde{\bA}^1 &= \hat{\bA}(\hat{\bB}(\bA_{init})) - \bA_* \\
+	\tilde{\bB}^2 &= \hat{\bB}(\hat{\bA}(\hat{\bB}(\bA_{init}))) - \bB_*
+\end{align*}
+From the assumptions presented, as $p,f,n\to\infty$, all the error matrices defined above tend to zero.
+
+Lemma \ref{lemma: large_dev_optimal} implies $|\tilde{\bB}^0|_\infty=O_P\left(\sqrt{ \frac{\log M}{np}} \right)$ as $n,p,f\to\infty$, so we have
+\begin{equation} \label{B_0_Frob}
+	\nn \tilde{\bB}^0 \nn_F = O_P\left( \sqrt{\frac{f^2\log M}{np}} \right)
+\end{equation}
+
+From the matrix inversion lemma \cite{HornJohnson}, we have
+\begin{align}
+	\hat{\bB}(\bA_{init})^{-1} &= (\bB_* + \tilde{\bB}^0)^{-1} \nonumber \\ 
+		&= \bB_*^{-1} - \bB_*^{-1} \tilde{\bB}^0 \bB_*^{-1} + \bDelta_1 \label{mil_1}
+\end{align}
+where
+\begin{equation*}
+	\bDelta_1 = \sum_{k=2}^\infty (-\bB_*^{-1}\tilde{\bB}^0)^k \bB_*^{-1}
+\end{equation*}
+
+Let us show
+\begin{equation} \label{Delta_1_Frob}
+	\nn \bDelta_1 \nn_F = O_P\left( \frac{f^{2.5} \log M}{np} \right)
+\end{equation}
+
+From the submultiplicative property of the spectral norm, the triangle inequality and (\ref{B_0_Frob}), we have:
+\begin{equation*}
+	\nn \bDelta_1 \nn_2 \leq \sum_{k=2}^\infty (\nn \bB_*^{-1} \nn_2 \nn \tilde{\bB}^0 \nn_F)^k \nn \bB_*^{-1} \nn_2 = O_P\left( \frac{f^2 \log M}{np} \right)
+\end{equation*}
+where we used Assumption 1 and $b_{p,f,n}= \nn \bB_*^{-1} \nn_2 \nn \tilde{\bB}^0 \nn_F=O_P\left(  \sqrt{\frac{f^2 \log M}{np}} \right)$ in the bound:
+\begin{equation*}
+	\sum_{k=2}^\infty b_{p,f,n}^k = b_{p,f,n}^2 + \frac{b_{p,f,n}^3}{1-b_{p,f,n}} \leq C b_{p,f,n}^2
+\end{equation*}
+with high probability as $p,f,n\to\infty$ (here, $C>0$ is an absolute constant). This type of asymptotic argument will be used in the remainder of the proof to retain the dominant terms. The inequality $\nn \bDelta_1 \nn_F \leq \sqrt{f} \nn \bDelta_1 \nn_2$ then implies (\ref{Delta_1_Frob}).
+%Let us rigorously justify this. Let $b_{f,n}=\frac{f^2 \log(f)}{n}$ and $\tilde{b}_{f,n}=(\sqrt{\frac{f^2 \log(f)}{n}})^3 + (\sqrt{\frac{f^2 \log(f)}{n}})^4 + \dots$. Then, $\nn \bDelta_1 \nn_2=O_p(b_{f,n} + \tilde{b}_{f,n})$. Then, $r_{f,n}:=\frac{\tilde{b}_{f,n}}{b_{f,n}}=o(1)$ by the growth rate assumption. As a result, $r_{f,n}$ is bounded-i.e., $0\leq r_{f,n} \leq M_r$ for some $M_r>0$ for all $f,n$. Then, since 
+%\begin{align*}
+%	\sup_{f,n}\Pr &\left( \frac{\nn \bDelta_1 \nn_2}{b_{f,n}} >K(1+M_r) \right) \\
+%		&\quad \leq \sup_{f,n}\Pr \left( \frac{\nn \bDelta_1 \nn_2}{b_{f,n}}>K(1+r_{f,n}) \right) \to 0
+%\end{align*}
+%as $K\to\infty$, we conclude that $\nn \bDelta_1 \nn_2 = O_p(b_{f,n})$ as $f,n\to\infty$. From this and the inequality $\nn\bDelta_1 \nn_F \leq \sqrt{f} \nn \bDelta_1 \nn_2$, (\ref{Delta_1_Frob}) holds.
+
+
+Next we expand $\vec(\tilde{\bA}^1)$:
+\begin{align}
+	\vec(\tilde{\bA}^1) &= \frac{1}{f} \hat{\bR}_A \vec( \hat{\bB}(\bA_{init})^{-1}) - \vec(\bA_*) \nonumber \\
+		%&= \frac{1}{f} \tilde{\bR}_A \vec(\bB_*^{-1}) - \frac{1}{f} \bR_A (\bB_*^{-T}\otimes \bB_*^{-1}) \vec(\tilde{\bB}^0) \nonumber \\
+		%&\qquad + \vec(\bDelta_2) \nonumber  \\
+		&= \vec(\hat{\bA}(\bB_*)-\bA_*) - \frac{\tr(\bB_*^{-1} \tilde{\bB}^0)}{f} \vec(\bA_*) \nonumber \\
+		&\qquad + \vec(\bDelta_2) \label{A_1_error}
+\end{align}
+where we used (see (106) from \cite{EstCovMatKron})
+\begin{align}
+	\bR_A(\bB_*^{-T}\otimes \bB_*^{-1}) &= \vec(\bA_*)\vec(\bB_*)^T \nonumber \\
+	\bR_B(\bA_*^{-T}\otimes \bA_*^{-1}) &= \vec(\bB_*)\vec(\bA_*)^T \label{identities}
+\end{align}
+and $\bDelta_2$ is given by
+\begin{align}
+	\vec(\bDelta_2) &= \frac{1}{f} \hat{\bR}_A \vec(\bDelta_1) \nonumber \\
+		&\quad - \frac{1}{f} \tilde{\bR}_A (\bB_*^{-T}\otimes \bB_*^{-1}) \vec(\tilde{\bB}^0)  \label{vec_Delta_2}
+\end{align}
+
+Using (\ref{Delta_1_Frob}) and (\ref{B_0_Frob}) and bounds $\nn \tilde{\bR}_A \nn_2 \leq pf |\hat{\bS}_n-\bSigma_0|_\infty=O_P\left( pf \sqrt{\frac{\log(pf)}{n}} \right)$ (see Lemma 1 in \cite{Rothman}) and $\nn \bR_A\nn_2 = \nn \bA_0 \nn_F \nn \bB_0 \nn_F \leq \sqrt{pf} \nn \bSigma_0 \nn_2$:
+\begin{align}
+	\nn & \bDelta_2 \nn_F \leq \frac{1}{f} \nn \hat{\bR}_A \nn_2 \nn \bDelta_1 \nn_F + \frac{1}{f} \nn \tilde{\bR}_A \nn_2 \nn \bB_*^{-1} \nn_2^2 \nn \tilde{\bB}^0\nn_F \nonumber \\
+	  %&= O_P\left( \sqrt{\frac{p}{f}} \frac{f^{2.5} \log f}{n} + \frac{pf\sqrt{\log(pf)\log(f)}}{n} \right) \nonumber \\
+		&= O_P\left( (f^2p^{-1/2} + \sqrt{p}) \frac{\log M }{n} \right) \label{Delta_2_Frob}
+\end{align}
+
+
+Now, using the triangle inequality in (\ref{A_1_error}) and the bounds (\ref{Delta_2_Frob}) and (\ref{B_0_Frob}), we obtain:
+\begin{align}
+	\nn \tilde{\bA}^1 \nn_F &\leq \nn \hat{\bA}(\bB_*)-\bA_* \nn_F + \frac{\nn \bA_*\nn_F \nn \bB_*^{-1}\nn_F \nn \tilde{\bB}^0 \nn_F}{f} + \nn \bDelta_2\nn_F  \nonumber \\
+		&\leq O_P\Big( \underbrace{ (pf^{-1/2}+\sqrt{f})\sqrt{\frac{\log M}{n}} }_{a_{p,f,n}^{(1)}} + \underbrace{ (f^2p^{-1/2}+\sqrt{p}) \frac{\log M}{n} }_{\tilde{a}_{p,f,n}^{(1)}} \Big) \label{tilde_A_1_Frob}
+\end{align}
+where we also used the Cauchy-Schwarz inequality $|\tr(\bA_*\bB_*^{-1})|\leq \nn \bA_*\nn_F \nn \bB_*^{-1}\nn_F \leq \sqrt{pf} \nn \bA_* \nn_2\nn \bB_*^{-1}\nn_2$ and Lemma \ref{lemma: large_dev_optimal}. The growth assumption implies $\frac{\tilde{a}_{p,f,n}^{(1)}}{a_{p,f,n}^{(1)}} = \frac{f^2p^{-1/2}+\sqrt{p}}{pf^{-1/2}+\sqrt{f}} \sqrt{\frac{\log M}{n}} = O(1)$. This implies that $\tilde{a}_{p,f,n}^{(1)}$ is asymptotically negligible and thus:
+\begin{equation} \label{A_1_Frob}
+	\nn \tilde{\bA}^1 \nn_F = O_P\left( (pf^{-1/2}+\sqrt{f})\sqrt{\frac{\log M}{n}} \right)
+\end{equation}
+
+
+In parallel to (\ref{mil_1}), we expand:
+\begin{align}
+	(\hat{\bA}(\hat{\bB}(\bA_{init})))^{-1} &= (\bA_* + \tilde{\bA}^1)^{-1} \nonumber \\
+		&= \bA_*^{-1} - \bA_*^{-1}\tilde{\bA}^1 \bA_*^{-1} + \bDelta_3  \label{eqq}
+\end{align}
+where
+\begin{equation} \label{Delta_3}
+	\bDelta_3 = \sum_{k=2}^\infty (-\bA_*^{-1} \tilde{\bA}^1)^k \bA_*^{-1}
+\end{equation}
+
+Then, expanding $\tilde{\bB}^2$ in parallel to (\ref{A_1_error}),
+\begin{align}
+	\vec(\tilde{\bB}^2) %&= \frac{1}{p} \hat{\bR}_B \vec((\hat{\bA}(\hat{\bB}(\bA_{init})))^{-1}) - \vec(\bB_*) \nonumber \\
+		%&= \frac{1}{p} \tilde{\bR}_B \vec(\bA_*^{-1}) - \frac{1}{p} \bR_B (\bA_*^{-T}\otimes \bA_*^{-1}) \vec(\tilde{\bA}^1) \nonumber \\
+		%&\qquad + \vec(\bDelta_4) \nonumber \\
+		&= \vec(\hat{\bB}(\bA_*)-\bB_*) - \frac{\tr(\bA_*^{-1} \tilde{\bA}^1)}{p} \vec(\bB_*) \nonumber \\
+		&\qquad + \vec(\bDelta_4) \label{B_2_error}
+\end{align}
+where 
+\begin{equation} \label{vec_Delta_4}
+	\vec(\bDelta_4) = \frac{1}{p} \hat{\bR}_B\vec(\bDelta_3) - \frac{1}{p} \tilde{\bR}_B (\bA_*^{-T}\otimes \bA_*^{-1}) \vec(\tilde{\bA}^1)
+\end{equation}
+
+Using similar techniques as above, it follows from (\ref{A_1_Frob}) and (\ref{Delta_3}):
+\begin{equation*}
+	\nn \bDelta_3 \nn_2 = O_P\left( (pf^{-1/2}+\sqrt{f})^2 \frac{\log M}{n} \right)
+\end{equation*}
+which implies
+\begin{equation} \label{Delta_3_Frob}
+	\nn \bDelta_3 \nn_F = O_P\left( \sqrt{p} (pf^{-1/2}+\sqrt{f})^2 \frac{\log M}{n} \right)
+\end{equation}
+
+Applying the triangle inequality in (\ref{vec_Delta_4}) and using (\ref{A_1_Frob}), (\ref{Delta_3_Frob}), we have after some algebra:
+\begin{align}
+	\nn & \bDelta_4 \nn_F \leq \frac{1}{p} \nn\hat{\bR}_B\nn_2 \nn \bDelta_3\nn_F + \frac{1}{p} \nn \tilde{\bR}_B\nn_2 \nn \bA_*^{-1}\nn_2^2 \nn \tilde{\bA}^1\nn_F \nonumber \\
+		%&= O_P \Big( \frac{\sqrt{pf}}{p} \frac{\sqrt{p} M_{p,f}^2 \log(M_{p,f})}{n}  \nonumber \\
+		%&\quad + \frac{1}{p}\left(pf\sqrt{\frac{\log(pf)}{n}}\right) \sqrt{\frac{M_{p,f}^2 \log(M_{p,f})}{n}} \Big) \nonumber \\
+		&= O_P\left( \sqrt{f} (pf^{-1/2}+\sqrt{f})^2 \frac{\log M}{n} \right) \label{Delta_4_Frob}
+\end{align}
+
+From (\ref{B_2_error}), (\ref{A_1_Frob}) and (\ref{vec_Delta_4}), we obtain:
+\begin{align}
+%\leq \nn\hat{\bB}(\bA_*)-\bB_*\nn_F + \frac{|\tr(\bA_*^{-1} \tilde{\bA}^1)|}{p} \nn\bB_*\nn_F + \nn\bDelta_4 \nn_F \nonumber \\
+	\nn & \tilde{\bB}^2 \nn_F \leq \nn\hat{\bB}(\bA_*)-\bB_*\nn_F + \frac{\nn \tilde{\bA}^1 \nn_F \sqrt{pf}}{p} \nn\bA_*^{-1}\nn_2 \nn\bB_*\nn_2 + \nn\bDelta_4 \nn_F \nonumber \\
+		%&=O_P\left( \sqrt{\frac{f^2 \log f}{n}} + (\sqrt{\frac{pM\log M}{n}}) \frac{\sqrt{pf}}{p} + \frac{\sqrt{f} M^2\log M}{n} \right) \nonumber \\
+		&= O_P\left( \underbrace{(fp^{-1/2}+\sqrt{p}) \sqrt{\frac{\log M}{n}}}_{b^{(2)}} + \underbrace{\sqrt{f} (pf^{-1/2}+\sqrt{f})^2 \frac{\log M}{n}}_{\tilde{b}^{(2)}} \right) \nonumber \\
+		&= O_P\left( (fp^{-1/2}+\sqrt{p}) \sqrt{\frac{\log M}{n}} \right) \label{tilde_B_2_Frob}
+\end{align}
+where we used the growth assumption to obtain $\frac{\tilde{b}^{(2)}}{b^{(2)}} = \frac{\sqrt{f}(pf^{-1/2}+\sqrt{f})^2}{fp^{-1/2}+\sqrt{p}}=O(1)$.
+
+Define the errors $\tilde{\bR}_{FF}(3)=\hat{\bR}_{FF}(3) - \bSigma_0$ and $\tilde{\bR}:=\hat{\bS}_n-\bSigma_0$. Using the permutation operator $\mathcal{R}$ defined in \cite{EstCovMatKron}, we plug in (\ref{A_1_error}) and (\ref{B_2_error}) and simplify: 
+\begin{align}
+	& \vec(\mathcal{R}(\tilde{\bR}_{FF}(3))) = \vec(\vec(\tilde{\bA}^1)\vec(\bB_*)^T) \nonumber \\
+		&\quad + \vec(\vec(\bA_*)\vec(\tilde{\bB}^2)^T) + \vec(\vec(\tilde{\bA}^1)\vec(\tilde{\bB^2})^T) \nonumber\\
+		&\quad = \bP_R^{-1}\bXi \vec(\tilde{\bR}) + \vec(\tilde{\bDelta}_R) \label{error_FF_1}
+\end{align}
+where $\tilde{\bDelta}_R$ is given by:
+\begin{align}
+	& \tilde{\bDelta}_R = \vec(\bDelta_2)\vec(\bB_*)^T + \vec(\bA_*)\vec(\bDelta_4)^T \nonumber \\
+	&\quad -\frac{\tr(\bDelta_2 \bA_*^{-1})}{p} \vec(\bA_0)\vec(\bB_0)^T + \vec(\tilde{\bA}^1)\vec(\tilde{\bB}^2)^T \label{tilde_Delta_R}
+\end{align}
+and $\bXi$ is a data-independent matrix:
+\begin{align}
+	\bXi &= \bP_R \big[ \frac{1}{f} (\vec(\bB_0)\vec(\bB_0^{-1})^T\otimes \bI_{p^2}) \bP_{R_A} \nonumber \\
+		&\quad + \frac{1}{p} (\bI_{f^2}\otimes \vec(\bA_0)\vec(\bA_0^{-1})^T) \bK_{f^2,p^2} \bP_{R_B} \nonumber \\
+		&\quad - \frac{1}{pf} (\vec(\bB_0)\vec(\bA_0^{-1})^T \nonumber \\
+		&\qquad \otimes \vec(\bA_0)\vec(\bB_0^{-1})^T) \bK_{p^2,f^2} \bP_{R_A} \big] \label{bXi_def}
+\end{align}
+From (\ref{error_FF_1}) and (24) in \cite{EstCovMatKron}, we have:
+\begin{equation} \label{error_FF_2}
+	\vec(\tilde{\bR}_{FF}(3)) = \bXi \vec(\tilde{\bR}) + \vec(\bDelta_R)
+\end{equation}
+where $\vec(\bDelta_R):=\bP_R \vec(\tilde{\bDelta}_R)$. Since $\bP_R$ is a permutation matrix, $\nn \bDelta_R \nn_F = \nn \tilde{\bDelta}_R \nn_F$. Using this and the triangle inequality in (\ref{tilde_Delta_R}):
+\begin{align}
+	\nn \bDelta_R \nn_F %&\leq \nn\bDelta_2 \nn_F \nn\bB_* \nn_F + \nn \bA_*\nn_F \nn \bDelta_4 \nn_F \nonumber \\
+		%&+ \frac{|\tr(\bDelta_2 \bA_*^{-1})|}{p} \nn\bA_0\nn_F \nn\bB_0\nn_F + \nn\tilde{\bA}^1\nn_F \nn\tilde{\bB}^2\nn_F \nonumber \\
+		&\leq \nn \bDelta_2 \nn_F \sqrt{f} \nn \bB_*\nn_2 + \sqrt{p} \nn \bA_*\nn_2 \nn \bDelta_4 \nn_F \nonumber \\
+		&+ \nn\bDelta_2\nn_F \nn \bA_*^{-1}\nn_2 \nn\bA_0 \nn_2 \sqrt{f} \nn \bB_0 \nn_2 + \nn\tilde{\bA}^1\nn_F \nn\tilde{\bB}^2\nn_F \nonumber \\
+		%&=O_P\Big( \sqrt{f}(\frac{\sqrt{p} M^2 \log M}{n}) + \sqrt{p} (\frac{ \sqrt{f} M^2 \log M}{n}) \nonumber \\
+		%&\quad + \frac{\sqrt{pf} M \log M}{n} \Big) \nonumber \\
+		&= O_P\left( \sqrt{pf} \bar{M} \frac{\log M}{n} \right) \label{Delta_R_Frob}
+\end{align}
+where we used the Frobenius norm bounds in (\ref{Delta_2_Frob}), (\ref{Delta_4_Frob}), (\ref{tilde_A_1_Frob}) and (\ref{tilde_B_2_Frob}). Recall that $\bar{M}$ was defined in the statement of the Theorem.
+
+From (\ref{error_FF_2}), we obtain:
+\begin{align}
+	\Cov(& \vec(\tilde{\bR}_{FF}(3))) = \bXi \Cov(\vec(\tilde{\bR})) \bXi^T + \E[\bXi \vec(\tilde{\bR}) \vec(\bDelta_R)^T] \nonumber \\
+		&+ \E[\vec(\bDelta_R) (\bXi \vec(\tilde{\bR}))^T] + \E[\vec(\bDelta_R) \vec(\bDelta_R)^T] \label{cov_error_FF}
+\end{align}
+where we used $\E[\vec(\tilde{\bR})] = \mathbf{0}$ and $\E[\vec(\bDelta_R)] = \mathbf{0}$.
+By Jensen's inequality and the Cauchy-Schwarz inequality, we obtain:
+\begin{equation}
+	|\tr(\E[\bXi \vec(\tilde{\bR}) \vec(\bDelta_R)^T])| \leq \nn \bXi \nn_2 \E[ \nn \tilde{\bR} \nn_F \nn \bDelta_R \nn_F ] \label{term_1_bound}
+\end{equation}
+From (\ref{bXi_def}), it is easy to see that $\nn \bXi \nn_2=O(1)$ as $p,f\to\infty$. Similarly, we have
+\begin{equation} \label{term_2_bound}
+	|\tr(\E[\vec(\bDelta_R) \vec(\bDelta_R)^T])| \leq \E[ \nn \bDelta_R \nn_F^2 ]
+\end{equation}
+
+
+After some algebra, it can be shown \cite{TsiligkaridisTSP}:
+\begin{align}
+	\tr\left( \bXi (\bSigma_0\otimes \bSigma_0) \bXi^T\right) &= \tr(\bA_0)^2 \frac{\tr(\bB_0^2)}{f} + \tr(\bB_0)^2 \frac{\tr(\bA_0^2)}{p} \nonumber \\
+		&\quad - \frac{\tr(\bA_0^2)\tr(\bB_0^2)}{pf} \label{eval_1}
+\end{align}
+From $\tr(\bA_0)^2 \leq \nn \bA_0 \nn_2^2 p^2$ and $\tr(\bB_0^2) \leq f \nn\bB_0 \nn_2^2$, we then have:
+\begin{equation} \label{upper_bound_trace}
+	\tr\left( \bXi (\bSigma_0\otimes \bSigma_0) \bXi^T\right) \leq (p^2+f^2) \nn \bSigma_0\nn_2^2
+\end{equation}
+and
+\begin{equation} \label{lower_bound_trace}
+	\tr\left( \bXi (\bSigma_0\otimes \bSigma_0) \bXi^T\right) \geq (p^2+f^2) \lambda_{min}(\bA_0)^2 \lambda_{min}(\bB_0)^2 - \nn \bSigma_0\nn_2^2
+\end{equation}
+%Let us prove (\ref{eval_1}) now. Note that
+%\begin{equation*}
+%	\tr(\bXi (\bSigma_0\otimes \bSigma_0) \bXi^T) = \vec(\bXi^T \bXi)^T \vec(\bSigma_0\otimes \bSigma_0) = \sum_{i=1}^9 T_i
+%\end{equation*}
+%where $T_i$ will be defined and calculated below.
+%
+%% T1
+%We have
+%\begin{align*}
+%	T_1 &= \vec(\{\frac{1}{f} (\vec(\bB_0)\vec(\bB_0^{-1})^T\otimes \bI_{p^2}) \bP_{R_A} \}^T \times \\
+%	&\quad \{\frac{1}{f} (\vec(\bB_0)\vec(\bB_0^{-1})^T\otimes \bI_{p^2}) \bP_{R_A} \})^T \vec(\bSigma_0\otimes \bSigma_0) \\
+%		%&= \frac{\tr(\bB_0)^2}{f^2} \vec(\bP_{R_A}^T(\vec(\bB_0^{-1})\vec(\bB_0^{-1})^T\otimes \bI_{p^2})\bP_{R_A})^T \times \\
+%		%&\quad  \vec(\bSigma_0\otimes \bSigma_0) \\
+%		%&= \frac{\tr(\bB_0)^2}{f^2} \vec((\vec(\bB_0^{-1})\vec(\bB_0^{-1})^T\otimes \bI_{p^2}))^T \times \\
+%		%&\quad (\bP_{R_A}\otimes \bP_{R_A}) \vec(\bSigma_0\otimes \bSigma_0) \\
+%		&= \frac{\tr(\bB_0)^2}{f^2} \vec((\vec(\bB_0^{-1})\vec(\bB_0^{-1})^T\otimes \bI_{p^2}))^T \times \\
+%		&\quad \vec(\bP_{R_A}(\bSigma_0\otimes \bSigma_0)\bP_{R_A}^T) \\
+%		&= \frac{\tr(\bB_0)^2}{f^2} \vec((\vec(\bB_0^{-1})\vec(\bB_0^{-1})^T\otimes \bI_{p^2}))^T \times \\
+%		&\quad \vec((\bB_0\otimes \bB_0)\otimes (\bA_0\otimes \bA_0)) \\
+%		%&= \frac{\tr(\bB_0)^2}{f^2} \tr((\vec(\bB_0^{-1})\vec(\bB_0^{-1})^T\otimes \bI_{p^2}) \times \\
+%		%&\quad ((\bB_0\otimes \bB_0)\otimes (\bA_0\otimes \bA_0))) \\
+%		%&= \frac{\tr(\bB_0)^2}{f^2} \tr((\vec(\bB_0^{-1})\vec(\bB_0^{-1})^T(\bB_0\otimes \bB_0)) \otimes (\bA_0\otimes \bA_0)) \\
+%		&= \tr(\bA_0)^2 \frac{\tr(\bB_0^2)}{f^2} \cdot \vec(\bB_0^{-1})^T (\bB_0 \otimes \bB_0) \vec(\bB_0^{-1}) \\
+%		&= \tr(\bA_0)^2 \frac{\tr(\bB_0^2)}{f}
+%\end{align*}
+%where we used several Kronecker product identities \cite{HornJohnson} and the definition of the permutation matrix $\bP_{R_A}$.
+%%We also used the nontrivial identity
+%%\begin{align*}
+%%	\vec(\bB_0^{-1})^T (\bB_0 \otimes \bB_0) \vec(\bB_0^{-1}) &= \vec(\bB_0^{-1})^T \vec(\bB_0 \bB_0^{-1} \bB_0) \\
+%%		&= \tr(\bB_0 \bB_0^{-1}) = f
+%%\end{align*}
+%
+%
+%The rest of the terms are given by:
+%\begin{align*}
+%	T_2 &= \vec(\{\frac{1}{f} (\vec(\bB_0)\vec(\bY_0)^T\otimes \bI_{p^2})\bP_{R_A}\}^T \\
+%			& \times \{ \frac{1}{p} (\bI_{f^2} \otimes \vec(\bA_0)\vec(\bX_0)^T)\bK_{f^2,p^2}\bP_{R_B} \})^T \vec(\bSigma_0\otimes \bSigma_0) \\
+%		%	&= \frac{\tr(\bA_0^2)\tr(\bB_0^2)}{pf} \\
+%	T_3 &= \vec(\{\frac{1}{f} (\vec(\bB_0)\vec(\bY_0)^T\otimes \bI_{p^2})\bP_{R_A}\}^T \\
+%			& \times \{ \frac{-1}{pf} (\vec(\bB_0)\vec(\bX_0)^T \otimes \vec(\bA_0)\vec(\bY_0)^T)\bK_{p^2,f^2}\bP_{R_A} \})^T \\
+%			& \times \vec(\bSigma_0\otimes \bSigma_0) \\
+%		%	&= -\frac{\tr(\bA_0^2)\tr(\bB_0^2)}{pf} \\
+%	T_4 &= \vec(\{\frac{1}{p}(\bI_{f^2}\otimes \vec(\bA_0)\vec(\bX_0)^T) \bK_{f^2,p^2} \bP_{R_B}\}^T \\
+%			& \times \{\frac{1}{f} (\vec(\bB_0)\vec(\bY_0)^T \otimes \bI_{p^2}) \bP_{R_A}\})^T \vec(\bSigma_0\otimes \bSigma_0) \\
+%		%	&= \frac{\tr(\bA_0^2)\tr(\bB_0^2)}{pf} \\
+%	T_5 &= \vec(\{\frac{1}{p}(\bI_{f^2}\otimes \vec(\bA_0)\vec(\bX_0)^T) \bK_{f^2,p^2} \bP_{R_B}\}^T \\
+%			& \times \{ \frac{1}{p} (\bI_{f^2}\otimes \vec(\bA_0)\vec(\bA_0^{-1})) \bK_{f^2,p^2} \bP_{R_B} \} )^T \vec(\bSigma_0\otimes \bSigma_0) \\
+%		%&= \frac{\tr(\bA_0^2)}{p^2} \vec(\bP_{R_B}^T \bK_{f^2,p^2} (\bI_{f^2} \otimes \vec(\bA_0^{-1})\vec(\bA_0^{-1})^T)  \times \\
+%		%&\quad \bK_{f^2,p^2} \bP_{R_B})^T\vec(\bSigma_0\otimes \bSigma_0) \\
+%		%&= \frac{\tr(\bA_0^2)}{p^2} \vec(\bI_{f^2} \otimes \vec(\bA_0^{-1})\vec(\bA_0^{-1})^T)^T \times \\
+%		%&\quad \vec( \bK_{f^2,p^2} \bP_{R_B}(\bSigma_0\otimes \bSigma_0)\bP_{R_B}^T \bK_{f^2,p^2}^T) \\
+%		%&= \frac{\tr(\bA_0^2)}{p^2} \tr(\bB_0)^2 \vec(\bA_0^{-1})^T (\bA_0\otimes \bA_0) \vec(\bA_0^{-1}) \\
+%			&= \tr(\bB_0)^2 \frac{\tr(\bA_0^2)}{p} \\
+%	T_6 &= \vec(\{\frac{1}{p}(\bI_{f^2}\otimes \vec(\bA_0)\vec(\bX_0)^T) \bK_{f^2,p^2} \bP_{R_B}\}^T \\
+%			& \times \{ \frac{-1}{pf}(\vec(\bB_0)\vec(\bX_0)^T \otimes \vec(\bA_0)\vec(\bY_0)^T)\bK_{p^2,f^2}\bP_{R_A} \} )^T \\
+%			& \times \vec(\bSigma_0\otimes \bSigma_0) \\
+%	%		&= -\frac{\tr(\bA_0^2)\tr(\bB_0^2)}{pf} \\
+%	T_7 &= \vec(\{  \frac{-1}{pf}(\vec(\bB_0)\vec(\bX_0)^T \otimes \vec(\bA_0)\vec(\bY_0)^T)\bK_{p^2,f^2}\bP_{R_A} \}^T  \\
+%			& \times \{ \frac{1}{f} (\vec(\bB_0)\vec(\bY_0)^T\otimes \bI_{p^2})\bP_{R_A} \} )^T \vec(\bSigma_0\otimes \bSigma_0) \\
+%	%		&= -\frac{\tr(\bA_0^2)\tr(\bB_0^2)}{pf} \\
+%	T_8 &= \vec(\{  \frac{-1}{pf}(\vec(\bB_0)\vec(\bX_0)^T \otimes \vec(\bA_0)\vec(\bY_0)^T)\bK_{p^2,f^2}\bP_{R_A} \}^T  \\
+%			& \times \{ \frac{1}{p}(\bI_{f^2}\otimes \vec(\bA_0)\vec(\bX_0)^T) \bK_{f^2,p^2} \bP_{R_B} \} )^T \vec(\bSigma_0\otimes \bSigma_0) \\
+%	%		&= -\frac{\tr(\bA_0^2)\tr(\bB_0^2)}{pf} \\
+%	T_9 &= \vec(\{  \frac{-1}{pf}(\vec(\bB_0)\vec(\bX_0)^T \otimes \vec(\bA_0)\vec(\bY_0)^T)\bK_{p^2,f^2}\bP_{R_A} \}^T \\
+%			& \times \{  \frac{-1}{pf}(\vec(\bB_0)\vec(\bX_0)^T \otimes \vec(\bA_0)\vec(\bY_0)^T)\bK_{p^2,f^2}\bP_{R_A} \} )^T \\
+%			& \times \vec(\bSigma_0\otimes \bSigma_0)
+%	%		&= \frac{\tr(\bA_0^2)\tr(\bB_0^2)}{pf}
+%\end{align*}
+%where we used the definitions of the permutation matrices $\bP_{R_B}, \bP_{R_A}, \bK_{p^2,f^2}$ and $\bK_{f^2,p^2}$.
+%
+%%% T9
+%%Using similar techniques, we simplify $T_9$:
+%%\begin{align*}
+%%	T_9 &= \vec(\frac{1}{p^2f^2} \bP_{R_A}^T\bK_{p^2,f^2}^T (\vec(\bA_0^{-1})\vec(\bB_0)^T \\
+%%		&\quad \otimes \vec(\bB_0^{-1})\vec(\bA_0)^T) (\vec(\bB_0)\vec(\bA_0^{-1})^T \\
+%%		&\quad \otimes \vec(\bA_0)\vec(\bB_0^{-1})^T) \bK_{p^2,f^2} \bP_{R_A})^T  \times \\
+%%		&\quad \vec(\bSigma_0\otimes \bSigma_0) \\
+%%		%&= \frac{\tr(\bB_0^2)\tr(\bA_0^2)}{p^2f^2} \vec(\vec(\bA_0^{-1})\vec(\bA_0^{-1})^T \\
+%%		%&\quad \otimes \vec(\bB_0^{-1})\vec(\bB_0^{-1})^T)^T \vec((\bA_0\otimes \bA_0)\otimes (\bB_0\otimes \bB_0)) \\
+%%		%&= \frac{\tr(\bB_0^2)\tr(\bA_0^2)}{p^2f^2} \cdot \{\vec(\bA_0^{-1})^T (\bA_0\otimes \bA_0) \vec(\bA_0^{-1})\} \times \\
+%%		%&\quad \{\vec(\bB_0^{-1})^T (\bB_0\otimes \bB_0) \vec(\bB_0^{-1})\} \\
+%%		&= \frac{\tr(\bA_0^2)\tr(\bB_0^2)}{pf}
+%%\end{align*}
+%
+%After some algebra, we observe $T_2=-T_3=T_4=-T_6=-T_7=-T_8=T_9=\frac{\tr(\bA_0^2)\tr(\bB_0^2)}{pf}$, which implies:
+%\begin{equation*}
+%	\tr(\bXi(\bSigma_0 \otimes \bSigma_0) \bXi^T) = T_1+T_5+T_7
+%\end{equation*}
+%which in turn yields (\ref{eval_1}).
+%
+%
+%%% put trace inequality here!
+%%Recall Eq. (109) in \cite{EstCovMatKron}-i.e.
+%%\begin{equation*}
+%%	\Cov(\vec(\tilde{\bR})) = \frac{\bSigma_0^T \otimes \bSigma_0}{n}
+%%\end{equation*}
+From (\ref{cov_error_FF}) and the bounds (\ref{term_1_bound}),(\ref{term_2_bound}), we have:
+\begin{align}
+	\Big| & \frac{n \tr(\Cov(\vec(\tilde{\bR}_{FF}(3))))}{\tr(\bXi(\bSigma_0^T\otimes \bSigma_0)\bXi^T)} - 1 \Big| \nonumber \\
+		&\leq \frac{n(2\nn\bXi \nn_2 \E[\nn \tilde{\bR} \nn_F\nn \bDelta_R\nn_F] + \E[\nn \bDelta_R\nn_F^2])}{\tr(\bXi(\bSigma_0^T\otimes \bSigma_0)\bXi^T)} \nonumber \\
+		&= O\Big( \frac{n}{p^2+f^2} \Big\{(pf)^{3/2}\bar{M} (\frac{\log M}{n})^{3/2} \nonumber \\
+		&\qquad + pf \bar{M}^2 (\frac{\log M}{n})^2 \Big\}  \Big) \label{step_LB} \\
+		%&= O\left( \frac{pf M^2}{p^2+f^2} \frac{(\log M)^{3/2}}{\sqrt{n}} (\sqrt{pf} + M^2\sqrt{\frac{\log M}{n}}) \right) \nonumber \\
+		&= O\left( \frac{(pf)^{3/2} \bar{M}}{p^2+f^2} \frac{(\log M)^{3/2}}{\sqrt{n}} \right) \label{trace_ineq_1} \\
+		&= o(1) \nonumber
+\end{align}
+where we used (\ref{lower_bound_trace}) in (\ref{step_LB}). Note that we used the growth bound assumption $\frac{\bar{M} \sqrt{\log M}}{\sqrt{pf}} =O(\sqrt{n})$ in (\ref{trace_ineq_1}) \footnote{This follows since $\frac{\bar{M} \sqrt{\log M}}{\sqrt{pf}} \leq \frac{\bar{M} \sqrt{\log M}}{\sqrt{f/p} + \sqrt{p/f}}=O(\sqrt{n})$.} and the last step follows from the growth assumption $\frac{(pf)^3 \bar{M}^2 (\log M)^3}{(p^2+f^2)^2}=o(n)$.
+
+Thus, in first order, we have:
+\begin{equation*}
+	\tr(\Cov(\vec(\tilde{\bR}_{FF}(3)))) \cong \frac{ \tr(\bXi (\bSigma_0 \otimes \bSigma_0) \bXi^T)}{n}
+\end{equation*}
+as $p,f,n\to\infty$, which implies:
+\begin{equation*}
+	\nn \tilde{\bR}_{FF}(3) \nn_F^2 = O_P\left( \frac{\tr(\bXi (\bSigma_0 \otimes \bSigma_0) \bXi^T)}{n} \right)
+\end{equation*}
+as $p,f,n\to\infty$. Combining this with (\ref{upper_bound_trace}), we conclude that the proof for $k=3$ FF iterations is complete.
+
+
+
+
+
+
+% Extend to k odd
+
+%
+%Next, we turn to the $k\geq 3$ case, where $k$ is odd. For this case, the main arguments will be sketched since the details follow from similar analysis as before. We saw above that $\bDelta_R$ is asymptotically negligible as $p,f,n\to\infty$, so we introduce the approximation symbol ``$\cong$'' that will retain only the first order terms.
+%
+%As before, define $\bB^0 = \hat{\bB}(\bA_{init}) - \bB_*$ and for $k \geq 3$ odd, recursively define:
+%\begin{align}
+%	\vec(\tilde{\bA}^{k-2}) \cong \frac{1}{f} \tilde{\bR}_A \vec(\bB_*^{-1}) - \frac{1}{f} \bR_A(\bB_*^{-T}\otimes \bB_*^{-1})\vec(\tilde{\bB}^{k-3}) \label{vec_tilde_A_iter} \\
+%	\vec(\tilde{\bB}^{k-1}) \cong \frac{1}{p} \tilde{\bR}_B \vec(\bA_*^{-1}) - \frac{1}{p} \bR_B(\bA_*^{-T}\otimes \bA_*^{-1})\vec(\tilde{\bA}^{k-2}) \label{vec_tilde_B_iter}
+%\end{align}
+%This is a continuation of the recursive pattern that arises when ignoring the higher-order asymptotics-i.e., for $k=3$, (\ref{vec_tilde_A_iter}) becomes identical to (\ref{A_1_error}) when $\bDelta_2$ is negligible and (\ref{vec_tilde_B_iter}) becomes identical to (\ref{B_2_error}) when $\bDelta_4$ is negligible.
+%
+%Expanding out $\vec(\tilde{\bA}^{k-2})$ and $\vec(\tilde{\bB}^{k-1})$ for odd $k\geq 3$, we obtain:
+%\begin{align}
+%	\vec( &\tilde{\bA}^{k-2}) \cong \frac{1}{f} \tilde{\bR}_A\vec(\bB_*^{-1}) \nonumber \\
+%		& - (\frac{k-3}{2}) \frac{1}{pf} \vec(\bA_*) \vec(\bB_*^{-T})^T \tilde{\bR}_B \vec(\bA_*^{-1}) \nonumber \\
+%		& + (\frac{k-3}{2}) \frac{1}{pf} \vec(\bA_*) \vec(\bA_*^{-T})^T \tilde{\bR}_A \vec(\bB_*^{-1}) \nonumber \\
+%		& - \frac{1}{pf} \vec(\bA_*)\vec(\bB_*^{-T})^T \tilde{\bR}_B \vec(\bA_{init}^{-1}) \label{vec_tilde_A_iter_expand} \\
+%	\vec( &\tilde{\bB}^{k-1}) \cong \frac{1}{p}\tilde{\bR}_B \vec(\bA_*^{-1}) \nonumber \\
+%		& - (\frac{k-1}{2}) \frac{1}{pf} \vec(\bB_*)\vec(\bA_*^{-T})^T \tilde{\bR}_A \vec(\bB_*^{-1}) \nonumber \\
+%		& + (\frac{k-3}{2}) \frac{1}{pf} \vec(\bB_*)\vec(\bB_*^{-T})^T \tilde{\bR}_B \vec(\bA_*^{-1}) \nonumber \\
+%		& + \frac{1}{pf} \vec(\bB_*)\vec(\bB_*^{-T})^T \tilde{\bR}_B \vec(\bA_{init}^{-1}) \label{vec_tilde_B_iter_expand}
+%\end{align}
+%where we repeteadly used the identities (\ref{identities}) (see (106) in \cite{EstCovMatKron}).
+%
+%Then, at the $k$th odd FF iteration, letting $\tilde{\bR}_{FF}(k) = \hat{\bR}_{FF}(k)- \bSigma_0$, we have:
+%\begin{align}
+%	\vec(\mathcal{R}(\tilde{\bR}_{FF}(k))) &\cong \vec(\vec(\tilde{\bA}^{k-2})\vec(\bB_*)^T) \nonumber \\
+%		&\quad + \vec(\vec(\bA_*)\vec(\tilde{\bB}^{k-1})^T) \label{total_error_k}
+%\end{align}
+%where we used Eqs. (22),(23) from \cite{EstCovMatKron}.
+%
+%Using (\ref{vec_tilde_A_iter_expand}) and (\ref{vec_tilde_B_iter_expand}) in (\ref{total_error_k}) and simplifying:
+%%\begin{align*}
+%%	& \vec( \mathcal{R}(\tilde{\bR}_{FF}(k))) \cong \frac{1}{f} (\vec(\bB_0)\vec(\bB_0^{-1})^T \otimes \bI_{p^2}) \vec(\bR_A) \\
+%%	 &- (\frac{k-3}{2}) \frac{1}{pf} (\vec(\bB_0)\vec(\bA_0^{-1})^T \otimes \vec(\bA_0)\vec(\bB_0^{-T})^T) \\
+%%	 &\qquad \times \vec(\tilde{\bR}_B) \\
+%%	 &+ (\frac{k-1}{2}) \frac{1}{pf} (\vec(\bB_0)\vec(\bB_0^{-1})^T \otimes \vec(\bA_0)\vec(\bA_0^{-T})^T) \\
+%%	 &\qquad \times \vec(\tilde{\bR}_A) \\
+%%	 &- \frac{1}{pf} (\vec(\bB_0)\vec(\bB_0^{-1})^T \otimes \vec(\bA_0)\vec(\bA_0^{-T})^T) \vec(\tilde{\bR}_A) \\
+%%	 &- \frac{1}{pf} (\vec(\bB_*)\vec(\bA_{init}^{-1})^T \otimes \vec(\bA_*)\vec(\bB_*^{-T})^T) \vec(\tilde{\bR}_B) \\
+%%	 &+ \frac{1}{p} (\bI_{f^2}\otimes \vec(\bA_0)\vec(\bA_0^{-1})^T) \vec(\tilde{\bR}_B^T) \\
+%%	 &- (\frac{k-1}{2}) \frac{1}{pf} (\vec(\bB_0)\vec(\bA_0^{-T})^T \otimes \vec(\bA_0)\vec(\bB_0^{-1})^T) \\
+%%	 &\qquad \times \vec(\tilde{\bR}_A^T) \\
+%%	 &+ (\frac{k-3}{2}) \frac{1}{pf} (\vec(\bB_0)\vec(\bB_0^{-T})^T \otimes \vec(\bA_0)\vec(\bA_0^{-1})^T) \\
+%%	 &\qquad \times \vec(\tilde{\bR}_B^T) \\
+%%	 &+ \frac{1}{pf} (\vec(\bB_*)\vec(\bB_*^{-T})^T \otimes \vec(\bA_*)\vec(\bA_{init}^{-1})^T) \vec(\tilde{\bR}_B^T) \\
+%%	 &= \bP_R^{-1} \bXi \vec(\tilde{\bR})
+%%\end{align*}
+%\begin{equation*}
+%	\vec( \mathcal{R}(\tilde{\bR}_{FF}(k))) \cong \bP_R^{-1} \bXi \vec(\tilde{\bR})
+%\end{equation*}
+%where $\bXi$ was defined in (\ref{bXi_def}), $\tilde{\bR} = \hat{\bS}_n-\bSigma_0$, and $\bP_R$ is the permutation matrix defined in (24) from \cite{EstCovMatKron}. Note that three cancellations occured in the last step. Using (24) from \cite{EstCovMatKron}:
+%\begin{equation} \label{eq_star}
+%	\vec(\tilde{\bR}_{FF}(k))) \cong \bXi \vec(\tilde{\bR})
+%\end{equation}
+%Since (\ref{eq_star}) is identical to (\ref{error_FF_2}) when $\bDelta_R$ is negligible, the same analysis following (\ref{error_FF_2}) holds and as a result, the same rate holds for odd $k\geq 3$.
+%
+%For the $k\geq 3$ even case, the analysis changes slightly, but the same rate holds. To see this, first note that for $k\geq 4$ even,
+%\begin{align}	
+%	\vec(\mathcal{R}(\tilde{\bR}_{FF}(k))) &\cong \vec(\vec(\tilde{\bA}^{k-1})\vec(\bB_*)^T)  \nonumber \\
+%		&\quad + \vec(\vec(\bA_*)\vec(\tilde{\bB}^{k-2})^T) \label{k_even_R_FF}
+%\end{align}
+%Using (\ref{vec_tilde_A_iter_expand}) and (\ref{vec_tilde_B_iter_expand}) in (\ref{k_even_R_FF}), we obtain, after some algebra,
+%\begin{align}
+%	\vec(&\mathcal{R}(\tilde{\bR}_{FF}(k))) \cong \frac{1}{f} (\vec(\bB_0)\vec(\bB_0^{-1})^T \otimes \bI_{p^2})\vec(\tilde{\bR}_A) \nonumber \\
+%		& + \frac{1}{p} (\bI_{f^2}\otimes \vec(\bA_0)\vec(\bA_0^{-1})^T) \vec(\tilde{\bR}_B^T) \nonumber \\
+%		& - \frac{2}{pf} (\vec(\bB_0)\vec(\bB_0^{-1})^T \otimes \vec(\bA_0)\vec(\bA_0^{-1})^T)\vec(\tilde{\bR}_B^T) \nonumber \\
+%		&= \bP_R^{-1} \tilde{\bXi} \vec(\tilde{\bR}) \nonumber
+%\end{align}
+%where
+%\begin{align*}
+%	\tilde{\bXi} &= \bP_R \Big[ \frac{1}{f}(\vec(\bB_0)\vec(\bY_0)^T \otimes \bI_{p^2})\bP_{R_A} \\
+%		& + \frac{1}{p}(\bI_{f^2}\otimes \vec(\bA_0)\vec(\bX_0)^T) \bK_{f^2,p^2} \bP_{R_B} \\
+%		& - \frac{2}{pf} (\vec(\bB_0)\vec(\bY_0)^T \otimes \vec(\bA_0)\vec(\bX_0)^T)\bK_{f^2,p^2}\bP_{R_B} \Big]
+%\end{align*}
+%Thus, $\vec(\tilde{\bR}_{FF}(k)) \cong \tilde{\bXi} \vec(\tilde{\bR})$. Proceeding similarly as before, we have:
+%\begin{equation*}
+%	\tr(\tilde{\bXi}(\bSigma_0\otimes \bSigma_0)\tilde{\bXi}^T) = \vec(\tilde{\bXi}^T \tilde{\bXi})^T \vec(\bSigma_0\otimes \bSigma_0) = \sum_{i=1}^9 \tilde{T}_i 
+%\end{equation*}
+%where
+%\begin{align*}
+%	\tilde{T}_1 &= \vec(\{\frac{1}{f} (\vec(\bB_0)\vec(\bY_0)^T\otimes \bI_{p^2}) \bP_{R_A} \}^T  \\
+%							& \times \{\frac{1}{f} (\vec(\bB_0)\vec(\bY_0)^T\otimes \bI_{p^2}) \bP_{R_A} \})^T \vec(\bSigma_0\otimes \bSigma_0) \\
+%	\tilde{T}_2 &= \vec(\{\frac{1}{f} (\vec(\bB_0)\vec(\bY_0)^T\otimes \bI_{p^2}) \bP_{R_A} \}^T  \\
+%							& \times \{\frac{1}{p} (\bI_{f^2}\otimes \vec(\bA_0)\vec(\bX_0)^T)\bK_{f^2,p^2}\bP_{R_B} \})^T \\
+%							& \times \vec(\bSigma_0\otimes \bSigma_0) \\
+%	\tilde{T}_3 &= \vec(\{\frac{1}{f} (\vec(\bB_0)\vec(\bY_0)^T\otimes \bI_{p^2}) \bP_{R_A} \}^T  \\
+%							& \times \{ \frac{-2}{pf} (\vec(\bB_0)\vec(\bY_0)^T \otimes\vec(\bA_0)\vec(\bX_0)^T) \bK_{f^2,p^2} \bP_{R_B} \})^T \\
+%							& \times \vec(\bSigma_0\otimes \bSigma_0) \\
+%	\tilde{T}_4 &= \vec(\{\frac{1}{p} (\bI_{f^2}\otimes \vec(\bA_0)\vec(\bX_0)^T)\bK_{f^2,p^2}\bP_{R_B} \}^T  \\
+%							& \times \{ \frac{1}{f} (\vec(\bB_0)\vec(\bY_0)^T\otimes \bI_{p^2}) \bP_{R_A} \})^T \vec(\bSigma_0\otimes \bSigma_0) \\						
+%	\tilde{T}_5 &= \vec(\{\frac{1}{p} (\bI_{f^2}\otimes \vec(\bA_0)\vec(\bX_0)^T)\bK_{f^2,p^2}\bP_{R_B} \}^T \times \\
+%							& \{ \frac{1}{p} (\bI_{f^2}\otimes \vec(\bA_0)\vec(\bX_0)^T)\bK_{f^2,p^2}\bP_{R_B} \})^T \vec(\bSigma_0\otimes \bSigma_0) \\
+%	\tilde{T}_6 &= \vec(\{\frac{1}{p} (\bI_{f^2}\otimes \vec(\bA_0)\vec(\bX_0)^T)\bK_{f^2,p^2}\bP_{R_B} \}^T  \\
+%							& \times \{ \frac{-2}{pf} (\vec(\bB_0)\vec(\bY_0)^T \otimes\vec(\bA_0)\vec(\bX_0)^T) \bK_{f^2,p^2} \bP_{R_B} \})^T \\
+%							& \times \vec(\bSigma_0\otimes \bSigma_0) \\
+%	\tilde{T}_7 &= \vec(\{ \frac{-2}{pf} (\vec(\bB_0)\vec(\bY_0)^T \otimes\vec(\bA_0)\vec(\bX_0)^T) \bK_{f^2,p^2} \bP_{R_B} \}^T  \\
+%							& \times \{ \frac{1}{f} (\vec(\bB_0)\vec(\bY_0)^T\otimes \bI_{p^2}) \bP_{R_A} \})^T \vec(\bSigma_0\otimes \bSigma_0) \\
+%	\tilde{T}_8 &= \vec(\{ \frac{-2}{pf} (\vec(\bB_0)\vec(\bY_0)^T \otimes\vec(\bA_0)\vec(\bX_0)^T) \bK_{f^2,p^2} \bP_{R_B} \}^T \\
+%							& \times \{ \frac{1}{p} (\bI_{f^2}\otimes \vec(\bA_0)\vec(\bX_0)^T)\bK_{f^2,p^2}\bP_{R_B} \})^T \vec(\bSigma_0\otimes \bSigma_0) \\	
+%	\tilde{T}_9 &= \vec(\{ \frac{-2}{pf} (\vec(\bB_0)\vec(\bY_0)^T \otimes\vec(\bA_0)\vec(\bX_0)^T) \bK_{f^2,p^2} \bP_{R_B} \}^T  \\
+%							& \times \{ \frac{-2}{pf} (\vec(\bB_0)\vec(\bY_0)^T \otimes\vec(\bA_0)\vec(\bX_0)^T) \bK_{f^2,p^2} \bP_{R_B} \})^T \\
+%							& \times \vec(\bSigma_0\otimes \bSigma_0)
+%\end{align*}
+%
+%After some algebra, we notice $\tilde{T}_1=T_1$, $\tilde{T}_2=T_2$, $\tilde{T}_5=T_5$, $\tilde{T}_3=-2\tilde{T}_2$, $\tilde{T}_2=\tilde{T}_4$, $\tilde{T}_9=4 T_2$ and $\tilde{T}_6=\tilde{T}_7=\tilde{T}_8=\tilde{T}_3$. Thus, $\sum_{i=1}^9 \tilde{T}_i = T_1+T_5-2T_2$. From this, it is easy to see that we have the upper and lower bounds:
+%\begin{align*}
+%	\tr(\tilde{\bXi}(\bSigma_0\otimes \bSigma_0)\tilde{\bXi}^T) &\leq (p^2+f^2) \nn \bSigma_0 \nn_2^2 \\
+%	\tr(\tilde{\bXi}(\bSigma_0\otimes \bSigma_0)\tilde{\bXi}^T) &\geq (p^2+f^2) \lambda_{min}(\bA_0)^2 \lambda_{min}(\bB_0)^2 -2 \nn \bSigma_0 \nn_2^2
+%\end{align*}
+%The remaining of the proof follows similarly as in the $k\geq 3$ odd case. The proof of the theorem is complete.
+
+\end{IEEEproof}
