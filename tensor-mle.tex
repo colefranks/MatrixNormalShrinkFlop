@@ -2079,7 +2079,7 @@ As a consequence, we have
 \end{prop}
 The proof uses Fano's inequality with mutual information bounded by relative entropy, as in \cite{yang1999information}.
 \begin{lemma}[Fano's method]
-Let $\{P_i: i \in [m]\}$ be a finite set of probability distributions a set $\mathcal X$, and let $T: \mathcal X \to [m]$ be an estimator for $i$ from a sample of $P_i$. Then 
+Let $\{P_i: i \in [m]\}$ be a finite set of probability distributions over a set $\mathcal X$, and let $T: \mathcal X \to [m]$ be an estimator for $i$ from a sample of $P_i$. Then 
 $$ \max_{i\in [m]} \Pr_{x \sim P_i}[T(x) \neq i] \geq 1 - \frac{ - \log 2 + \max_{i,j \in [m]} D_{KL}(P_i|| P_j)}{\log m}.$$
 \end{lemma}
 
@@ -2103,11 +2103,11 @@ There is $c > 0$ such that the following holds for $X, \htheta, B$ as in \cref{p
 \begin{enumerate}
 \item Let $\delta^2 = c\min \left\{1,d^2/n\right\}$. Then
 \begin{align}
-\sup_{\Theta \in B} \Pr\left[ d_F(\htheta|| \Theta)  \geq \delta\right] \geq \frac{1}{2}.\label{eq:frob-lower}
+\sup_{\Theta \in B} \Pr\left[ d_F(\htheta|| \Theta)  \geq \delta\right] \geq \frac{1}{2}.\label{eq:df-lower}
 \end{align}
 \item Let $\delta^2 = c\min \left\{1,d/n\right\}$. Then
  \begin{align}
-\sup_{\Theta \in B} \Pr\left[ d_{op}(\htheta|| \Theta) \geq \delta\right] \geq \frac{1}{2}. \label{eq:op-lower}
+\sup_{\Theta \in B} \Pr\left[ d_{op}(\htheta|| \Theta) \geq \delta\right] \geq \frac{1}{2}. \label{eq:dop-lower}
 \end{align}
 \end{enumerate}
 As a consequence, we have 
@@ -2125,7 +2125,7 @@ One could hope that, for the purposes of estimating $\Theta_1$, having access to
 %Here we show that our bounds for the matrix normal model are best possible for estimating the individual matrices $\Theta_a$. The bound for $\Theta_2$ is clearly best possible because it is what we would obtain even if $\Theta_1$ were known, but in fact even the bound on $\Theta_1$ is tight.
 
 \begin{theorem}[Lower bound for matrix normal models]\label{thm:matrix-lower}
-There is $c > 0$ such that the following holds. Let $\htheta_1$ be any estimator for $\Theta_1$ from a tuple $X$ of $n$ samples of the matrix normal model with precision matrices $\Theta_1, \Theta_2$. Let $B\subset \PD(d_1)$ denote the ball about $I_d$ of radius $1/2$ in the operator norm.
+There is $c > 0$ such that the following holds. Let $\htheta_1$ be any estimator for $\Theta_1$ from a tuple $X$ of $n$ samples of the matrix normal model with precision matrices $\Theta_1, \Theta_2$. Let $B\subset \PD(d_1)$ denote the ball about $I_{d_1}$ of radius $1/2$ in the operator norm.
 \begin{enumerate}
 \item \label{it:frob-lower} Let $\delta^2 = c\min \left\{1,\frac{d_1^2}{n \min \{n d_1, d_2\}}\right\}$. Then
 \begin{align}
@@ -2133,7 +2133,7 @@ There is $c > 0$ such that the following holds. Let $\htheta_1$ be any estimator
 \end{align}
 \item\label{it:op-lower} Let $\delta^2 = c\min \left\{1,\frac{d_1}{n \min \{n d_1, d_2\}}\right\}$. Then
  \begin{align}
-\sup_{\Theta_1 \in B, \Theta_2 \in \PD(d_2)} \Pr\left[ d_{op}(\htheta_1|| \Theta_1) \geq \delta\right] \geq \frac{1}{2}. \label{eq:op-lower}
+\sup_{\Theta_1 \in B, \Theta_2 \in \PD(d_2)} \Pr\left[ d_{op}(\htheta_1|| \Theta_1) \geq \delta\right] \geq \frac{1}{2}. \label{eq:dop-lower-matrix-normal}
 \end{align}
 \end{enumerate}
 As a consequence, we have 
