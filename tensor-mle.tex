@@ -829,11 +829,48 @@ Then, for $0 < t < 1$, the following occurs with probability at least $1 - 2e^{-
 Equipped with these results we now prove our gradient bound.
 
 \begin{proof}[Proof of \cref{prop:gradient-bound}]
-For any fixed $a\in[k]$, recall that $\rho^{(a)}$ has the same distribution as~$\frac1{nD} YY^T$, where $Y$ is an $d_a\times N_a$-matrix with standard Gaussian entries.
+For any fixed $a\in[k]$, recall that $\rho^{(a)}$ has the same distribution as~$\frac1{nD} YY^T$, where $Y$ is an $d_a\times N_a$-matrix with standard Gaussian entries where $N_{a} := \frac{nD}{d_{a}}$.
 By \cref{cor:vershynin}, we have the following bound with $\leq 2 e^{-t^2/2}$ failure probability:
 \begin{align*}
   \sqrt{N_a} - \sqrt{d_a} - t \leq \sigma_d(Y) \leq \sigma_1(Y) \leq \sqrt{N_a} + \sqrt{d_a} + t.
 \end{align*}
+\AR{
+Let $t = \eps \sqrt{n D d_{a}/ d_{\max}^{2}}$. Since $nD \geq d_{\max}^{2}/\eps^{2}$ then $\sqrt{d_{a}} \leq t$, so we can bound eigenvalues of $d_{a} \rho_{a} - I_{d_{a}}$ up to constants by 
+\[ \frac{t}{\sqrt{N_{a}}} =  \sqrt{ \frac{\eps^{2} nD d_{a}/ d_{\max}^{2}}{nD / d_{a}} }
+= \eps \frac{d_{a}}{d_{\max}} , \]
+with failure probability $e^{-\eps^{2} n D d_{a}/ d_{\max}^{2}}$. 
+So by union bound we get
+\begin{align*}
+  \norm{\nabla_a f_x}_{\op}
+&\leq\frac{1}{\sqrt{d_a}} \norm*{d_{a} \rho^{(a)} - I_{d_a}} + \frac{\abs{\tr\rho - 1}}{\sqrt{d_a}}
+\leq \frac{9\eps \sqrt{d_{a}} }{d_{\max}} \qquad \text{for all } a\in[k].
+\end{align*}
+
+
+Let $t = \eps \sqrt{n D / d_{\max}}$. We have $d_{a} \leq d_{\max} \leq \eps^{2} \frac{n D}{d_{\max}} = t^{2}$, so we can bound eigenvalues of $d_{a} \rho_{a} - I_{d_{a}}$ up to constants by 
+\[ \frac{t}{\sqrt{N_{a}}} =  \sqrt{ \frac{\eps^{2} nD / d_{\max}}{nD / d_{a}} }
+= \eps \sqrt{ \frac{d_{a}}{d_{\max}} } , \]
+with failure probability $e^{-\eps^{2} n D / d_{\max}} \leq e^{-d_{\max}}$. 
+So by union bound we get
+\begin{align*}
+  \norm{\nabla_a f_x}_{\op}
+&\leq\frac{1}{\sqrt{d_a}} \norm*{d_{a} \rho^{(a)} - I_{d_a}} + \frac{\abs{\tr\rho - 1}}{\sqrt{d_a}}
+\leq \frac{9\eps }{\sqrt{d_{\max}}} \qquad \text{for all } a\in[k].
+\end{align*}
+
+
+Let $t = \sqrt{d_{\max}}$ and using the fact that $n D \geq d_{\max}^{2} / \eps^{2}$, we have magnitude of eigenvalues of $d_{a} \rho^{(a)} - I_{d_{a}}$  in
+\[ \sqrt{\frac{d_{\max}}{N_{a}}} = \sqrt{\frac{d_{a} d_{\max}}{nD}} = \eps \sqrt{\frac{d_{a}}{d_{\max}}}  \]
+with failure probability $2 e^{-d_{\max}/2}$. So by union bound we get
+\begin{align*}
+  \norm{\nabla_a f_x}_{\op}
+&\leq\frac{1}{\sqrt{d_a}} \norm*{d_{a} \rho^{(a)} - I_{d_a}} + \frac{\abs{\tr\rho - 1}}{\sqrt{d_a}}
+\leq \frac{9\eps }{\sqrt{d_{\max}}} \qquad \text{for all } a\in[k].
+\end{align*}
+
+The point is that this is proportional to $d_{a}$ and/or inversely proportional to $d_{\max}$. This is what we improve in Section 4 by normalizing the largest marginal. The calculation that is there now makes it look like larger $d_{a}$ have better gradient bounds. }
+
+
 Let $t = \eps \sqrt{N_a}$.
 Using that $0<\eps<1$ and $d_a \leq N_a \eps^2$ by assumption, this bound implies that
 % \begin{align*}
@@ -1432,8 +1469,18 @@ Say $\Phi$ has \emph{spectral gap} $\gamma$ if
 where $\sigma_2$ denotes the second largest singular value of~$\Phi$.
 \end{definition}
 
-It is known that this notion is closely related to quantum expansion.
+Recall that by the variational formula for singular values, if we let $X_{1} \in \Mat(d_{b})$ be the first (right) singular vector of $\Phi$, we can rewrite the above condition as 
+%an optimization over $H \in \Mat(d_{b})$:
+\begin{align*}
+  \sigma_2(\Phi) = \max_{\langle H, X_{1} \rangle = 0} \frac{\norm{\Phi(H)}_{F}}{\norm{H}_{F}} \leq (1 - \gamma) \frac{\tr \Phi(I_{d_b})}{\sqrt{d_a d_b}} .
+\end{align*}
+On the other hand, the definition of an $(\eps,\lambda)$-quantum expander is given in \cref{eq:expansion} as
+\begin{align*}
+      \norm{\Phi}_0 := \max_{\langle H, I_{d_{b}} \rangle = 0} \frac{\norm{\Phi(H)}_F}{\norm{H}_{F}} 
+\leq \lambda \frac{\tr \Phi(I_{d_b})}{\sqrt{d_a d_b}}  .
+\end{align*}
 
+Due to the $\eps$-doubly balanced condition in \cref{eq:doubly balanced}, it turns out that these two notions are closely related. 
 \begin{lemma}[Lemma~A.3 in \cite{FM20}]\label{lem:fm20}
 There exists a universal constant $c>0$ with the following property.
 If $\Phi$ is an $(\eps,\lambda)$-quantum expander and $\eps \leq c(1-\lambda)$, then~$\Phi$ has spectral gap~$1-\lambda-O(\eps)$.
@@ -1444,11 +1491,12 @@ Because~$k = 2$, the gradient and Hessian are completely described by the comple
 
 \begin{theorem}[Theorem 1.8, Proof of Theorem~3.22 in \cite{KLR19}]\label{thm:klr}
 There is a universal constant $C>0$ such that the following holds.
-If the completely positive map $\Phi^{(12)}$ defined in \cref{eq:hessian channel} is $\eps$-doubly balanced and has spectral gap~$\gamma$, where $\gamma^2 \geq C \eps \log d_{\min}$, then, restricted to $\SSPD(d_1) \times \SSPD(d_2)$, where $\SSPD(d)$ denotes the $d\times d$ positive definite matrices of unit determinant, the function~$f_x$ has a unique maximizer $(P_1,P_2)$ such that
+If the completely positive map $\Phi^{(12)}$ defined in \cref{eq:hessian channel} is $\eps$-doubly balanced and has spectral gap~$\gamma$, where $\gamma^2 \geq C \eps \log d_{\min}$, then, restricted to $\SSPD(d_1) \times \SSPD(d_2)$, where $\SSPD(d)$ denotes the $d\times d$ positive definite matrices of unit determinant, the function~$f_x$ has a unique minimizer $(P_1,P_2)$ such that
 \begin{align*}
   \max \{ \norm{P_1 - I_{d_1}}_{\op}, \norm{P_2 - I_{d_2}}_{\op} \} = O\Bigl(\frac{\eps \log d_{\min}}\gamma\Bigr).
 \end{align*}
 Moreover, $f_x(P_1, P_2) \geq (1 - \frac{4 \eps^2}{\lambda}) \frac{\|x\|^2}{nD}$. \MW{XX}
+\AR{Both statements seems correct to me because we optimize over SPD, so then $f$ is just norm-squared and KLR grad flow remains in SPD, and defintions of spectral gap/$\eps$-doubly balanced are homogenous.}
 \end{theorem}
 
 \begin{corollary}\label{cor:klr}
@@ -1458,12 +1506,17 @@ There is a universal constant $C>0$ such that the following holds. Suppose $\|x\
 \end{align*}
 \end{corollary}
 \begin{proof}
-To compute the MLE, we reparametrize by $\Theta_1 = P_1$ and $\Theta_2 = \lambda P_2$ where $P_1,P_2 \in \SPD(d_1) \times \SPD(d_2)$. Plugging this reparametrization into $f_x$ shows $\lambda, P_1, P_2$ solve
-$$\arg\max_{\lambda, P_1, P_2} \lambda f_x(P_1, P_2) - \log \lambda.$$
-In particular, the MLE $\htheta_1, \htheta_2$ exists uniquely if $f_x$ restricted to $\SPD(d_1) \times \SPD(d_2)$ has unique minimizers $P_1, P_2$. Such unique maximizers exist by \cref{thm:klr}. Given $P_1, P_2$, solving the simple one-dimensional optimization problem for $\lambda$ yields $\lambda = 1/f_x(P_1, P_2)$. We have $\htheta = P_1$, and
+To compute the MLE, we reparametrize by $\Theta_1 = P_1$ and $\Theta_2 = \lambda P_2$ where $P_1,P_2 \in \SPD(d_1) \times \SPD(d_2)$. \AR{Not sure which notation you guys want to keep but Theorem 4.2 denotes this as SPD (which I like)}
+Plugging this reparametrization into $f_x$ shows $\lambda, P_1, P_2$ solve
+$$\arg\min_{\lambda, P_1, P_2} \lambda f_x(P_1, P_2) - \log \lambda.$$
+For a fixed choice of $(P_{1},P_{2})$, the above is a strictly convex one-dimensional optimization problem with value
+\[ \min_{\lambda} \lambda f_x(P_1, P_2) - \log \lambda  = 1 + \log f_{x}(P_{1},P_{2}) , \]
+at $\lambda = 1/f_x(P_1, P_2)$. Therefore, the MLE $\htheta_1, \htheta_2$ exists uniquely iff $f_x$ restricted to $\SPD(d_1) \times \SPD(d_2)$ has unique minimizers $P_1, P_2$. Such unique minimizers exist by \cref{thm:klr}. 
+%Given $P_1, P_2$, solving the simple one-dimensional optimization problem for $\lambda$ yields $\lambda = 1/f_x(P_1, P_2)$. 
+So we have $\htheta = P_1$, and
 $$ \|\htheta_2 - I_{d_2} \|_{op} = \|\lambda P_2  - I_{d_2} \|_{op} \leq \lambda \|P_2 - I_{d_2}\| + |1 - \lambda|.$$
-By \cref{thm:klr}, $1 \leq \lambda \leq (1 + 4 \eps^2/\gamma)^{-1}.$ By our assumptions on $\gamma, \eps$, we have $\eps^2/\gamma \leq \eps/\gamma \leq \eps/\gamma^2$. Thus $\lambda = (1 + O(\eps^2/\gamma)) = O(1)$ if $C$ is large enough, and so
-$\|\htheta_2 - I_{d_2} \|_{op} = O(\eps^2 \log d_{\min}/\gamma).$ \end{proof}
+By \cref{thm:klr}, $1 \leq \lambda \leq (1 - 4 \eps^2/\gamma)^{-1}.$ By our assumptions on $\gamma, \eps$, we have $\eps^2/\gamma \leq \eps/\gamma \leq \eps/\gamma^2$. Thus $\lambda = (1 + O(\eps^2/\gamma))$ if $C$ is large enough, and so
+$\max\{\|\htheta_1 - I_{d_1} \|_{op}, \|\htheta_2 - I_{d_2} \|_{op} \} = O(\eps \log d_{\min}/\gamma)$ by the bounds in \cref{thm:klr}. \end{proof}
 
 % the MLE $\htheta = \htheta_1 \ot \htheta_2$ for $\Theta=I_{d_1} \ot I_{d_2}$ satisfies
 % where the Kronecker factors $\htheta_1$, $\htheta_2$ are chosen such that $\det\htheta_1=\det\htheta_2$.
@@ -1504,7 +1557,8 @@ Then, with probability at least $1 - e^{ - \Omega( d_{\min} \eps^2)}$, the funct
 %-----------------------------------------------------------------------------
 We now use \cref{thm:operator-cheeger} as well as some more refined concentration inequalities to prove \cref{thm:matrix-normal}.
 The additional concentration is required to obtain the tighter bounds on the smaller Kronecker factor.
-Throughout this section, we assume without loss of generality that $d_1 \leq d_2$.
+Throughout this section, we assume without loss of generality that $d_1 \leq d_2$. 
+\AR{\cref{prop:gradient-bound} shows bounds on $\|(\nabla f_\samp)_{a}\|_{\op} $ which are inversely proportional to $d_{\max}$, so in the case when $d_{2} \gg d_{1}$ we can actually prove much better bounds on  $\|(\nabla f_\samp)_{1}\|_{\op}$ than on $\|(\nabla f_\samp)_{2}\|_{\op}$. }
 
 The idea of the proof is to apply one step of the flip-flop algorithm to ``renormalize'' the samples such that the second partial trace is proportional to $I_{d_2}$.
 This has the effect of making the second component of the gradient~$\nabla f_\samp$ equal to zero.
@@ -1527,7 +1581,7 @@ That is:
 The completely positive map $\Phi^{(12)}$ corresponding to the ``renormalized'' samples $Y_1,\dots,Y_n$ is $\frac1{nD} \Phi_Y$.
 By construction, it satisfies
 \begin{align}\label{eq:one-step}
-  \frac1{n D} \Phi_Y(I_{d_2}) = \frac1{d_2} X_i \left( \sum_{i=1}^n X_i^T X_i \right)^{-1} X_i
+  \frac1{n D} \Phi_Y(I_{d_2}) = \frac1{d_2} \sum_{i=1}^{n} X_i \left( \sum_{i=1}^n X_i^T X_i \right)^{-1} X_i
 \quad\text{and}\quad
   \frac1{n D} \Phi^*_Y(I_{d_1}) = \frac{I_{d_2}}{d_2}.
 \end{align}
@@ -1559,14 +1613,14 @@ Recall that we define $\htheta_1(\samp), \htheta_2(\samp)$ to be $\arg\min_{\det
 Consider the following events.
 \begin{enumerate}
 \item\label{it:expander} The operator $\Phi_{\rv}$ is a $(\eps  \sqrt{{d_2}/{n d_1}},1-\lambda)$-quantum expander.
-\item\label{it:flop-balanced} The operator $\tilde{\Phi}$ is $\eps \sqrt{{d_1}/{n d_2}}$-balanced.
+\item\label{it:flop-balanced} The operator $\tilde{\Phi}$ is $\eps \sqrt{{d_1}/{n d_2}}$-balanced. \AR{Is $\tilde{\Phi}$ the same as $\Phi_{y}$?}
 \item \label{it:norm} $|1 - \frac{\|X\|}{\sqrt{nD}}| \leq \frac{\eps}{\sqrt{d_2}}. $
 \end{enumerate}
 These events occur with failure probability $1 - O(e^{ - \Omega( d_1 \eps^2)}).$ Indeed, by the assumption
 $$n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $$
 \cref{it:expander} occurs with probability $1 - O(e^{ - \Omega( d_1 \eps^2)})$ by \cref{thm:operator-cheeger}. By \cref{lem:flipflop-concentration}, \cref{it:flop-balanced} occurs with probability $1 - O(e^{ - \Omega( d_1 \eps^2)}).$ Finally, \cref{it:norm} occurs with probability $1 - e^{- \Omega(n d_1 \eps^2)}$ by \cref{prp:xnorm}. By the union bound all the events occur with probability $1 - O(e^{ - \Omega( d_1 \eps^2)})$. Let $\samp$ satisfy all three properties.
 
-We now use a lemma relating the quantum expansion of $\tilde{\Phi}$ and $\Phi_\samp$; this is analogous to \cref{convexRobustness} guaranteeing the strong convexity of $f$ in a neighborhood of the origin. Recall that $y = (\sqrt{ nd_1} I_{d_1} \ot \Phi_x^*(I_2)^{-1/2}) x:= (I_{d_1} \ot B)x$ and $\tilde{\Phi} = \Phi_y$. By Lemma 4.4 in \cite{FM20}, if $\kappa(B^2) - 1 \leq \delta < c$,  then $\Phi_y$ is an $(\eps \sqrt{d_2/n d_1} + O(\delta), 1 - \lambda + O(\delta))$-quantum expander. We have $\kappa(B^2) = \kappa(\|x\|^{-2} \Phi_\samp^*(I_{d_1})) = O(\|\|x\|^{-2} \Phi_\samp^*(I_{d_1}) - I_{d_2}\|_{op}) = O(\eps \sqrt{d_2/nd_1})$ by the balancedness of $\Phi_x$. Thus $\tilde{\Phi}$ is an $(\eps \sqrt{d_1 / n d_2}, 1 - \lambda/2)$-quantum expander provided $\eps \sqrt{d_2/nd_1}$ is small enough compared to $\lambda$.
+We now use a lemma relating the quantum expansion of $\tilde{\Phi}$ and $\Phi_\samp$; this is analogous to \cref{convexRobustness} guaranteeing the strong convexity of $f$ in a neighborhood of the origin. Recall that $y = (\sqrt{ nd_1} I_{d_1} \ot \Phi_x^*(I_2)^{-1/2}) x:= (I_{d_1} \ot B)x$ and $\tilde{\Phi} = \Phi_y$. By Lemma 4.4 in \cite{FM20}, if $\kappa(B^2) - 1 \leq \delta < c$,  then $\Phi_y$ is an $(\eps \sqrt{d_2/n d_1} + O(\delta), 1 - \lambda + O(\delta))$-quantum expander \AR{Shouldn't write this because it ignores that one of the marginals is exactly right. The statement on $\tilde{\Phi}$ contradicts this}. We have $\kappa(B^2) = \kappa(\|x\|^{-2} \Phi_\samp^*(I_{d_1})) = O(\|\|x\|^{-2} \Phi_\samp^*(I_{d_1}) - I_{d_2}\|_{op}) = O(\eps \sqrt{d_2/nd_1})$ by the balancedness of $\Phi_x$. Thus $\tilde{\Phi}$ is an $(\eps \sqrt{d_1 / n d_2}, 1 - \lambda/2)$-quantum expander provided $\eps \sqrt{d_2/nd_1}$ is small enough compared to $\lambda$.
 
 By our choice of $n$, we have $\eps \sqrt{d_1/nd_2} \leq c\lambda^2\log d_1$ provided $\eps \leq c\lambda^2$. Thus \cref{thm:klr} applies to $\tilde{\Phi}$ and so the MLE $\htheta_1(y), \htheta_2(y)$ satisfy
 \begin{gather*} \| \htheta_1(y) - I_{d_1}\|_{op}, \| \htheta_2(y) - I_{d_2}\|_{op} = O\left(\eps \sqrt{\frac{d_1}{n d_2}} \log d_1\right).\end{gather*}
