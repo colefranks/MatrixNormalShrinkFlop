@@ -1,0 +1,77 @@
+"0","knitr::opts_chunk$set(echo = TRUE)"
+"0","library(reshape2)"
+"0","library(scales)"
+"0","library(jointMeanCov)"
+"0","library(Matrix)"
+"0","library(expm)"
+"2","
+Attaching package: ‘expm’
+
+"
+"2","The following object is masked from ‘package:Matrix’:
+
+    expm
+
+"
+"0","library(matrixcalc)"
+"0","library(ggplot2)"
+"0","library(tictoc)"
+"0","library(R.matlab)"
+"2","R.matlab v3.6.2 (2018-09-26) successfully loaded. See ?R.matlab for help.
+"
+"2","
+Attaching package: ‘R.matlab’
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    getOption, isOpen
+
+"
+"0","options(matlab=""/Applications/MATLAB_R2020b.app/bin/matlab"")"
+"0","Matlab$startServer()"
+"1","[1]"
+"1"," 0"
+"1","
+"
+"0","matlab <- Matlab()"
+"0","isOpen <- open(matlab)"
+"1","
+                                                                              < M A T L A B (R) >
+                                                                    Copyright 1984-2020 The MathWorks, Inc.
+                                                                R2020b Update 1 (9.9.0.1495850) 64-bit (maci64)
+                                                                               September 30, 2020
+
+"
+"1"," 
+"
+"1","To get started, type doc.
+"
+"1","For product information, visit www.mathworks.com.
+"
+"1"," 
+"
+"2","Running MatlabServer v3.5.9-9000
+"
+"2","MATLAB v7.x or higher detected.
+"
+"2","Saving with option -V6.
+"
+"2","Added InputStreamByteWrapper to dynamic Java CLASSPATH.
+"
+"2","----------------------
+"
+"2","MATLAB server started!
+----------------------
+"
+"2","MATLAB working directory: /Users/Cole/Dropbox (MIT)/Writeups/dumb-code/zhou-comparison
+"
+"2","Trying to open server socket (port 9999"
+"2",")..."
+"2","done.
+"
+"2","Waiting for client to connect (port 9999)..."
+"2","connected.
+"
+"0","#Hello did this save"
+"0",""
