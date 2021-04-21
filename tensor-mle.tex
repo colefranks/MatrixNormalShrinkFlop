@@ -2339,7 +2339,34 @@ We compare the performance of the estimator with Zhou's single step estimator \c
 
 \subsection{Learning curves}
 
-In this subsection we examine how the number of samples affects the error. 
+In this subsection we examine how the number of samples affects the error. In \cref{fig:lc} we see that for $1$ sample, the Gemini and regularized Flip-Flop estimators are comparable. The error of the unregularized Flip-flop estimator is much higher. As the number of samples increases, however, the regularized Flip-flop estimator performs better, and for even more samples the unregularized Flip-Flop e
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{./code/zhou-comparison/20-50-lc-geo.pdf}
+         %\caption{$y=x$}
+         %\label{fig:y equals x}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{./code/zhou-comparison/25-50-lc-op.pdf}
+         %\caption{$y=3sinx$}
+         %\label{fig:three sin x}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{./code/zhou-comparison/25-50-lc-frob.pdf}
+         %\caption{$y=5/x$}
+         %\label{fig:five over x}
+     \end{subfigure}
+        %\caption{Three simple graphs}
+        %\label{fig:three graphs}
+\caption{Average error with $d_1 = 50, d_2 = 50, $ and number of samples $n$ ranging from $1$ to $10$ for both precision matrices sparse. ``Gemini'' refers to Zhou's Gemini estimator, ``KGlasso'' refers to the Kronecker Glasso algorithm \CF{cite}, ``RegSink" refers to our regularized estimator, ``Sink'' refers to unregularized Sinkhorn, and ``Trivial'' refers to the estimator that always outputs the identity matrix. \CF{actually do 10 runs/draws; right now it is 5, and get it to have only one legend; normalize operator norm properly, say how sparse it is. Choose regularization better for KGlasso so that it actually improves with more samples.}}\label{fig:lc}
+\end{figure}
 
 \subsection{Computational aspects}
 
