@@ -1,0 +1,59 @@
+\begin{lemma} \label{Isserlis_bound}
+	Let $\bz \sim N(\mathbf{0},\bA_0\otimes \bB_0)$,where $\bA_0\in S_{++}^p, \bB_0\in S_{++}^f$. Let $\bX$ be symmetric-i.e. $\bX \in S^p$. Then, for $m\geq 0$, we have the moment bound:
+	\begin{align*}
+		\E & \left[ \left( \sum_{i,j=1}^p \bX_{i,j} \left([\bz]_{(i-1)f+k}[\bz]_{(j-1)f+l}-[\bA_0]_{i,j}[\bB_0]_{k,l}  \right) \right)^{m+2} \right] \\
+		%\sum_{i_1,j_1=1}^p & \cdots \sum_{i_{m+2},j_{m+2}=1}^p \bX_{i_1,j_1} \cdots \bX_{i_{m+2},j_{m+2}} \\
+		%	&\times  \E\Big[ \prod_{\alpha=1}^{m+2} \Big( [\bz]_{(i_\alpha-1)f+k}[\bz]_{(j_\alpha-1)f+l} -[\bA_0]_{i_\alpha,j_\alpha}[\bB_0]_{k,l} \Big) \Big] \\
+			&\leq (2m+2)!! \left( \max_{1\leq k\leq f} [\bB_0]_{k,k} \nn\bX\nn_2 \nn\bA_0\nn_2 \right)^{m+2}
+	\end{align*}
+\end{lemma}
+\begin{IEEEproof}
+%Define the identification $\nu(\cdot): I' \to \NN$ where $I'$ corresponds to an index set.  
+%\begin{align*}
+%	i_1 &\leftrightarrow 1 \\
+%	j_1 &\leftrightarrow 2 \\
+%	i_2 &\leftrightarrow 3 \\
+%	j_2 &\leftrightarrow 4 \\
+%	&\vdots \\
+%	i_{m+2} &\leftrightarrow 2(m+2)-1 \\
+%	j_{m+2} &\leftrightarrow 2(m+2)
+%\end{align*}
+
+Consider the index set $\{\{i_1,j_1\},\{i_2,j_2\},\dots,\{i_{m+2},j_{m+2}\}\}$. Define groups $G_k=\{i_k,j_k\}$ for $k=1,\dots,m+2$. Let the generic notation $\pi(\cdot)$ denote the permutation operator of a set of indices.
+
+Define the set of indices $M_{m+2}=M_{m+2}(i_1,j_1,\dots,i_{m+2},j_{m+2})$ as the set containing sequences $(I_1,J_1,\dots,I_{m+2},J_{m+2})$ satisfying the properties:
+\begin{enumerate}
+	\item $\{I_1,J_1,\dots,I_{m+2},J_{m+2}\}$ is a permutation of the index set $\{i_1,j_1,\dots,i_{m+2},j_{m+2}\}$
+		-i.e. $\{I_1,J_1,\dots,I_{m+2},J_{m+2}\} = \pi(\{i_1,j_1,\dots,i_{m+2},j_{m+2}\})$
+	\item For each $q\in\{1,\dots,m+2\}$, indices $I_q$ and $J_q$
+		must belong to disjoint groups $\{G_k\}_{k=1}^{m+2}$
+	\item Suppose a sequence $\{I_1,J_1,\dots,I_{m+2},J_{m+2}\}$ satisfies
+		the first two properties. Then, add it to $M_{m+2}$ and $M_{m+2}$ does not
+		contain (block-permuted) sequences of the form $\{\pi(\{\pi(\{I_1,J_1\}),\pi(\{I_2,J_2\}),\dots,\pi(\{I_{m+2},J_{m+2}\})\})\}$
+\end{enumerate}
+It can be shown that $\card(M_{m+2})=(2m+2)!!$.
+%
+%As an illustrative example, consider the case $m=1$. 
+%\begin{example}
+%	For $m=1$, the set $M_{m+2}$ contains the following $4!!=8$ elements:
+%	\begin{align*}
+%		&\{\{i_1,i_2\},\{j_1,i_3\},\{j_2,j_3\}\}, 		\{\{i_1,i_2\},\{j_1,j_3\},\{j_2,i_3\}\}, \\
+%		&\{\{i_1,j_2\},\{j_1,i_3\},\{i_2,j_3\}\}, 		\{\{i_1,j_2\},\{j_1,j_3\},\{i_2,i_3\}\}, \\
+%		&\{\{i_1,i_3\},\{j_1,i_2\},\{j_2,j_3\}\}, 		\{\{i_1,i_3\},\{j_1,j_2\},\{i_2,j_3\}\}, \\
+%		&\{\{i_1,j_3\},\{j_1,j_2\},\{i_2,i_3\}\}, 		\{\{i_1,j_3\},\{j_1,i_2\},\{j_2,i_3\}\}.
+%	\end{align*}
+%	Of course, other equivalent possibilities for $M_{m+2}$ are possible.
+%\end{example}
+
+Note that $\tr((\bX\bA_0)^{m+2})\geq 0$ for all $m\geq 0$. From Isserlis' formula \cite{Isserlis}, we have:
+\begin{align*}
+	& \E\left[ \left( \sum_{i,j=1}^p \bX_{i,j} \left([\bz]_{(i-1)f+k}[\bz]_{(j-1)f+l}-[\bA_0]_{i,j}[\bB_0]_{k,l}  \right) \right)^{m+2} \right] \\
+	&= \sum_{i_1,j_1=1}^p \cdots \sum_{i_{m+2},j_{m+2}=1}^p \bX_{i_1,j_1} \cdots \bX_{i_{m+2},j_{m+2}} \\
+			&\times  \E\Big[ \prod_{\alpha=1}^{m+2} \Big( [\bz]_{(i_\alpha-1)f+k}[\bz]_{(j_\alpha-1)f+l} -[\bA_0]_{i_\alpha,j_\alpha}[\bB_0]_{k,l} \Big) \Big] \\
+			&\leq (\max_{1\leq k\leq f} [\bB_0]_{k,k})^{m+2} \sum_{i_1,j_1=1}^p \cdots \sum_{i_{m+2},j_{m+2}=1}^p \bX_{i_1,j_1} \cdots \bX_{i_{m+2},j_{m+2}}  \\
+			&\quad \times \sum_{\{I_q,J_q\}_{q=1}^{m+2} \in M_{m+2}} \prod_{q=1}^{m+2} [\bA_0]_{I_q,J_q} \\
+			&\leq (\max_{1\leq k\leq f} [\bB_0]_{k,k})^{m+2} (2m+2)!! (\nn\bX\nn_2 \nn\bA_0\nn_2)^{m+2}
+\end{align*}
+
+
+\end{IEEEproof}
