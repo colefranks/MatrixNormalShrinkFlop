@@ -664,17 +664,14 @@ hence
 \end{align*}
 Thus the sublevel set of~$f(\Theta)$ is contained in the ball of radius~$r$ about~$\Theta$.
 By replacing $r$ with any smaller~$r'>\frac{2\eps}\lambda$, we see that the sublevel set is in fact contained in the ball of radius~$\frac{2\eps}\lambda$.
-In particular, $f$ has a minimum and any minimizer~$\smash{\htheta}$ is contained in this ball.
+In particular, the minimum of $f$ is attained and any minimizer~$\smash{\htheta}$ is contained in this ball.
 Moreover, as the right-hand side of \cref{eq:g convex lower} takes a minimum at $t=\frac\eps\lambda$, we have $g(t) \geq g(0) - \frac{\eps^2}{2\lambda}$ for all~$0\leq t\leq r$.
 By definition of $g$, this implies \cref{eq:minimum lower bound}.
 
 
 Next, we prove that any minimizer of~$f$ is necessarily contained in the ball of radius~$\frac\eps\lambda$.
 To see this, take an arbitrary minimizer~$\htheta$ and write it in the form $\htheta = \exp_\Theta(TH)$, where~$H\in \H$ is a unit vector and~$T>0$.
-\AR{Is this assuming a minimizer exists? What if all finite points are only approx minimizers?
-\\ I think I have a strategy to get around this: let $\htheta$ be the minimizer over the $r$ ball (or any convex set containing $\Theta$). Then if we can show $\htheta$ is in the interior, then it is a local min, which by convexity implies it is global min. If $f$ is strongly convex on this set, then the argument below gives uniqueness. 
-\\ Then for the same $g$ defined, we get the condition $g'(T) \leq 0$, as otherwise there would be a smaller value inside the ball. Everything else follows the same way. 
-}
+%\AR{Is this assuming a minimizer exists? What if all finite points are only approx minimizers?\\ I think I have a strategy to get around this: let $\htheta$ be the minimizer over the $r$ ball (or any convex set containing $\Theta$). Then if we can show $\htheta$ is in the interior, then it is a local min, which by convexity implies it is global min. If $f$ is strongly convex on this set, then the argument below gives uniqueness. \\ Then for the same $g$ defined, we get the condition $g'(T) \leq 0$, as otherwise there would be a smaller value inside the ball. Everything else follows the same way. }
 As before, we consider the function $g(t) = f(\exp_\Theta(tH))$.
 Then, using \cref{eq:grad bound}, the convexity of~$g(t)$ for all $t\in\R$ and the $\lambda$-strong convexity of~$g(t)$ for~$\abs t \leq  r$, we have
 \begin{align*}
