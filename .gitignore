@@ -6,7 +6,7 @@
 *.blg
 *.out
 *.toc
-*.synctex.gz
+*.synctex*
 tensor-mle.pdf
 fast-literature/
 .DS_Store
