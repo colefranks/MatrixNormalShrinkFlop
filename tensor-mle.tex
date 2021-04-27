@@ -12,6 +12,9 @@
 \WarningFilter{latexfont}{Font shape}
 \WarningFilter{latexfont}{Size substitutions}
 
+\usepackage{caption}
+\usepackage{subcaption}
+
 \startlocaldefs
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{innercustomthm}{Theorem}
@@ -677,7 +680,9 @@ By definition of $g$, this implies \cref{eq:minimum lower bound}.
 
 Next, we prove that any minimizer of~$f$ is necessarily contained in the ball of radius~$\frac\eps\lambda$.
 To see this, take an arbitrary minimizer~$\htheta$ and write it in the form $\htheta = \exp_\Theta(TH)$, where~$H\in \H$ is a unit vector and~$T>0$.
+
 %\AR{Is this assuming a minimizer exists? What if all finite points are only approx minimizers?\\ I think I have a strategy to get around this: let $\htheta$ be the minimizer over the $r$ ball (or any convex set containing $\Theta$). Then if we can show $\htheta$ is in the interior, then it is a local min, which by convexity implies it is global min. If $f$ is strongly convex on this set, then the argument below gives uniqueness. \\ Then for the same $g$ defined, we get the condition $g'(T) \leq 0$, as otherwise there would be a smaller value inside the ball. Everything else follows the same way. }
+
 As before, we consider the function $g(t) = f(\exp_\Theta(tH))$.
 Then, using \cref{eq:grad bound}, the convexity of~$g(t)$ for all $t\in\R$ and the $\lambda$-strong convexity of~$g(t)$ for~$\abs t \leq  r$, we have
 \begin{align*}
@@ -1507,27 +1512,25 @@ Moreover, $f_x(P_1, P_2) \geq (1 - \frac{4 \eps^2}{\lambda}) \frac{\|x\|^2}{nD}$
 \end{theorem}
 
 \begin{corollary}\label{cor:klr}
-There is a universal constant $C>0$ such that the following holds. Suppose $\|x\| = \sqrt{nD}$ and $0 \leq \eps, \gamma \leq 1$. If the completely positive map $\Phi^{(12)}$ defined in \cref{eq:hessian channel} is $\eps$-doubly balanced and has spectral gap~$\gamma$, where $\gamma^2 \geq C \eps \log d_{\min}.$ Then the MLE's $\htheta_1, \htheta_2$ satisfy
+There is a universal constant $C>0$ such that the following holds. Suppose 
+%$\|x\| = \sqrt{nD}$ and 
+$0 \leq \eps, \gamma \leq 1$. Suppose the completely positive map $\Phi^{(12)}$ defined in \cref{eq:hessian channel} is $\eps$-doubly balanced and has spectral gap~$\gamma$, where $\gamma^2 \geq C \eps \log d_{\min}.$ Further suppose that $\|x\|^2/nD = 1 + \delta$ where $|\delta| \leq .5$.  Then the MLE's $\htheta_1, \htheta_2$ satisfy
 \begin{align*}
-  \max \{ \norm{\htheta_1 - I_{d_1}}_{\op}, \norm{\htheta_2 - I_{d_2}}_{\op} \} = O\Bigl(\frac{\eps \log d_{\min}}\gamma\Bigr).
+  \max \{ \norm{\htheta_1 - I_{d_1}}_{\op}, \norm{\htheta_2 - I_{d_2}}_{\op} \} = O\Bigl(\delta + \frac{\eps \log d_{\min}}\gamma\Bigr).
 \end{align*}
 \end{corollary}
 \begin{proof}
-To compute the MLE, we reparametrize by $\Theta_1 = P_1$ and $\Theta_2 = \lambda P_2$ where $P_1,P_2 \in \SPD(d_1) \times \SPD(d_2)$. \AR{Not sure which notation you guys want to keep but Theorem 4.2 denotes this as SPD (which I like)}
-Plugging this reparametrization into $f_x$ shows $\lambda, P_1, P_2$ solve
-$$\arg\min_{\lambda, P_1, P_2} \lambda f_x(P_1, P_2) - \log \lambda.$$
-For a fixed choice of $(P_{1},P_{2})$, the above is a strictly convex one-dimensional optimization problem with value
-\[ \min_{\lambda} \lambda f_x(P_1, P_2) - \log \lambda  = 1 + \log f_{x}(P_{1},P_{2}) , \]
-at $\lambda = 1/f_x(P_1, P_2)$. Therefore, the MLE $\htheta_1, \htheta_2$ exists uniquely iff $f_x$ restricted to $\SPD(d_1) \times \SPD(d_2)$ has unique minimizers $P_1, P_2$. Such unique minimizers exist by \cref{thm:klr}. 
-%Given $P_1, P_2$, solving the simple one-dimensional optimization problem for $\lambda$ yields $\lambda = 1/f_x(P_1, P_2)$. 
-So we have $\htheta = P_1$, and
-$$ \|\htheta_2 - I_{d_2} \|_{op} = \|\lambda P_2  - I_{d_2} \|_{op} \leq \lambda \|P_2 - I_{d_2}\| + |1 - \lambda|.$$
-By \cref{thm:klr}, $1 \leq \lambda \leq (1 - 4 \eps^2/\gamma)^{-1}.$ By our assumptions on $\gamma, \eps$, we have $\eps^2/\gamma \leq \eps/\gamma \leq \eps/\gamma^2$. Thus $\lambda = (1 + O(\eps^2/\gamma))$ if $C$ is large enough, and so
-$\max\{\|\htheta_1 - I_{d_1} \|_{op}, \|\htheta_2 - I_{d_2} \|_{op} \} = O(\eps \log d_{\min}/\gamma)$ by the bounds in \cref{thm:klr}. \end{proof}
+
+To compute the MLE, we reparametrize by $\Theta_1 = P_1$ and $\Theta_2 = \lambda P_2$ where $P_1,P_2 \in \SPD(d_1) \times \SPD(d_2)$. Plugging this reparametrization into $f_x$ shows $\lambda, P_1, P_2$ solve
+$$\arg\max_{\lambda, P_1, P_2} \lambda f_x(P_1, P_2) - \log \lambda.$$
+In particular, the MLE $\htheta_1, \htheta_2$ exists uniquely if $f_x$ restricted to $\SPD(d_1) \times \SPD(d_2)$ has unique minimizers $P_1, P_2$. Such unique maximizers exist by \cref{thm:klr}. Given $P_1, P_2$, solving the simple one-dimensional optimization problem for $\lambda$ yields $\lambda = 1/f_x(P_1, P_2)$. We have $\htheta = P_1$, and
+$$ \|\htheta_2 - I_{d_2} \|_{op} = \|\lambda P_2  - I_{d_2} \|_{op} \leq \lambda \|P_2 - I_{d_2}\|_{op} + |1 - \lambda|.$$
+By \cref{thm:klr}, $nD/\|x\|^2  \leq \lambda \leq (1 + 4 \eps^2/\gamma)^{-1} (nD/\|x\|^2).$ By our assumptions on $\gamma, \eps$, we have $\eps^2/\gamma \leq \eps/\gamma \leq \eps/\gamma^2$. Thus $\lambda = (1 + O(\eps^2/\gamma))(1+ O(\delta)) = (1 + O(\eps^2/\gamma +\delta)) = O(1)$ if $C$ is large enough, so $\lambda \|P_2 - I_{d_2}\|_{op} = O(\|P_2 - I_{d_2}\|_{op}) = O(\eps^2 \log d_{\min}/\gamma)$ by \cref{thm:klr}. $|1 - \lambda| = O(\eps^2/\gamma +\delta) = O(\eps^2 \log d_{\min}/\gamma)$. Combining these bounds completes the proof.\end{proof}
+
 
 % the MLE $\htheta = \htheta_1 \ot \htheta_2$ for $\Theta=I_{d_1} \ot I_{d_2}$ satisfies
 % where the Kronecker factors $\htheta_1$, $\htheta_2$ are chosen such that $\det\htheta_1=\det\htheta_2$.
-\CF{look ok? I believe we only ever need to apply this for vectors with the desired norm, so the assumption $\|x\| = \sqrt{nD}$ doesn't hurt and  makes things cleaner.}
+%\CF{look ok? I believe we only ever need to apply this for vectors with the desired norm, so the assumption $\|x\| = \sqrt{nD}$ doesn't hurt and  makes things cleaner.}
 
 \MW{Once this is done I will check the following bounds:}
 {\color{red}\Cref{lem:fm20,thm:klr}, along with what we have shown so far, already implies a preliminary version of \cref{thm:matrix-normal}.
@@ -1593,7 +1596,7 @@ By construction, it satisfies
   \frac1{n D} \Phi^*_Y(I_{d_1}) = \frac{I_{d_2}}{d_2}.
 \end{align}
 Note also that $\tr \Phi_Y(I_{d_2}) = \tr \Phi_Y^*(I_{d_1}) = \|Y\|^2 = nD$. Thus $\Phi_Y$ is $\delta$-doubly balanced if and only if $\|\frac{1}{nD} \Phi_Y(I_{d_2}) - \frac{1}{d_1} I_{d_1}\|_{op} \leq \frac{\delta}{d_1}$.
-\MW{Isn't there a factor $1/d_1$ missing on the right?}
+\MW{Isn't there a factor $1/d_1$ missing on the right?}\CF{still, or did I fix it?}
 
 \begin{lemma}[Concentration after flip-flop]\label{lem:flipflop-concentration}
 There is a universal constant $C>0$ such that the following holds.
@@ -2103,9 +2106,9 @@ $60 \dmax \cdot \left(\dfrac{16}{\lambda \gamma}\right)^2$ steps, we will find a
 
 For the $\otheta$ we just obtained, \cref{lem:gradient-strong-convexity-fm} applies and therefore $f_x$ is $\lambda$-strongly convex in a ball that contains the sublevel set $\{ \Upsilon \ \mid \ f_x(\Upsilon) \leq f_x(\otheta) \}$. Henceforth, \cref{lem:descent-sublevel-set} applies with $\alpha = \dfrac{1}{12 \dmax}$ and in $T = \dfrac{24 \dmax}{\lambda} \log(1/\delta)$ steps we obtain a  $\otheta'$ such that $\norm{\nabla_x(\otheta')}_F \leq \delta$. Setting $\delta = \dfrac{\varepsilon \lambda}{4 \sqrt{\dmax}}$, \cref{lem:tensor-distance-opt} implies that $D_{op}(\htheta_a \ || \ \otheta_a') \leq \varepsilon$ for $a \in \{1, 2\}$.
 
+
 In particular, \cref{alg:flip-flop matrix} correctly returns a scaling $\varepsilon$-close to the MLE. The number of iterations follows from the above.
 \end{proof}
-
 
 %=============================================================================
 \section{Lower bounds}\label{sec:lower}
@@ -2134,7 +2137,7 @@ As a consequence, we have
 \end{prop}
 The proof uses Fano's inequality with mutual information bounded by relative entropy, as in \cite{yang1999information}.
 \begin{lemma}[Fano's method]
-Let $\{P_i: i \in [m]\}$ be a finite set of probability distributions a set $\mathcal X$, and let $T: \mathcal X \to [m]$ be an estimator for $i$ from a sample of $P_i$. Then 
+Let $\{P_i: i \in [m]\}$ be a finite set of probability distributions over a set $\mathcal X$, and let $T: \mathcal X \to [m]$ be an estimator for $i$ from a sample of $P_i$. Then 
 $$ \max_{i\in [m]} \Pr_{x \sim P_i}[T(x) \neq i] \geq 1 - \frac{ - \log 2 + \max_{i,j \in [m]} D_{KL}(P_i|| P_j)}{\log m}.$$
 \end{lemma}
 
@@ -2142,7 +2145,7 @@ $$ \max_{i\in [m]} \Pr_{x \sim P_i}[T(x) \neq i] \geq 1 - \frac{ - \log 2 + \max
 We first prove \cref{eq:frob-lower}, the lower bound on estimation in the Frobenius norm. We begin by the standard reduction from estimation to testing; let $V_0$ be a $1$-packing of the Frobenius ball $B_F$ of radius $1$ in the $d\times d$ symmetric matrices, i.e. $B_F = \{A: A \text{ Symmetric}, \|A\|_F \leq 1\}$ of cardinality $m \geq 2^{d(d+1)/2}$, as guaranteed by the Gilbert-Varshamov bound. Let $0 \leq \delta \leq 1/2$, and let $V = I_d + \delta V_0 = \{I_d + \delta v: v \in V_0\}$. Write $V = \{\Theta_1, \dots, \Theta_m\}$. Note that $V$ is contained within the operator norm ball $B$.
 Let $P_i$ to be the distribution of $X(\Theta_i)$ on $\R^{dn}$, i.e $\mathcal{N}(0, \Theta^{-1}_i)^{\ot n}$. Define the estimator $T$ by 
 $$T(x) = \arg\min_{i \in [m]} \|\Theta_i - \htheta(x)\|_F,$$
-so that $\Pr[T(X) = i] \geq \Pr[\|\htheta -  \Theta_i\|_F \leq \delta/2]$ because $V$ is $\delta$-separated. In order to apply the local Fano's method, we use the well-known fact that $D_{KL}(P_i|| P_j) = n D_{KL}(\mathcal{N}(0, \Theta_i^{-1}), \mathcal{N}(0, \Theta_j^{-1}) = O(nD_{F}(\Theta_j || \Theta_i)^2)$ when $\Theta_i^{-1}\Theta_j$ has eigenvalues uniformly bounded away from zero (\CF{cite barsanov}, see also \cref{sec:rel-error}). This condition holds because $I_d/2 \preceq \Theta_j, \Theta_j \preceq 3I_d/2$ for $i,j \in [m]$ by our assumption that $\delta \leq 1/2$. Moreover, for $i \in [m]$, we have $\|\Theta_i^{-1}\|_{op} \leq 2$ and so $D_F(\Theta_j|| \Theta_i) = O( \|\Theta_i - \Theta_j\|_F) = O(\delta).$ We now have $D_{KL}(P_i|| P_j) \leq Cn \delta^2$ for some absolute constant $C$. By Fano's lemma, 
+so that $\Pr[T(X) = i] \geq \Pr[\|\htheta -  \Theta_i\|_F \leq \delta/2]$ because $V$ is $\delta$-separated. In order to apply the local Fano's method, we use the well-known fact that $D_{KL}(P_i|| P_j) = n D_{KL}(\mathcal{N}(0, \Theta_i^{-1}), \mathcal{N}(0, \Theta_j^{-1}) = O(nD_{F}(\Theta_j || \Theta_i)^2)$ when $\Theta_i^{-1}\Theta_j$ has eigenvalues uniformly bounded away from zero by \cref{prop:dissimilarities}. This condition on the eigenvalues holds because $I_d/2 \preceq \Theta_j, \Theta_j \preceq 3I_d/2$ for $i,j \in [m]$ by our assumption that $\delta \leq 1/2$. Moreover, for $i \in [m]$, we have $\|\Theta_i^{-1}\|_{op} \leq 2$ and so $D_F(\Theta_j|| \Theta_i) = O( \|\Theta_i - \Theta_j\|_F) = O(\delta).$ We now have $D_{KL}(P_i|| P_j) \leq Cn \delta^2$ for some absolute constant $C$. By Fano's lemma, 
  $$\min_{i \in [m]} \Pr_{x \sim P_i}[T(X) =  i] \leq \frac{ - \log 2 + C n \delta^2}{d(d+1)(\log 2)/2 }.$$
 If $\delta^2 = c\min\{ \frac{d^2}{n}, 1\}$, the right-hand side is bounded by $\frac{1}{2}$ and the assumption $\delta \leq 1/2$ is satisfied provided $c$ is a small enough absolute constant. On the other hand, we showed $\Pr_{x \sim P_i}[T(X) =  i] \geq \Pr[\|\htheta -  \Theta_i\|_F \leq \delta/2]$. Thus, 
 $$\min_{i \in [m]} \Pr[ \|\htheta - \Theta_i\|_F \leq \delta/2] \leq 1/2.$$
@@ -2154,15 +2157,15 @@ We remark that the above proof shows the necessity of a scale-invariant dissimil
 
 We now use the result just obtained to prove bounds on the relative Frobenius and operator error. Because $I_d/2 \preceq \Theta \preceq 3I_d/2$ for $\Theta \in B$, the bounds $\|\Theta - \htheta\|_F \leq \|\Theta\|_{op} D_F(\htheta|| \Theta)$ and $\|\Theta - \htheta\|_{op} \leq \|\Theta\|_{op} D_{op}(\htheta|| \Theta)$ together with \cref{prp:standard-lower} imply the following corollary.
 \begin{corollary}[Relative Frobenius and operator error]\label{prp:relative-lower}
-There is $c > 0$ such that the following holds for $X, \htheta, B$ be as in \cref{prp:standard-lower}.
+There is $c > 0$ such that the following holds for $X, \htheta, B$ as in \cref{prp:standard-lower}.
 \begin{enumerate}
 \item Let $\delta^2 = c\min \left\{1,d^2/n\right\}$. Then
 \begin{align}
-\sup_{\Theta \in B} \Pr\left[ d_F(\htheta|| \Theta)  \geq \delta\right] \geq \frac{1}{2}.\label{eq:frob-lower}
+\sup_{\Theta \in B} \Pr\left[ d_F(\htheta|| \Theta)  \geq \delta\right] \geq \frac{1}{2}.\label{eq:df-lower}
 \end{align}
 \item Let $\delta^2 = c\min \left\{1,d/n\right\}$. Then
  \begin{align}
-\sup_{\Theta \in B} \Pr\left[ d_{op}(\htheta|| \Theta) \geq \delta\right] \geq \frac{1}{2}. \label{eq:op-lower}
+\sup_{\Theta \in B} \Pr\left[ d_{op}(\htheta|| \Theta) \geq \delta\right] \geq \frac{1}{2}. \label{eq:dop-lower}
 \end{align}
 \end{enumerate}
 As a consequence, we have 
@@ -2176,48 +2179,71 @@ As a consequence, we have
 
 
 \subsection{Lower bounds for the matrix normal model}
-One could hope that, for the purposes of estimating $\Theta_1$, having access to $X$ is like having access to $n D/d_1$ independent samples of a Gaussian with precision matrix $\Theta_1$. In particular, one could hope e.g. for an RMSE rate of $\sqrt{ d_1/ n d_2}$ for estimating $A$ in spectral norm in the matrix model. Here we show that this only holds if $d_2 \leq n d_1$; the rate cannot be better than $O(\sqrt{d_1/ n \min(n d_1, d_2)})$. Intuitively, this holds because we can choose $\Theta_2$ to have low rank and effectively zero out some entries of $X$. However, this does not quite work because $\Theta_2$ must be invertible - we have to instead choose $\Theta_2$ to be approximately equal to a random low rank matrix.
+One could hope that, for the purposes of estimating $\Theta_1$, having access to $X$ is like having access to $n D/d_1$ independent samples of a Gaussian with precision matrix $\Theta_1$. In particular, one could hope e.g. for an RMSE rate of $\sqrt{ d_1/ n d_2}$ for estimating $\Theta_1$ in spectral norm in the matrix model even if $d_2$ is very large. Here we show that, to the contrary, the rate cannot be better than $O(\sqrt{d_1/ n \min(n d_1, d_2)})$. 
 %Here we show that our bounds for the matrix normal model are best possible for estimating the individual matrices $\Theta_a$. The bound for $\Theta_2$ is clearly best possible because it is what we would obtain even if $\Theta_1$ were known, but in fact even the bound on $\Theta_1$ is tight.
 
-\begin{theorem}Suppose $d_2 > n d_1$. Let $X$ denote a tuple of $n$ samples from the matrix normal model with precision matrices $\Theta_1, \Theta_2$. Let $Y$ be a tuple of $nd_1$ Gaussians on $\R^{d_1}$ with precision matrix $\Theta_1$. Let $\widehat{\Theta}_1$ be any estimator for $\Theta_1$. For every $\delta > 0$, there is a distribution on $\Theta_2$ and an estimator $\tilde{\Theta}$ such that the distribution of $\widehat{\Theta}_1(X)$ and the distribution of $\tilde{\Theta}(Y)$ differ by at most $\delta$ in total variation distance. In particular (see \cref{lem:dtv}), the minimax MSE for $\widehat{\Theta}_1$ can be no less than the minimax MSE for the precision matrix of a $d_1$ dimensional Gaussian with $nd_1$ samples; this holds as well for $\Theta_1$ to subsets such as sparse, etc. %\CF{I need to check this final conclusion; it might require some reasonable assumption like boundedness}
+\begin{theorem}[Lower bound for matrix normal models]\label{thm:matrix-lower}
+There is $c > 0$ such that the following holds. Let $\htheta_1$ be any estimator for $\Theta_1$ from a tuple $X$ of $n$ samples of the matrix normal model with precision matrices $\Theta_1, \Theta_2$. Let $B\subset \PD(d_1)$ denote the ball about $I_{d_1}$ of radius $1/2$ in the operator norm.
+\begin{enumerate}
+\item \label{it:frob-lower} Let $\delta^2 = c\min \left\{1,\frac{d_1^2}{n \min \{n d_1, d_2\}}\right\}$. Then
+\begin{align}
+\sup_{\Theta_1 \in B, \Theta_2 \in \PD(d_2)} \Pr\left[ d_F(\htheta_1|| \Theta_1)  \geq \delta\right] \geq \frac{1}{2}.
+\end{align}
+\item\label{it:op-lower} Let $\delta^2 = c\min \left\{1,\frac{d_1}{n \min \{n d_1, d_2\}}\right\}$. Then
+ \begin{align}
+\sup_{\Theta_1 \in B, \Theta_2 \in \PD(d_2)} \Pr\left[ d_{op}(\htheta_1|| \Theta_1) \geq \delta\right] \geq \frac{1}{2}. \label{eq:dop-lower-matrix-normal}
+\end{align}
+\end{enumerate}
+As a consequence, we have 
+\begin{align*}\sup_{\Theta_1 \in B, \Theta_2 \in \PD(d_2)}\E[d_F(\htheta_1|| \Theta_1)^2] &=\Omega\left( \min \left\{\frac{d_1^2}{n \min \{n d_1, d_2\}},1\right\}\right)\\
+\text{ and } \sup_{\Theta_1 \in B, \Theta_2 \in \PD(d_2)}\E[d_{op}(\htheta_1|| \Theta_1)^2] &= \Omega\left( \min \left\{\frac{d_1}{n \min \{n d_1, d_2\}},1\right\}\right).\end{align*}
 \end{theorem}
-In the proof, one finds that the estimator $\tilde{\Theta}$ uses additional randomness - but by Yao's theorem the minimax MSE is unchanged when estimators with additional randomness are allowed.
 
-\begin{proof}
-%If $d_2 \leq nd_1$, we are done. Assume $d_2 > n d_1$. 
+Intuitively, the above theorem holds because we can choose $\Sigma_2$ to zero out all but $nd_1$ columns of each $X_i$, which allows access to at most $n \cdot n d_1$ samples from a Gaussian with precision $\Theta_1$. However, this does not quite work because $\Sigma_2$ would not be invertible and hence the precision matrix $\Theta_2$ would not exist. We must instead choose $\Sigma_2$ to be approximately equal to a random low rank matrix. The resulting construction allows us to deduce the same lower bounds for estimating $\Theta_1$ as the Gaussian case with at most $n\min \{d_2, n d_1\}$ independent samples.
 
-Let $B$ be any $d_2\times d_2$ matrix such that the last $d_2 - nd_1$ columns are zero. Given access to the tuple $X$ of $n$ samples $\sqrt{\Sigma_1} X_i B^T$, where $X_i$ are i.i.d Gaussian $d_1\times d_2$ matrices, clearly $\widehat{\Theta}_2$ has access to at most $n d_1$ samples of the Gaussian on $\R^{d_1}$ with covariance matrix $\Sigma_1$ because $X_i B^T$ depends only on the first $d_1$ columns of each $X_i$.
 
-To lower bound the rates for estimating $\Theta_1$, we must supply \emph{invertible} $B$. Choose the first $nd_1$ columns of $B$ to uniformly at random among the collections of $nd_1$ orthonormal vectors in $\R^{d_2}$. Let the remaining entries be i.i.d uniform in $[-\delta, \delta]$ (the precise distribution of the remaining entries will not matter as long as they are small). Let $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ denote the resulting random variable with $B$ and $X$ chosen independently. If $\delta = 0$, then with access to the random variable $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ by the argument above $\widehat{\Theta}_1$ has access to at most $nd_1$ samples. However, we claim that as $\delta \to 0$, the distribution of $Y_\delta$ tends to that of $Y_0$ in total variation distance. Thus the distribution of $\widehat{\Theta}_1(Y_\delta)$ converges to that of $\widehat{\Theta}_1(Y_0)$ in total variation. Since $Y_0$ only depends on $nd_1$ samples to the Gaussian on $\R^{d_1}$ with precision matrix $\Theta_1$, which we call $Y$, we can let $\tilde{\Theta}(Y) = \widehat{\Theta}_1(Y_0)$.
 
-It remains to prove that $Y_\delta$ converges to $Y_0$ in total variation distance. First note that $Y_\delta = Y_0 + \delta Z$ where $Z_i = \sqrt{\Theta_1} X_i C^T$, where $C$ is a random matrix where the first columns are zero and the last $d_2 - n d_1$ columns have entries i.i.d uniform on $[-1, 1]$. Because of the zero patterns of $B$ and $C$, $Y_0$ and $Z$ are actually independent. If we can show that $Y_0$ has a density on $\R^{nd_1d_2}$, then $Y_0 + \delta Z$ converges to $Y_0$ in total variation because adding $\delta Z$ corresponds to convolving the density of $Y_0$, an $L_1$ function, by an approximate identity \CF{find reference}.
-
-By invertibility of $\Sigma_1$, it is enough to show that $Y_0$ has a density when $\Sigma_1 = I_1$. Now $X = (X_i B^T, \dots, X_n B^T)$. Consider the $nd_1$ random vectors that are the rows of $BX_i^T$. Because $B$ is supported only in its first $nd_1$ columns, the joint distribution of these random vectors may be obtained by sampling $n d_1$ independent standard Gaussian vectors $v_i$ on $\R^{nd_1}$ and then multiplying them by the $d_2 \times nd_1$ matrix $B'$ that is the restriction of $B$ to its first $nd_1$ columns. We have chosen $B'$ such that it is an isometry into a uniformly random subspace of $\R^{d_2}$ of dimension $nd_1$. Thus $Bv_i/\|v_i\|$ are $nd_1$ many independent, random unit vectors in $\R^{d_2}$. As $\|v_i\|$ are also independent, $B v_i$ are thus independent. The marginal $Bv_1$ has a density; one may sample it by choosing a uniformly random vector and then choosing the length $\|v_1\|$, hence the density is a product density in spherical coordinates. The joint density of the $Bv_i$ is then the product density of the marginal densities. \end{proof}
-
-In the conclusion of the lemma we needed to use that convergence in total variation of some estimator $\widehat{\Theta}_n$ to another, $\widehat{\Theta}$, implied that the former has minimax error at least that of the latter in any dissimilarity measure. This holds by applying the next lemma to the random variables $X_n = d_*( \widehat{\Theta}_n, \Theta)$ and $Y = d_*(\widehat{\Theta}, \Theta)$ where $d_*$ represents any nonnegative function. For example, we could take $d_*$ to be the Frobenius, spectral, Fischer-Rao, Kullback-Leibler or Mahalanobis ``distances".
-\CF{surely I can cite this next thing, I am just proving it for my own sanity}
-\begin{lemma}\label{lem:dtv}
-Suppose $X_n, Y$ are nonnegative random variables such that $X_n \to Y$ in $d_{TV}$. Then $$\limsup_{n\to \infty} \E X_n \geq \E Y.$$
+\begin{lemma}\label{lem:reduce-lower}Suppose $d_2 > n d_1$. Let $X$ denote a tuple of $n$ samples from the matrix normal model with precision matrices $\Theta_1, \Theta_2$. Let $Y$ be a tuple of $n\min\{nd_1, d_2\}$ Gaussians on $\R^{d_1}$ with precision matrix $\Theta_1$. Let $\widehat{\Theta}_1$ be any estimator for $\Theta_1$. For every $\delta > 0$, there is a distribution on $\Theta_2$ and an estimator $\tilde{\Theta}$ such that the distribution of $\widehat{\Theta}_1(X)$ and the distribution of $\tilde{\Theta}(Y)$ differ by at most $\delta$ in total variation distance. 
+%In particular (see \cref{lem:dtv}), the minimax MSE for $\widehat{\Theta}_1$ can be no less than the minimax MSE for the precision matrix of a $d_1$ dimensional Gaussian with $nd_1$ samples; this holds as well for $\Theta_1$ to subsets such as sparse, etc. 
 \end{lemma}
+%In the proof, one finds that the estimator $\tilde{\Theta}$ uses additional randomness - but by Yao's theorem the minimax MSE is unchanged when estimators with additional randomness are allowed.
+
 \begin{proof}
-%If $X_n \to Y$, then the random variables $\|X_n - I\|\to  \|Y - I\|$ in total variation. Does convergence in total variation implies convergence in means?
+If $d_2 \leq nd_1$, then setting $\Theta_2 = I(d_2)$ shows that $\htheta_1$ has access to precisely $n d_2$ samples from a Gaussian $\R^{d_1}$ with precision matrix $\Theta_1$. Thus we may take $\tilde{\Theta} = \htheta_1$ in that case, completing the proof. The harder case is $d_2 > n d_1$. 
 
-If the mean of $Y$ is bounded then we have Markov's inequality. Let $\eps > 0$; by the Dominated Convergence Theorem there is $\alpha$ large enough that $\E[Y 1_{Y \leq \alpha}] \geq \E[Y] - \eps$. Now we have
- $$\E[X_n] \geq \E[X_n 1_{X_n \leq \alpha} ] \to \E[ Y 1_{Y \leq \alpha}] \geq \E[Y] - \eps.% \geq (\E[Y| Y \leq \alpha] - \delta)(1 - \delta - \eps).
- $$
- as $n \to \infty$, where the limit is deduced by H\"older's inequality. Letting $\eps \to 0$ completes the proof.\end{proof}
-%By H\"older's inequality, $\E[X_n 1_{X_n \leq \alpha}] \to \E[ Y 1_{Y \leq \alpha}]$ as $n \to \infty$. \end{proof}
+Let $B$ be any $d_2\times d_2$ matrix such that the last $d_2 - nd_1$ columns are zero. Given access to the tuple $X$ of $n$ samples $\sqrt{\Sigma_1} X_i B^T$, where $X_i$ are i.i.d Gaussian $d_1\times d_2$ matrices, clearly $\widehat{\Theta}_2$ has access to at most $n^2 d_1$ samples of the Gaussian on $\R^{d_1}$ with precision matrix $\Theta_1$ because $X_i B^T$ depends only on the first $d_1$ columns of each $X_i$.
 
-%This is possible because $\E[Y|Y\leq \alpha] = \E[Y 1_{Y \leq \alpha}]/ \Pr[Y \leq \alpha]$, and as $\alpha \to \infty$ the numerator converges to $\E[Y]$ by the dominated convergence theorem and the denominator converges to $1$ by Markov's inequality.
+However, we must supply \emph{invertible} $B$ in order for $\Theta_2 = (BB^T)^{-1}$ to exist. Choose the first $nd_1$ columns of $B$ to uniformly at random among the collections of $nd_1$ orthonormal vectors in $\R^{d_2}$. Let the remaining entries be i.i.d uniform in $[-\delta, \delta]$ (the precise distribution of the remaining entries will not matter as long as they are small). Let $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ denote the resulting random variable with $B$ and $X$ chosen independently. If $\delta = 0$, then, by the argument above, with access to the random variable $Y_\delta:=(\sqrt{\Sigma_1} X_1 B^T, \dots, \sqrt{\Sigma_1} X_n B^T)$ the estimator $\widehat{\Theta}_1$ has access to at most $n^2d_1$ samples of a Gaussian on $\R^{d_1}$ with precision matrix $\Theta_1$. We claim that as $\delta \to 0$, the distribution of $Y_\delta$ tends to that of $Y_0$ in total variation distance. Thus the distribution of $\widehat{\Theta}_1(Y_\delta)$ converges to that of $\widehat{\Theta}_1(Y_0)$ in total variation. Since $Y_0$ only depends on $n^2d_1$ samples to the Gaussian on $\R^{d_1}$ with precision matrix $\Theta_1$, which we call $Y$, defining $\tilde{\Theta}(Y) = \widehat{\Theta}_1(Y_0)$ proves the theorem. \CF{there's still a probability zero event that $B$ is not full rank; not an issue I think, but we should resolve.}
+
+It remains to prove that $Y_\delta$ converges to $Y_0$ in total variation distance. First note that $Y_\delta = Y_0 + \delta Z$ where $Z_i = \sqrt{\Theta_1} X_i C^T$, where $C$ is a random matrix where the first columns are zero and the last $d_2 - n d_1$ columns have entries i.i.d uniform on $[-1, 1]$. Because of the zero patterns of $B$ and $C$ and the fact that the entries of $X$ are i.i.d., the random variables $Y_0$ and $Z$ are independent. If we can show that $Y_0$ has a density on $\R^{nd_1d_2}$, then $Y_0 + \delta Z$ converges to $Y_0$ in total variation because adding $\delta Z$ corresponds to convolving the density of $Y_0$, an $L_1$ function, by an approximate identity \CF{find reference}.
+
+By invertibility of $\Sigma_1$, it is enough to show that $Y_0$ has a density when $\Sigma_1 = I(d_1)$. Now $X = (X_i B^T, \dots, X_n B^T)$. Consider the $nd_1$ random vectors in $ \R^{d_2}$ that are the rows of the matrices $BX_i^T$, for $i \in \{1, \dots, n\}$. Because $B$ is supported only in its first $nd_1$ columns, the joint distribution of these random vectors may be obtained by sampling $n d_1$ independent standard Gaussian vectors $v_j$ on $\R^{nd_1}$ and then multiplying them by the $d_2 \times nd_1$ matrix $B'$ that is the restriction of $B$ to its first $nd_1$ columns. We have chosen $B'$ such that it is an isometry into a uniformly random subspace of $\R^{d_2}$ of dimension $nd_1$. Thus $Bv_j/\|v_j\|$ are $nd_1$ many independent, random unit vectors in $\R^{d_2}$. As the $\|v_j\|$ are also independent, $B v_j$ are thus independent. Each marginal $Bv_i$ has a density; one may sample it by choosing a uniformly random vector and then choosing the length $\|v_i\|$, hence the density is a product density in spherical coordinates. The joint density of the $Bv_j$ is then the product density of the marginal densities. \end{proof}
+
+The above lemma combined with \cref{prp:relative-lower} immediately implies \cref{thm:matrix-lower}. We remark that the below proof uses no properties about $d_F$; a lower bound on any error metric for estimating a Gaussian with $n \min \{n d_1, d_2\}$ samples will transfer to the matrix normal model. In particular, \cref{thm:matrix-lower} holds true when $d_F$ is replaced by the Frobenius error and $d_{op}$ replaced by the operator norm error.
+\begin{proof}[Proof of \cref{thm:matrix-lower}] 
+%We begin with the proofs of \cref{it:frob-lower,it:op-lower}, as they imply the rate lower bounds. If $nd_1 \geq d_1$, then the bound follows immediately from \CF{finish}
+
+To show \cref{it:frob-lower}, let $\delta^2 \leq c\min \left\{1,\frac{d_1^2}{n \min \{n d_1, d_2\}}\right\}$. Let $\Theta_2$ be the distributed as in \cref{lem:reduce-lower} so that, as guaranteed by \cref{lem:reduce-lower} there is an estimator $\tilde{\Theta}$ with access to a tuple $Y$ of $n \min \{n d_1, d_2\}$ samples of a Gaussian on $\R^{d_1}$ with precision matrix $\Theta_1$ satisfying $d_{TV} (\htheta_1(X), \tilde{\Theta}(Y)) \leq \delta_0$. \cref{prp:relative-lower} implies \begin{align*}
+\sup_{\Theta \in B} \Pr_Y\left[ d_F(\tilde{\Theta}|| \Theta_1)  \geq \delta\right] \geq \frac{1}{2}.
+\end{align*}
+On the other hand, the total variation distance bound implies 
+\begin{align*}
+\sup_{\Theta \in B, \Theta_2 \in \PD(d_2)} \Pr_{X} \left[ d_F(\htheta_1|| \Theta_1) \geq \delta \right] \geq \sup_{\Theta \in B} \Pr_{\Theta_2, X}\left[ d_F(\htheta_1|| \Theta_1)  \geq \delta\right] \geq \frac{1}{2} - \delta_0.
+\end{align*}
+Allowing $\delta_0 \to 0$ implies the theorem. The proof of \cref{it:op-lower} is similar.
+\end{proof}
 
 
-
-%Then $\widehat{\Theta}_1$ is an estimator that has access to only $n d_1$ samples of a Gaussian.
 
 %=============================================================================
 \section{Numerics and regularization}\label{sec:numerics}
 %=============================================================================
-Here we show experimentally that, in some natural situations, the MLE performs better than regularized estimators. We also show that in the undersampled regime, a simpler regularizer can match and sometimes outperform the GLASSO-type estimators appearing in \CF{tsilig, zhou}. The estimator is closer to a shrinkage estimator as in \CF{cite goes, weisel, thresholding}, or to a rank penalty \CF{elaborate}, or to \CF{tang?}. Instead of the MLE, we consider the following penalized log-likelihood:
+
+In the undersampled regime, most effort so far has focused on the sparse case. Existing estimators, such as the Gemini estimator \cite{zhou2014gemini} and kGLASSO estimator \cite{tsiligkaridis2013convergence} work by adding a regularizer proportional to the $\ell_1$ norm of the precision matrices to encourage sparsity. We refer to these as GLASSO-type estimators.
+
+To handle cases which have structure but are not necessarily sparse, we propose a simple regularizer. We show experimentally that, under a natural generative model for \emph{dense} covariance matrices, our regularized estimator outperforms the GLASSO-type estimators appearing in \cite{tsiligkaridis2013convergence,zhou2014gemini}. We also show that, even without regularization, the MLE can outputerform Gemini when $\Theta_2$ is ill-conditioned even when $\Theta_1$ is sparse. Moreover, we observe that our regularized estimator is significantly faster to compute than the GLASSO-type estimators. All the estimators require parameter tuning, so we compare throughout a plausible range of parameters for both estimators. We leave determination of the appropriate regularization parameters by cross-validation for future work.
+
+ Our estimator is related to the shrinkage estimator as in \cite{goes2020robust} and the Frobenius penalty considered in \CF{tang}. Instead of the MLE, we consider the following penalized log-likelihood:
 
 \begin{align*}
   \ell_{\samp}^\alpha(\Theta_1, \dots, \Theta_k)
@@ -2225,19 +2251,19 @@ Here we show experimentally that, in some natural situations, the MLE performs b
 %  := \frac {n D} 2 \sum_{a = 1}^k \frac{1}{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i} + \alpha \prod_{i=1}^k \tr \Theta_a,
   := \ell_{\samp}(\Theta_1, \dots, \Theta_k) + \alpha \prod_{i=1}^k \tr \Theta_a,
 \end{align*}
-where $\alpha$ is a parameter to be tuned. Set $\widehat{\Theta}^\alpha_x = \arg\min_{|\Theta|_1 =\dots =  |\Theta_k|} \ell^\alpha_\samp(\Theta)$.
+where $\alpha$ is a parameter which must be tuned. Set $\widehat{\Theta}^\alpha_x = \arg\min_{|\Theta|_1 =\dots =  |\Theta_k|} \ell^\alpha_\samp(\Theta)$.
 Observe the following:
 \begin{enumerate}
 \item If $\alpha > 0$, then $\widehat{\Theta}^\alpha_x$ exists uniquely for every $x$.
 \item $\widehat{\Theta}^\alpha_x$ is equal to $\widehat{\Theta}_{y}$ where $y$ is the tuple of $n + D$ vectors given by
 $$(x_1, \dots, x_n, \alpha e_{1\dots 1}, \dots, \alpha e_{d_1d_2 \dots d_k}).$$ Here $e_{i_1 \dots i_k}$ denotes the standard basis vector in $\R^{d_1d_2 \dots d_k}$. Thus the flip-flop estimator applied to the tuple $y$ converges to $\widehat{\Theta}^\alpha_x$.
-\item The function $\ell^\alpha_\samp$ is \CF{$\alpha?$}-geodesically strongly convex at the identity, and shares the same robustness properties as $\ell$. Thus for $\alpha$ large enough, flip-slop is guaranteed to converge linearly.
+\item The function $\ell^\alpha_\samp$ is \CF{$\alpha?$}-geodesically strongly convex at the identity, and shares the same robustness properties as $\ell$. Thus for $\alpha$ large enough, flip-flop is guaranteed to converge linearly.
 \item $\widehat{\Theta}^\alpha_\samp$ is the maximum a posteriori probability (MAP) estimator for $\Theta$ assuming $\Theta$ is drawn from the Wishart prior with $D + 1$ degrees of freedom and $V = I/\alpha$. That is, $\Theta_1, \dots, \Theta_k$ are selected proportional to $e^{- \alpha \tr \Theta_1 \ot \dots \ot \Theta_k}.$
 \end{enumerate}
 %As in the unpenalized case, we will often consider the scale-invariant function $f^\alpha_x$ given by
 
 
-The flip-flop algorithm for this regularized estimator is nearly as simple as the unregularized flip-flop algorithm: see \cref{alg:reg-flip-flop}. Above we explained that it can be viewed as the flip-flop estimator for an augmented tuple of tensors $y$, but due to the special form of $y$ the iterations simplify significantly. The only modification is that a certain multiple of the identity is added in each flip-flop step.  \CF{I need to check all the normalizations carefully; may want to define $\rho \leftarrow \rho/nD$ and $\alpha \leftarrow \alpha/nD$.}
+The flip-flop algorithm for this regularized estimator is nearly as simple as the unregularized flip-flop algorithm: see \cref{alg:reg-flip-flop}. Above we explained that it can be viewed as the flip-flop estimator for an augmented tuple of tensors $y$, but due to the special form of $y$ one need not look at the entirety of $y$ to perform the iterations. The only modification is that a certain multiple of the identity is added in each flip-flop step.  \CF{I need to check all the normalizations carefully; may want to define $\rho \leftarrow \rho/nD$ and $\alpha \leftarrow \alpha/nD$.}
 
 
 \begin{Algorithm}
@@ -2267,12 +2293,143 @@ $$\otheta_a = \frac{n D}{d_a}\left(\Upsilon_i + \alpha \left(\prod_{i \neq a} \t
 \caption{Regularized flip-flop algorithm}\label{alg:reg-flip-flop}
 \end{Algorithm}
 
-We compare the performance of the estimator with Zhou's single step estimator \CF{cite gemini} for the matrix normal model. We find that when $\Theta_1$ is sparse and $\Theta_2$ is well-conditioned, Zhou's estimator obtains modest gains over the regularized Sinkhorn algorithm in Frobenius error. However, when $\Theta_2$ can be ill-conditioned, we find that the shrinkage estimator outperforms the lasso-type estimators. Both estimators require parameter tuning, so we compare throughout a plausible range of parameters for both estimators. We leave determination of the appropriate regularization parameters by cross-validation to future work. \CF{actually include the figures; maybe include an extra tantalizing one in the intro?}.
+\subsection{Spiked, dense covariances}
+
+
+\TODO{
+\begin{enumerate}
+\item Take a look at the plots that are here, tell me how they should change.
+\item Just use Frobenius error except for a plot showing that it behaves similarly to frobenius error?
+\item Explain more precisely how things were generated.
+\item Show how things decay with sparsity.
+\item Plot timings, discuss complexity.
+\end{enumerate} }
+
+Here we compare the performance of our regularized estimator with Zhou's single step estimator (Gemini) for the matrix normal model assuming $\Sigma_1, \Sigma_2$ are dense, spiked matrices. More precisely, $\Sigma_1, \Sigma_2$ are each a random rank one matrix plus a small multiple of the identity matrix. \cref{fig:spiked} was generated by setting $d_1 = 25, d_2 = 50$ and $n = 1$, for each choice of regularization parameter independently generating 10 different pairs $\Sigma_1 \sim I_{d_1} + 10 v_1v_1^T$ and $\Sigma_2 \sim I_{d_2} + 10 v_2v_2^T$ where the $v_i$ are standard $d_i$-dimensional Gaussian vectors, and then computing the relative error (Geodesic distance from the estimator to the truth divided by the Geodesic distance from the identity to the truth) for samples drawn from this distribution 10 times and averaging all 100 errors. \CF{For simplicity, before computing the geodesic distance we normalize all matrices to be in $\SL(d_i)$}. Note that with a single sample ($n = 1$) the MLE does not exist. 
+
+We observe that the Gemini estimator is never better than the ``trivial" estimator which simply always outputs the identity matrix. However, for a fairly broad range of regularizers, the Gemini does outperform the inverse of the the partial trace of the sample covariance matrix (the partial trace of the sample covariance matrix is an unbiased estimator of $\Sigma_1$). As expected, as the regularization parameter tends to zero Gemini becomes identical to the inverse of the the partial trace of the sample covariance matrix. \CF{explain that this is what Gemini for $\Theta_1$ is.} For a broad range of regularization parameters, our regularized estimator outperforms the trivial estimator.
 
 
 
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{./code/zhou-comparison/25-50-spiked-geo.pdf}
+         %\caption{$y=x$}
+         %\label{fig:y equals x}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{./code/zhou-comparison/25-50-spiked-op.pdf}
+         %\caption{$y=3sinx$}
+         %\label{fig:three sin x}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{./code/zhou-comparison/25-50-spiked-frob.pdf}
+         %\caption{$y=5/x$}
+         %\label{fig:five over x}
+     \end{subfigure}
+        %\caption{Three simple graphs}
+        %\label{fig:three graphs}
+\caption{Average error with $d_1 = 25, d_2 = 50, n = 1$ for spiked, dense covariance matrices. ``Gemini'' refers to Zhou's Gemini estimator, ``KGlasso'' refers to the Kronecker Glasso algorithm \CF{cite}, ``RegSink" refers to our regularized estimator, and ``Trivial'' refers to the estimator that always outputs the identity matrix. \CF{actually do 10 runs/draws; right now it is 5, and get it to have only one legend; normalize operator norm properly, say how sparse it is.}}\label{fig:spiked}
+\end{figure}
 
+ 
+ \subsection{Sparse, ill-conditioned inputs} \CF{ACTUALLY DO THIS PART}
 
+We compare the performance of the estimator with Zhou's single step estimator \cite{zhou2014gemini} for the matrix normal model. We find that when $\Theta_1$ is sparse and $\Theta_2$ is well-conditioned, Zhou's estimator obtains modest gains over the regularized Sinkhorn algorithm in Frobenius error; see \cref{fig:sparse-ii}. However, when $\Theta_2$ can be ill-conditioned, we find that the shrinkage estimator performs comparably to the Gemini estimator; see \cref{fig:sparse-i}.  \CF{similar explanation for how these figures work.}
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{./code/zhou-comparison/25-50-sparse-geo.pdf}
+         %\caption{$y=x$}
+         %\label{fig:y equals x}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{./code/zhou-comparison/25-50-sparse-op.pdf}
+         %\caption{$y=3sinx$}
+         %\label{fig:three sin x}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{./code/zhou-comparison/25-50-sparse-frob.pdf}
+         %\caption{$y=5/x$}
+         %\label{fig:five over x}
+     \end{subfigure}
+        %\caption{Three simple graphs}
+        %\label{fig:three graphs}
+\caption{Average error with $d_1 = 25, d_2 = 50, n = 1$ for $\Theta_1$ sparse and $\Theta_2$ spiked. ``Gemini'' refers to Zhou's Gemini estimator, ``KGlasso'' refers to the Kronecker Glasso algorithm \CF{cite}, ``RegSink" refers to our regularized estimator, and ``Trivial'' refers to the estimator that always outputs the identity matrix. \CF{actually do 10 runs/draws; right now it is 5, and get it to have only one legend; normalize operator norm properly, say how sparse it is.}}\label{fig:sparse-i}
+\end{figure}
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{./code/zhou-comparison/25-50-doubly-sparse-geo.pdf}
+         %\caption{$y=x$}
+         %\label{fig:y equals x}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{./code/zhou-comparison/25-50-doubly-sparse-op.pdf}
+         %\caption{$y=3sinx$}
+         %\label{fig:three sin x}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{./code/zhou-comparison/25-50-doubly-sparse-frob.pdf}
+         %\caption{$y=5/x$}
+         %\label{fig:five over x}
+     \end{subfigure}
+        %\caption{Three simple graphs}
+        %\label{fig:three graphs}
+\caption{Average error with $d_1 = 25, d_2 = 50, n = 1$ for both precision matrices sparse. ``Gemini'' refers to Zhou's Gemini estimator, ``KGlasso'' refers to the Kronecker Glasso algorithm \CF{cite}, ``RegSink" refers to our regularized estimator, and ``Trivial'' refers to the estimator that always outputs the identity matrix. \CF{actually do 10 runs/draws; right now it is 5, and get it to have only one legend; normalize operator norm properly, say how sparse it is.}}\label{fig:sparse-ii}
+\end{figure}
+
+\subsection{Learning curves}
+
+In this subsection we examine how the number of samples affects the error. In \cref{fig:lc} we see that for a single sample, the Gemini and regularized Flip-Flop estimators are comparable and the error of the unregularized Flip-flop estimator is much higher than either. As the number of samples increases, however, the regularized Flip-flop estimator performs better, and for even more samples the unregularized Flip-Flop estimator obtains the least error. This is to be expected because regularization introduces bias.
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{./code/zhou-comparison/20-50-lc-geo.pdf}
+         %\caption{$y=x$}
+         %\label{fig:y equals x}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{./code/zhou-comparison/25-50-lc-op.pdf}
+         %\caption{$y=3sinx$}
+         %\label{fig:three sin x}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{./code/zhou-comparison/25-50-lc-frob.pdf}
+         %\caption{$y=5/x$}
+         %\label{fig:five over x}
+     \end{subfigure}
+        %\caption{Three simple graphs}
+        %\label{fig:three graphs}
+\caption{Average error with $d_1 = 50, d_2 = 50, $ and number of samples $n$ ranging from $1$ to $10$ for both precision matrices sparse. ``Gemini'' refers to Zhou's Gemini estimator, ``KGlasso'' refers to the Kronecker Glasso algorithm \CF{cite}, ``RegSink" refers to our regularized estimator, ``Sink'' refers to unregularized Sinkhorn, and ``Trivial'' refers to the estimator that always outputs the identity matrix. \CF{actually do 10 runs/draws; right now it is 5, and get it to have only one legend; normalize operator norm properly, say how sparse it is. Choose regularization better for KGlasso so that it actually improves with more samples.}}\label{fig:lc}
+\end{figure}
+
+\subsection{Computational aspects}
+
+Here we show that the regularized estimator is much faster to compute than its counterparts that rely on Glasso. 
 
 %=============================================================================
 \section{Conclusion and open problems}
@@ -2947,7 +3104,7 @@ D(A^{-1}||B^{-1}) &= O(D(A||B)).
 \end{lemma}
 For $D_{op}$, the result is \cite[Lemma C.1]{FM20}. For $D_F$, the result holds because because $D_F(A|| B) = \Theta(d(A, B))$ if either is at most some absolute constant (shown below). Because $d(A, B)$ is a metric, it automatically satisfies \cref{eq:tri,eq:sym}. Furthermore, $d(A,B) = d(A^{-1}, B^{-1})$ by direct calculation. We next consider the relationship between $D_F$ and other dissimilarity measures in the statistics literature.
 
-\begin{prop}[Relationships between dissimilarity measures.] There is a constant $c > 0$ such that the following holds. If any of $D_F(\Theta_1|| \Theta_2)$, $d_{TV}(\mathcal{N}(0, \Theta_1^{-1}), \mathcal{N}(0, \Theta_2^{-1})$, $d_{KL}(\mathcal{N}(0, \Theta_1^{-1}) || \mathcal{N}(0, \Theta_2^{-1})$ or the Fisher-Rao distance $d(\Theta_1, \Theta_2)$ is at most $c$, then 
+\begin{prop}[Relationships between dissimilarity measures.]\label{prop:dissimilarities} There is a constant $c > 0$ such that the following holds. If any of $D_F(\Theta_1|| \Theta_2)$, $d_{TV}(\mathcal{N}(0, \Theta_1^{-1}), \mathcal{N}(0, \Theta_2^{-1})$, $d_{KL}(\mathcal{N}(0, \Theta_1^{-1}) || \mathcal{N}(0, \Theta_2^{-1})$ or the Fisher-Rao distance $d(\Theta_1, \Theta_2)$ is at most $c$, then 
 $$ D_F(\Theta_1|| \Theta_2) \asymp  d_{TV}(\mathcal{N}(0, \Theta_1^{-1}), \mathcal{N}(0, \Theta_2^{-1})^2 \asymp d_{KL}(\mathcal{N}(0, \Theta_1^{-1}) || \mathcal{N}(0, \Theta_2^{-1}) \asymp d(\Theta_1, \Theta_2).$$
 \end{prop}
 \begin{proof}
