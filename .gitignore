@@ -12,3 +12,5 @@ fast-literature/
 .DS_Store
 
 .Rproj.user
+.RData
+.Rhistory
