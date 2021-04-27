@@ -1,0 +1,43 @@
+\begin{IEEEproof}
+\begin{enumerate}
+	\item Without loss of generality, fix $\bY\in S_{++}^f$. The function $\tr((\bX \otimes \bY)\hat{\bS}_n)$ is linear in $\bX$.	The function $g(\mathbf{X}_1):=-\log\det(\mathbf{X}_1)$ is a convex function in $\mathbf{X}_1$ over the set $S_{++}^p$ \cite{ConvexOpt}. The triangle inequality implies $|\cdot|_1$ is convex. Finally, the sum of convex functions is convex.	The set $S_{++}^p$ is a convex set for any $p\in \mathbb{N}$.
+	\item By symmetry we only need prove that (\ref{dualX}) is the dual of $\min_{\mathbf{Y}\in S_{++}^f} J_\lambda(\bX,\bY)$. By standard duality relations between $\ell_1$ and $\ell_\infty$ norms \cite{ConvexOpt} and symmetry of $\bY$ \footnote{ The maximum is attained at $\mathbf{U}_{i,j}= \frac{\mathbf{Y}_{i,j}}{|\mathbf{Y}_{i,j}|}$ for $\mathbf{Y}_{i,j}\neq 0$ and at $\mathbf{U}_{i,j}=0$ for $\mathbf{Y}_{i,j}=0$.}: 
+	\begin{equation*}
+		|\mathbf{Y}|_1=\max_{\mathbf{U}\in S^f: |\mathbf{U}|_{\infty}\leq 1}{\tr(\mathbf{Y}\mathbf{U})}
+	\end{equation*}
+	Using this in (\ref{J_lambda_func}) and invoking the saddlepoint inequality:
+	\begin{align}
+	  &\min_{\mathbf{Y}\in S_{++}^f}  {\tr((\mathbf{X}\otimes \mathbf{Y})\hat{\bS}_n)-p\log\det(\mathbf{Y})+p\lambda_Y |\bY|_1} \nonumber \\
+	  	%&= \min_{\mathbf{Y}\in S_{++}^f} \max_{|\mathbf{U}|_{\infty}\leq \lambda_Y} \Big\{ \tr((\mathbf{X}\otimes \mathbf{Y})\hat{\bS}_n)-p\log\det(\mathbf{Y})\nonumber \\
+	  	%& \qquad +p \tr(\mathbf{Y}\mathbf{U}) \Big\} \nonumber \\
+	    &\geq \max_{|\mathbf{U}|_{\infty}\leq \lambda_Y} \min_{\mathbf{Y}\in S_{++}^f} \Big\{ \tr((\mathbf{X}\otimes \mathbf{Y})\hat{\bS}_n)-p\log\det(\mathbf{Y}) \nonumber \\
+	    & \qquad +p \tr(\mathbf{Y}\mathbf{U}) \Big\} \label{saddle_ptY}
+	\end{align}
+When the equality in (\ref{saddle_ptY}) is achieved, $(\bU,\mathbf{Y})$ is a saddlepoint and the duality gap is zero. Rewrite the objective function, denoted $\tilde{J}_\lambda(\cdot,\cdot)$, in the minimax operation (\ref{saddle_ptY}):
+	\begin{equation*}
+		\tilde{J}_\lambda(\bX,\bY):= \tr((\bX\otimes \bY)(\hat{\bS}_n+\tilde{\bU}(\bX)))-p\log\det(\bY)
+	\end{equation*}
+	where $\tilde{\mathbf{U}}(\mathbf{X})=p \frac{\bI_p \otimes \bU}{\tr(\bX)}$. Define $\bM=\hat{\bS}_n + \tilde{\bU}(\bX)$. To evaluate $\min_{\bY \in S_{++}^f}{\tilde{J}_\lambda(\bX,\bY)}$ in (\ref{saddle_ptY}), we invoke the KKT conditions to obtain the solution $\bY=\left( \frac{1}{p} \sum_{i,j=1}^p{\bX_{i,j} \bM(j,i))} \right)^{-1}$. Define $\bW=\bY^{-1}$ as the dual space variable. Using this in (\ref{saddle_ptY}):
+	\begin{equation} \label{dualY_full}
+		\max_{|\bW-\frac{1}{p}\sum_{i,j=1}^p{\bX_{i,j} \hat{\bS}_n(j,i)}|_{\infty}\leq \lambda_Y } p \log\det(\mathbf{W}) + pf
+	\end{equation}
+	where the constraint set was obtained in terms of $\bW$ by observing that $\tilde{\mathbf{U}}(\mathbf{X})(j,i) = \frac{p \mathbf{U}}{\tr(\mathbf{X})} I(j=i)$, and $I(\cdot)$ is the indicator function. 
+%	Note that a cancellation occured in (\ref{dualY_full}) which is due to the identity:
+%	\begin{align}
+%		\tr&((\mathbf{X}\otimes \mathbf{Y})\mathbf{M}) = \sum_{i=1}^p{ \tr \left( \sum_{j=1}^p{ \mathbf{X}_{i,j} \mathbf{Y} \mathbf{M}(j,i) } \right) } \nonumber \\
+%			%&=  \tr \left( \sum_{i=1}^p{  \sum_{j=1}^p{ \mathbf{X}_{i,j} \mathbf{M}(j,i) \mathbf{Y} } } \right) \nonumber \\
+%			&=  p \tr \left( \sum_{i=1}^p { \sum_{j=1}^p{ \mathbf{X}_{i,j} \mathbf{M}(j,i)} \Big( \sum_{i,j=1}^p{ \mathbf{X}_{i,j} \mathbf{M}(j,i) \Big)^{-1}} } \right) \nonumber \\
+%			&=  pf \nonumber
+%	\end{align}
+%	where $\mathbf{M}(j,i)$ denotes the $(j,i)$th $f\times f$ sub-block of the $pf\times pf$ symmetric matrix $\mathbf{M}$.
+	It is evident that (\ref{dualY_full}) is equivalent to (\ref{dualY}).
+
+	\item It suffices to verify that the duality induced by the saddle point formulation is equivalent to Lagrangian duality (see Section 5.4 in \cite{ConvexOpt}). Slater's constraint qualification (see Section 5.3.2 in \cite{ConvexOpt}) trivially holds for the convex problem $\min_{\mathbf{Y} \in S_{++}^f}\tilde{J}_\lambda(\mathbf{X},\mathbf{Y})$, and thus for the corresponding convex problem $\min_{\mathbf{Y} \in S_{++}^f}J_\lambda(\mathbf{X},\mathbf{Y})$. Since the objective function of each dual problem has an optimal objective that is bounded below, Slater's constraint qualification also implies that the dual optimal solution is attained.
+
+	\item From \cite{EstCovMatKron}, it follows that if $\hat{\bS}_n$ is p.d., each ``compression step'' (see lines 6 and 8 in Algorithm \ref{alg: algKGL}) yields a p.d. matrix. Combining this with the positive definiteness of the Glasso estimator \cite{ModelSel}, we conclude that the first subiteration of KGlasso yields a p.d. matrix. A simple induction, combined with the fact that the Kronecker product of p.d. matrices is p.d., establishes that (\ref{dualY}) and (\ref{dualX}) are p.d.
+
+\end{enumerate}
+	
+	
+	
+\end{IEEEproof}

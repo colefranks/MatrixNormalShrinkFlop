@@ -1,0 +1,184 @@
+\begin{IEEEproof}
+As in the proof of Thm. 1 in \cite{EstCovMatKron}, let $\bB_* = \frac{\tr(\bA_0\bA_{init}^{-1})}{p} \bB_0$ and $\bA_* = (\frac{\tr(\bA_0\bA_{init}^{-1})}{p})^{-1} \bA_0$. Note that Assumption 1 implies that $\nn \bB_* \nn_2 = \Theta(1)$ and $\nn \bA_* \nn_2=\Theta(1)$ as $p,f\to\infty$. For conciseness, the statement ``with probability $1-\frac{2}{n^2}$'' will be abbreviated as ``w.h.p.''-i.e., with high probability.
+
+For concreteness, we first present the result for $k=2$ iterations. Then, we generalize the analysis to all finite flip-flop iterations by induction.
+
+Define intermediate error matrices:
+\begin{align*}
+	\tilde{\bB}^0 &= \hat{\bB}(\bA_{init}) - \bB_* \\
+	\tilde{\bA}^1 &= \hat{\bA}(\hat{\bB}(\bA_{init})) - \bA_*
+%	\tilde{\bB}^2 &= \hat{\bB}(\hat{\bA}(\hat{\bB}(\bA_{init}))) - \bB_*
+\end{align*}
+Define $\bY_*=\bB_*^{-1}$ and $\bX_*=\bA_*^{-1}$. Also, define:
+\begin{align*}
+	\bY_1 &= \hat{\bB}(\bA_{init})^{-1} \\
+	\bX_2 &= \hat{\bA}(\hat{\bB}(\bA_{init}))^{-1}
+%	\bY_3 &= \hat{\bB}(\hat{\bA}(\hat{\bB}(\bA_{init})))^{-1}
+\end{align*}
+These inverses exist if $n\geq \max\{\frac{p}{f},\frac{f}{p}\} + 1$ (see \cite{LuZimmerman}). Define the error $\tilde{\bSigma}_{FF}(k)=\bSigma_{FF}(k) - \bSigma_0$ for $k \geq 2$.
+
+
+Lemma \ref{lemma: large_dev_optimal} implies that for
+\begin{equation} \label{cond_0}
+	n> \frac{12(2+\tau)^2}{\sqrt{\psi(\frac{1}{2+\tau})}} \log M
+\end{equation}
+then with probability $1-\frac{2}{(np)^2} \geq 1 - \frac{2}{n^2}$, we have:
+%\begin{equation*}
+%	|\tilde{\bB}^0|_\infty \leq \max_k [\bB_0]_{k,k} \nn\bA_{init}^{-1}\bA_0\nn_2 \sqrt{12\psi(\frac{1}{2+\tau})} \sqrt{ \frac{\log M}{np}}
+%\end{equation*}
+%which implies 
+\begin{equation} \label{B_0_Frob1}
+	\nn \tilde{\bB}^0 \nn_F \leq \max_k [\bB_0]_{k,k} \nn\bA_{init}^{-1}\bA_0\nn_2 \sqrt{12\psi(\frac{1}{2+\tau})} f \sqrt{ \frac{\log M}{np}}
+\end{equation}
+
+As in the proof of Thm. 1 in \cite{EstCovMatKron}, we vectorize the operations (\ref{A_update}) and (\ref{B_update}):
+\begin{align*}
+	\vec(\hat{\bA}(\bB)) &= \frac{1}{f} \hat{\bR}_A \vec(\bB^{-1}) \\
+	\vec(\hat{\bB}(\bA)) &= \frac{1}{p} \hat{\bR}_B \vec(\bA^{-1})
+\end{align*}
+where $\hat{\bR}_A$ and $\hat{\bR}_B$ are permuted versions of the sample covariance matrix \cite{EstCovMatKron}.
+
+Let $\epsilon'>1$. Note that from (\ref{B_0_Frob1}), for
+\begin{equation} \label{cond_1}
+	n\geq (\epsilon' \max_k [\bB_0]_{k,k} \nn\bA_{init}^{-1}\bA_0\nn_2)^2 \nn\bY_*\nn_2^2 12 \psi(\frac{1}{2+\tau}) f^2 p^{-1} \log M
+\end{equation}
+with probability $1-\frac{2}{n^2}$,
+\begin{align*}
+	\lambda_{min} &(\hat{\bB}(\bA_{init})) = \lambda_{min}(\tilde{\bB}^0 + \bB_*) \geq \lambda_{min}(\bB_*) - \nn \tilde{\bB}^0 \nn_2 \\
+		&\geq \lambda_{min}(\bB_*) - \nn \tilde{\bB}^0 \nn_F \geq \left( 1-\frac{1}{\epsilon'} \right) \lambda_{min}(\bB_*)
+\end{align*}
+Thus, w.h.p.,
+\begin{align}
+	\nn & \bY_1-\bY_* \nn_F = \nn \bY_1 (\hat{\bB}(\bA_{init})-\bB_*) \bY_* \nn_F \nonumber \\ 
+		&\leq \nn \bY_1 \nn_2 \nn \bY_* \nn_2 \nn \tilde{\bB}^0 \nn_F = \frac{\nn \tilde{\bB}^0 \nn_F}{ \lambda_{min}(\bB_*) \lambda_{min}(\hat{\bB}(\bA_{init})) } \nonumber \\
+		&\leq \left( 1-\frac{1}{\epsilon'} \right)^{-1} \nn\bY_*\nn_2^2 (\max_k [\bB_0]_{k,k}) \nn \bA_{init}^{-1} \bA_0\nn_2 \nonumber \\
+		&\quad \sqrt{12 \psi(\frac{1}{2+\tau})} f \sqrt{\frac{\log M}{np}} \label{bound_Frob_spec}
+\end{align}
+
+
+Using Lemma \ref{lemma: large_dev_Zhou}, for 
+\begin{equation} \label{cond_2}
+	n>16 (C_1 \kappa + C_2)^2 \log M
+\end{equation}
+then, w.h.p.,
+\begin{align}
+	\nn & \tilde{\bR}_A\nn_2 = \sup_{\nn \bv \nn_2=1} \nn \tilde{\bR}_A \bv \nn_2 \leq p \sup_{\nn \bv \nn_2 = 1} \nn \hat{\bR}_A \bv - \bR_A \bv \nn_\infty \nonumber \\
+		&= pf \sup_{\nn \bv \nn_2 = 1} \nn \frac{1}{f} \hat{\bR}_A \bv - \frac{<\vec(\bB_0),\bv>}{f} \vec(\bA_0) \nn_\infty \nonumber \\
+		&\leq 4 (C_1 + \frac{C_2}{\kappa}) \max(1,\max_i [\bA_0]_{i,i} \frac{\nn \bB_0\nn_2}{\sqrt{f}}) p\sqrt{f} \sqrt{\frac{\log M}{n}} \label{bound_mixed_norm2}
+\end{align}
+
+Expanding $\tilde{\bA}^1$:
+\begin{align}
+	\vec(\tilde{\bA}^1) &= \frac{1}{f} \hat{\bR}_A \vec(\bY_1) - \vec(\bA_*) \nonumber \\
+		%&= \frac{1}{f} (\bR_A+\tilde{\bR}_A) \vec(\bY_1-\bY_*)  + \frac{1}{f} \tilde{\bR}_A \vec(\bY_*) \nonumber  \\
+		&= \frac{\tr(\bB_0(\bY_1-\bY_*))}{f} \vec(\bA_0) + \vec(\hat{\bA}(\bB_*)-\bA_*) \nonumber \\
+		&\quad + \frac{1}{f} \tilde{\bR}_A \vec(\bY_1-\bY_*) \label{A_1_error2}
+\end{align}
+where we used $\bR_A = \vec(\bA_0)\vec(\bB_0^T)^T$ (see Eq. (91) from \cite{EstCovMatKron}).
+
+Now, using the triangle inequality in (\ref{A_1_error2}), the bounds (\ref{bound_Frob_spec}) and (\ref{bound_mixed_norm2}), the Cauchy-Schwarz inequality, we obtain w.h.p. (under conditions (\ref{cond_0}),(\ref{cond_1}),(\ref{cond_2}), after some algebra:
+\begin{align}
+	\nn \tilde{\bA}^1 \nn_F &\leq \sqrt{\frac{p}{f}} \nn \bA_0\nn_2 \nn \bB_0\nn_2 \nn \bY_1-\bY_* \nn_F + p |\hat{\bA}(\bB_*)-\bA_*|_\infty \nonumber \\
+		&\quad + \frac{1}{f} \nn\tilde{\bR}_A\nn_2 \nn \bY_1-\bY_* \nn_F  \nonumber \\
+		&\leq \tilde{C}_1 (\sqrt{f}+pf^{-1/2}) \sqrt{\frac{\log M}{n}} + \tilde{C}_2 \sqrt{pf} \frac{\log M}{n} \label{tilde_A_1_Frob_bound}
+\end{align}
+where
+\begin{align*}
+	\tilde{C}_1 &:= (1-\frac{1}{\epsilon'})^{-1} \kappa(\bSigma_0)^2 \kappa(\bA_{init}^{-1}) \nn \bA_{init}\nn_2 \sqrt{12 \psi(\frac{1}{2+\tau})} \\
+	\tilde{C}_2 &:= 4 (C_1+\frac{C_2}{\kappa}) \max(1,\max_i [\bA_0]_{i,i} \frac{\nn\bB_0\nn_2}{\sqrt{f}}) (1-\frac{1}{\epsilon'})^{-1} \\
+	&\quad \times \nn\bY_0\nn_2 \kappa(\bSigma_0) \kappa(\bA_{init}^{-1}) \sqrt{12 \psi(\frac{1}{2+\tau})}
+\end{align*}
+
+Let $c_1>0$. For
+\begin{equation} \label{cond_3}
+	n \geq (\frac{\tilde{C}_2}{\tilde{C}_1 c_1})^2 p \log M
+\end{equation}
+then, from (\ref{tilde_A_1_Frob_bound}), we have w.h.p.
+\begin{equation} \label{tilde_A_1_Frob2}
+	\nn \tilde{\bA}^1 \nn_F \leq \tilde{C}_1 (1+c_1) (\sqrt{f}+pf^{-1/2}) \sqrt{\frac{\log M}{n}}
+\end{equation}
+
+Using the permutation operator $\mathcal{R}(\cdot)$ defined in \cite{EstCovMatKron}:
+\begin{align}
+	& \vec(\mathcal{R}(\tilde{\bSigma}_{FF}(2))) = \vec(\vec(\tilde{\bA}^1)\vec(\bB_*)^T) \nonumber \\
+		&\quad + \vec(\vec(\bA_*)\vec(\tilde{\bB}^0)^T) + \vec(\vec(\tilde{\bA}^1)\vec(\tilde{\bB^0})^T) \label{error_FF_2iter}
+\end{align}
+From (\ref{B_0_Frob1}),(\ref{tilde_A_1_Frob_bound}), (\ref{error_FF_2iter}) and $\vec(\tilde{\bSigma}_{FF}(2)) = \bP_R \vec(\mathcal{R}(\tilde{\bSigma}_{FF}(2)))$ \cite{EstCovMatKron}, under conditions (\ref{cond_0}),(\ref{cond_1}),(\ref{cond_2}) and (\ref{cond_3}), w.h.p.,
+\begin{align}
+	\nn &\tilde{\bSigma}_{FF}(2) \nn_F \leq \nn \tilde{\bA_1} \nn_F \nn \bB_*\nn_F \nonumber \\
+		&+ \nn \bA_*\nn_F \nn \tilde{\bB}^0 \nn_F + \nn \tilde{\bA}^1\nn_F \nn \tilde{\bB}^0\nn_F \nonumber \\
+		&\leq \tilde{C}_3 (p+2f) \sqrt{\frac{\log M}{n}} + \tilde{C}_4 (f\sqrt{f/p}+\sqrt{pf}) \frac{\log M}{n} \label{tilde_R_FF_2}
+\end{align}
+where
+\begin{align*}
+	\tilde{C}_3 &:= \max \Big(\tilde{C}_1(1+c_1) \nn\bB_0\nn_2 \left|\frac{\tr(\bA_0\bA_{init}^{-1})}{p}\right|, \\
+		&\quad \nn\bA_0\nn_2 \kappa(\bA_0)\kappa(\bA_{init}^{-1}) \max_k [\bB_0]_{k,k} \sqrt{12\psi(\frac{1}{2+\tau})} \Big) \\
+	\tilde{C}_4 &:= \tilde{C}_1(1+c_1) \max_k [\bB_0]_{k,k} \sqrt{12\psi(\frac{1}{2+\tau})}) \nn\bA_{init}^{-1} \bA_0\nn_2
+\end{align*}
+For
+\begin{equation} \label{cond_star_2}
+	n \geq (\frac{\tilde{C}_4}{\tilde{C}_3 c_2})^2 \frac{(f\sqrt{f/p}+\sqrt{pf})^2}{(p+2f)^2} \log M
+\end{equation}
+then, from (\ref{tilde_R_FF_2}) w.h.p.,
+\begin{equation*}
+	\nn \tilde{\bSigma}_{FF}(2)\nn_F \leq \tilde{C}_3(1+c_2) (p+2f) \sqrt{\frac{\log M}{n}}
+\end{equation*}
+
+The proof for $k=2$ iterations is complete. Using a simple induction, it follows that the rate (\ref{FF_rate_2}) holds for all $k$ finite.
+
+
+Next, we show that the convergence rate in the precision matrix Frobenius error is on the same order as the covariance matrix error. Let $\bTheta_{FF}(2):=\bSigma_{FF}(2)^{-1}$. From (\ref{Y_Frob_error}), for
+\begin{equation*}
+	n> (\epsilon' \nn\bX_*\nn_2 \tilde{C}_1 (1+c_1))^2 (\sqrt{f}+pf^{-1/2})^2 \log M
+\end{equation*}
+then w.h.p.,
+\begin{align}
+	\nn \bX_2-\bX_*\nn_F &\leq (1-\frac{1}{\epsilon'})^{-1} \nn\bA_*\nn_2^2 \tilde{C}_1(1+c_1) \nonumber \\
+		&\quad \times (\sqrt{f}+pf^{-1/2}) \sqrt{\frac{\log M}{n}} \label{X_2_Frob_error}
+\end{align}
+Using (\ref{bound_Frob_spec}) and (\ref{X_2_Frob_error}), we have w.h.p.,
+\begin{align}
+	\nn & \bTheta_{FF}(2)-\bTheta_0 \nn_F \leq \nn \bX_2-\bX_*\nn_F \nn \bY_*\nn_F \nonumber \\
+		&\quad + \nn \bY_1-\bY_*\nn_F \nn \bX_*\nn_F + \nn \bX_2-\bX_*\nn_F \nn \bY_1-\bY_*\nn_F \nonumber \\
+		&\leq \tilde{D}_1 (2f+p) \sqrt{\frac{\log M}{n}} + \tilde{D}_2 (f\sqrt{\frac{f}{p}}+\sqrt{pf}) \frac{\log M}{n} \label{bound_Theta}
+\end{align}
+where
+\begin{align*}
+	\tilde{D}_1 &= \nn\bTheta_0\nn_2 \left(1-\frac{1}{\epsilon'}\right)^{-1} \kappa(\bA_0) \\
+	 &\quad \times \max\left(\nn\bA_{init}^{-1}\nn_2 \tilde{C}_1(1+c_1), \kappa(\bA_{init}^{-1}) \kappa(\bB_0) \sqrt{12 \psi(\frac{1}{2+\tau})} \right) \\
+	\tilde{D}_2 &= (1-\frac{1}{\epsilon'})^{-2} \nn\bTheta_0\nn_2 \kappa(\bSigma_0) \tilde{C}_1 (1+c_1) \nn \bA_{init}^{-1}\nn_2 \sqrt{12 \psi(\frac{1}{2+\tau})}
+\end{align*}
+For
+\begin{equation*}
+	n>(\frac{\tilde{D}_2}{\tilde{D}_1 d'})^2 (\frac{f\sqrt{f/p}+\sqrt{pf}}{2f+p})^2 \log M
+\end{equation*}
+the bound (\ref{bound_Theta}) becomes w.h.p.,
+\begin{equation*}
+	\nn \bTheta_{FF}(2)-\bTheta_0 \nn_F \leq \tilde{D}_1 (1+d') (2f+p) \sqrt{\frac{\log M}{n}}
+\end{equation*}
+Thus, the same rate $O_P\left( \sqrt{\frac{(p^2+f^2)\log M}{n}} \right)$ holds for the precision matrix Frobenius error.
+
+
+
+%Next, consider another FF iteration.
+%
+%Expanding $\tilde{\bB}^2$:
+%\begin{align}
+%	\vec(\tilde{\bB}^2) &= \frac{\tr(\bA_0(\bX_1-\bX_*))}{p} \vec(\bB_0) + \vec(\hat{\bB}(\bA_*)-\bB_*) \nonumber\\
+%		&\quad + \frac{1}{p} \tilde{\bR}_B \vec(\bX_2-\bX_*) \label{B_2_error2}
+%\end{align}
+%Using the triangle inequality in (\ref{B_2_error2}) and similar bounds as in (\ref{tilde_A_1_Frob2}), we obtain
+%\begin{equation} \label{tilde_B_2_Frob2}
+%	\nn \tilde{\bB}^2 \nn_F = O_P\left( (fp^{-1/2}+\sqrt{p}) \sqrt{\frac{\log M}{n}} \right)
+%\end{equation}
+%
+%
+%Proceeding similarly as in the bound (\ref{bound_k_2}), we obtain from (\ref{tilde_A_1_Frob2}) and (\ref{tilde_B_2_Frob2}):
+%\begin{align}
+%	\nn \tilde{\bR}_{FF}(3) \nn_F &\leq \nn \tilde{\bA_1} \nn_F \nn \bB_*\nn_F + \nn \bA_*\nn_F \nn \tilde{\bB}^2 \nn_F \nonumber \\
+%		&\quad + \nn \tilde{\bA}^1\nn_F \nn \tilde{\bB}^2\nn_F \nonumber \\
+%		&= O_P\left( (p+f)\sqrt{\frac{\log M}{n}} \right) \label{bound_k_3}
+%\end{align}
+%The proof for $k=3$ iterations is complete. Using a simple induction, it follows that the rate (\ref{FF_rate_2}) holds for all $k$ finite.
+
+\end{IEEEproof}
