@@ -11,6 +11,6 @@ tensor-mle.pdf
 fast-literature/
 .DS_Store
 
-.Rproj.user
-.RData
-.Rhistory
+*.Rproj.user
+*.RData
+*.Rhistory
