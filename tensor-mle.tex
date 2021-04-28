@@ -131,6 +131,9 @@ The matrix normal model, the family of Gaussian matrix-variate distributions who
 
 %this is just a test to see if overleaf deletes my code again
 %test again to see if overleaf deletes
+%testing the overleaf clone
+
+%testing pulling changes from overleaf
 
 \end{abstract}
 %=============================================================================
@@ -1697,7 +1700,7 @@ Before we formally state the flip-flop algorithm with the proper parameters, we 
 	to prove a good bound on the distance it is enough to show that $\norm{Z}_F$ is small.
 	We will achieve this by using the strong geodesic convexity of $f_x$.
 
-	Since $f_x$ is $\lambda$-strongly geodesically convex over geodesic ball containing $\htheta$ and $\otheta$,	we have that the function $g(t) = f_x(\exp_{\otheta} (t \oZ) )$ is $\lambda$-strongly convex, $g(0) = \otheta$ and $g(\norm{Z}_F) = \htheta$, which implies:
+	Since $f_x$ is $\lambda$-strongly geodesically convex over geodesic ball containing $\htheta$ and $\otheta$,	we have that the function $g(t) = f_x(\exp_{\otheta} (t \oZ) )$ is $\lambda$-strongly convex, $g(0) = f_{x}(\otheta)$ and $g(\norm{Z}_F) = f_{x}(\htheta)$, which implies:
 	$$ g(\norm{Z}_F) \geq g(0) + g'(0) \cdot \norm{Z}_F + \lambda \cdot \frac{\norm{Z}_F^2}{2}. $$
 	Since $\htheta$ is the MLE estimator, we have $g(\norm{Z}_F) \leq g(0)$, and by definition of
 	$g$ and Cauchy-Schwarz, we have that
