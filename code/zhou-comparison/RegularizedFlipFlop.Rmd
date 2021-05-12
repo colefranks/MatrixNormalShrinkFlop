@@ -726,11 +726,12 @@ dev.off()
 lp
 
 ```
-Learning curves
+
+Spiked Learning curves
 ```{r}
 #this time let n to infinity. Question: what model? Sparse?
 
-LearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples,NumInstances=2,TrialsPerInstance=2,sparsity = 10,RegMin = -5, RegMax =5, RegStride=1){
+SpikedLearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples,NumInstances=2,TrialsPerInstance=2,spike = 10,RegMin = -5, RegMax =5, RegStride=1){
   
   results = data.frame(Samples = c(MinSamples:MaxSamples),Gemini=0,RegSink = 0,Sink = 0, Trivial=0, KGlasso = 0)
 
@@ -746,42 +747,26 @@ LearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples,NumIn
     
     for (l in 1:NumInstances){ 
   
-      #define sparse INVERSE covariance
-    
-      invA = .5*diag(SmallDimension)
-      for (term in 1:SmallDimension*sparsity/10){
-      #print(term)
-        x=sample(1:SmallDimension,2,replace=F)
-        invA[x[1],x[1]]=invA[x[1],x[1]]+1
-        invA[x[1],x[2]]=invA[x[1],x[2]]-1
-        invA[x[2],x[1]]=invA[x[2],x[1]]-1
-        invA[x[2],x[2]]=invA[x[2],x[2]]+1
-      }
-      A = solve(invA)
+      #define the covariances
+      A = diag(SmallDimension)
+      v = matrix(rnorm(SmallDimension),nrow = SmallDimension, ncol = 1)
+      A = A + spike*v%*%t(v)
       rootA = sqrtm(A)
+      invA = solve(A)
       invA = invA/tr(invA)
       normA = norm(invA,"F")^2
       detinvA = DetNorm(invA)
-      #print(c("detA",det(invA)))
       
-      #actually the INVERSE should be sparse
-      
-      
+      print(c("det A: ", det(A)))
     
-      invB = .5*diag(BigDimension)
-      for (term in 1:BigDimension*sparsity/10){
-        #print(term)
-        x=sample(1:BigDimension,2,replace=F)
-        invB[x[1],x[1]]=invB[x[1],x[1]]+1
-        invB[x[1],x[2]]=invB[x[1],x[2]]-1
-        invB[x[2],x[1]]=invB[x[2],x[1]]-1
-        invB[x[2],x[2]]=invB[x[2],x[2]]+1
-      }
-      B = solve(invB)
+      B = diag(BigDimension)
+      v = matrix(rnorm(BigDimension),nrow = BigDimension, ncol = 1)
+      B = B + spike*v%*%t(v)
       rootB = sqrtm(B)
-      invB = invB/tr(invB)
-      normB = norm(invB,"F")^2
-      detinvB = DetNorm(invB)
+      #invB = solve(B)
+      #normB = norm(invB,"F")^2
+      #detinvB = DetNorm(invB)
+      
     
       
       #for each covariance we will compute the estimate with fresh samples from the model a few times
@@ -918,7 +903,7 @@ Learning curves run
 ```{r, echo=FALSE, message=FALSE, result=hide}
 #doing the learning curves
 
-res =LearningCurve(50,50,1,15,NumInstances = 3,TrialsPerInstance = 10)
+res =SpikedLearningCurve(50,50,1,15,NumInstances = 3,TrialsPerInstance = 10)
 ```
 
 Plotting learning curves
@@ -960,21 +945,21 @@ LearningCurvePlot <- function(results){
 #geodesic
 lp=LearningCurvePlot(res$GeoResults)
 lp = lp + ggtitle("Error in Geodesic distance") #cool way to title on the fly :)
-pdf("25-50-lc-geo.pdf")
+pdf("25-50-spiked-lc-geo.pdf")
 lp
 dev.off()
 lp
 
 lp=LearningCurvePlot(res$OpResults)
 lp = lp + ggtitle("Error in operator norm")
-pdf("25-50-lc-op.pdf")
+pdf("25-50-spiked-lc-op.pdf")
 lp
 dev.off()
 lp
 
 lp=LearningCurvePlot(res$Results)
 lp = lp + ggtitle("Error in Frobenius norm") 
-pdf("25-50-lc-frob.pdf")
+pdf("25-50-spiked-lc-frob.pdf")
 lp
 dev.off()
 lp
@@ -1176,7 +1161,7 @@ SparsityCurve <-function(SmallDimension,BigDimension,NumSamples, MinSparse,MaxSp
 res =SparsityCurve(20,20,1,40,60)
 ```
 
-Plotting learning curves
+Plotting sparsity curves
 
 ```{r}
 lp = SparseCurvePlot(res$Results)
@@ -1236,5 +1221,188 @@ lp
 
 ```
 
+Learning curves
 
+```{r}
+LearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples,NumInstances=2,TrialsPerInstance=2,sparsity = 10,RegMin = -5, RegMax =5, RegStride=1){
+  
+  results = data.frame(Samples = c(MinSamples:MaxSamples),Gemini=0,RegSink = 0,Sink = 0, Trivial=0, KGlasso = 0)
+
+  #make copies for the other error metrics.
+  GeoResults = data.frame(results)
+  OpResults = data.frame(results)
+  
+  setVariable(matlab, SmallDimension=SmallDimension, BigDimension=BigDimension)
+  
+  for(j in MinSamples:MaxSamples){
+    NumSamples = as.double(j)
+    setVariable(matlab, NumSamples=NumSamples)
+    
+    for (l in 1:NumInstances){ 
+  
+      #define sparse INVERSE covariance
+    
+      invA = .5*diag(SmallDimension)
+      for (term in 1:SmallDimension*sparsity/10){
+      #print(term)
+        x=sample(1:SmallDimension,2,replace=F)
+        invA[x[1],x[1]]=invA[x[1],x[1]]+1
+        invA[x[1],x[2]]=invA[x[1],x[2]]-1
+        invA[x[2],x[1]]=invA[x[2],x[1]]-1
+        invA[x[2],x[2]]=invA[x[2],x[2]]+1
+      }
+      A = solve(invA)
+      rootA = sqrtm(A)
+      invA = invA/tr(invA)
+      normA = norm(invA,"F")^2
+      detinvA = DetNorm(invA)
+      #print(c("detA",det(invA)))
+      
+      #actually the INVERSE should be sparse
+      
+      
+    
+      invB = .5*diag(BigDimension)
+      for (term in 1:BigDimension*sparsity/10){
+        #print(term)
+        x=sample(1:BigDimension,2,replace=F)
+        invB[x[1],x[1]]=invB[x[1],x[1]]+1
+        invB[x[1],x[2]]=invB[x[1],x[2]]-1
+        invB[x[2],x[1]]=invB[x[2],x[1]]-1
+        invB[x[2],x[2]]=invB[x[2],x[2]]+1
+      }
+      B = solve(invB)
+      rootB = sqrtm(B)
+      invB = invB/tr(invB)
+      normB = norm(invB,"F")^2
+      detinvB = DetNorm(invB)
+    
+      
+      #for each covariance we will compute the estimate with fresh samples from the model a few times
+      for(k in 1:TrialsPerInstance){
+        
+        #create the fresh samples
+        X = list(0*c(1:j))
+        dat = matrix(0, ncol = j, nrow = SmallDimension*BigDimension)
+        
+        for(i in 1:j){
+          
+          #create the data
+          X[[i]] = rootA%*%matrix(rnorm(SmallDimension*BigDimension,sd=1), nrow=SmallDimension, ncol=BigDimension)%*%rootB
+          dat[,i] = X[[i]]
+          
+        }
+        #print(c("dat: ",dat, nrow(dat), ncol(dat)))
+        
+        ind = j - MinSamples + 1
+        
+        #trivial frobenius error
+        TrivialError = norm(invA - diag(SmallDimension)/SmallDimension,"F")^2 / normA
+        results$Trivial[ind] = results$Trivial[ind]+ TrivialError/(NumInstances*TrialsPerInstance)
+        
+        #operator error
+        OpTrivialError = norm(invA - diag(SmallDimension)/SmallDimension,"I")^2
+        OpResults$Trivial[ind] = OpResults$Trivial[ind]+ OpTrivialError/(NumInstances*TrialsPerInstance)
+        
+        #geodesic trivial
+        GeoTrivialError = GeodesicDistance(detinvA, diag(SmallDimension))
+        
+        #GeoResults$Trivial[j] = GeoResults$Trivial[j] + GeoTrivialError/(NumInstances*TrialsPerInstance)
+        GeoResults$Trivial[ind] = GeoResults$Trivial[ind] + 1/(NumInstances*TrialsPerInstance)
+        
+        #gemini
+        #set gemini penalties
+        GeminiRegFactor = 1*sqrt(log(SmallDimension)/BigDimension)
+        tic("geminiB")
+        out <- GeminiBmult(X, GeminiRegFactor, penalize.diagonal=FALSE)
+        toc()
+        GeminiEstimate = out$B.hat.inv
+        print(c("Gemini det",det(GeminiEstimate)))
+        #calculate frobenius error
+        GeminiError = norm(invA - (GeminiEstimate/tr(GeminiEstimate)),"F")^2 / normA
+        results$Gemini[ind] = results$Gemini[ind]+ GeminiError/(NumInstances*TrialsPerInstance)
+        
+        #operator error
+        OpGeminiError = norm(invA - (GeminiEstimate/tr(GeminiEstimate)),"I")^2
+        OpResults$Gemini[ind] = OpResults$Gemini[ind]+ OpGeminiError/(NumInstances*TrialsPerInstance)
+        
+        #calculate geodesic error
+        GeoGeminiError = GeodesicDistance(detinvA, DetNorm(GeminiEstimate))^2/GeoTrivialError^2
+        GeoResults$Gemini[ind] = GeoResults$Gemini[ind] + GeoGeminiError/(NumInstances*TrialsPerInstance)
+        
+        
+        ######Sinkhorn
+        
+        #regularized Sinkhorn
+        #set sinkhorn penalties
+        tic("sinkhorn")
+        SinkEstimate = sinkhorn(X,tol = .01)[[1]]
+        toc()
+        
+        #print(c("Sinkhorn det",det(RegSinkEstimate)))
+        
+        #calculate frobenius
+        SinkError = norm(invA - (SinkEstimate/tr(SinkEstimate)),"F")^2 / normA
+        results$Sink[ind] = results$Sink[ind]+ SinkError/(NumInstances*TrialsPerInstance)
+        
+        #operator error
+        OpUnregSinkError = norm(invA - (SinkEstimate/tr(SinkEstimate)),"I")^2
+        OpResults$Sink[ind] = OpResults$Sink[ind]+ OpUnregSinkError/(NumInstances*TrialsPerInstance)
+        
+        #geodesic distance
+        GeoUnregSinkError = GeodesicDistance(DetNorm(invA), DetNorm(SinkEstimate))^2/GeoTrivialError^2
+        GeoResults$Sink[ind] = GeoResults$Sink[ind] + GeoUnregSinkError/(NumInstances*TrialsPerInstance)
+        
+        
+        
+        
+        
+        #regularized Sinkhorn
+        #set sinkhorn penalties
+        RegSinkFactor = 1
+        tic("regularized sinkhorn")
+        RegSinkEstimate = regsinkhorn(X,tol = .01, reg = RegSinkFactor)[[1]]
+        toc()
+        
+        print(c("Sinkhorn det",det(RegSinkEstimate)))
+        
+        #calculate frobenius
+        RegSinkError = norm(invA - (RegSinkEstimate/tr(RegSinkEstimate)),"F")^2 / normA
+        results$RegSink[ind] = results$RegSink[ind]+ RegSinkError/(NumInstances*TrialsPerInstance)
+        
+        #operator error
+        OpSinkError = norm(invA - (RegSinkEstimate/tr(RegSinkEstimate)),"I")^2
+        OpResults$RegSink[ind] = OpResults$RegSink[ind]+ OpSinkError/(NumInstances*TrialsPerInstance)
+        
+        #geodesic distance
+        GeoSinkError = GeodesicDistance(DetNorm(invA), DetNorm(RegSinkEstimate))^2/GeoTrivialError^2
+        GeoResults$RegSink[ind] = GeoResults$RegSink[ind] + GeoSinkError/(NumInstances*TrialsPerInstance)
+        
+        #KGlasso 
+        #print(c("MatReg, ", MatReg))
+        setVariable(matlab, dat = dat)
+        #evaluate(matlab, "SmallDimension, class(BigDimension),class(NumSamples)")
+        evaluate(matlab,"[C,D] = KGL_R(dat,SmallDimension,BigDimension,NumSamples,.4,.4,30,.01);")
+        KGlassoEstimate = getVariable(matlab,"C")$C
+
+        KGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"F")^2 / normA
+        #print(c("Glasso Error: ",KGlassoError))
+        results$KGlasso[ind] = results$KGlasso[ind]+ KGlassoError/(NumInstances*TrialsPerInstance)
+
+        #operator error
+        OpKGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"I")^2
+        OpResults$KGlasso[ind] = OpResults$KGlasso[ind]+ OpKGlassoError/(NumInstances*TrialsPerInstance)
+        
+        #geodesic distance
+        GeoKGlassoError = GeodesicDistance(DetNorm(invA), DetNorm(KGlassoEstimate))^2/GeoTrivialError^2
+        GeoResults$KGlasso[ind] = GeoResults$KGlasso[ind] + GeoKGlassoError/(NumInstances*TrialsPerInstance)
+
+      }
+    }
+  }
+  output<- list(Results = results,OpResults = OpResults, GeoResults = GeoResults, Example=A[1:min(SmallDimension,10),1:min(SmallDimension,10)])
+}
+  
+
+```
 
