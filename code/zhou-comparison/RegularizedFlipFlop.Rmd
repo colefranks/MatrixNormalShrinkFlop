@@ -27,11 +27,9 @@ isOpen <- open(matlab)
 
 Spiked comparison code
 
-```{r, echo=FALSE}
-setOption(matlab, "readResult/interval",30*6)
-evaluate(matlab,"addpath('../KGlasso_code')")
 
-
+```{r}
+#functions
 
 DetNorm <-function(A){
   n = dim(A)[1]
@@ -44,6 +42,18 @@ GeodesicDistance <-function(P,Q){
   P = root %*% P %*% root
   return(norm(logm(P),"F"))
 }
+
+
+```
+
+
+```{r, echo=FALSE}
+setOption(matlab, "readResult/interval",30*6)
+evaluate(matlab,"addpath('../KGlasso_code')")
+
+
+
+
 
 #test geodesic distance
 #A = diag(c(1,2,3))
@@ -733,7 +743,7 @@ Spiked Learning curves
 
 SpikedLearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples,NumInstances=2,TrialsPerInstance=2,spike = 10,RegMin = -5, RegMax =5, RegStride=1){
   
-  results = data.frame(Samples = c(MinSamples:MaxSamples),Gemini=0,RegSink = 0,Sink = 0, Trivial=0, KGlasso = 0)
+  results = data.frame(Samples = c(MinSamples:MaxSamples),Gemini=0,RegSink = 0,Sink = 0, Trivial=0, KGlasso = NA)
 
   #make copies for the other error metrics.
   GeoResults = data.frame(results)
@@ -850,7 +860,8 @@ SpikedLearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples
         
         #regularized Sinkhorn
         #set sinkhorn penalties
-        RegSinkFactor = 1
+        #RegSinkFactor = 5/log(j+1)^(1/2)
+        RegSinkFactor = 100*j
         tic("regularized sinkhorn")
         RegSinkEstimate = regsinkhorn(X,tol = .01, reg = RegSinkFactor)[[1]]
         toc()
@@ -870,23 +881,18 @@ SpikedLearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples
         GeoResults$RegSink[ind] = GeoResults$RegSink[ind] + GeoSinkError/(NumInstances*TrialsPerInstance)
         
         #KGlasso 
-        #print(c("MatReg, ", MatReg))
-        setVariable(matlab, dat = dat)
-        #evaluate(matlab, "SmallDimension, class(BigDimension),class(NumSamples)")
-        evaluate(matlab,"[C,D] = KGL_R(dat,SmallDimension,BigDimension,NumSamples,.4,.4,30,.01);")
-        KGlassoEstimate = getVariable(matlab,"C")$C
+        #setVariable(matlab, dat = dat)
+        #evaluate(matlab,"[C,D] = KGL_R(dat,SmallDimension,BigDimension,NumSamples,.4,.4,30,.01);")
+        #KGlassoEstimate = getVariable(matlab,"C")$C
 
-        KGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"F")^2 / normA
-        #print(c("Glasso Error: ",KGlassoError))
-        results$KGlasso[ind] = results$KGlasso[ind]+ KGlassoError/(NumInstances*TrialsPerInstance)
+        #KGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"F")^2 / normA
+        #results$KGlasso[ind] = results$KGlasso[ind]+ KGlassoError/(NumInstances*TrialsPerInstance)
 
-        #operator error
-        OpKGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"I")^2
-        OpResults$KGlasso[ind] = OpResults$KGlasso[ind]+ OpKGlassoError/(NumInstances*TrialsPerInstance)
+        #OpKGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"I")^2
+        #OpResults$KGlasso[ind] = OpResults$KGlasso[ind]+ OpKGlassoError/(NumInstances*TrialsPerInstance)
         
-        #geodesic distance
-        GeoKGlassoError = GeodesicDistance(DetNorm(invA), DetNorm(KGlassoEstimate))^2/GeoTrivialError^2
-        GeoResults$KGlasso[ind] = GeoResults$KGlasso[ind] + GeoKGlassoError/(NumInstances*TrialsPerInstance)
+        #GeoKGlassoError = GeodesicDistance(DetNorm(invA), DetNorm(KGlassoEstimate))^2/GeoTrivialError^2
+        #GeoResults$KGlasso[ind] = GeoResults$KGlasso[ind] + GeoKGlassoError/(NumInstances*TrialsPerInstance)
 
       }
     }
@@ -903,13 +909,14 @@ Learning curves run
 ```{r, echo=FALSE, message=FALSE, result=hide}
 #doing the learning curves
 
-res =SpikedLearningCurve(50,50,1,15,NumInstances = 3,TrialsPerInstance = 10)
+res =SpikedLearningCurve(25,25,1,50,NumInstances = 2,spike=100,TrialsPerInstance = 3)
 ```
 
 Plotting learning curves
 
 ```{r}
-lp = LearningCurvePlot(res$Results)
+LearningCurvePlot(res$Results)
+LearningCurvePlot(res$GeoResults)
 
 
 
@@ -933,7 +940,7 @@ LearningCurvePlot <- function(results){
 
   df = melt(results, id.vars = "Samples",variable.name = "Algorithm", value.name = "Error")
   #df = melt(results, id.vars = "Regularizer",variable.name = "Algorithm")
-  lp <- ggplot(data=df, aes(x=Samples, y=Error, group=Algorithm, color=Algorithm)) + geom_line() + geom_point() + scale_x_log10(breaks = 10^(-10:10),labels = trans_format("log10", math_format(10^.x)))+ scale_y_log10(breaks = 10^(-10:10),labels = trans_format("log10", math_format(10^.x)))+ mytheme
+  lp <- ggplot(data=df, aes(x=Samples, y=Error, group=Algorithm, color=Algorithm)) + geom_line() + geom_point() + scale_y_log10(breaks = 10^(-10:10),labels = trans_format("log10", math_format(10^.x)))+ mytheme
   
   return(lp)}
 
@@ -1221,7 +1228,7 @@ lp
 
 ```
 
-Learning curves
+Learning curves (Sparse)
 
 ```{r}
 LearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples,NumInstances=2,TrialsPerInstance=2,sparsity = 10,RegMin = -5, RegMax =5, RegStride=1){
@@ -1405,4 +1412,26 @@ LearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples,NumIn
   
 
 ```
+
+
+Setting the right regularization parameter.
+
+```{r}
+# to do this, compute for various n, d1, d2 the regularization parameters.
+#for gemini, the suggestion is lambda_A = log^{1/2}(min (d1,d2))/\sqrt{n d_2}
+#for tsiligkaridis, the suggestion is proportional to lambda_B = \sqrt{log M/ n d_1}, lambda_A = \sqrt{log M/n d_2} + lambda_B, I guess.
+#we can then guess 1/sqrt n dependence, 
+
+#to start, just remove KGlasso.
+
+
+
+
+
+
+```
+
+
+
+
 

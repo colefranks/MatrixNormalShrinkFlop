@@ -171,8 +171,8 @@ The matrix normal model, the family of Gaussian matrix-variate distributions who
 \end{enumerate}
 Polishing:
 \begin{enumerate}
-\item Akshay's note on simplifying the proof of \cref{thm:tensor-convexity}: \AR{Can rephrase explicitly in terms of $\nabla^{2} F$ and rank-one term. Then \cref{prop:gradient-bound} gives $1-\eps$ lower bound on each diagonal block of $\nabla^{2} F$, offdiagPisier gives $\lambda$ bound on each off-diagonal block of $\nabla^{2} F$, and \cref{prop:gradient-bound} once again gives $k \eps^{2}$ bound on whole rank-one term.  }
-\item \AR{Can improve the strong convexity stuff by a factor of two by using the projection to traceless on both sides of the inner product}
+%\item Akshay's note on simplifying the proof of \cref{thm:tensor-convexity}: \AR{Can rephrase explicitly in terms of $\nabla^{2} F$ and rank-one term. Then \cref{prop:gradient-bound} gives $1-\eps$ lower bound on each diagonal block of $\nabla^{2} F$, offdiagPisier gives $\lambda$ bound on each off-diagonal block of $\nabla^{2} F$, and \cref{prop:gradient-bound} once again gives $k \eps^{2}$ bound on whole rank-one term.  }
+%\item \AR{Can improve the strong convexity stuff by a factor of two by using the projection to traceless on both sides of the inner product}
 \item \CF{for the readers' sake some justification is needed for why perturbing $\samp$ this is the same as considering the Hessian of our function at another point in $\SPD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
 \item Add some discussion for noise added to data.
 \item Before \cref{lem:expansion-convexity}, add explanation of what the marginals of $\Phi^{ab}$ are in terms of $\rho^{a}$ etc.
@@ -1454,7 +1454,7 @@ If the completely positive map $\Phi^{(12)}$ defined in \cref{eq:hessian channel
   \max \{ \norm{P_1 - I_{d_1}}_{\op}, \norm{P_2 - I_{d_2}}_{\op} \} = O\Bigl(\frac{\eps \log d_{\min}}\gamma\Bigr).
 \end{align*}
 Moreover, $f_x(P_1, P_2) \geq (1 - \frac{4 \eps^2}{\lambda}) \frac{\|x\|^2}{nD}$. \MW{XX}
-\AR{Both statements seems correct to me because we optimize over SPD, so then $f$ is just norm-squared and KLR grad flow remains in SPD, and defintions of spectral gap/$\eps$-doubly balanced are homogenous.}
+%\AR{Both statements seems correct to me because we optimize over SPD, so then $f$ is just norm-squared and KLR grad flow remains in SPD, and defintions of spectral gap/$\eps$-doubly balanced are homogenous.}
 \end{theorem}
 
 \begin{corollary}\label{cor:klr}
@@ -1514,7 +1514,7 @@ Then, with probability at least $1 - e^{ - \Omega( d_{\min} \eps^2)}$, the funct
 We now use \cref{thm:operator-cheeger} as well as some more refined concentration inequalities to prove \cref{thm:matrix-normal}.
 The additional concentration is required to obtain the tighter bounds on the smaller Kronecker factor.
 Throughout this section, we assume without loss of generality that $d_1 \leq d_2$. 
-\AR{\cref{prop:gradient-bound} shows bounds on $\|(\nabla f_\samp)_{a}\|_{\op} $ which are inversely proportional to $d_{\max}$, so in the case when $d_{2} \gg d_{1}$ we can actually prove much better bounds on  $\|(\nabla f_\samp)_{1}\|_{\op}$ than on $\|(\nabla f_\samp)_{2}\|_{\op}$. }
+%\AR{\cref{prop:gradient-bound} shows bounds on $\|(\nabla f_\samp)_{a}\|_{\op} $ which are inversely proportional to $d_{\max}$, so in the case when $d_{2} \gg d_{1}$ we can actually prove much better bounds on  $\|(\nabla f_\samp)_{1}\|_{\op}$ than on $\|(\nabla f_\samp)_{2}\|_{\op}$.  }
 
 The idea of the proof is to apply one step of the flip-flop algorithm to ``renormalize'' the samples such that the second partial trace is proportional to $I_{d_2}$.
 This has the effect of making the second component of the gradient~$\nabla f_\samp$ equal to zero.
@@ -1569,14 +1569,17 @@ Recall that we define $\htheta_1(\samp), \htheta_2(\samp)$ to be $\arg\min_{\det
 Consider the following events.
 \begin{enumerate}
 \item\label{it:expander} The operator $\Phi_{\rv}$ is a $(\eps  \sqrt{{d_2}/{n d_1}},1-\lambda)$-quantum expander.
-\item\label{it:flop-balanced} The operator $\tilde{\Phi}$ is $\eps \sqrt{{d_1}/{n d_2}}$-balanced. \AR{Is $\tilde{\Phi}$ the same as $\Phi_{y}$?}
+\item\label{it:flop-balanced} The operator $\tilde{\Phi}$ is $\eps \sqrt{{d_1}/{n d_2}}$-balanced. 
+%\AR{Is $\tilde{\Phi}$ the same as $\Phi_{y}$?}
 \item \label{it:norm} $|1 - \frac{\|X\|}{\sqrt{nD}}| \leq \frac{\eps}{\sqrt{d_2}}. $
 \end{enumerate}
 These events occur with failure probability $1 - O(e^{ - \Omega( d_1 \eps^2)}).$ Indeed, by the assumption
 $$n \geq C (d_2/d_1) \max\{\log (d_2/d_1),  \eps^{-2}\} $$
 \cref{it:expander} occurs with probability $1 - O(e^{ - \Omega( d_1 \eps^2)})$ by \cref{thm:operator-cheeger}. By \cref{lem:flipflop-concentration}, \cref{it:flop-balanced} occurs with probability $1 - O(e^{ - \Omega( d_1 \eps^2)}).$ Finally, \cref{it:norm} occurs with probability $1 - e^{- \Omega(n d_1 \eps^2)}$ by \cref{prp:xnorm}. By the union bound all the events occur with probability $1 - O(e^{ - \Omega( d_1 \eps^2)})$. Let $\samp$ satisfy all three properties.
 
-We now use a lemma relating the quantum expansion of $\tilde{\Phi}$ and $\Phi_\samp$; this is analogous to \cref{convexRobustness} guaranteeing the strong convexity of $f$ in a neighborhood of the origin. Recall that $y = (\sqrt{ nd_1} I_{d_1} \ot \Phi_x^*(I_2)^{-1/2}) x:= (I_{d_1} \ot B)x$ and $\tilde{\Phi} = \Phi_y$. By Lemma 4.4 in \cite{FM20}, if $\kappa(B^2) - 1 \leq \delta < c$,  then $\Phi_y$ is an $(\eps \sqrt{d_2/n d_1} + O(\delta), 1 - \lambda + O(\delta))$-quantum expander \AR{Shouldn't write this because it ignores that one of the marginals is exactly right. The statement on $\tilde{\Phi}$ contradicts this}. We have $\kappa(B^2) = \kappa(\|x\|^{-2} \Phi_\samp^*(I_{d_1})) = O(\|\|x\|^{-2} \Phi_\samp^*(I_{d_1}) - I_{d_2}\|_{op}) = O(\eps \sqrt{d_2/nd_1})$ by the balancedness of $\Phi_x$. Thus $\tilde{\Phi}$ is an $(\eps \sqrt{d_1 / n d_2}, 1 - \lambda/2)$-quantum expander provided $\eps \sqrt{d_2/nd_1}$ is small enough compared to $\lambda$.
+We now use a lemma relating the quantum expansion of $\tilde{\Phi}$ and $\Phi_\samp$; this is analogous to \cref{convexRobustness} guaranteeing the strong convexity of $f$ in a neighborhood of the origin. Recall that $y = (\sqrt{ nd_1} I_{d_1} \ot \Phi_x^*(I_2)^{-1/2}) x:= (I_{d_1} \ot B)x$ and $\tilde{\Phi} = \Phi_y$. By Lemma 4.4 in \cite{FM20}, if $\kappa(B^2) - 1 \leq \delta < c$,  then $\Phi_y$ is an $(\eps \sqrt{d_2/n d_1} + O(\delta), 1 - \lambda + O(\delta))$-quantum expander 
+%\AR{Shouldn't write this because it ignores that one of the marginals is exactly right. The statement on $\tilde{\Phi}$ contradicts this}. 
+We have $\kappa(B^2) = \kappa(\|x\|^{-2} \Phi_\samp^*(I_{d_1})) = O(\|\|x\|^{-2} \Phi_\samp^*(I_{d_1}) - I_{d_2}\|_{op}) = O(\eps \sqrt{d_2/nd_1})$ by the balancedness of $\Phi_x$. Thus $\tilde{\Phi}$ is an $(\eps \sqrt{d_1 / n d_2}, 1 - \lambda/2)$-quantum expander provided $\eps \sqrt{d_2/nd_1}$ is small enough compared to $\lambda$.
 
 By our choice of $n$, we have $\eps \sqrt{d_1/nd_2} \leq c\lambda^2\log d_1$ provided $\eps \leq c\lambda^2$. Thus \cref{thm:klr} applies to $\tilde{\Phi}$ and so the MLE $\htheta_1(y), \htheta_2(y)$ satisfy
 \begin{gather*} \| \htheta_1(y) - I_{d_1}\|_{op}, \| \htheta_2(y) - I_{d_2}\|_{op} = O\left(\eps \sqrt{\frac{d_1}{n d_2}} \log d_1\right).\end{gather*}
@@ -2247,7 +2250,7 @@ The flip-flop algorithm for this regularized estimator is nearly as simple as th
 %we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
 \begin{itemize}
 %\item Set $\otheta^1$
-\item Define $\otheta^a:= \otheta_{(a)}^{-1} \otheta$, the tensor product in which the $i^{th}$ factor is $\otheta_i$ except for the $a^{th}$ which is $I_{d_a}$. Define $\Upsilon_a :=\tr_{[k] \setminus a} \otheta^a \rho$. Let $$a = \arg\max_{i \in [k]} d_i   \left\| \otheta_i^{1/2} \Upsilon_i \otheta_i^{1/2}  + \alpha (\prod_j \tr \Theta_j) \Theta_i - I_{d_i}/d_i\right\|_F^2,$$
+\item Define $\otheta^a:= \otheta_{(a)}^{-1} \otheta$, the tensor product in which the $i^{th}$ factor is $\otheta_i$ except for the $a^{th}$ which is $I_{d_a}$. Define $\Upsilon_a :=\tr_{[k] \setminus a} \otheta^a \rho$. Let \CF{new index in argmin} $$a = \arg\max_{i \in [k]} d_i   \left\| \otheta_i^{1/2} \Upsilon_i \otheta_i^{1/2}  + \alpha (\prod_j \tr \otheta_j) I_{d_i} - I_{d_i}/d_i\right\|_F^2,$$
 i.e., the index $a$ for which $\|\nabla_a \ell^\alpha_{\samp}(\otheta)\|_F$ is largest. If $\|\nabla_a \ell^\alpha_\samp(\otheta)\|_F < \eps$, end loop and \textbf{return} $(\otheta_1, \dots, \otheta_a)$.
 \item Set
 $$\otheta_a = \frac{n D}{d_a}\left(\Upsilon_i + \alpha \left(\prod_{i \neq a} \tr \otheta_a\right) I_{d_a} \right)^{-1}.$$
