@@ -17,6 +17,7 @@ library(ggplot2)
 library(tictoc)
 library(R.matlab)
 library(gridExtra)
+
 options(matlab="/Applications/MATLAB_R2020b.app/bin/matlab")
 Matlab$startServer()
 matlab <- Matlab()
@@ -24,6 +25,9 @@ isOpen <- open(matlab)
 #Hello did this save
 
 ```
+
+
+
 
 Spiked comparison code
 
@@ -65,7 +69,7 @@ evaluate(matlab,"addpath('../KGlasso_code')")
 SpikedComparison <-function(SmallDimension,BigDimension,NumSamples,NumInstances=2,TrialsPerInstance=2,spike = 10, RegMin = -5, RegMax =5, RegStride=1){
   
   Regularizers = exp(RegStride*c(floor(RegMin/RegStride):floor(RegMax/RegStride)))
-  results = data.frame(Regularizer = Regularizers,Gemini=0,RegSink = 0,Trivial=0, KGlasso = 0)
+  results = data.frame(Regularizer = Regularizers,Gemini=0,ShrinkFlop = 0,Trivial=0, KGlasso = 0)
   #need to add the sample covariance back in :/
   
   #make copies for the other error metrics.
@@ -150,22 +154,22 @@ SpikedComparison <-function(SmallDimension,BigDimension,NumSamples,NumInstances=
         
         #regularized Sinkhorn
         #set sinkhorn penalties
-        RegSinkFactor = 10
+        RegSinkFactor = .05
         tic("regularized sinkhorn")
         RegSinkEstimate = regsinkhorn(X,tol = .1*Regularizers[j], reg = Regularizers[j]*RegSinkFactor)[[1]]
         toc()
         
         #calculate frobenius
         RegSinkError = norm(invA - (RegSinkEstimate/tr(RegSinkEstimate)),"F")^2 / normA
-        results$RegSink[j] = results$RegSink[j]+ RegSinkError/(NumInstances*TrialsPerInstance)
+        results$ShrinkFlop[j] = results$ShrinkFlop[j]+ RegSinkError/(NumInstances*TrialsPerInstance)
         
         #operator error
         OpSinkError = norm(invA - (RegSinkEstimate/tr(RegSinkEstimate)),"I")^2
-        OpResults$RegSink[j] = OpResults$RegSink[j]+ OpSinkError/(NumInstances*TrialsPerInstance)
+        OpResults$ShrinkFlop[j] = OpResults$ShrinkFlop[j]+ OpSinkError/(NumInstances*TrialsPerInstance)
         
         #geodesic distance
         GeoSinkError = GeodesicDistance(DetNorm(invA), DetNorm(RegSinkEstimate))^2/GeoTrivialError^2
-        GeoResults$RegSink[j] = GeoResults$RegSink[j] + GeoSinkError/(NumInstances*TrialsPerInstance)
+        GeoResults$ShrinkFlop[j] = GeoResults$ShrinkFlop[j] + GeoSinkError/(NumInstances*TrialsPerInstance)
         
         #KGlasso 
         #print(c("MatReg, ", MatReg))
@@ -222,7 +226,7 @@ SimplePlot <- function(results){
 Test spiked covariance
 
 ```{r}
-ans = SpikedComparison(3,3,5,RegMin=-2,RegMax = 2,NumInstances =1, TrialsPerInstance  = 1, RegStride = .5)
+DoublySpikedTest = SpikedComparison(3,5,2,RegMin=-5,RegMax = 2,NumInstances =1, TrialsPerInstance  = 1, RegStride = .5)
 
 
 ```
@@ -230,7 +234,7 @@ ans = SpikedComparison(3,3,5,RegMin=-2,RegMax = 2,NumInstances =1, TrialsPerInst
 Run actual spiked covariance code
 
 ```{r, echo=FALSE, message=FALSE, results='hide'}
-ans = SpikedComparison(25,50,1,RegMin=-10, RegMax = 5, NumInstances =3, TrialsPerInstance  = 5, RegStride = .5)
+DoublySpiked = SpikedComparison(25,50,1,RegMin=-10, RegMax = 5, NumInstances =5, TrialsPerInstance  = 5, RegStride = .5)
 
 
 ```
@@ -238,27 +242,36 @@ ans = SpikedComparison(25,50,1,RegMin=-10, RegMax = 5, NumInstances =3, TrialsPe
 
 Spiked covariance plots
 
+Test plot
+```{r}
+#geodesic
+lp=SimplePlot(DoublySpikedTest$GeoResults)
+lp + ggtitle("Error in Geodesic distance") #cool way to title on the fly :)
+
+```
 
 
 
+
+Files
 ```{r}
 
 #geodesic
-lp=SimplePlot(ans$GeoResults)
+lp=SimplePlot(DoublySpiked$GeoResults)
 lp = lp + ggtitle("Error in Geodesic distance") #cool way to title on the fly :)
 pdf("25-50-spiked-geo.pdf")
 lp
 dev.off()
 lp
 
-lp=SimplePlot(ans$OpResults)
+lp=SimplePlot(DoublySpiked$OpResults)
 lp = lp + ggtitle("Error in operator norm")
 pdf("25-50-spiked-op.pdf")
 lp
 dev.off()
 lp
 
-lp=SimplePlot(ans$Results)
+lp=SimplePlot(DoublySpiked$Results)
 lp = lp + ggtitle("Error in Frobenius norm") 
 pdf("25-50-spiked-frob.pdf")
 lp
@@ -406,9 +419,9 @@ SparseComparison <-function(SmallDimension,BigDimension,NumSamples,NumInstances=
         
         #regularized Sinkhorn
         #set sinkhorn penalties
-        RegSinkFactor = 10
+        RegSinkFactor = .00005
         tic("regularized sinkhorn")
-        RegSinkEstimate = regsinkhorn(X,tol = .1*Regularizers[j], reg = Regularizers[j]*RegSinkFactor)[[1]]
+        RegSinkEstimate = regsinkhorn(X,tol = .01, reg = Regularizers[j]*RegSinkFactor)[[1]]
         toc()
         
         print(c("Sinkhorn det",det(RegSinkEstimate)))
@@ -452,6 +465,10 @@ SparseComparison <-function(SmallDimension,BigDimension,NumSamples,NumInstances=
 
 Plotting sparse comparison
 
+
+
+
+
 ```{r}
 #test sparse comparison
 ans3 = SparseComparison(11,11,5,RegMin=-5,RegMax = 5,NumInstances =1, TrialsPerInstance  = 1, spike=10, RegStride = 1)
@@ -463,7 +480,7 @@ lp
 ```
 ```{r, echo=FALSE}
 #test sparse comparison
-ans = SparseComparison(25,50,1,RegMin=-15,RegMax = 1,NumInstances =3, TrialsPerInstance  = 10, spike=100, RegStride = 1)
+ans = SparseComparison(25,50,1,RegMin=-15,RegMax = 1,NumInstances =2, TrialsPerInstance  = 2, spike=100, RegStride = 1)
 lp = SimplePlot(ans$Results)
 pdf("SparsePlot.pdf")
 lp
@@ -472,7 +489,22 @@ lp
 ```
 
 ```{r}
+#rename RegSink to ShrinkFlop
+colnames(ans$Results) = c("Regularizer","Gemini","ShrinkFlop","Trivial","Kglasso")
+colnames(ans$OpResults) = c("Regularizer","Gemini","ShrinkFlop","Trivial","Kglasso")
+colnames(ans$GeoResults) = c("Regularizer","Gemini","ShrinkFlop","Trivial","Kglasso")
+
+
+```
+
+```{r}
+SinglySpiked = SparseComparison(25,50,1,RegMin=-20,RegMax = 10,NumInstances =5, TrialsPerInstance  = 5, spike=100, RegStride = 1)
+#this fails - the KGlasso regularization parameter can't go too high, I think.
+```
+
+```{r}
 #do the plots 
+#ans = SparseComparison(25,50,1,RegMin=-15,RegMax = 5,NumInstances =5, TrialsPerInstance  = 5, spike=100, RegStride = .5)
 
 #geodesic
 lp=SimplePlot(ans$GeoResults)
@@ -641,7 +673,7 @@ DoublySparseComparison <-function(SmallDimension,BigDimension,NumSamples,NumInst
         
         #regularized Sinkhorn
         #set sinkhorn penalties
-        RegSinkFactor = 10
+        RegSinkFactor = .05
         tic("regularized sinkhorn")
         RegSinkEstimate = regsinkhorn(X,tol = .1*Regularizers[j], reg = Regularizers[j]*RegSinkFactor)[[1]]
         toc()
@@ -703,15 +735,27 @@ lp
 
 ```{r, echo=FALSE}
 #do doubly sparse comparison
-ans3 = DoublySparseComparison(25,50,1,RegMin=-10,RegMax = 2,NumInstances =3, TrialsPerInstance  = 10, RegStride = 0.5)
+ans3 = DoublySparseComparison(25,50,1,RegMin=-10,RegMax = 2,NumInstances =5, TrialsPerInstance  = 10, RegStride = 0.5)
 lp = SimplePlot(ans3$GeoResults)
 pdf("SparsePlot.pdf")
 lp
 dev.off()
 lp
 ```
+
+
 ```{r}
-#do the plots 
+#rename RegSink to ShrinkFlop
+colnames(ans3$Results) = c("Regularizer","Gemini","ShrinkFlop","Trivial","Kglasso")
+colnames(ans3$OpResults) = c("Regularizer","Gemini","ShrinkFlop","Trivial","Kglasso")
+colnames(ans3$GeoResults) = c("Regularizer","Gemini","ShrinkFlop","Trivial","Kglasso")
+
+
+```
+
+```{r}
+#with the files 
+#ans3 = DoublySparseComparison(25,50,1,RegMin=-10,RegMax = 2,NumInstances =5, TrialsPerInstance  = 5, RegStride = 0.5)
 
 #geodesic
 lp=SimplePlot(ans3$GeoResults)
@@ -813,7 +857,8 @@ SpikedLearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples
         
         #gemini
         #set gemini penalties
-        GeminiRegFactor = 1*sqrt(log(SmallDimension)/BigDimension)
+        #gemini reg should depend on it too.
+        GeminiRegFactor = 1*sqrt(log(SmallDimension)/(BigDimension*j))
         tic("geminiB")
         out <- GeminiBmult(X, GeminiRegFactor, penalize.diagonal=FALSE)
         toc()
@@ -861,7 +906,8 @@ SpikedLearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples
         #regularized Sinkhorn
         #set sinkhorn penalties
         #RegSinkFactor = 5/log(j+1)^(1/2)
-        RegSinkFactor = 100*j
+        #RegSinkFactor = .05/j
+        RegSinkFactor = .0001*2^(-1.1*j)
         tic("regularized sinkhorn")
         RegSinkEstimate = regsinkhorn(X,tol = .01, reg = RegSinkFactor)[[1]]
         toc()
@@ -909,8 +955,18 @@ Learning curves run
 ```{r, echo=FALSE, message=FALSE, result=hide}
 #doing the learning curves
 
-res =SpikedLearningCurve(25,25,1,50,NumInstances = 2,spike=100,TrialsPerInstance = 3)
+res =SpikedLearningCurve(25,25,1,50,NumInstances = 2,spike=100,TrialsPerInstance = 2)
 ```
+
+```{r}
+#rename RegSink to ShrinkFlop
+colnames(res$Results) = c("Samples","Gemini","ShrinkFlop","Flip-Flop","Trivial")
+colnames(res$OpResults) = c("Samples","Gemini","ShrinkFlop","Flip-Flop","Trivial")
+colnames(res$GeoResults) = c("Samples","Gemini","ShrinkFlop","Flip-Flop","Trivial")
+
+
+```
+
 
 Plotting learning curves
 
@@ -948,25 +1004,26 @@ LearningCurvePlot <- function(results){
 
 ```{r}
 #do the plots 
+#only do cols 1-5 because we didn't include kglasso
 
 #geodesic
-lp=LearningCurvePlot(res$GeoResults)
+lp=LearningCurvePlot(res$GeoResults[,1:5])
 lp = lp + ggtitle("Error in Geodesic distance") #cool way to title on the fly :)
-pdf("25-50-spiked-lc-geo.pdf")
+pdf("25-25-spiked-lc-geo.pdf")
 lp
 dev.off()
 lp
 
-lp=LearningCurvePlot(res$OpResults)
+lp=LearningCurvePlot(res$OpResults[,1:5])
 lp = lp + ggtitle("Error in operator norm")
-pdf("25-50-spiked-lc-op.pdf")
+pdf("25-25-spiked-lc-op.pdf")
 lp
 dev.off()
 lp
 
-lp=LearningCurvePlot(res$Results)
+lp=LearningCurvePlot(res$Results[,1:5])
 lp = lp + ggtitle("Error in Frobenius norm") 
-pdf("25-50-spiked-lc-frob.pdf")
+pdf("25-25-spiked-lc-frob.pdf")
 lp
 dev.off()
 lp
@@ -1319,7 +1376,7 @@ LearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples,NumIn
         
         #gemini
         #set gemini penalties
-        GeminiRegFactor = 1*sqrt(log(SmallDimension)/BigDimension)
+        GeminiRegFactor = 1*sqrt(log(SmallDimension)/(BigDimension*j))
         tic("geminiB")
         out <- GeminiBmult(X, GeminiRegFactor, penalize.diagonal=FALSE)
         toc()
@@ -1343,7 +1400,7 @@ LearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples,NumIn
         #regularized Sinkhorn
         #set sinkhorn penalties
         tic("sinkhorn")
-        SinkEstimate = sinkhorn(X,tol = .01)[[1]]
+        SinkEstimate = sinkhorn(X,tol = .01*2^(-j/2))[[1]]
         toc()
         
         #print(c("Sinkhorn det",det(RegSinkEstimate)))
@@ -1366,9 +1423,9 @@ LearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples,NumIn
         
         #regularized Sinkhorn
         #set sinkhorn penalties
-        RegSinkFactor = 1
+        RegSinkFactor = .0005*2^(-j)
         tic("regularized sinkhorn")
-        RegSinkEstimate = regsinkhorn(X,tol = .01, reg = RegSinkFactor)[[1]]
+        RegSinkEstimate = regsinkhorn(X,tol = .01*2^(-j/2), reg = RegSinkFactor)[[1]]
         toc()
         
         print(c("Sinkhorn det",det(RegSinkEstimate)))
@@ -1389,7 +1446,7 @@ LearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples,NumIn
         #print(c("MatReg, ", MatReg))
         setVariable(matlab, dat = dat)
         #evaluate(matlab, "SmallDimension, class(BigDimension),class(NumSamples)")
-        evaluate(matlab,"[C,D] = KGL_R(dat,SmallDimension,BigDimension,NumSamples,.4,.4,30,.01);")
+        evaluate(matlab,"[C,D] = KGL_R(dat,SmallDimension,BigDimension,NumSamples,.4/NumSamples^(1/2),.4/NumSamples^(1/2),30,.01);")
         KGlassoEstimate = getVariable(matlab,"C")$C
 
         KGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"F")^2 / normA
@@ -1414,6 +1471,47 @@ LearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples,NumIn
 ```
 
 
+Doing sparse learning curve plots
+
+```{r, echo=FALSE, message=FALSE, result=hide}
+#doing the learning curves
+
+sparseres =LearningCurve(25,25,1,50,NumInstances = 2,sparsity=10,TrialsPerInstance = 2)
+LearningCurvePlot(sparseres$Results)
+LearningCurvePlot(sparseres$GeoResults)
+```
+Make files for these
+
+```{r}
+#do the plots 
+
+#geodesic
+lp=LearningCurvePlot(sparseres$GeoResults)
+lp = lp + ggtitle("Error in Geodesic distance") #cool way to title on the fly :)
+pdf("25-50-sparse-lc-geo.pdf")
+lp
+dev.off()
+lp
+
+lp=LearningCurvePlot(sparseres$OpResults)
+lp = lp + ggtitle("Error in operator norm")
+pdf("25-50-sparse-lc-op.pdf")
+lp
+dev.off()
+lp
+
+lp=LearningCurvePlot(sparseres$Results)
+lp = lp + ggtitle("Error in Frobenius norm") 
+pdf("25-50-sparse-lc-frob.pdf")
+lp
+dev.off()
+lp
+
+```
+
+
+
+
 Setting the right regularization parameter.
 
 ```{r}
@@ -1432,6 +1530,63 @@ Setting the right regularization parameter.
 ```
 
 
+Computational stuff
+
+```{r}
+#timeit
+
+Timings<-function(BigDimension, SmallDimension, NumSamples, NumInstances = 1, TrialsPerInstance = 1){
+      spike=10
+      #define the covariances
+      for (l in 1:NumInstances){
+        A = diag(SmallDimension)
+        v = matrix(rnorm(SmallDimension),nrow = SmallDimension, ncol = 1)
+        A = A + spike*v%*%t(v)
+        rootA = sqrtm(A)
+        invA = solve(A)
+        invA = invA/tr(invA)
+        normA = norm(invA,"F")^2
+        detinvA = DetNorm(invA)
+        
+        print(c("det A: ", det(A)))
+        
+        B = diag(BigDimension)
+        v = matrix(rnorm(BigDimension),nrow = BigDimension, ncol = 1)
+        B = B + spike*v%*%t(v)
+        rootB = sqrtm(B)
+        for(k in 1:TrialsPerInstance){
+          #create the fresh samples
+          X = list(0*c(1:NumSamples))
+        dat = matrix(0, ncol = NumSamples, nrow = SmallDimension*BigDimension)
+        
+        for(i in 1:NumSamples){
+          
+          #create the data
+          X[[i]] = rootA%*%matrix(rnorm(SmallDimension*BigDimension,sd=1), nrow=SmallDimension, ncol=BigDimension)%*%rootB
+          dat[,i] = X[[i]]
+          
+          RegSinkFactor = .05*10^(-2)
+          tic("regularized sinkhorn")
+          RegSinkEstimate = regsinkhorn(X,tol = .01, reg = RegSinkFactor)[[1]]
+          toc()
+          
+          GeminiRegFactor = 1*sqrt(log(SmallDimension)/(BigDimension))*10^(-1.5)
+          tic("geminiB")
+          out <- GeminiBmult(X, GeminiRegFactor, penalize.diagonal=FALSE)
+          toc()
+          
+        }
+        }
+      }
+}
+      
+      #draw the data
+      
 
 
+```
 
+```{r}
+Timings(100,200,1,NumInstances =2, TrialsPerInstance  = 2)
+
+```

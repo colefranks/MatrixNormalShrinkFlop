@@ -76,6 +76,7 @@ sinkhorn<-function(kraus, tol=10**(-6),maxit=100,verbose=FALSE){
 #regularized completely positive map
 regcpmap<-function(kraus, current, reg=0.1){
   y=0
+  
   n = dim(kraus[[1]])[1]
   for(x in kraus){
     y<-y + x%*% current %*% t(x)
@@ -94,18 +95,27 @@ regsinkstep<-function(kraus, current, reg){
   m = dim(kraus[[1]])[1]
   #print(m)
   n = dim(kraus[[1]])[2]
+  
+  numsamp = length(kraus)
+  tracerho = tr(cpmap(kraus,diag(n)))
+  
+    
   #print(n)
   #compute left scaling
   #print(round(regcpmap(kraus,current,reg),2))
-  left = solve(regcpmap(kraus,current,reg))/m
+  left = solve((1 - reg)*cpmap(kraus,current)/(numsamp*m*n) + reg*tracerho*tr(current)*diag(m)/(m*n))/m
   #print(round(m*left,2))
   #print(left)
   #compute right scaling
   #print(cpdual(kraus,left))
-  right = solve(regcpdual(kraus, left, reg))/n
+  right = solve((1 - reg)*cpdual(kraus,left)/(numsamp*m*n) + reg*tracerho*tr(left)*diag(n)/(m*n))/n
   #output the pair of them
   list(left,right)
 }
+
+#do for tensors also?
+
+
 
 threshsinkstep<-function(kraus, current, thr, reg){
   #print(thr)
@@ -166,6 +176,8 @@ threshsinkstep<-function(kraus, current, thr, reg){
 regsinkhorn<-function(kraus, tol=10**(-6),maxit=100,verbose=FALSE,reg=0.1){
   m = dim(kraus[[1]])[1]
   n = dim(kraus[[1]])[2]
+  numsamp = length(kraus)
+  tracerho = tr(cpmap(kraus,diag(n)))
   #initialize number of iterations to zero
   it = 0
   #start with the identity
@@ -174,14 +186,16 @@ regsinkhorn<-function(kraus, tol=10**(-6),maxit=100,verbose=FALSE,reg=0.1){
   #initialize eps to 1, something large
   eps = 1
   #while not scaled
+  reg1 = (2/pi)*atan(reg)
+  print(c("regsink reg",reg1))
   while(eps > tol & it < maxit){
     
     #measure progress
-    eps = tr(matrix.power(left %*% regcpmap(kraus,right,reg) - diag(m)/m, 2))
+    eps = tr(matrix.power(left %*% ((1 - reg1)*cpmap(kraus,right)/(m*n*numsamp) + reg1*tr(right)*tracerho*diag(m)/(m*n)) - diag(m)/m, 2))
     
     #do a sinkhorn step
-    left = regsinkstep(kraus,right,reg)[[1]]
-    right = regsinkstep(kraus,right,reg)[[2]]
+    left = regsinkstep(kraus,right,reg1)[[1]]
+    right = regsinkstep(kraus,right,reg1)[[2]]
     
     if(verbose){
       print(eps)
