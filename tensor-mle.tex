@@ -25,11 +25,12 @@
 % \newtheorem{obs}[theorem]{Observation}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{remark}[theorem]{Remark}
-\newtheorem*{remark*}{Remark}
+\newtheorem{remark*}[theorem]{Remark}
 \newtheorem{fact}[theorem]{Fact}
 % \newtheorem{claim}[theorem]{Claim}
 \theoremstyle{definition}
-\newtheorem*{definition}{Definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
 \floatstyle{boxed}\newfloat{Algorithm}{ht}{alg}
 \crefname{Algorithm}{Algorithm}{Algorithms}
 \numberwithin{equation}{section}
@@ -580,8 +581,20 @@ Using our definition of geodesics, we obtain the following notion of geodesic co
 A twice differentiable function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $\Theta\in\P$ if $\partial^2_{t=0} f(\exp_\Theta(tH)) \geq 0$ for all~$H\in\H$.
 It is called \emph{$\lambda$-strongly geodesically convex} at $\Theta$ for some $\lambda>0$ if $\partial^2_{t=0} f(\exp_P(tH)) \geq \lambda \norm H_F^2$ for all~$H\in\H$.
 
-We say that for a geodesically convex domain $D \subseteq \P$, a function $f$ is (strongly) geodesically convex on~$D$ if, and only if, the function $t \mapsto f(\gamma(t))$ is (strongly) convex on~$[0,1]$ for any (unit-speed) geodesic $\gamma(t)$ with $\gamma(0),\gamma(1)\in D$.
+
+We say that for a geodesically convex domain $D \subseteq \P$, a function $f$ is (strictly) geodesically convex on~$D$ if, and only if, the function $t \mapsto f(\gamma(t))$ is (strictly) convex on~$[0,1]$ for any (unit-speed) geodesic $\gamma(t)$ with $\gamma(0),\gamma(1)\in D$.
 In other words, geodesic convexity simply means convexity in the ordinary Euclidean sense when restricted to geodesics.
+
+\begin{example}\label{exa:usual-likelihood} It is instructive to consider the case $k = 1$, or $\P = PD(d)$. The metric in this case is simply a constant ($1/\sqrt{d_1}$) multiple of the metric considered in \citep{bhatia2009positive,skovgaard1984riemannian}. The geodesics through $\Theta$ are the curves $t \mapsto \sqrt{\Theta} e^{H t} \sqrt{\Theta}.$ As an example of a geodesically convex function, consider the likelihood for the precision matrix of a Gaussian with data $x_1, \dots, x_n$. Let $\rho := \frac1{nD}\sum_i x_i x_i^T$ denote the matrix of ``second sample moments'' of the data. Then we can rewrite the objective function~\eqref{eq:neg log likelihood} as
+\begin{align*}%\label{eq:obj via rho}
+  f_x(\Theta) = \tr \rho \, \Theta - \frac1D \log \det \Theta.
+\end{align*}
+We claim that $f_x(\Theta)$ is always geodesically convex, and in fact \emph{strictly} geodesically convex whenever $\rho$ is invertible. Indeed, 
+$$ \partial^2_{t = 0} f_x(\sqrt{\Theta} e^{t H} \sqrt{\Theta}) = \tr \sqrt{\Theta} \rho \sqrt{\Theta} H^2 \geq 0 $$ 
+with strict inequality whenever $\rho$ is invertible.
+
+\end{example}
+
 % A function $f\colon \P \to \R$ is said to be \emph{geodesically convex} at $P\in\P$ if the functions $t \mapsto f(\exp_P(tH))$ are convex in $t\in\R$ for all~$H \in \H$.
 % Assuming $f$ is twice differentiable, this holds if, and only if, $\partial^2_t f(\exp_P(tH)) \geq 0$ for all~$H\in\H$.
 
@@ -835,8 +848,7 @@ Proceeding according to step~\ref{it:grad} of the plan outlined in \cref{subsec:
 
 To calculate the gradient, we need a definition from linear algebra.
 Recall that our data comes as an $n$-tuple $x=(x_1,\dots,x_n)$ of $k$-tensors. %, which we can also think of as an array of format~$d_1\times\dots\times d_k\times n$.
-Let $\rho := \frac1{nD}\sum_i x_i x_i^T$ denote the matrix of ``second sample moments'' of the data.
-Then we can rewrite the objective function~\eqref{eq:neg log likelihood} as
+As in \cref{exa:usual-likelihood}, let $\rho := \frac1{nD}\sum_i x_i x_i^T$, and rewrite the objective function~\eqref{eq:neg log likelihood} as
 \begin{align}\label{eq:obj via rho}
   f_x(\Theta) = \tr \rho \, \Theta - \frac1D \log \det \Theta.
 \end{align}
@@ -2124,7 +2136,7 @@ Informally, both bounds imply that no estimator for a $d\times d$ precision matr
 \begin{prop}[Frobenius and operator error]\label{prp:standard-lower}
 There is $c > 0$ such that the following holds.
 Let $X \in \R^{d \times n}$ denote $n$ independent random samples from a Gaussian with precision matrix $\Theta \in \PD(d)$.
-Consider any estimator $\htheta = \htheta(X)$ \MW{Would $\htheta = \htheta(x)$ be more logical? No strong opinion, do whatever is standard in the stats literature.} for the precision matrix~$\Theta$, and let $B\subset \PD(d)$ denote the ball about $I_d$ of radius $1/2$ in the operator norm.
+Consider any estimator $\htheta = \htheta(x)$ for the precision matrix~$\Theta$, and let $B\subset \PD(d)$ denote the ball about $I_d$ of radius $1/2$ in the operator norm.
 \begin{enumerate}
 \item Let $\delta^2 = c \, \min \left\{1,d^2/n\right\}$. Then,
 \begin{align}
@@ -2316,15 +2328,19 @@ Existing estimators, such as the Gemini estimator \cite{zhou2014gemini} and KGla
 We refer to these as Glasso-type estimators.
 We propose a new, shrinkage-based estimator that is simple to compute and experimentally outperforms Gemini and KGlasso in a natural generative model.
 
-To describe our estimator, we remind the reader that the maximum likelihood estimator is the optimum of a function depending on the sample covariance matrix.
-Namely, we choose $\Theta \in \P$ optimizing $\tr \Theta S - \frac{1}{D}\log \det \Theta$ where $S = \frac{1}{n} \sum_{i = 1}^n x_i x_i^T$ \MW{Factor $1/D$ missing?} is the sample covariance matrix.\footnote{or, more accurately, the matrix of second moments}
-\MW{Add reference to \cref{eq:neg log likelihood,eq:obj via rho}.}
-\MW{I would replace $S$ by $\rho$, since this is the notation used throughout the paper (as well as two paragraphs down).}
-In our estimator, $S$ is replaced by a shrinkage estimator for the covariance matrix.
-Namely, we replace $S$ by $\tilde{S}: = (1- \alpha) S + \alpha \frac{\tr S}{D} I $ for some $\alpha \in [0,1]$.
+To describe our estimator, we remind the reader that the maximum likelihood estimator as defined in \cref{eq:obj via rho} is the optimum of a function depending on the sample covariance matrix.
+Namely, we choose $\Theta \in \P$ optimizing $\tr \Theta \rho - \frac{1}{D}\log \det \Theta$ where $\rho = \frac{1}{n D} \sum_{i = 1}^n x_i x_i^T$ is the sample covariance matrix.\footnote{or, more accurately, the matrix of second moments}
+In our estimator, $\rho$ is replaced by a shrinkage estimator for the covariance matrix.
+Namely, we replace $\rho$ by $\tilde{\rho}: = (1- \alpha) \rho + \alpha \frac{\tr \rho}{D} I $ for some $\alpha \in [0,1]$. Formally, define $\widehat{\Theta}^\alpha_x = \arg\min_{\Theta \in \P} f^\alpha_\samp(\Theta)$ where 
+\begin{align*}
+  f_{\samp}^\alpha(\Theta)
+% = \frac n2 \log \det(\Theta/2\pi) - \sum_{i=1}^n \frac12 \braket{\samp_i, \Theta \samp_i} ~
+%  := \frac {n D} 2 \sum_{a = 1}^k \frac{1}{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i} + \alpha \prod_{i=1}^k \tr \Theta_a,
+  :=  \tr \Theta \left((1 - \alpha) \rho + \alpha \frac{\tr \rho}{D} I\right) - \frac{1}{D}\log\det\Theta.
+\end{align*}
+
 This is known as a shrinkage estimator with ridge regularization \CF{cite}.
-The estimator, which we call the \emph{shrinkage-based flip-flop estimator}, or \emph{ShrinkFlop} for short, seems closely related to the shrinkage estimator considered in \cite{goes2020robust} and the Frobenius penalty considered in \cite{tang2018integrated}.
-\MW{`ShrinkFlop' is a beautiful term that should feature in the intro :-) I added a subsection (7.1) with it in the title\dots}
+The estimator, which we call the \emph{shrinkage-based flip-flop estimator}, or \emph{ShrinkFlop} for short, is closely related to the shrinkage estimator considered in \cite{goes2020robust} and the Frobenius penalty considered in \cite{tang2018integrated}.
 
 %We propose a regularizer that is simple to compute and experimentally outperforms Gemini and KGlasso under a natural generative model for \emph{dense} covariance matrices.
 We consider a generative model in which the covariance matrices $\Theta_i$ are distributed as a low-rank Wishart matrix \MW{It looks like we are actually doing a rank-one perturbation.} plus a small multiple of the identity matrix to ensure invertibility; we refer to them as \emph{spiked} covariance matrices.
@@ -2336,23 +2352,8 @@ All three estimators require parameter tuning, so when possible we compare throu
 %-----------------------------------------------------------------------------
 \subsection{ShrinkFlop estimator}
 %-----------------------------------------------------------------------------
-To define our estimator more precisely, we consider the following objective function.
-Let $\rho:= \frac{1}{nD} \sum_{i = 1}^n \samp_i \samp_i^T$. Define
-
-\begin{align*}
-  f_{\samp}^\alpha(\Theta)
-% = \frac n2 \log \det(\Theta/2\pi) - \sum_{i=1}^n \frac12 \braket{\samp_i, \Theta \samp_i} ~
-%  := \frac {n D} 2 \sum_{a = 1}^k \frac{1}{d_a} \log \det \Theta_a  - \frac12 \sum_{i=1}^n \braket{\samp_i, \left( \textstyle \bigotimes_{a=1}^k \Theta_a \right) \samp_i} + \alpha \prod_{i=1}^k \tr \Theta_a,
-  :=  \tr \Theta \left((1 - \alpha) \rho + \alpha \frac{\tr \rho}{D} I\right) - \frac{1}{D}\log\det\Theta,
-\end{align*}
-where $\alpha \in [0,1]$ is a parameter which must be tuned.
-\MW{A bit awkward that this is precisely repeating what was written above (but good that there is a clear definition).}
-Set $\widehat{\Theta}^\alpha_x = \arg\min_{\Theta \in \P} \ell^\alpha_\samp(\Theta)$ and  $\tilde{\rho} := (1- \alpha) \rho + \alpha \frac{\tr \rho}{D} I.$
-
-If $\alpha > 0$, then $\tilde{\rho}$ is invertible and therefore $\widehat{\Theta}^\alpha_x$ exists uniquely for every $x$.
-This is because, whenever $\tilde{\rho}$ is invertible, the function $f_{\samp}^\alpha$ has a unique minimizer even over the larger domain $\PD(D)$,\footnote{This is a consequence of the AM-GM inequality} and is geodesically convex.
-Thus it has a unique minimizer over the geodesically convex domain $\P$.
-\MW{$\leftarrow$ I don't understand this logic.}
+We now discuss some properties of the ShrinkFlop estimator. As above, set $\tilde{\rho} := (1- \alpha) \rho + \alpha \frac{\tr \rho}{D} I.$ If $\alpha > 0$, then $\tilde{\rho}$ is invertible and therefore $\widehat{\Theta}^\alpha_x$ exists uniquely for every $x$.
+This is because, whenever $\tilde{\rho}$ is invertible, the function $f_{\samp}^\alpha$ is strictly geodesically convex even on the larger domain $\PD(D)$ (see \cref{exa:usual-likelihood}). Thus it has a unique minimizer over the geodesically convex domain $\P$.
 
 The estimator $\widehat{\Theta}^\alpha_x$ can be approximately computed using the flip-flop algorithm (as in \cref{alg:flip-flop}) with $\rho$ replaced by $\tilde{\rho}$.
 Due to the special form of $\tilde{\rho}$, theone need not look at the entirety of $\tilde{\rho}$ to perform each step of the flip-flop algorithm.
@@ -2534,16 +2535,12 @@ Let $A_1,\dots,A_N,A$ be independent $n \times m$ random matrices with independe
 For any~$t \geq 2$, with probability at least $1 - t^{-\Omega(m+n)}$,
 \begin{align*}
   \norm*{\left(\sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}
-  \leq O\left( t^2 \sqrt{N} \bigl( \E \norm{A}_{\op} \bigr)^2 \right),
+  \leq O\left( t^2 \sqrt{N} ( m+n ) \right),
 \end{align*}
 where $\Pi$ denotes the orthogonal projection onto the traceless subspace of $\R^m \ot \R^m$, that is, onto the orthogonal complement of $\vect(I_m)$.
 \end{theorem}
 
-We first explain how \cref{thm:Pisier-expansion}, along with the following estimate of the operator norm of a standard Gaussian $n \times m$ random matrix~$A$ (see Theorem~5.32 in \cite{vershynin2010introduction}),
-\begin{equation}\label{eq:op norm upper bound}
-  \E \norm{A}_{\op} \leq \sqrt{n} + \sqrt{m},
-\end{equation}
-implies \cref{thm:hess-pisier}.
+We first explain how \cref{thm:Pisier-expansion} implies \cref{thm:hess-pisier}.
 
 \begin{proof}[Proof of \cref{thm:hess-pisier}]
 Choose $n=d_a$ and $m=d_b$.
@@ -2557,44 +2554,56 @@ Observe that
 = \norm{\Phi \circ \Pi}_{\op}.
 \end{align*}
 Here we identified $\Mat(m) \cong \R^m \ot \R^m$, so $\Pi$ identifies with the orthogonal projection onto the traceless matrices, and we used that $\norm{\Pi(H)}_F \leq \norm{H}_F$, since $\Pi$ is an orthogonal projection.
-Using \cref{eq:vec rep,thm:Pisier-expansion}, it follows that
+Using \cref{eq:vec rep,thm:Pisier-expansion}, the result follows as
 \begin{align*}
-  \norm{\Phi_A}_0 \leq O\left( t^2 \sqrt{N} \bigl( \E \norm{A}_{\op} \bigr)^2 \right),
+  \norm{\Phi_A}_0 \leq O\left( t^2 \sqrt{N} (m+n) \right),
 \end{align*}
-with the desired probability.
-Using \cref{eq:op norm upper bound}, we can bound the right-hand side operator norm,
-\begin{align*}
-  \bigl( \E \norm{A}_{\op} \bigr)^2
-= O\left( \left( \sqrt{n} + \sqrt{m} \right)^2 \right)
-= O\left(n+m\right),
-\end{align*}
-which concludes the proof.
+% with the desired probability.
+% Using \cref{eq:op norm upper bound}, we can bound the right-hand side operator norm,
+% \begin{align*}
+%   \bigl( \E \norm{A}_{\op} \bigr)^2
+% = O\left( \left( \sqrt{n} + \sqrt{m} \right)^2 \right)
+% = O\left(n+m\right),
+% \end{align*}
+% which concludes the proof.
 \end{proof}
 
 In the remainder we discuss the proof of \cref{thm:Pisier-expansion}.
 % Our setting required the result on rectangular matrices with strong error bounds \MW{$\leftarrow$ Should mention this at the beginning of the appendix instead of just talking about a `slightly different language'.}, so we follow the proof in \cite{pisier2012grothendieck} with these minor modifications and claim no originality.
 The proof proceeds by a symmetrization trick, followed by the trace method.
-We will first state a necessary concentration result and then give the proof of \cref{thm:Pisier-expansion}.
+We first state some relevant bounds on Gaussian random variables and then give the proof of \cref{thm:Pisier-expansion}.
 
-\begin{theorem}[Theorem~1.5 and~(1.3) in \cite{P86}]\label{thm:banach conc}
+We will often use the following estimate of the operator norm of a standard Gaussian $n \times m$ random matrix~$A$ (see Theorem~5.32 in \cite{vershynin2010introduction}),
+\begin{equation}\label{eq:op norm upper bound}
+  \E \norm{A}_{\op} \leq \sqrt{n} + \sqrt{m}  . 
+\end{equation}
+
+\begin{theorem}\label{thm:banach conc}
 Let $A$ be a centered Gaussian random variable that takes values in a separable Banach space with norm $\|\cdot\|$.
 Then $\|A\|$ satisfies the concentration and moment inequalities below with parameter $\sigma^2 := \sup \{ \E \langle \xi, A \rangle^{2} \mid \|\xi\|_{*} \leq 1 \}$, where $\|\cdot\|_{*}$ denotes the dual norm.
 \[ \forall t > 0 \colon \quad \Pr\Bigl( \abs[\big]{\norm A - \E \norm A} \geq t\Bigr) \leq 2 \exp\Bigl( - \frac{\Omega(t^2)}{\sigma^{2}}\Bigr)  , \qquad \text{and}  \]
 \begin{equation}\label{eq:conc via moments}
-  \forall p \geq 2 \colon \quad (\E \|A\|^{p})^{\frac{1}{p}} \leq \E \|A\| + O \left( \sqrt{\frac{p}{\sigma^{2}}} \right).
+  \forall p \geq 1 \colon \quad \E \|A\|^{p} \leq (2 \E \|A\|)^{p}  + O ( \sigma \sqrt{p} )^{p}.
 \end{equation}
-\MW{Not exactly the statement of the Lemma in Vershynin. $\norm A$ vs $\norm A - \E \norm A$, $p\geq1$ vs $p\geq 2$ -- but in particular the constant $\sigma$ should be in the numerator of \cref{eq:conc via moments}?}
+% \MW{Not exactly the statement of the Lemma in Vershynin. $\norm A$ vs $\norm A - \E \norm A$, $p\geq1$ vs $p\geq 2$ -- but in particular the constant $\sigma$ should be in the numerator of \cref{eq:conc via moments}?}
 \end{theorem}
+\begin{proof}
+The first statement on concentration is exactly Theorem~1.5 in \cite{P86}. For the second, we consider random variable $X := \frac{1}{\sigma} (\|A\| - \E \|A\| )$. Then the equivalence in Lemma 5.5 of \cite{vershynin2010introduction} gives the moment bound
+\[ ( \E |X|^{p} )^{1/p} = \sigma^{-1} \Big( \E \Big| \|A\| - \E \|A\| \Big|^{p} \Big)^{1/p} \leq O(\sqrt{p}) .      \]
+The moment bound in the theorem now follows by rearranging as
+\[ \E \|A\|^{p} = \E \Big( \E \|A\| + \sigma X  \Big)^{p} \leq 2^{p} \Big( (\E \|A\|)^{p} + O( \sigma \sqrt{p} )^{p} \Big)  ,  \]
+where the last step was by the simple inequality $(a+b)^{p} \leq 2^{p} (|a|^{p} + |b|^{p})$. 
+\end{proof}
 
-\begin{remark}
-The concentration inequalities and moment bounds in \cref{thm:banach conc} are related to the notion of sub-Gaussian random variables (see Lemma 5.5 of \cite{vershynin2010introduction}), and are often used in random matrix theory. 
-\end{remark}
+% \begin{remark}
+% The concentration inequalities and moment bounds in \cref{thm:banach conc} are related to the notion of sub-Gaussian random variables (see Lemma 5.5 of \cite{vershynin2010introduction}) which are often used in random matrix theory. 
+% \end{remark}
 
 Below, we calculate the $\sigma^{2}$ parameter in \cref{thm:banach conc} with regards to our random matrix setting. 
 
 \begin{corollary}\label{lem:opNormSubG}
-Let $A$ be an $n \times m$ matrix with independent standard Gaussian entries.
-Then $\norm{A}_{\op}$ is sub-Gaussian with parameter $\sigma^{2} = 1$. \MW{See sub-Gaussian comment above.}
+Let $A$ be an $n \times m$ matrix with independent standard Gaussian entries. Then the random variable $\norm{A}_{\op}$ satisfies the conclusions of \cref{thm:banach conc} with $\sigma^{2} = 1$. 
+% \MW{See sub-Gaussian comment above.}
 \end{corollary}
 \begin{proof}
 Note that the dual norm is the trace norm~$\norm{\cdot}_{\operatorname{tr}}$, hence the concentration parameter can be estimated as
@@ -2607,6 +2616,7 @@ Note that the dual norm is the trace norm~$\norm{\cdot}_{\operatorname{tr}}$, he
 where we first used that $\braket{\xi,A}$ is distributed the same as $\norm\xi_F A_{11}$ by orthogonal invariance, and then that the trace norm dominates the Frobenius norm, with equality attained for example by $\xi = E_{11}$.
 \end{proof}
 
+\AR{I think we don't need this lower bound anymore if we just bound by $m+n$ instead of $\E\|A\|_{\op}^{2}$}. 
 We can now prove a lower bound that complements \cref{eq:op norm upper bound}.
 
 \begin{lemma}\label{lem:op norm lower bound}
@@ -2715,44 +2725,53 @@ To bound the right-hand side, we use \cref{thm:banach conc}, applied to the rand
 Then, $\sigma^2=1$, as computed in \cref{lem:opNormSubG}, and we find that
 \begin{align*}
 \E \norm*{\left( \sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^{2q}
-\leq (4 N)^q m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}.
+\leq (4 N)^q m^2 \Bigl( (2 \E\norm A_{\op})^{2q} + (C \sqrt{q})^{2q} \Bigr)^{2}.
 \end{align*}
-where~$C>0$ is a universal constant implied by the big-$O$ notation in \cref{eq:conc via moments}.
-Finally, we can use Markov's inequality to see that, for some large universal constant $C' \geq 1$ that we choose later, the event
+where~$C>0$ is a universal constant implied by the big-$O$ notation in \cref{eq:conc via moments}. 
+We can bound the first term $\E \norm{A}_{\op} \leq \sqrt{m}+\sqrt{n}$ by \cref{eq:op norm upper bound}, so for $q = 2(m + n)$, we can upper bound the mean by
+\begin{align*}
+\E \norm*{\left( \sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^{2q}
+\leq 4 m^2 \Big( (\max\{2, C\})^{2} \cdot q \cdot \sqrt{ 4 N }\Big)^{2q} .
+\end{align*}
+Finally, we can use Markov's inequality to see that, for some large universal constant $C' \geq 2 \max\{2, C \}$, the event
 \begin{align}\label{eq:desired event}
   \norm*{\left(\sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}
-  \leq (C' t)^2 \sqrt{4 N} \bigl( \E \norm{A}_{\op} \bigr)^2
+  \leq (C' t)^2 \cdot (m+n) \cdot \sqrt{4 N} 
 \end{align}
 holds up to failure probability at most
 \begin{align*}
-  \frac{\E \norm*{\left(\sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^{2q}}{\left( (C' t)^2 \sqrt{4 N} \bigl( \E \norm{A}_{\op} \bigr)^2 \right)^{2q}}
-\leq % \frac{2 N^q m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(2C')^{4q} t^{4q} N^q \bigl( \E \norm{A}_{\op} \bigr)^{4q}} =
+  4 m^2 \left( \frac{(\max\{2, C\})^{2} \cdot q \cdot \sqrt{ 4 N } }{(C' t)^2 \cdot (m+n) \cdot \sqrt{4 N}} \right)^{2q}
+  \leq 4 m^2 (2t)^{-2q} \leq t^{-\Omega(m+n)} , 
+%   \frac{(4 N)^q m^2 \cdot 4 (\max\{2, C\})^{4q} q^{2q}}{\left( (C' t)^2 \sqrt{4 N} (m+n) \right)^{2q}}
+% \leq \frac{2 N^q m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(2C')^{4q} t^{4q} N^q \bigl( \E \norm{A}_{\op} \bigr)^{4q}} =
   % \frac{m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(C' t)^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}}.
   % \frac{m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{\bigl( C' t \, \E \norm{A}_{\op} \bigr)^{4q}}.
-  m^2 \left( \frac{\E\norm A_{\op} + C \sqrt{q}}{C' t \, \E \norm{A}_{\op}} \right)^{4q}.
+%   m^2 \frac{\Bigl( (2 \E\norm A_{\op})^{2q} + (C \sqrt{q})^{2q} \Bigr)^{2}}{(C' t \, \E \norm{A}_{\op})^{4q}}.
 \end{align*}
-We choose $q = \max\{1, (C^{-1} \E \norm{A}_{\op})^{2} \}$, which by \cref{lem:op norm lower bound} is $\Omega(m + n)$.
-We now have two cases.
-If $\E \norm{A}_{\op} \leq C$, and therefore $q = 1$, then we can bound the failure probability as
-\begin{align*}
-  m^2 \left( \frac{\E\norm A_{\op} + C \sqrt{q}}{C' t \, \E \norm{A}_{\op}} \right)^{4q}
-\leq m^2 \left( \frac{2C}{C' t \, \E \norm{A}_{\op}} \right)^{4q}
-\leq m^2 t^{-4q},
-\end{align*}
-where the second inequality follows by choosing $C'$ large enough, as $\E\norm A_{\op}$ is bounded below by a universal constant (according to \cref{lem:op norm lower bound}).
-If instead $C \sqrt{q} \leq \E \norm{A}_{\op}$, then we bound the failure probability as
-\begin{align*}
-  m^2 \left( \frac{\E\norm A_{\op} + C \sqrt{q}}{C' t \, \E \norm{A}_{\op}} \right)^{4q}
-\leq m^2 \left( \frac{2 \E\norm A_{\op}}{C' t \, \E \norm{A}_{\op}} \right)^{4q}
-= m^2 \left( \frac{2}{C' t} \right)^{4q}
-\leq m^2 t^{-4q}
-\end{align*}
-where the seond inequality follows by choosing~$C'\geq2$.
-Thus, in either case the event~\eqref{eq:desired event} holds up to a failure probability of at most
-\begin{align*}
-  m^2 t^{-4q} = t^{-\Omega(m+n)},
-\end{align*}
-where we used that $q = \Omega(m + n)$ as well as the fact that $t\geq2$, so the prefactor $m^{2}$ can be absorbed at the cost of slightly changing the constant in the exponent.
+  where the first step was by our choice of $q = 2(m+n)$ and the assumption that $C' \geq 2 \max\{2, C \}$, and the final inequality was by the fact that $t\geq2$, so the prefactor $4 m^{2}$ can be absorbed at the cost of slightly changing the constant in the exponent.
+
+% We choose $q = \max\{1, (C^{-1} \E \norm{A}_{\op})^{2} \}$, which by \cref{lem:op norm lower bound} is $\Omega(m + n)$.
+% We now have two cases.
+% If $\E \norm{A}_{\op} \leq C$, and therefore $q = 1$, then we can bound the failure probability as
+% \begin{align*}
+%   m^2 \left( \frac{\E\norm A_{\op} + C \sqrt{q}}{C' t \, \E \norm{A}_{\op}} \right)^{4q}
+% \leq m^2 \left( \frac{2C}{C' t \, \E \norm{A}_{\op}} \right)^{4q}
+% \leq m^2 t^{-4q},
+% \end{align*}
+% where the second inequality follows by choosing $C'$ large enough, as $\E\norm A_{\op}$ is bounded below by a universal constant (according to \cref{lem:op norm lower bound}).
+% If instead $C \sqrt{q} \leq \E \norm{A}_{\op}$, then we bound the failure probability as
+% \begin{align*}
+%   m^2 \left( \frac{\E\norm A_{\op} + C \sqrt{q}}{C' t \, \E \norm{A}_{\op}} \right)^{4q}
+% \leq m^2 \left( \frac{2 \E\norm A_{\op}}{C' t \, \E \norm{A}_{\op}} \right)^{4q}
+% = m^2 \left( \frac{2}{C' t} \right)^{4q}
+% \leq m^2 t^{-4q}
+% \end{align*}
+% where the seond inequality follows by choosing~$C'\geq2$.
+% Thus, in either case the event~\eqref{eq:desired event} holds up to a failure probability of at most
+% \begin{align*}
+%   m^2 t^{-4q} = t^{-\Omega(m+n)},
+% \end{align*}
+% where we used that $q = \Omega(m + n)$ as well as the fact that $t\geq2$, so the prefactor $m^{2}$ can be absorbed at the cost of slightly changing the constant in the exponent.
 \end{proof}
 
 
@@ -2763,13 +2782,15 @@ where we used that $q = \Omega(m + n)$ as well as the fact that $t\geq2$, so the
 In this appendix we give a proof of \cref{convexRobustness}, which shows that strong convexity at a particular point implies strong convexity nearby.
 First note that by \cref{remark:hessian-everywhere}, we have $\nabla^2 f_\samp(\Theta) = \nabla^2 f_{\samp'}$ where $\samp' = \Theta^{1/2} \samp$.
 Thus we need only bound the difference between $f_\samp$ and $f_{\samp'}$ for $\|\log \Theta\|_{\op}$ small, $\Theta \in \P$.
-For a matrix $\delta$ in $\Mat(d_a)$, we adopt the abuse of notation
-$$e^{\delta_{(a)}} = I_{d_1} \otimes \cdots \otimes I_{d_{a-1}} \otimes e^{\delta} \otimes I_{d_{a+1}} \otimes \cdots \otimes I_{d_k}.$$
-We will write $\Theta^{1/2}$ as $e^{\delta}$, where $\delta = \sum_{a =1}^k \delta_{(a)}$.
-\MW{$\leftarrow$ $\delta$ is already a matrix in $\Mat(d_a)$, now it is a matrix tuple}
-We now have $\Theta^{1/2} = e^{\delta} = \otimes_{a = 1}^k e^{\delta_a}$, and $\frac{1}{2}\|\log \Theta\|_{\op} = \|\delta\|_{\op} = \sum_{a =1}^k \|\delta_{a}\|_{\op}$.
-To bound the difference between $\nabla^2 f_{x'}$ and $\nabla^2 f_x$, we will show each component of the Hessian $\nabla f_{x'}$ (as presented in \cref{lem:hessian}) only changes (from $\nabla f_x$) by a small amount under the perturbation $x' := e^\delta x \leftarrow x$.
-In particular we will give bounds on each block under each component-wise perturbation $e^{\delta_{(a)}}x \leftarrow x$, and write the overall perturbation as a sequence of such component-wise perturbations. For convenience, we adopt the short-hand
+For a matrix $\delta_{a}$ in $\Mat(d_a)$, we use
+$e^{(\delta_{a})_{(a)}}$ to denote 
+$$ e^{(\delta_{a})_{(a)}} = I_{d_1} \otimes \cdots \otimes I_{d_{a-1}} \otimes e^{\delta} \otimes I_{d_{a+1}} \otimes \cdots \otimes I_{d_k}.$$
+We will write $\Theta^{1/2}$ as $e^{\delta}$, where $\delta = \sum_{a=1}^k (\delta_{a})_{(a)}$ so that 
+%\MW{$\leftarrow$ $\delta$ is already a matrix in $\Mat(d_a)$, now it is a matrix tuple}
+We now have 
+$\Theta^{1/2} = e^{\delta} = \otimes_{a = 1}^k e^{\delta_a}$, and $\frac{1}{2}\|\log \Theta\|_{\op} = \|\delta\|_{\op} = \sum_{a =1}^k \|\delta_{a}\|_{\op}$.
+To bound the difference between $\nabla^2 f_{x'}$ and $\nabla^2 f_x$, we will show each component of the Hessian $\nabla f_{x'}$ (as presented in \cref{lem:hessian}) only changes (from $\nabla f_x$) by a small amount under the perturbation $x \to x' := e^\delta x$.
+In particular we will give bounds on each block under each component-wise perturbation $x \to e^{(\delta_{a})_{(a)}} x$, and write the overall perturbation as a sequence of such component-wise perturbations. For convenience, we adopt the short-hand
 $$ \rho_x:= \frac{1}{nD} x x^T.$$
 
 
