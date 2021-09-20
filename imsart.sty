@@ -65,7 +65,7 @@
 % Requires Latex2e, ver.2000.06
 %
 \def\imsfmt@name{imsart}
-\def\imsfmt@version{2020/11/02}
+\def\imsfmt@version{2021/08/04}
 %
 \ProvidesFile{imsart.sty}[\imsfmt@version\space IMS article style]
 %
@@ -166,7 +166,6 @@
     \def\journal@name{Probability Surveys }%
     \def\journal@issn{ISSN: 1549-5787}%
     \def\journal@url{https://imstat.org/journals-and-publications/probability-surveys/}%
-    \AtEndOfPackage{\let\affiliation\@gobble}%
     }
 %
 % Information about journals
@@ -175,7 +174,6 @@
     \def\journal@name{Statistics Surveys }%
     \def\journal@issn{ISSN: 1935-7516}%
     \def\journal@url{https://imstat.org/journals-and-publications/statistics-surveys/}%
-    \AtEndOfPackage{\let\affiliation\@gobble}%
     }
 %
 % Information about journals
@@ -184,7 +182,6 @@
     \def\journal@name{Electronic Journal of Statistics }%
     \def\journal@issn{ISSN: 1935-7524}%
     \def\journal@url{https://imstat.org/journals-and-publications/electronic-journal-of-statistics/}%
-    \AtEndOfPackage{\let\affiliation\@gobble}%
     }
 %
 % Options for the IMS journals:
@@ -203,7 +200,7 @@
     \@autosecdottrue
     \@print@bid@doitrue
     \@updated@thanksreftrue
-}
+    }
 %
 \DeclareOption{aop}{%
     \def\journal@id{-aop}%
@@ -251,6 +248,12 @@
     \@autosecdottrue
     \@print@bid@doitrue
     \@updated@thanksreftrue
+    \AtBeginDocument{%
+        \@ifpackagewith{natbib}{number}{%
+            \@latex@error{Only author-year citations are allowed!
+                Please use the option 'authoryear' of 'natbib' package}{}%
+            }%
+        }%
     }
 %
 \DeclareOption{sts}{%
@@ -262,6 +265,7 @@
     \input{leqno.clo}% formula numbers at left
     \@amsmath@leqnotrue
     \@stslayouttrue
+    \@twocolumntrue
     \AtEndPreamble{\if@twocolumn\set@page@layout{528.62625pt}{702.75pt}\fi}%
     }
 %
@@ -272,8 +276,13 @@
     \set@page@layout{34pc}{574pt}%
     \@twosidetrue
     \@bjlayouttrue
-    \AtEndOfPackage{\let\affiliation\@gobble}%
     \@updated@thanksreftrue
+    \AtBeginDocument{%
+        \@ifpackagewith{natbib}{authoryear}{%
+            \@latex@error{Only numerical citations are allowed!
+                Please use the option 'numbers' of 'natbib' package}{}%
+            }%
+        }%
     }
 %
 \DeclareOption{aihp}{%
@@ -284,9 +293,14 @@
     \set@page@layout{169.475mm}{56pc}%
     \@twosidetrue
     \@aihplayouttrue
-    \AtEndOfPackage{\let\affiliation\@gobble}%
     \@updated@thanksreftrue
-}
+    \AtBeginDocument{%
+        \@ifpackagewith{natbib}{authoryear}{%
+            \@latex@error{Only numerical citations are allowed!
+                Please use the option 'numbers' of 'natbib' package}{}%
+            }%
+        }%
+    }
 %
 \DeclareOption{bjps}{%
     \def\journal@id{-bjps}%
@@ -296,7 +310,6 @@
     \@twosidetrue
     \@historyasfootnotetrue
     \@keywordsasfootnotetrue
-    \@addressatendtrue
     \@bjpslayouttrue
     \@updated@thanksreftrue
     }
@@ -353,6 +366,21 @@
         \set@preedit@page@layout
         }%
     \numberlines@false
+    }
+%
+% for preprint or supplement articles - removes journal info
+\newif\if@imsart@preprint \@imsart@preprintfalse
+\ifcsundef{imsart@preprint@settings}%
+    {%
+        \def\imsart@preprint@settings{%
+            \global\@imsart@preprinttrue
+            \let\info@line\@empty
+            \numberlines@false
+            }%
+    }%
+    {}
+\DeclareOption{preprint}{%
+    \imsart@preprint@settings
     }
 %
 % Initiate some info:
@@ -448,6 +476,7 @@
     \fi
     \if@bjpslayout
         \set@page@layout{30pc}{550pt}% 30pc * 46 line
+        \@addressatendtrue
     \fi
     \if@stslayout
         \set@page@layout{32pc}{658pt}% 32pc * 55 line
@@ -800,6 +829,11 @@
 \newif\ifnot@ead@star
 \newif\if@printead@opt
 %
+\def\printead@presep{}
+\def\printead@text{}
+\define@key{printead}{text}{\def\printead@text{#1}}
+\define@key{printead}{presep}{\def\printead@presep{#1}}
+%
 \DeclareRobustCommand{\printead}{%
     \@ifstar{\not@ead@starfalse\@printead}{\not@ead@startrue\@printead}%
     }
@@ -810,8 +844,14 @@
 %
 \def\@@printead[#1]#2{{%
     \if@printead@opt%[]
-        \def\ims@href@text{#1}%
-        \not@ead@starfalse
+        \setkeys{printead}{#1}%
+        \printead@presep
+        \ifx\printead@text\@empty
+            \@printead@optfalse
+        \else
+            \def\safe@href@text{\printead@text}%
+            \not@ead@starfalse
+        \fi
     \fi
     \let\prev@ead@text\relax
     \let\@ead@sep\relax
@@ -1375,13 +1415,17 @@
 %
 % TEXT, etc.
 \setpkgattr{doi}{text}{\url@fmt{url: }{\ttfamily}{\paper@url}{\paper@url}}
-\setpkgattr{copyright}{text}{%
-    \url@fmt{}{\bfseries}{\journal@name}{\journal@url}\break
-    \@ifundefined{volume@title}{}{\textbf{\volume@title}\break}%
-    \@ifnonempty{\@volume\@pubyear\@pagerange\break}%
-    \@ifnonempty{\journal@issn\break}%
-    \doi@text
-    }
+\if@imsart@preprint
+    \setpkgattr{copyright}{text}{}
+\else
+    \setpkgattr{copyright}{text}{%
+        \url@fmt{}{\bfseries}{\journal@name}{\journal@url}\break
+        \@ifundefined{volume@title}{}{\textbf{\volume@title}\break}%
+        \@ifnonempty{\@volume\@pubyear\@pagerange\break}%
+        \@ifnonempty{\journal@issn\break}%
+        \doi@text
+        }
+\fi
 %
 \setpkgattr{infoline}{text}{%
     \lower12pt%
@@ -1568,6 +1612,10 @@
     \thanksref{CoRreCtIoNnOtE}%
     \g@addto@macro\title@endhook{\thankstext{CoRreCtIoNnOtE}{#1}}%
     }
+\def\title@supportinfo#1{%
+    \thanksref{SuPpOrTiNfO}%
+    \g@addto@macro\title@endhook{\thankstext{SuPpOrTiNfO}{#1}}%
+    }
 \def\title#1{%
     \vglue\title@skip
     % check if we are in {frontmatter}
@@ -1576,6 +1624,7 @@
     \bgroup
         \no@harm
         \let\correctionnote\@gobble
+        \let\support\@gobble
         \xdef\@argi{#1}%
         \xdef\@title{#1}%
     \egroup
@@ -1585,6 +1634,7 @@
     \fi
     \bgroup
         \let\correctionnote\title@correctionnote
+        \let\support\title@supportinfo
         \title@style\title@size\title@case{#1}\par
     \egroup
     \title@endhook
@@ -1734,6 +1784,7 @@
         #2\par
     \egroup
     }
+\AtEndOfPackage{\def\affiliation#1{\@latex@error{Command '\string\affiliation' is no longer in use}{}}}%
 %
 % CONTRIBUTOR
 % write as index entry:
@@ -2335,13 +2386,18 @@
         \csdef{copyrightowner@text}{International Society for Bayesian Analysis}%
         \def\journal@issn{$\copyright$~\ims@href{https://www.imstat.org}{\copyrightowner@text}, 
             \@copyrightyear}%
-        \setpkgattr{issuedata}{text}{%
-            \ims@href{\journal@url}{\journal@name}%
-            \space\@pubyear
-            \hskip5pc%
-            \@ifnonempty{\textbf{\@volume}, Number \@issue, pp. \@pagerange}%
-            }%
-        \setpkgattr{copyright}{text}{\copyright@owner \hfill \doi@text}%
+        \if@imsart@preprint
+            \setpkgattr{issuedata}{text}{}
+            \setpkgattr{copyright}{text}{}
+        \else
+            \setpkgattr{issuedata}{text}{%
+                \ims@href{\journal@url}{\journal@name}%
+                \space\@pubyear
+                \hskip5pc%
+                \@ifnonempty{\textbf{\@volume}, Number \@issue, pp. \@pagerange}%
+                }%
+            \setpkgattr{copyright}{text}{\copyright@owner \hfill \doi@text}%
+        \fi
         \setpkgattr{copyright}{owner}{$\copyright$~\@copyrightyear \copyrightowner@text}%
         }
     \def\@floatboxreset{%
@@ -2376,19 +2432,6 @@
     \AtBeginDocument{%
         \@ifpackageloaded{amsmath}{\allowdisplaybreaks}{}%
         }
-    % Acknowledgements
-    \setpkgattr{acknowledgement}{name}{Acknowledgments}
-    \setpkgattr{acknowledgement}{size}{\small}
-    \setpkgattr{acknowledgementname}{fmt}{\noindent\normalfont\sffamily\bfseries}
-    \newenvironment{acknowledgement}%
-        {%
-            \vskip0.5\baselineskip
-            \acknowledgement@size
-            {\acknowledgementname@fmt\acknowledgement@name}\par
-            \begingroup\parindent 0pt\parskip 0.5\baselineskip
-        }%
-        {\endgroup}
-    %
     \ifcsvoid{bibdir}{\gdef\bibdir{}}{}
     \def\bibliography#1{%
         \if@filesw
@@ -2700,10 +2743,14 @@
     %
     \setpkgattr{author}{prefix}{By~}
     %
-    \setpkgattr{copyright}{text}{%
-        \url@fmt{}{\itshape}{\journal@name}{\journal@url}\break
-        \@ifnonempty{\@copyrightyear\@volume\@issue\@pagerange\break}\doi@text
-        }
+    \if@imsart@preprint
+        \setpkgattr{copyright}{text}{}
+    \else
+        \setpkgattr{copyright}{text}{%
+            \url@fmt{}{\itshape}{\journal@name}{\journal@url}\break
+            \@ifnonempty{\@copyrightyear\@volume\@issue\@pagerange\break}\doi@text
+            }
+    \fi
     %
     \setpkgattr{url}{text}{URL: }
     \setpkgattr{fullurl}{text}{URL: }
@@ -2778,6 +2825,9 @@
     \setlength\footskip{24\p@}
     \setlength\parskip{0\p@}
     \setlength\topskip{10\p@}
+    \setlength\maxdepth{.5\topskip}
+    \setlength\parindent{10\p@}
+    \sv@parindent=\parindent
     %
     \declaremathsizes@as@in@mathtime
     \DeclareMathSizes{\@xxivpt}{\@xxivpt}{16}{12}
@@ -3007,6 +3057,7 @@
     \setpkgattr{author}{size}{\normalsize}
     \setpkgattr{fnms}{size}{\uppercase}
     \setpkgattr{snm}{size}{\uppercase}
+    \let\inits@size\@gobble
     %
     \setpkgattr{address}{size}{\small\itshape}
     \setpkgattr{abstract}{size}{\small\upshape}
@@ -3020,8 +3071,12 @@
     \setpkgattr{footline}{size}{\footnotesize}
     %
     \setpkgattr{email}{text}{E-mail:~}
-    \setpkgattr{copyright}{text}{\url@fmt{}{\itshape}{\journal@name}{\journal@url}\ 
-        \textbf{\@volume}\@issue\@pubyear\ \@pagerange\\\doi@text}
+    \if@imsart@preprint
+        \setpkgattr{copyright}{text}{}
+    \else
+        \setpkgattr{copyright}{text}{\url@fmt{}{\itshape}{\journal@name}{\journal@url}\ 
+            \textbf{\@volume}\@issue\@pubyear\ \@pagerange\\\doi@text}
+    \fi
     \setpkgattr{history}{postfix}{}
     \setpkgattr{revised}{prefix}{ and revised~}
     \setpkgattr{keyword}{postfix}{}
@@ -3180,7 +3235,7 @@
     \setpkgattr{abstract}{width}{\textwidth}
     \setpkgattr{abstract}{indent}{\z@}
     \setpkgattr{keyword}{width}{\textwidth}
-    \setpkgattr{keyword}{indent}{\z@} %
+    \setpkgattr{keyword}{indent}{\z@}
     %
     % FRONT MATTER FONTS
     \setpkgattr{title}{size}{\huge}
@@ -3188,6 +3243,7 @@
     \setpkgattr{abstract}{size}{\small\upshape}
     \setpkgattr{keywordname}{size}{\itshape}
     \setpkgattr{thebibliography}{size}{\footnotesize}
+    \let\inits@size\@gobble
     \setcounter{tocdepth}{6}
     %
     \def\put@fmt@data{%
@@ -3334,20 +3390,35 @@
     \setpkgattr{abstractname}{skip}{.\enskip}
     %
     \setpkgattr{title}{size}{\Large\bfseries\mathversion{bold}}
-    \setpkgattr{address}{size}{\scriptsize}
     \setpkgattr{keywordname}{size}{\itshape}
     \setpkgattr{runninghead}{size}{\footnotesize}
     \setpkgattr{pagenumber}{size}{\small}
     \setpkgattr{thebibliography}{size}{\footnotesize}
     \setpkgattr{keyword}{postfix}{\unskip.}
+    \let\inits@size\@gobble
     %
-    \setpkgattr{copyright}{text}{\url@fmt{}{\itshape}{\journal@name}{\journal@url}\break
-        \@ifnonempty{\@volume\@pubyear\@pagerange\break}%
-        \@ifnonempty{\journal@issn\break}\doi@text
-        }%
-    \setpkgattr{email}{text}{E-mail: }
-    \setpkgattr{url}{text}{URL: }
-    \setpkgattr{fullurl}{text}{URL: }
+    \if@imsart@preprint
+        \setpkgattr{copyright}{text}{}%
+    \else
+        \setpkgattr{copyright}{text}{\url@fmt{}{\itshape}{\journal@name}{\journal@url}\break
+            \@ifnonempty{\@volume\@pubyear\@pagerange\break}%
+            \@ifnonempty{\journal@issn\break}\doi@text
+            }%
+    \fi
+    \if@old@layout
+        \setpkgattr{address}{size}{\scriptsize}
+        \setpkgattr{email}{text}{E-mail: }
+        \setpkgattr{url}{text}{URL: }
+        \setpkgattr{fullurl}{text}{URL: }
+    \else
+        \setpkgattr{address}{style}{\centering\normalfont}
+        \setpkgattr{address}{size}{\scriptsize\itshape}
+        \setpkgattr{ead}{size}{}
+        \setpkgattr{ead}{sep}{; }
+        \setpkgattr{email}{text}{}
+        \setpkgattr{url}{text}{}
+        \setpkgattr{fullurl}{text}{}
+    \fi
     \setcounter{tocdepth}{6}
     \def\thethanks{\@arabic\c@thanks}
     \def\theaddressref{\alph{addressref}}
@@ -3938,6 +4009,27 @@
 \else
     \AtBeginDocument{\@ifpackageloaded{amsthm}{\set@amsthm}{}}
 \fi
+%
+% Acknowledgements
+%
+\def\acknowledgementsname{Acknowledgments}
+\newenvironment{acks}[1][\acknowledgementsname]{\section*{#1}}{\par}
+\let\ack\undefined \let\endack\undefined
+\if@balayout
+    \renewenvironment{acks}[1][\acknowledgementsname]%
+        {%
+            \vskip0.5\baselineskip
+            \small
+            {\noindent\normalfont\sffamily\bfseries\acknowledgementsname}\par
+            \begingroup\parindent 0pt\parskip 0.5\baselineskip
+        }%
+        {\endgroup}
+\fi
+%
+% Funding
+% 
+\def\fundingname{Funding}
+\newenvironment{funding}[1][\fundingname]{\begin{acks}[\fundingname]}{\end{acks}}
 %
 % thebibliography, loading natbib
 %

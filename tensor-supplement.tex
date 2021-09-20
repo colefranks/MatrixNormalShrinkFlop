@@ -1,0 +1,215 @@
+\documentclass[aos]{imsart}
+\pdfoutput=1
+\RequirePackage[english]{babel}
+\RequirePackage[ascii]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{microtype,amsthm,amsmath,amsfonts,amssymb,mathtools,braket,bm,xcolor,float}
+\RequirePackage[authoryear]{natbib}  % \RequirePackage[numbers]{natbib}
+\RequirePackage[bookmarksnumbered,colorlinks,citecolor=blue,urlcolor=blue,linkcolor=blue,anchorcolor=green,breaklinks=true]{hyperref}
+\RequirePackage{graphicx}
+\RequirePackage[capitalize]{cleveref}
+\RequirePackage{silence}
+\WarningFilter{latexfont}{Font shape}
+\WarningFilter{latexfont}{Size substitutions}
+
+\usepackage{caption}
+\usepackage{subcaption}
+
+\startlocaldefs
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{innercustomthm}{Theorem}
+\newenvironment{customthm}[1]{\renewcommand\theinnercustomthm{#1}\innercustomthm}{\endinnercustomthm}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{prop}[theorem]{Proposition}
+% \newtheorem{obs}[theorem]{Observation}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{fact}[theorem]{Fact}
+% \newtheorem{claim}[theorem]{Claim}
+\theoremstyle{definition}
+\newtheorem*{definition}{Definition}
+\floatstyle{boxed}\newfloat{Algorithm}{ht}{alg}
+\crefname{Algorithm}{Algorithm}{Algorithms}
+\numberwithin{equation}{section}
+% \allowdisplaybreaks[4]
+\urlstyle{same}
+
+\DeclareMathOperator{\Lie}{Lie}
+\DeclareMathOperator{\Lin}{L}
+\DeclareMathOperator{\ope}{op}
+\DeclareMathOperator{\poly}{poly}
+\DeclareMathOperator{\op}{op}
+\DeclareMathOperator{\vol}{vol}
+\DeclareMathOperator{\cut}{cut}
+\DeclareMathOperator{\ch}{ch}
+
+\DeclareMathOperator{\Mat}{Mat}
+\DeclareMathOperator{\GL}{GL}
+\DeclareMathOperator{\tr}{Tr}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\PD}{PD}
+\DeclareMathOperator{\SSPD}{SPD}
+\DeclareMathOperator{\vect}{vec}
+
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+\DeclarePairedDelimiter{\ip}{\langle}{\rangle}
+
+\newcommand{\R}{{\mathbb{R}}}
+\renewcommand{\P}{{\mathbb{P}}}
+\newcommand{\C}{{\mathbb{C}}}
+\renewcommand{\H}{{\mathbb{H}}}
+\newcommand{\G}{{\mathbb{G}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\renewcommand{\S}{\mathbb{S}}
+\newcommand{\otheta}{\overline{\Theta}}
+\newcommand{\htheta}{\widehat{\Theta}}
+\newcommand{\oZ}{\overline{Z}}
+\newcommand{\ot}{\otimes}
+\renewcommand{\vec}{\bm}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\GG}{\mathcal{G}}
+\newcommand{\SL}{\operatorname{SL}}
+\newcommand{\Herm}{\operatorname{Herm}}
+\newcommand{\Sym}{\mathcal{S}}
+\newcommand{\smallSym}{S}
+\newcommand{\SPD}{\mathbb{P}}
+\newcommand{\samp}{x}
+\newcommand{\rv}{x}
+\newcommand{\ef}{f}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\PP}{\mathcal{P}}
+% \newcommand{\RR}{\mathcal{R}}
+% \newcommand{\CC}{\mathcal{C}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\II}{\mathcal{I}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\AP}{\mathcal{AP}}
+\newcommand{\eqdef}{:=}
+\newcommand{\maps}{\colon}
+\newcommand{\email}[1]{\href{mailto:#1}{\texttt{#1}}}
+
+\def\dmin{d_{\min}}
+\def\dmax{d_{\max}}
+
+\newcommand{\CF}[1]{{\color{purple}[CF: #1]}}
+\newcommand{\AR}[1]{{\color{orange}[AR: #1]}}
+\newcommand{\RMO}[1]{{\color{olive}[RMO: #1]}}
+\newcommand{\MW}[1]{{\color{red}[MW: #1]}}
+\newcommand{\TODO}[1]{{\color{blue}[TODO: #1]}}
+
+
+\newcommand{\mitn}{\footnotemark[6]}
+\newcommand{\nyun}{\footnotemark[7]}
+
+\endlocaldefs
+
+\begin{document}
+%=============================================================================
+\begin{frontmatter}
+\title{Near optimal sample complexity for matrix and tensor normal models via geodesic convexity}
+\runtitle{Near optimal sample complexity for matrix and tensor normal models}
+%=============================================================================
+\begin{aug}
+\author[A]{\fnms{Cole} \snm{Franks}\corref{}\ead[label=e1]{franks@mit.edu}},
+\author[B]{\fnms{Rafael} \snm{Oliveira}\corref{}\ead[label=e2]{second@somewhere.com}},
+\author[B]{\fnms{Akshay} \snm{Ramachandran}\corref{}\ead[label=e3]{third@somewhere.com}} \\ \and
+\author[C]{\fnms{Michael} \snm{Walter}\corref{}\ead[label=e4]{m.walter@uva.nl}}
+\runauthor{C.\ Franks, R.\ Oliveira, A.\ Ramachandran \and M.\ Walter}
+\affiliation[A]{Massachusetts Institute of Technology} %, \printead{e1}
+\affiliation[B]{University of Waterloo} %, \printead{e2,e3}}
+\affiliation[C]{University of Amsterdam} %, \printead{e4}}
+\end{aug}
+
+
+
+
+
+\end{frontmatter}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Please use \tableofcontents for articles %%
+%% with 50 pages and more                   %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Main text entry area:
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Single Appendix:                         %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{appendix}
+%\section*{???}%% if no title is needed, leave empty \section*{}.
+%\end{appendix}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Multiple Appendixes:                     %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{appendix}
+%\section{???}
+%
+%\section{???}
+%
+%\end{appendix}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Support information, if any,             %%
+%% should be provided in the                %%
+%% Acknowledgements section.                %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{acks}[Acknowledgments]
+% The authors would like to thank ...
+%\end{acks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Funding information, if any,             %%
+%% should be provided in the                %%
+%% funding section.                         %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{funding}
+% The first author was supported by ...
+%
+% The second author was supported in part by ...
+%\end{funding}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Supplementary Material, if any, should   %%
+%% be provided in {supplement} environment  %%
+%% with title and short description.        %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{supplement}
+\stitle{Supplementary material for nearly optimal sample complexity for matrix and tensor normal models}
+\sdescription{???.}
+\end{supplement}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                  The Bibliography                       %%
+%%                                                         %%
+%%  imsart-???.bst  will be used to                        %%
+%%  create a .BBL file for submission.                     %%
+%%                                                         %%
+%%  Note that the displayed Bibliography will not          %%
+%%  necessarily be rendered by Latex exactly as specified  %%
+%%  in the online Instructions for Authors.                %%
+%%                                                         %%
+%%  MR numbers will be added by VTeX.                      %%
+%%                                                         %%
+%%  Use \cite{...} to cite references in text.             %%
+%%                                                         %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% if your bibliography is in bibtex format, uncomment commands:
+%\bibliographystyle{imsart-number} % Style BST file (imsart-number.bst or imsart-nameyear.bst)
+%\bibliography{bibliography}       % Bibliography file (usually '*.bib')
+
+%% or include bibliography directly:
+% \begin{thebibliography}{}
+% \bibitem{b1}
+% \end{thebibliography}
+
+\end{document}
