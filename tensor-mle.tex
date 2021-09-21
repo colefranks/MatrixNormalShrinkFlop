@@ -175,25 +175,6 @@ The matrix normal model, the family of Gaussian matrix-variate distributions who
 \tableofcontents
 %=============================================================================
 
-\TODO{
-\begin{enumerate}
-\item Explain that the default is equal-determinant factors.
-\item \RMO{Read section 7, Appendix C}
-\end{enumerate}
-Polishing:
-\begin{enumerate}
-%\item Akshay's note on simplifying the proof of \cref{thm:tensor-convexity}: \AR{Can rephrase explicitly in terms of $\nabla^{2} F$ and rank-one term. Then \cref{prop:gradient-bound} gives $1-\eps$ lower bound on each diagonal block of $\nabla^{2} F$, offdiagPisier gives $\lambda$ bound on each off-diagonal block of $\nabla^{2} F$, and \cref{prop:gradient-bound} once again gives $k \eps^{2}$ bound on whole rank-one term.  }
-%\item \AR{Can improve the strong convexity stuff by a factor of two by using the projection to traceless on both sides of the inner product}
-\item \CF{for the readers' sake some justification is needed for why perturbing $\samp$ this is the same as considering the Hessian of our function at another point in $\SPD$. We'll probably have to discuss this earlier in the paper when we mention all the different perspectives for scaling, but for now a little reminder would help.}
-%\item Add some discussion for noise added to data.
-\item Before \cref{lem:expansion-convexity}, add explanation of what the marginals of $\Phi^{ab}$ are in terms of $\rho^{a}$ etc.
-\item \CF{We use inequalities like $\norm{I_a - e^{Z}}_F
-\leq 2 \norm{Z}_F$ for $\|Z\|_F \leq 1$ all the time; we should consolidate these inequalities.}
-\item \CF{\cref{cor:g-convex-components} is strange. it would more naturally be a lemma + a corollary, the lemma being for getting from geodesic to $\DF$ etc and the corollary for the bounds for the mle.}
-\item \CF{change appendix to supplement as per annals suggestion}
-\end{enumerate}
-}
-
 
 %=============================================================================
 \section{Introduction}
@@ -317,7 +298,6 @@ For functions $f,g:S \to \R$ for any set $S$, we say $f = O(g)$ if there is a co
 \section{Model and main results}\label{sec:main results}
 %=============================================================================
 In this section we define the matrix and tensor normal models and we state our main technical results.
-\RMO{same here}
 
 %-----------------------------------------------------------------------------
 \subsection{Matrix and tensor normal model}\label{subsec:model}
@@ -374,7 +354,7 @@ This is in similarity with the fact that the set of rank-1 matrices is not conve
 We may now state our result for the tensor normal models precisely.
 As mentioned in the introduction, we use the following natural distance measures.
 
-\begin{definition}
+\begin{definition}[Relative error]\label{dfn:relative-error}
 For positive definite matrices $A, B$, define their \emph{relative Frobenius error} (or \emph{Mahalanobis distance}) as
 \begin{align}\label{eq:def D_F}
   \DF(A \Vert B) = \norm{I - B^{-1/2} A B^{-1/2}}_F.
@@ -493,7 +473,7 @@ Our next results show that the flip-flop algorithm can efficiently compute the M
 \MW{Elaborate on the convention chosen for the Kronecker factors.}
 
 \newcommand{\TensorFlop}{
-	If $\htheta$ denotes the MLE estimator for $\Theta$, then provided $n = \Omega(k^2 \cdot \dmax^3/D)$ \MW{Better to use a universal constant over the somewhat ambiguous $\Omega$ notion.} , the flip-flop algorithm computes $\otheta$ with
+	Let $\htheta$ denote the MLE estimator for $\Theta$. There exsits a universal constant $C > 0$ such that,  provided $n = C \cdot k^2 \cdot \dmax^3/D$, the flip-flop algorithm computes $\otheta$ with
 	$$ \DF(\htheta_a \ \Vert  \ \otheta_a) \leq \eps $$
 	in $O(k \log(1/\eps))$ iterations with probability at least
 	$$ 1 - k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)} - 2k \cdot e^{- \Omega(nD/k \dmax^2)}.$$}
@@ -504,7 +484,7 @@ Our next results show that the flip-flop algorithm can efficiently compute the M
 
 \newcommand{\MatrixFlop}{
 Let $(\widehat{\Theta}_1,\widehat{\Theta}_2)$ denote the MLE for $(\Theta_1,\Theta_2)$.
-\MW{Above we write $d_1 \leq d_2$ instead of $\dmin,\dmax$. Should unify.}
+\MW{In \cref{thm:matrix-normal}, we write $d_1 \leq d_2$ instead of $\dmin,\dmax$. Should unify.}
 There exists a universal constant $\Gamma > 0$ such that when given
 $$n \geq \Gamma \cdot \dfrac{\dmax}{\dmin} \cdot \max\left\{ \log\left( \dfrac{\dmax}{\dmin} \right), \dfrac{\log^2 \dmin}{\varepsilon^2} \right\}$$
 samples in the matrix normal model, the flip-flop algorithm computes $(\overline{\Theta}_1,\overline{\Theta}_2)$ with
@@ -516,7 +496,7 @@ for $a\in\{1,2\}$ in $O\left(\dmax +  \log(1/\varepsilon) \right)$ iterations wi
 
 \begin{theorem}[Matrix normal flip-flop]\label{thm:matrix-flipflop}
 \MatrixFlop\end{theorem}
-As a corollary of \cref{thm:tensor-flipflop,thm:matrix-flipflop}, the output of the flip-flop algorithm with $O\left(\dmax +  \log n \right)$ \MW{still confused about the $\log n$} iterations is an efficiently computable estimator with the same statistical guarantees as shown for the MLE in in \cref{thm:tensor-frobenius,thm:matrix-normal} for the tensor and matrix normal models, respectively.
+As a corollary of \cref{thm:tensor-flipflop,thm:matrix-flipflop}, the output of the flip-flop algorithm with $O\left(\dmax + k \log(1/\varepsilon)  \right)$ iterations is an efficiently computable estimator with the same statistical guarantees as shown for the MLE in in \cref{thm:tensor-frobenius,thm:matrix-normal} for the tensor and matrix normal models, respectively.
 
 One may wonder why in the above theorems we consider the distances for the individual tensor factors and not the covariance matrix itself, but tight bounds for the covariance matrix itself follow from the above bounds (apart from the logarithmic factor in the matrix normal case and a constant factor in general).
 \MW{Does the `apart from...' refer to the tightness? If so, how about rephrasing to ``but bounds for ... follow which are tight apart from ...'' or similar?}
@@ -589,8 +569,8 @@ In other words, geodesic convexity simply means convexity in the ordinary Euclid
 \begin{align*}%\label{eq:obj via rho}
   f_x(\Theta) = \tr \rho \, \Theta - \frac1D \log \det \Theta.
 \end{align*}
-We claim that $f_x(\Theta)$ is always geodesically convex, and in fact \emph{strictly} geodesically convex whenever $\rho$ is invertible. Indeed, 
-$$ \partial^2_{t = 0} f_x(\sqrt{\Theta} e^{t H} \sqrt{\Theta}) = \tr \sqrt{\Theta} \rho \sqrt{\Theta} H^2 \geq 0 $$ 
+We claim that $f_x(\Theta)$ is always geodesically convex, and in fact \emph{strictly} geodesically convex whenever $\rho$ is invertible. Indeed,
+$$ \partial^2_{t = 0} f_x(\sqrt{\Theta} e^{t H} \sqrt{\Theta}) = \tr \sqrt{\Theta} \rho \sqrt{\Theta} H^2 \geq 0 $$
 with strict inequality whenever $\rho$ is invertible.
 
 \end{example}
@@ -1675,7 +1655,7 @@ Note also that $\tr \Phi_Y(I_{d_2}) = \tr \Phi_Y^*(I_{d_1}) = \|Y\|^2 = nD$. Thu
 
 \begin{lemma}[Concentration after flip-flop]\label{lem:flipflop-concentration}
 There is a universal constant $c>0$ such that the following holds.
-\MW{Just to be sure, $c$ could be pretty large (>1), right?}
+\MW{Just to be sure, $c$ (and hence $\eps$) could be pretty large (>1), right?}
 Let $X_1,\dots,X_n$ be random $d_1 \times d_2$ matrices with independent standard Gaussian entries, where $d_1 \leq d_2$.
 If $n \geq \frac{d_2}{d_1}$ and $\eps\geq c$, then for $\Phi_Y$ as in \cref{eq:one-step} we have, with probability at least $1 - \exp(- \Omega( \eps^2 d_{1}))$,
 \begin{align*}
@@ -1766,12 +1746,13 @@ We begin by describing the flip-flop algorithm.
 
 
 \begin{Algorithm}
-\MW{Strange centering}
-\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$ \MW{Arbitrary $\Sigma$ vs tensor normal model.}, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. \\ Approximation parameter $0 < \delta < 1$, given in binary representation. \\[.3ex]
+\begin{description}
+\item[\hspace{.2cm}\textbf{Input}:] Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma_1\ot \dots \ot \Sigma_k)$ , where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $0 < \delta < 1$, given in binary representation. \\%[.3ex]}
 
-\textbf{Output}: $\otheta \in \SPD$ such that $\norm{\nabla_a f_x(\otheta)}_F \leq \delta$ for each $a \in [k]$ \\[.3ex]
+\item[\hspace{.2cm}\textbf{Output}:] $\otheta \in \SPD$ such that $\norm{\nabla_a f_x(\otheta)}_F \leq \delta$ for each $a \in [k]$ \\%[.3ex]
 
-\textbf{Algorithm}:
+\item[\hspace{.2cm}\textbf{Algorithm}:]
+\end{description}
 \begin{enumerate}
 \item\label{it:flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$.
 %$\delta = \dfrac{\eps^2}{16 k^2 \dmax^{3/2}}$. for tensor normal model
@@ -1916,11 +1897,13 @@ We now have all the lemmas we need to prove that, given appropriate initial cond
 We are now ready to state the tensor flip-flop algorithm and prove its fast convergence to the MLE.
 
 \begin{Algorithm}
-\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. \\ Approximation parameter $0 < \eps < 1$, given in binary representation. \\[.3ex]
+\begin{description}
+\item[\hspace{.2cm}\textbf{Input}:] Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma_1 \ot \dots \ot \Sigma_k)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $0 < \eps < 1$, given in binary representation. \\[.3ex]
 
-\textbf{Output}: $\otheta \in \SPD$ such that $\DF(\htheta_a \ \Vert  \ \otheta_a) < \eps$, for each $a \in [k]$, where $\htheta$ is the MLE for the precision matrix of $\Sigma$. \\[.3ex]
+\item[\hspace{.2cm}\textbf{Output}:] $\otheta \in \SPD$ such that $\DF(\htheta_a \ \Vert  \ \otheta_a) < \eps$, for each $a \in [k]$, where $\htheta$ is the MLE for the precision matrix. \\[.3ex]
 
-\textbf{Algorithm}:
+\item[\hspace{.2cm}\textbf{Algorithm}:]
+\end{description}
 \begin{enumerate}
 \item\label{it:tensor-flip-flop step 1} Set $\otheta_a = I_a$ for each $a \in [k]$, and
 $\delta = \dfrac{\eps}{8 \dmax^{1/2}}$.
@@ -1986,7 +1969,7 @@ If $\norm{\nabla_a}_F < \delta$, output $\otheta$ and return.
 
 
 \begin{proof}
-	When the number of samples is $n = \Omega(k^2 \cdot \dmax^3/D)$, with probability
+	Let $\Gamma$ be the universal constant from \cref{lem:tensor-initial-conditions}, and pick $C \geq \Gamma$. When the number of samples is $n = C \cdot k^2 \cdot \dmax^3/D$, with probability
 	$$ 1 - k^2 \cdot \left( \dfrac{\sqrt{nD}}{k \dmax} \right)^{-\Omega(\dmin)} - 2k \cdot e^{- \Omega(nD/k \dmax^2)}$$
 	we have that the hypothesis of \cref{lem:tensor-initial-conditions} applies, which implies that there exists a constant $4 \geq \gamma > 0$ such that our objective function $f_x$ is $\frac{1}{2}$-strongly geodesically convex at a ball $B_r(I)$ for $r = \dfrac{\gamma}{\sqrt{(k+1)\dmax}}$ and $\norm{\nabla f_x(I)}_F \leq \nu^{1/2}:=\dfrac{\gamma}{4 \sqrt{(k+1)\dmax}} < \sqrt{\frac{k}{\dmax}}$.
 
@@ -2007,12 +1990,13 @@ However, we can proceed as in~\cite{FM20} and use the results from~\cite{KLR19} 
 
 
 \begin{Algorithm}
-\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^{d_1 \times d_2}$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. \\
-Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
+\begin{description}
+\item[\hspace{.2cm}\textbf{Input}:] Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^{d_1 \times d_2}$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma_1 \ot \Sigma_2)$, where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation. \\[.3ex]
 
-\textbf{Output}: $\otheta \in \SPD$ s.th. $\Dop(\htheta_a \ \Vert  \  \otheta_a) < \eps$, for $a \in \{1,2\}$, where $\htheta$ is the MLE for the precision matrix $\Theta$. \\[.3ex]
+\item[\hspace{.2cm}\textbf{Output}:] $\otheta \in \SPD$ such that $\Dop(\htheta_a \ \Vert  \  \otheta_a) < \eps$, for $a \in \{1,2\}$, where $\htheta$ is the MLE for the precision matrix $\Theta$. \\[.3ex]
 
-\textbf{Algorithm}:
+\item[\hspace{.2cm}\textbf{Algorithm}:]
+\end{description}
 \begin{enumerate}
 \item\label{it:flip-flop step 1 matrix} Let $\gamma, \lambda$ be the constants from \cref{lem:matrix-normal-initial-conditions}. Set $\otheta_a = I_a$ for each $a \in \{1,2\}$, and $\delta = \dfrac{\eps \lambda}{4 \sqrt{\dmax}}$.
 
@@ -2180,7 +2164,7 @@ This condition on the eigenvalues holds because $I_d/2 \preceq \Theta_j, \Theta_
 
 Moreover, for $i \in [m]$, we have $\|\Theta_i^{-1}\|_{\op} \leq 2$ and so $\DF(\Theta_j\Vert  \Theta_i) = O( \|\Theta_i - \Theta_j\|_F) = O(\delta)$ by \cref{eq:D_F rel vs abs}.
 Thus we have $\DKL(P_i\Vert  P_j) \leq Cn \delta^2$ for some absolute constant $C$.
-Then, by \cref{lem:fano}, 
+Then, by \cref{lem:fano},
 \begin{align*}
   \min_{i \in [m]} \Pr_{X \sim P_i}[T(X) = i] \leq \frac{  \log 2 + C n \delta^2}{d(d+1)(\log 2)/2 }.
 \end{align*}
@@ -2331,7 +2315,7 @@ We propose a new, shrinkage-based estimator that is simple to compute and experi
 To describe our estimator, we remind the reader that the maximum likelihood estimator as defined in \cref{eq:obj via rho} is the optimum of a function depending on the sample covariance matrix.
 Namely, we choose $\Theta \in \P$ optimizing $\tr \Theta \rho - \frac{1}{D}\log \det \Theta$ where $\rho = \frac{1}{n D} \sum_{i = 1}^n x_i x_i^T$ is the sample covariance matrix.\footnote{or, more accurately, the matrix of second moments}
 In our estimator, $\rho$ is replaced by a shrinkage estimator for the covariance matrix.
-Namely, we replace $\rho$ by $\tilde{\rho}: = (1- \alpha) \rho + \alpha \frac{\tr \rho}{D} I $ for some $\alpha \in [0,1]$. Formally, define $\widehat{\Theta}^\alpha_x = \arg\min_{\Theta \in \P} f^\alpha_\samp(\Theta)$ where 
+Namely, we replace $\rho$ by $\tilde{\rho}: = (1- \alpha) \rho + \alpha \frac{\tr \rho}{D} I $ for some $\alpha \in [0,1]$. Formally, define $\widehat{\Theta}^\alpha_x = \arg\min_{\Theta \in \P} f^\alpha_\samp(\Theta)$ where
 \begin{align*}
   f_{\samp}^\alpha(\Theta)
 % = \frac n2 \log \det(\Theta/2\pi) - \sum_{i=1}^n \frac12 \braket{\samp_i, \Theta \samp_i} ~
@@ -2339,15 +2323,13 @@ Namely, we replace $\rho$ by $\tilde{\rho}: = (1- \alpha) \rho + \alpha \frac{\t
   :=  \tr \Theta \left((1 - \alpha) \rho + \alpha \frac{\tr \rho}{D} I\right) - \frac{1}{D}\log\det\Theta.
 \end{align*}
 
-This is known as a shrinkage estimator with ridge regularization \CF{cite}.
+This is known as a shrinkage estimator with ridge regularization \citep{warton2008penalized}.
 The estimator, which we call the \emph{shrinkage-based flip-flop estimator}, or \emph{ShrinkFlop} for short, is closely related to the shrinkage estimator considered in \cite{goes2020robust} and the Frobenius penalty considered in \cite{tang2018integrated}.
 
 %We propose a regularizer that is simple to compute and experimentally outperforms Gemini and KGlasso under a natural generative model for \emph{dense} covariance matrices.
-We consider a generative model in which the covariance matrices $\Theta_i$ are distributed as a low-rank Wishart matrix \MW{It looks like we are actually doing a rank-one perturbation.} plus a small multiple of the identity matrix to ensure invertibility; we refer to them as \emph{spiked} covariance matrices.
+We consider a generative model in which the covariance matrices $\Theta_i$ are distributed as a rank one Wishart matrix plus a small multiple of the identity matrix to ensure invertibility; we refer to them as \emph{spiked} covariance matrices.
 We also show that, even when $\Theta_1$ is sparse, our shrinkage-based estimator can outputerform Gemini and KGlasso when $\Sigma_2$ is spiked.
-Moreover, we observe that our regularized estimator is significantly faster to compute than the GLASSO-type estimators.
-\MW{Harmonize spelling `LASSO`, `GLASSO', `Glasso', 'KGLasso', `KGlasso', `KGLASSO' :-)}
-All three estimators require parameter tuning, so when possible we compare throughout a plausible range of parameters for each of them. We leave determination of $\alpha$ by cross-validation for future work.
+Moreover, we observe that our regularized estimator is significantly faster to compute than the Glasso-type estimators. All three estimators require parameter tuning, so when possible we compare throughout a plausible range of parameters for each of them. We leave determination of $\alpha$ by cross-validation for future work.
 
 %-----------------------------------------------------------------------------
 \subsection{ShrinkFlop estimator}
@@ -2356,35 +2338,39 @@ We now discuss some properties of the ShrinkFlop estimator. As above, set $\tild
 This is because, whenever $\tilde{\rho}$ is invertible, the function $f_{\samp}^\alpha$ is strictly geodesically convex even on the larger domain $\PD(D)$ (see \cref{exa:usual-likelihood}). Thus it has a unique minimizer over the geodesically convex domain $\P$.
 
 The estimator $\widehat{\Theta}^\alpha_x$ can be approximately computed using the flip-flop algorithm (as in \cref{alg:flip-flop}) with $\rho$ replaced by $\tilde{\rho}$.
-Due to the special form of $\tilde{\rho}$, theone need not look at the entirety of $\tilde{\rho}$ to perform each step of the flip-flop algorithm.
+Due to the special form of $\tilde{\rho}$, one need not look at the entirety of $\tilde{\rho}$ to perform each step of the flip-flop algorithm.
 The resulting algorithm is summarized in \cref{alg:reg-flip-flop}.
 The only modification as compared to the original algorithm is that at each flip-flop step the estimate of the covariance is replaced by a convex combination with a scaled identity matrix, as well as the computation of the gradient, which is given by the following formula:
-\begin{align}\nabla_a f^\alpha_\samp(\Theta) = (1 - \alpha) \rho^{(a)} + \frac{\|x\|^2 \alpha}{D}  (\prod_{b \neq a} \tr \otheta_b ) \otheta_a - \frac{1}{d_a} I_{d_a}, \label{eq:reg-like}
+\begin{align}\nabla_a f^\alpha_\samp(\Theta) = (1 - \alpha) (\Theta^{1/2} \rho \Theta^{1/2})^{(a)} + \frac{\|x\|^2 \alpha}{D}  (\prod_{b \neq a} \tr \Theta_b ) \Theta_a - \frac{1}{d_a} I_{d_a}. \label{eq:reg-like}
 %a = \arg\max_{i \in [k]} d_i   \left\| \otheta_i^{1/2} \Upsilon_i \otheta_i^{1/2}  + \alpha (\prod_j \tr \otheta_j) I_{d_i} - I_{d_i}/d_i\right\|_F^2,
 \end{align}
-for $\rho$ as in \cref{alg:reg-flip-flop}.
-\MW{This is pretty awkward since $\rho$ is already defined above. One option would be to give a formula for $\Theta=I$ (where $\rho$ is the one that you defined above) and a transformation formula, like in \cref{remark:gradient-everywhere}.}
+%\MW{This is pretty awkward since $\rho$ is already defined above. One option would be to give a formula for $\Theta=I$ (where $\rho$ is the one that you defined above) and a transformation formula, like in \cref{remark:gradient-everywhere}.}
+\MW{While \cref{eq:reg-like} now refers to $\rho$ as defined above, this is not the same as $\rho$ as define in the algorithm. Still a bit awkward/ambiguous since we cite \cref{eq:reg-like} from the algorithm\dots One simple fix would be to move \cref{eq:reg-like} into the algorithm box. What do you think?}
 
+\CF{I just went ahead and defined it explicitly...such a translation formula would be a pain in this case.}
+\MW{Agreed... perhaps we then do the same in Section~5?}
 \begin{Algorithm}
-\MW{This should be updated to be in line with \cref{alg:flip-flop}, which is a bit more polished (e.g., turn the gradient computation into a separate step and refer to some remark about how to compute it).}
-\textbf{Input}: Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$ and a real number $\eps > 0$.
+\begin{description}
+\item[\hspace{.2cm}\textbf{Input}:] Samples $\samp = (\samp_1, \ldots, \samp_n)$ where $\samp_i \in \R^D$ is sampled from a (unknown) centered normal distribution $\cN(0, \Sigma)$ \MW{actually a tensor normal model\dots maybe remove this?} and a real number $\eps > 0$.
 % where each entry of $\samp_i$ is encoded in binary, with bit size $\le b$. Approximation parameter $\eps > 0$, given in binary representation.
 
-\textbf{Output}: Regularized estimators $\otheta \in \SPD$.\\[.1ex]
+\item[\hspace{.2cm}\textbf{Output}:] Regularized estimators $\otheta \in \SPD$.\\[.1ex]
 % such that $\| \nabla \ell^\alpha_x (\otheta)\|_F < \eps$. \\[.3ex]
 
-\textbf{Algorithm}:
+\item[\hspace{.2cm}\textbf{Algorithm}:]
+\end{description}
 \begin{enumerate}
 \item\label{it:flip-flop step 1 reg} Set $\otheta_a = I_a$ for each $a \in [k]$.
 \item\label{it:flip-flop step 2 reg} Repeat the following:
 %we need T = \log(1/\epsilon) \cdot 1/\alpha \lambda
 \begin{itemize}
 %\item Set $\otheta^1$
-\item Compute the index $a$ for which $\|\nabla_b f^\alpha_{\samp}(\otheta)\|_F$ is largest (see \cref{eq:reg-like}). If $\|\nabla_a f^\alpha_\samp(\otheta)\|_F < \eps$, end loop and \textbf{return} $\overline{\Theta}$.
+\item Compute each component of the gradient $\nabla f^\alpha_{\samp}(\otheta_1, \ldots, \otheta_k)$, denoting $\nabla_a := \nabla_a f^\alpha_{\samp}(\otheta_1, \ldots, \otheta_k)$, and find the index $a \in [k]$ for which $\norm{\nabla_a}_F$ is largest. To compute the gradient, see \cref{eq:reg-like}.
+%\itemIf $\norm{\nabla_a}_F < \delta$, output $\otheta$ and return.
+\item If $\|\nabla_a \|_F < \eps$, end loop and \textbf{return} $\overline{\Theta}$.
 \item Otherwise, set
 $$\otheta_a^{-1} \leftarrow  d_a \left((1 - \alpha) \otheta_a^{-1/2} \rho^{(a)} \, \otheta_a^{-1/2} + \frac{\alpha \|x\|^2}{D} (\prod_{b \neq a} \tr \Theta_b) I_{d_a}  \right),$$
 where $\rho = \dfrac{1}{nD} \otheta^{1/2} \left( \sum_{i=1}^n x_ix_i^T \right) \otheta^{1/2}.$
-
 %Set$$\otheta_a = \frac{n D}{d_a}\left(\Upsilon_i + \alpha \left(\prod_{i \neq a} \tr \otheta_a\right) I_{d_a} \right)^{-1}.$$
 
 \end{itemize}
@@ -2398,11 +2384,12 @@ where $\rho = \dfrac{1}{nD} \otheta^{1/2} \left( \sum_{i=1}^n x_ix_i^T \right) \
 Here we compare the performance of our shrinkage based estimator with Zhou's single step estimator (Gemini) for the matrix normal model assuming $\Sigma_1, \Sigma_2$ are dense, spiked covariance matrices.
 %More precisely, $\Sigma_1, \Sigma_2$ are each a random rank one matrix plus a small multiple of the identity matrix.
 \cref{fig:spiked} was generated by setting $d_1 = 25, d_2 = 50$ and $n = 1$, and for each choice of regularization parameter independently generating 5 different pairs $\Sigma_1 \sim I_{d_1} + 10 v_1v_1^T$ and $\Sigma_2 \sim I_{d_2} + 10 v_2v_2^T$ where the $v_i$ are standard $d_i$-dimensional Gaussian vectors and then normalizing each to have trace $d_i$, respectively.
-As in \cite{zhou2014gemini}, we always normalize the trace of $\htheta_1$ to match that of $\Theta_1$ to focus on the core difficulties rather than estimating the overall scale of the data (which is easy to do).
-For each of the 5 pairs, we computed the relative squared error (the squared Frobenius distance from $\Theta_1$ to $\htheta_1$ divided by the squared Frobenius norm of $\Theta_1$ \MW{Why don't we divide by the squared Frobenius distance from $\Theta_1$ to $I$, as we do for the geodesic distance below?}\CF{I guess in Euclidean space 0 is natural origin rather than $I$. I am just following the other stats papers for Frobenius.}) for samples drawn from this distribution 5 times.
-\MW{Also, the reason why we don't use the relative Frobenius error in place of the squared Frobenius distance is because stats people like the latter and because the former is kind of equivalent to geodesic error anyways, right? Possibly worth commenting upon.}\CF{yes.}
+As in \cite{zhou2014gemini}, we always normalize the trace of $\htheta_1$ to match that of $\Theta_1$ to focus on the core difficulties rather than estimating the overall scale of the data (which is easy to do). Though our main focus is estimation in geodesic distance, we also considered the Frobenius distance due to its prevalence in the literature.
+For each of the 5 pairs, following \cite{tsiligkaridis2013convergence} we computed the normalized squared error (the squared Frobenius distance from $\Theta_1$ to $\htheta_1$ divided by the squared Frobenius norm of $\Theta_1$ for samples drawn from this distribution 5 times.
 Finally we averaged all 25 errors.
 Note that with $d_1 = 25, d_2 = 50$ and $n = 1$, the MLE never exists and so we cannot compare with flip-flop without shrinkage.
+
+We also computed the error in geodesic distance. We used geodesic distance in place of the relative Frobenius error (\cref{dfn:relative-error}) because these quantities are comparable (see \cref{sec:rel-error}).
 To compute the error in geodesic distance, we compute the squared geodesic distance between the estimator and the truth and divide by the geodesic distance between the truth and the identity.
 
 \cref{fig:spiked} demonstrates that in the spiked case, for all choices of regularization parameter, the Gemini and KGlasso estimator were outperformed by the ``trivial'' estimator which always outputs the identity matrix.
@@ -2410,8 +2397,6 @@ For a broad range of regularization parameters, our regularized estimator outper
 The poor performance of Gemini and KGlasso in this case are to be expected because the true precision matrices are dense.
 
 %However, for a fairly broad range of regularization parameter, the Gemini does outperform the inverse of the the partial trace of the sample covariance matrix (the partial trace of the sample covariance matrix is an unbiased estimator of $\Sigma_1$). As expected, as the regularization parameter tends to zero Gemini becomes identical to the inverse of the the partial trace of the sample covariance matrix. \CF{explain that this is what Gemini for $\Theta_1$ is.} For a broad range of regularization parameters, our regularized estimator outperforms the trivial estimator.
-
-\MW{Font size in all figures is too small.}
 
 \begin{figure}
          \centering
@@ -2432,7 +2417,7 @@ The poor performance of Gemini and KGlasso in this case are to be expected becau
 \subsection{Scenario 2: Sparse and partially sparse precision matrices}
 %-----------------------------------------------------------------------------
 %We next compare the performance of the estimator with Zhou's single step estimator \cite{zhou2014gemini} for the matrix normal model.
-We now compare the performance of our estimator with other leading estimators in the case when one or more of the precision matrices $\Theta_1, \Theta_2$ is sparse. We find that when both $\Theta_1$ and $\Theta_2$ are sparse, the Gemini estimator outperforms the regularized Sinkhorn algorithm in Frobenius error; see \cref{fig:sparse-ii}. However, when $\Theta_2$ is spiked, we find that the shrinkage-based flip-flop estimator outperforms the Gemini estimator; see \cref{fig:sparse-i}. In practice, $\Theta_2$ is often considered a nuisance parameter and $\Theta_1$ is the object that should be interpretable (e.g., sparse). Thus ill-conditioned and dense nuisance parameters $\Theta_2$ can break GLASSO-type estimators even when $\Theta_1$ is sparse.
+We now compare the performance of our estimator with other leading estimators in the case when one or more of the precision matrices $\Theta_1, \Theta_2$ is sparse. We find that when both $\Theta_1$ and $\Theta_2$ are sparse, the Gemini estimator outperforms the regularized Sinkhorn algorithm in Frobenius error; see \cref{fig:sparse-ii}. However, when $\Theta_2$ is spiked, we find that the shrinkage-based flip-flop estimator outperforms the Gemini estimator; see \cref{fig:sparse-i}. In practice, $\Theta_2$ is often considered a nuisance parameter and $\Theta_1$ is the object that should be interpretable (e.g., sparse). Thus ill-conditioned and dense nuisance parameters $\Theta_2$ can break Glasso-type estimators even when $\Theta_1$ is sparse.
 
 The figures were generated in the same manner as \cref{fig:spiked}, apart from the generative model. The sparse matrices $\Theta_i$ were generated by adding $\frac{1}{2}I_{d_1}$ to the Laplacian of a random multigraph with $0.4 d_i$ edges and normalizing to have trace $d_i$, and the spiked covariance matrix $\Sigma_2$ for \cref{fig:sparse-i} was drawn according to $\Sigma_2 \sim I_{d_2} + 100 v_2v_2^T$ where $v_2$ has i.i.d. Gaussian coordinates, and then normalized to have trace $d_2$.
 
@@ -2466,8 +2451,7 @@ Labels and choice of regularizer as in \cref{fig:spiked}.\label{fig:sparse-ii}}
         %\caption{Three simple graphs}
         %\label{fig:three graphs}
 \caption{Average error with $d_1 = 25, d_2 = 50, n = 1$ for $\Theta_1$ sparse and $\Theta_2$ spiked. Interestingly, for Frobenius distance the shrinkage-based estimator performs best at the bottom of the regularization path and for the geodesic distance it performs best for larger regularization parameters.
-Labels and choice of regularizer as in \cref{fig:spiked}.
-\MW{What's going on with trivial in the RHS plot?}}\label{fig:sparse-i}
+Labels and choice of regularizer as in \cref{fig:spiked}. All algorithms perform poorly in geodesic distance under this model; as expected, ShrinkFlop approaches the trivial algorithm as the regularizer becomes large.}\label{fig:sparse-i}
 \end{figure}
 
 %-----------------------------------------------------------------------------
@@ -2491,7 +2475,7 @@ In \cref{fig:lc} we see that Gemini outperforms flip-flop with a single sample, 
          %\label{fig:five over x}
         %\caption{Three simple graphs}
         %\label{fig:three graphs}
-\caption{Average error with $d_1 = 25, d_2 = 25, $ and number of samples $n$ ranging from $1$ to $50$ for both precision matrices spiked. It was necessary to choose $d_1 = d_2$ so that the flip-flop estimator converged for $n = 1$. We did not include KGlasso here because its running time was prohibitive. \MW{regularization for ShrinkFlop: $\alpha = 2^{-1.1n}$}\label{fig:lc}}
+\caption{Average error with $d_1 = 25, d_2 = 25, $ and number of samples $n$ ranging from $1$ to $50$ for both precision matrices spiked. It was necessary to choose $d_1 = d_2$ so that the flip-flop estimator converged for $n = 1$. The regularization for ShinkFlop was given by $\alpha = 2^{-1.1n}$. We did not include KGlasso here because its running time was prohibitive.\label{fig:lc}}
 \end{figure}
 
 %-----------------------------------------------------------------------------
@@ -2510,7 +2494,7 @@ As a consequence, we can also control other equivariant statistical distances su
 In particular, we showed that the maximum likelihood estimator (MLE) for the covariance matrix in the matrix normal models has optimal sample complexity up to logarithmic factors in the dimensions.
 We showed that the MLE for tensor normal models with a constant number of tensor factors has optimal sample complexity in the regime where it is information-theoretically possible to recover the covariance matrix to within a constant Frobenius error.
 Whenever the number of samples is large enough for either of the aforementioned statistical results to hold, we show that the flip-flop algorithm converges to the MLE exponentially quickly.
-Hence, the output of the flip-flop algorithm with $O\left(\dmax +  \log n \right)$ \MW{still need to understand $\log n$ ;)} iterations is an efficiently computable estimator with statistical guarantees comparable to those we show for the MLE.
+Hence, the output of the flip-flop algorithm with $O\left(\dmax +  \log n \right)$ \MW{where does the $\log n$ come from?} iterations is an efficiently computable estimator with statistical guarantees comparable to those we show for the MLE.
 
 We also observed empirically that under a certain natural generative model of ill-conditioned, dense covariance matrices, the flip-flop algorithm combined with a very simple shrinkage technique can outperform existing estimators designed for the sparse case (Gemini and KGLASSO \MW{capitalization?}).
 We view our empirical results as evidence that, in some cases, flip-flop combined with shrinkage provides the fastest, simplest and most statistically accurate known method to estimate the covariances.
@@ -2527,8 +2511,11 @@ Filling in this final gap will place the tensor normal model on the same tight t
 %=============================================================================
 \section{Pisier's proof of quantum expansion}\label{sec:pisier}
 %=============================================================================
-In this appendix we prove the spectral condition for random Gaussian maps given in \cref{thm:hess-pisier}. 
-This follows from the work of Pisier \cite{pisier2012grothendieck}, whose original theorem dealt with square matrices and gave slightly weaker probabilistic guarantees than \cref{thm:Pisier-expansion} stated below. We adapt this result to give exponentially small error probability in the setting of rectangular matrices. We emphasize that these are minor modifications which follow readily from \cite{P14} and \cite{pisier2012grothendieck}. Therefore, we state the proof below for completeness and claim no originality. 
+In this appendix we prove the spectral condition for random Gaussian completely positive maps given in \cref{thm:hess-pisier}.
+This follows from the work of \cite{pisier2012grothendieck}, whose original theorem dealt with square matrices and gave slightly weaker probabilistic guarantees than \cref{thm:Pisier-expansion} stated below.
+We adapt this result to give exponentially small error probability in the setting of rectangular matrices.
+We emphasize that these are minor modifications, which follow readily from \cite{P14,pisier2012grothendieck}.
+Therefore, we state the proof below for completeness and claim no originality.
 
 \begin{theorem}[Pisier]\label{thm:Pisier-expansion}
 Let $A_1,\dots,A_N,A$ be independent $n \times m$ random matrices with independent standard Gaussian entries.
@@ -2554,10 +2541,11 @@ Observe that
 = \norm{\Phi \circ \Pi}_{\op}.
 \end{align*}
 Here we identified $\Mat(m) \cong \R^m \ot \R^m$, so $\Pi$ identifies with the orthogonal projection onto the traceless matrices, and we used that $\norm{\Pi(H)}_F \leq \norm{H}_F$, since $\Pi$ is an orthogonal projection.
-Using \cref{eq:vec rep,thm:Pisier-expansion}, the result follows as
-\begin{align*}
-  \norm{\Phi_A}_0 \leq O\left( t^2 \sqrt{N} (m+n) \right),
-\end{align*}
+Using \cref{eq:vec rep}, the result now follows from \cref{thm:Pisier-expansion}.
+% as
+% \begin{align*}
+%   \norm{\Phi_A}_0 \leq O\left( t^2 \sqrt{N} (m+n) \right),
+% \end{align*}
 % with the desired probability.
 % Using \cref{eq:op norm upper bound}, we can bound the right-hand side operator norm,
 % \begin{align*}
@@ -2575,34 +2563,43 @@ We first state some relevant bounds on Gaussian random variables and then give t
 
 We will often use the following estimate of the operator norm of a standard Gaussian $n \times m$ random matrix~$A$ (see Theorem~5.32 in \cite{vershynin2010introduction}),
 \begin{equation}\label{eq:op norm upper bound}
-  \E \norm{A}_{\op} \leq \sqrt{n} + \sqrt{m}  . 
+  \E \norm{A}_{\op} \leq \sqrt{n} + \sqrt{m}  .
 \end{equation}
 
 \begin{theorem}\label{thm:banach conc}
 Let $A$ be a centered Gaussian random variable that takes values in a separable Banach space with norm $\|\cdot\|$.
-Then $\|A\|$ satisfies the concentration and moment inequalities below with parameter $\sigma^2 := \sup \{ \E \langle \xi, A \rangle^{2} \mid \|\xi\|_{*} \leq 1 \}$, where $\|\cdot\|_{*}$ denotes the dual norm.
+Then $\|A\|$ satisfies the following concentration and moment inequalities with parameter $\sigma^2 := \sup \{ \E \langle \xi, A \rangle^{2} \mid \|\xi\|_{*} \leq 1 \}$, where $\|\cdot\|_{*}$ denotes the dual norm:
 \[ \forall t > 0 \colon \quad \Pr\Bigl( \abs[\big]{\norm A - \E \norm A} \geq t\Bigr) \leq 2 \exp\Bigl( - \frac{\Omega(t^2)}{\sigma^{2}}\Bigr)  , \qquad \text{and}  \]
 \begin{equation}\label{eq:conc via moments}
   \forall p \geq 1 \colon \quad \E \|A\|^{p} \leq (2 \E \|A\|)^{p}  + O ( \sigma \sqrt{p} )^{p}.
 \end{equation}
-% \MW{Not exactly the statement of the Lemma in Vershynin. $\norm A$ vs $\norm A - \E \norm A$, $p\geq1$ vs $p\geq 2$ -- but in particular the constant $\sigma$ should be in the numerator of \cref{eq:conc via moments}?}
 \end{theorem}
 \begin{proof}
-The first statement on concentration is exactly Theorem~1.5 in \cite{P86}. For the second, we consider random variable $X := \frac{1}{\sigma} (\|A\| - \E \|A\| )$. Then the equivalence in Lemma 5.5 of \cite{vershynin2010introduction} gives the moment bound
-\[ ( \E |X|^{p} )^{1/p} = \sigma^{-1} \Big( \E \Big| \|A\| - \E \|A\| \Big|^{p} \Big)^{1/p} \leq O(\sqrt{p}) .      \]
+The first statement on concentration is exactly Theorem~1.5 in \cite{P86}.
+For the second, we consider the random variable $X := \frac{1}{\sigma} (\|A\| - \E \|A\| )$.
+Then the equivalence in Lemma 5.5 of \cite{vershynin2010introduction} gives the moment bound
+\[
+  \Bigl( \E |X|^{p} \Bigr)^{1/p}
+= \frac1\sigma \Big( \E \Big| \|A\| - \E \|A\| \Big|^{p} \Big)^{1/p}
+ \leq O(\sqrt{p}).
+\]
 The moment bound in the theorem now follows by rearranging as
-\[ \E \|A\|^{p} = \E \Big( \E \|A\| + \sigma X  \Big)^{p} \leq 2^{p} \Big( (\E \|A\|)^{p} + O( \sigma \sqrt{p} )^{p} \Big)  ,  \]
-where the last step was by the simple inequality $(a+b)^{p} \leq 2^{p} (|a|^{p} + |b|^{p})$. 
+\[
+  \E \|A\|^{p}
+= \E \Bigl( \E \|A\| + \sigma X  \Bigr)^{p}
+\leq 2^{p} \Bigl( (\E \|A\|)^{p} + O( \sigma \sqrt{p} )^{p} \Bigr),
+\]
+where the last step was by the simple inequality $(a+b)^{p} \leq 2^{p} (|a|^{p} + |b|^{p})$.
 \end{proof}
 
 % \begin{remark}
-% The concentration inequalities and moment bounds in \cref{thm:banach conc} are related to the notion of sub-Gaussian random variables (see Lemma 5.5 of \cite{vershynin2010introduction}) which are often used in random matrix theory. 
+% The concentration inequalities and moment bounds in \cref{thm:banach conc} are related to the notion of sub-Gaussian random variables (see Lemma 5.5 of \cite{vershynin2010introduction}) which are often used in random matrix theory.
 % \end{remark}
 
-Below, we calculate the $\sigma^{2}$ parameter in \cref{thm:banach conc} with regards to our random matrix setting. 
+Below, we calculate the $\sigma^{2}$ parameter in \cref{thm:banach conc} with regards to our random matrix setting.
 
 \begin{corollary}\label{lem:opNormSubG}
-Let $A$ be an $n \times m$ matrix with independent standard Gaussian entries. Then the random variable $\norm{A}_{\op}$ satisfies the conclusions of \cref{thm:banach conc} with $\sigma^{2} = 1$. 
+Let $A$ be an $n \times m$ matrix with independent standard Gaussian entries. Then the random variable $\norm{A}_{\op}$ satisfies the conclusions of \cref{thm:banach conc} with $\sigma^{2} = 1$.
 % \MW{See sub-Gaussian comment above.}
 \end{corollary}
 \begin{proof}
@@ -2616,33 +2613,24 @@ Note that the dual norm is the trace norm~$\norm{\cdot}_{\operatorname{tr}}$, he
 where we first used that $\braket{\xi,A}$ is distributed the same as $\norm\xi_F A_{11}$ by orthogonal invariance, and then that the trace norm dominates the Frobenius norm, with equality attained for example by $\xi = E_{11}$.
 \end{proof}
 
-\AR{I think we don't need this lower bound anymore if we just bound by $m+n$ instead of $\E\|A\|_{\op}^{2}$}. 
-We can now prove a lower bound that complements \cref{eq:op norm upper bound}.
+% \AR{I think we don't need this lower bound anymore if we just bound by $m+n$ instead of $\E\|A\|_{\op}^{2}$}.
+% We can now prove a lower bound that complements \cref{eq:op norm upper bound}.
 
-\begin{lemma}\label{lem:op norm lower bound}
-Let $A$ be an $n \times m$ matrix with independent standard Gaussian entries. Then there is some universal constant $c > 0$ such that
-\begin{equation*}
-  \E \norm{A}_{\op} \geq c (\sqrt{n} + \sqrt{m}).
-\end{equation*}
-\end{lemma}
-\begin{proof}
-% The moment definition of sub-Gaussianity from \cref{thm:banach conc} shows for $p=2$ and $\sigma^{2} = 1$ (by \cref{l:opNormSubG}) that
-% \[
-%   (\E \norm{A}_{\op}^{2})^{1/2} \leq \E \norm{A}_{\op} + C \sqrt{2}
-% \implies \E \norm{A}_{\op} \geq (\E \norm{A}_{\op}^{2})^{1/2} - C \sqrt{2},
-% \]
-% where $C$ the universal constant in \cref{eq:conc via moments}.
-% We can then lower bound the second moment
-% \[ \E \norm{A}_{\op}^{2} = \E \norm{A^{T} A}_{\op} \geq \norm{\E A^{T} A}_{\op} = n ,  \]
-% where the first step is by definition of $\norm{\cdot}_{\op}$, the second is by Jensen's inequality, and the third step is because $\E A^{T} A = n I_{m}$.
-Without loss of generality we may assume that $n \geq m$.
-Then,
-\[ \E \norm{A}_{\op} \geq \E \norm{A e_{1}}_{2} \geq \frac{\sqrt{n}}{2} \geq \frac{\sqrt{m} + \sqrt{n}}{4}. \]
-The second inequality follows by observing that $g := A e_1$ is a vector of standard Gaussian entries in~$\R^n$, so its length is distributed as $\E\sqrt X$ for $X = \norm g_2^2$ a chi-square variable with~$n$ degrees of freedom. This can be bounded by elementary integration (see Section 3.1 of \cite{ENormLB}).
-\MW{I think this reference does not talk about chi-square random variables but rather asserts an explicit formula for this norm in terms of Gamma functions and the bounds $\frac n {\sqrt{n+1}} \leq \E\norm g_2 \leq \sqrt n$. Rephrase?}\CF{will track down akshay for this.} \AR{The reference just states elementary integration, so I thought I'd give a bit more intuition as to how I was able to see the result. }
-\end{proof}
+% \begin{lemma}\label{lem:op norm lower bound}
+% Let $A$ be an $n \times m$ matrix with independent standard Gaussian entries. Then there is some universal constant $c > 0$ such that
+% \begin{equation*}
+%   \E \norm{A}_{\op} \geq c (\sqrt{n} + \sqrt{m}).
+% \end{equation*}
+% \end{lemma}
+% \begin{proof}
+% Without loss of generality we may assume that $n \geq m$.
+% Then,
+% \[ \E \norm{A}_{\op} \geq \E \norm{A e_{1}}_{2} \geq \frac{\sqrt{n}}{2} \geq \frac{\sqrt{m} + \sqrt{n}}{4}. \]
+% The second inequality follows by observing that $g := A e_1$ is a vector of standard Gaussian entries in~$\R^n$.
+% Its expected length can be bounded by elementary integration, using that $\norm{g}_2$ is distributed as $\sqrt X$ for $X = \norm{g}_2^2$~a $\chi^2$ random variable with~$n$ degrees of freedom (see Section 3.1 of \cite{ENormLB}).
+% \end{proof}
 
-We will also use the the \emph{Schatten $p$-norm} $\norm{A}_p = (\tr\left[(A^TA)^{\frac p2}\right])^{\frac1p}$, which generalize the trace, Frobenius, and operator norms.
+We will also use the the \emph{Schatten $p$-norms} $\norm{A}_p = (\tr\left[(A^TA)^{\frac p2}\right])^{\frac1p}$, which generalize the trace, Frobenius, and operator norms.
 They satisfy the following H\"older inequality for $p\geq1$:
 \begin{align}\label{eq:holder}
   \abs*{\tr \prod_{i=1}^{p} A_i} \leq \prod_{i=1}^{p} \norm{A_i}_p,
@@ -2727,28 +2715,32 @@ Then, $\sigma^2=1$, as computed in \cref{lem:opNormSubG}, and we find that
 \E \norm*{\left( \sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^{2q}
 \leq (4 N)^q m^2 \Bigl( (2 \E\norm A_{\op})^{2q} + (C \sqrt{q})^{2q} \Bigr)^{2}.
 \end{align*}
-where~$C>0$ is a universal constant implied by the big-$O$ notation in \cref{eq:conc via moments}. 
+where~$C>0$ is a universal constant implied by the big-$O$ notation in \cref{eq:conc via moments}.
 We can bound the first term $\E \norm{A}_{\op} \leq \sqrt{m}+\sqrt{n}$ by \cref{eq:op norm upper bound}, so for $q = 2(m + n)$, we can upper bound the mean by
 \begin{align*}
 \E \norm*{\left( \sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}^{2q}
-\leq 4 m^2 \Big( (\max\{2, C\})^{2} \cdot q \cdot \sqrt{ 4 N }\Big)^{2q} .
+% &\leq (4 N)^q m^2 \Bigl( (2 (\sqrt m + \sqrt n))^{2q} + (C^2 q)^q \Bigr)^{2} \\
+% &\leq (4 N)^q m^2 \Bigl( (2^2  q)^q + (C^2 q)^q \Bigr)^{2} \\
+&\leq 4 m^2 \Big( (\max\{2, C\})^{2} \cdot q \cdot \sqrt{ 4 N }\Big)^{2q} .
 \end{align*}
-Finally, we can use Markov's inequality to see that, for some large universal constant $C' \geq 2 \max\{2, C \}$, the event
+Finally, we can use Markov's inequality to see that, for $C' = \sqrt{2} \max\{2,C\}$, the event
+%\MW{Why dont' we choose $C' = \sqrt{2} \max\{2,C\}$\dots}
 \begin{align}\label{eq:desired event}
   \norm*{\left(\sum_{i=1}^N A_i \otimes A_i \right) \circ \Pi}_{\op}
-  \leq (C' t)^2 \cdot (m+n) \cdot \sqrt{4 N} 
+  \leq (C' t)^2 \cdot (m+n) \cdot \sqrt{4 N}
 \end{align}
 holds up to failure probability at most
+%\MW{\dots so that $(2t)^{-2q}$ would become $t^{-2q}$ in the following, no?}
 \begin{align*}
   4 m^2 \left( \frac{(\max\{2, C\})^{2} \cdot q \cdot \sqrt{ 4 N } }{(C' t)^2 \cdot (m+n) \cdot \sqrt{4 N}} \right)^{2q}
-  \leq 4 m^2 (2t)^{-2q} \leq t^{-\Omega(m+n)} , 
+  \leq 4 m^2 t^{-2q} \leq t^{-\Omega(m+n)} ,
 %   \frac{(4 N)^q m^2 \cdot 4 (\max\{2, C\})^{4q} q^{2q}}{\left( (C' t)^2 \sqrt{4 N} (m+n) \right)^{2q}}
 % \leq \frac{2 N^q m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(2C')^{4q} t^{4q} N^q \bigl( \E \norm{A}_{\op} \bigr)^{4q}} =
   % \frac{m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{(C' t)^{4q} \bigl( \E \norm{A}_{\op} \bigr)^{4q}}.
   % \frac{m^2 \Bigl( \E\norm A_{\op} + C \sqrt{q} \Bigr)^{4q}}{\bigl( C' t \, \E \norm{A}_{\op} \bigr)^{4q}}.
 %   m^2 \frac{\Bigl( (2 \E\norm A_{\op})^{2q} + (C \sqrt{q})^{2q} \Bigr)^{2}}{(C' t \, \E \norm{A}_{\op})^{4q}}.
 \end{align*}
-  where the first step was by our choice of $q = 2(m+n)$ and the assumption that $C' \geq 2 \max\{2, C \}$, and the final inequality was by the fact that $t\geq2$, so the prefactor $4 m^{2}$ can be absorbed at the cost of slightly changing the constant in the exponent.
+  where the first step was by our choice of $q = 2(m+n)$ and of $C' = \sqrt{2} \max\{2,C\}$, and the final inequality was by the fact that $t\geq2$, so the prefactor $4 m^{2}$ can be absorbed at the cost of slightly changing the constant in the exponent.
 
 % We choose $q = \max\{1, (C^{-1} \E \norm{A}_{\op})^{2} \}$, which by \cref{lem:op norm lower bound} is $\Omega(m + n)$.
 % We now have two cases.
@@ -2776,18 +2768,18 @@ holds up to failure probability at most
 
 
 %=============================================================================
+
 \section{Proof of the robustness lemma}\label{app:robust}
 %=============================================================================
-\CF{Read appendix B.}
 In this appendix we give a proof of \cref{convexRobustness}, which shows that strong convexity at a particular point implies strong convexity nearby.
 First note that by \cref{remark:hessian-everywhere}, we have $\nabla^2 f_\samp(\Theta) = \nabla^2 f_{\samp'}$ where $\samp' = \Theta^{1/2} \samp$.
 Thus we need only bound the difference between $f_\samp$ and $f_{\samp'}$ for $\|\log \Theta\|_{\op}$ small, $\Theta \in \P$.
 For a matrix $\delta_{a}$ in $\Mat(d_a)$, we use
-$e^{(\delta_{a})_{(a)}}$ to denote 
+$e^{(\delta_{a})_{(a)}}$ to denote
 $$ e^{(\delta_{a})_{(a)}} = I_{d_1} \otimes \cdots \otimes I_{d_{a-1}} \otimes e^{\delta} \otimes I_{d_{a+1}} \otimes \cdots \otimes I_{d_k}.$$
-We will write $\Theta^{1/2}$ as $e^{\delta}$, where $\delta = \sum_{a=1}^k (\delta_{a})_{(a)}$ so that 
+We will write $\Theta^{1/2}$ as $e^{\delta}$, where $\delta = \sum_{a=1}^k (\delta_{a})_{(a)}$ so that
 %\MW{$\leftarrow$ $\delta$ is already a matrix in $\Mat(d_a)$, now it is a matrix tuple}
-We now have 
+We now have
 $\Theta^{1/2} = e^{\delta} = \otimes_{a = 1}^k e^{\delta_a}$, and $\frac{1}{2}\|\log \Theta\|_{\op} = \|\delta\|_{\op} = \sum_{a =1}^k \|\delta_{a}\|_{\op}$.
 To bound the difference between $\nabla^2 f_{x'}$ and $\nabla^2 f_x$, we will show each component of the Hessian $\nabla f_{x'}$ (as presented in \cref{lem:hessian}) only changes (from $\nabla f_x$) by a small amount under the perturbation $x \to x' := e^\delta x$.
 In particular we will give bounds on each block under each component-wise perturbation $x \to e^{(\delta_{a})_{(a)}} x$, and write the overall perturbation as a sequence of such component-wise perturbations. For convenience, we adopt the short-hand
@@ -3095,6 +3087,7 @@ Let $\Phi$ be a completely positive map and $\delta<0.005$ such that the followi
 \end{align}
 \end{enumerate}
 Then $\ch(\Phi) \geq \frac16 - O(\delta)$.
+\MW{Let's discuss the assumption $r_1 + r_2 > 0$ on RocketChat. We don't need it here, since for (1) it is automatic and for (2) it is implied by the stronger assumption that $\vol>0$. But in Lemma C.5 it might make sense to ask for it.}
 \end{lemma}
 \begin{proof}
 The first assumption implies we only need to reason about the case that $F_2 < \frac49 n d_1 d_2$.
@@ -3129,8 +3122,8 @@ Let $F_1:= n r_1(d_2 - r_2) + n r_2(d_1-r_1)$ and $F_2 = n r_1 r_2$.
 Then, the following holds for the random completely positive map $\Phi=\Phi_X$:
 \begin{enumerate}
 \item If $F_2 \geq \frac49 n d_1 d_2$, then \cref{eq:vol} holds with $\delta = 0$ with probability at least $1 - e^{-\Omega( n d_1 d_2)}$.
-\item If $F_2 < \frac49 n d_1 d_2$, then \cref{eq:cut} holds with $\delta = 0$ with probability at least $1 - e^{-\Omega( F_1)}$.
-\item Finally, $\vol(\Pi_1, \Pi_2) \geq \frac12 \frac{d_1}{d_2} \tr \Phi(I_{d_1})$ with probability at least $1 - e^{- \Omega(F_1 + 2F_2)}$. \CF{I think this is wrong - it should be $\vol(\Pi_1, \Pi_2) \geq  \frac{1}{d_2} \tr \Phi(I_{d_1}).$ This will have to propagate forward, unfortunately, replacing the $\log(d_2/d_1)$ in the theorem by $\log (d_2)$ Not the worst thing ever, but annoying.}
+\item If $F_2 < \frac49 n d_1 d_2$ \MW{and $r_1 + r_2 > 0$ (could also demand the stronger condition that $\vol>0$, not sure what you prefer here). or just demand $r_1+r_2>0$ for all three items.}, then \cref{eq:cut} holds with $\delta = 0$ with probability at least $1 - e^{-\Omega( F_1)}$.
+\item Finally, \MW{if $r_1 + r_2 > 0$ then} $\vol(\Pi_1, \Pi_2) \geq \frac12 \frac{d_1}{d_2} \tr \Phi(I_{d_1})$ with probability at least $1 - e^{- \Omega(F_1 + 2F_2)}$. \CF{I think this is wrong - it should be $\vol(\Pi_1, \Pi_2) \geq  \frac{1}{d_2} \tr \Phi(I_{d_1}).$ This will have to propagate forward, unfortunately, replacing the $\log(d_2/d_1)$ in the theorem by $\log (d_2)$ Not the worst thing ever, but annoying.}
 % $1 - e^{- \Omega(n r_1 d_2 + n r_2 d_1)}$.
 \end{enumerate}
 \end{lemma}
@@ -3142,7 +3135,7 @@ In view of \cref{eq:vol,eq:cut} with $\delta=0$, it is thus enough to show that
 \item If $F_2 < \frac49 n d_1 d_2$, then $R_1 + 2R_2 \leq \frac43 (F_1 + 2F_2)$ and $R_1 \geq \frac23 F_1$ hold with probability $1 - e^{-\Omega(F_1)}$.
 \item $R_1 + 2 R_2 \geq \frac23 (F_1 + 2F_2)$ and $R_1 + R_2 + R_3 \leq \frac43 (F_1 + F_2 + F_3)$ with probability $1 - e^{- \Omega(F_1 + 2F_2)}$.
 \end{enumerate}
-Indeed, the first (resp. second) item above implies the first (resp. second) item in the lemma by substituting the expressions for $\vol$ and $\cut $ of $(\pi_1, \pi_2)$ and $(I_{d_1}, I_{d_2})$ in terms of $R_1, R_2, R_3$. The last item follows from the same reasoning combined with the inequality $F_1 + 2 F_2 \geq \frac{1}{d_2} (F_1 + F_2 + F_3)$ for $r_1, r_2$ not both zero. \CF{this is the sentence I would add for the modified item 3 in the lemma.}
+Indeed, the first (resp.\ second) item above implies the first (resp.\ second) item in the lemma by substituting the expressions for $\vol$ and $\cut $ of $(\pi_1, \pi_2)$ and $(I_{d_1}, I_{d_2})$ in terms of $R_1, R_2, R_3$. The last item follows from the same reasoning combined with the inequality $F_1 + 2 F_2 \geq \frac{1}{d_2} (F_1 + F_2 + F_3)$ for $r_1, r_2$ not both zero. \CF{this is the sentence I would add for the modified item 3 in the lemma.} \MW{If you assume that $d_2 \geq d_1$ then I agree!}
 
 All three follow from standard results for concentration of $\chi^2$ random variables; see e.g.~\cite{W19}.
 We only prove the first item; the second and third items are straightforward.
@@ -3203,7 +3196,7 @@ The proof of the second inequality is similar.
 
 \begin{lemma}[Union bound]\label{lem:union}
 There is a universal constant $C>0$ such that the following holds.
-If $d_1 < d_2$ and $n \geq C \frac{d_2}{d_1} \log (d_2)$ \CF{before $\log d_2$ was a typo, now I think it's correct}, then $\ch(\Phi) = \Omega(1)$ with probability $1 - e^{- \Omega(n d_1)}$.
+If $d_1 \leq d_2$ and $n \geq C \frac{d_2}{d_1} \log (d_2)$ \CF{before $\log d_2$ was a typo, now I think it's correct}, then $\ch(\Phi) = \Omega(1)$ with probability $1 - e^{- \Omega(n d_1)}$.
 \end{lemma}
 \begin{proof}
 \MW{Still need to check this once my other confusions have been resolved.}
@@ -3211,7 +3204,7 @@ Let $\delta' \leq c d_1/d_2$ \CF{this will need to become $1/d_2$}. Let $\cN(r_1
 \begin{enumerate}
 \item \cref{eq:vol} holds with $\delta = 0$ for every $\Pi_1,\Pi_2 \in \cN(r_1, r_2)$ when $r_1 r_2 \geq (4/9) d_1 d_2$,
 \item  and \cref{eq:cut} holds with $\delta =0$ for all $\Pi_1, \Pi_2 \in \cN(r_1, r_2)$ when $r_1 r_2 < (4/9) d_1 d_2$,
-\item and $\vol(\Pi_1, \Pi_2) \geq \tr \Phi(I) (d_1/d_2)$. \CF{will be $\tr \Phi(I) /d_2$} 
+\item and $\vol(\Pi_1, \Pi_2) \geq \tr \Phi(I) (d_1/d_2)$. \CF{will be $\tr \Phi(I) /d_2$}
 \end{enumerate}
 Let us check that the hypotheses of \cref{lem:suff} with $\delta \leq c$ (for some small enough constant $c$) are implied by these three items; this will imply that conditioned on the three items we have $\ch(\Phi) \geq \Omega(1)$. Because every pair $(\Pi'_1,\Pi'_2)$ of projections of ranks $r_1,r_2$ is most $\delta'$ far from some element $(\Pi_1, \Pi_2)$ of $\cN(r_1,r_2)$, by \cref{lem:net-suffices} (and the inequality $\vol(\Pi_1, \Pi_2) \geq \tr \Phi(I)(d_1/d_2)$ \CF{this will change if we have to fix C.4}) we have
 \begin{align*} (1 - 4 \delta'  \cdot d_2/d_1) \vol(\Pi_1, \Pi_2) \leq  \vol(\Pi_1', \Pi_2') \leq  (1 + 4 \delta'  \cdot d_2/d_1) \vol(\Pi_1, \Pi_2).\end{align*}
@@ -3241,7 +3234,7 @@ The third item holds with probability $1 - e^{-\Omega(n (r_1d_2 + r_2 d_1))}$ by
 \begin{proof}[Proof of \cref{thm:operator-cheeger}]
 Let $\Phi:=\Phi_X$.
 To prove \cref{thm:operator-cheeger}, we apply \cref{lem:union} to bound~$\ch(\Phi)$ and \cref{prop:gradient-bound} to show that $\Phi$ is $\eps_0$-doubly balanced, and invoke \cref{lem:op-cheeger}.
-Without loss of generality, $d_1 < d_2$.
+Without loss of generality, $d_1 \leq d_2$.
 Thus our assumption reads
 \MW{Why do we divide by $\log(d_1)$? Is this missing above?}\CF{yes, it was missing above, I think from when I thought we couldn't put it there. but now I think that again, so it's fine above.}
 \begin{align*}
