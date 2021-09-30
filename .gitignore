@@ -7,10 +7,9 @@
 *.out
 *.toc
 *.synctex*
-tensor-mle.pdf
+*.pdf
 fast-literature/
 .DS_Store
-
 *.Rproj.user
 *.RData
 *.Rhistory
