@@ -18,11 +18,18 @@ library(tictoc)
 library(R.matlab)
 library(gridExtra)
 
-options(matlab="/Applications/MATLAB_R2020b.app/bin/matlab")
-Matlab$startServer()
-matlab <- Matlab()
-isOpen <- open(matlab)
-#Hello did this save
+
+
+#if you don't want to compare with the matlab KGlasso code, set use_matlab to False
+#everything will be much faster if you do that :)
+use_matlab = FALSE
+if(use_matlab){
+  #change path below to your matlab location
+  options(matlab="/Applications/MATLAB_R2020b.app/bin/matlab")
+  Matlab$startServer()
+  matlab <- Matlab()
+  isOpen <- open(matlab)
+}
 
 ```
 
@@ -33,7 +40,10 @@ Spiked comparison code
 
 
 ```{r}
-#functions
+
+#some helper functions
+
+#normalize determinant to one
 
 DetNorm <-function(A){
   n = dim(A)[1]
@@ -52,10 +62,10 @@ GeodesicDistance <-function(P,Q){
 
 
 ```{r, echo=FALSE}
-setOption(matlab, "readResult/interval",30*6)
-evaluate(matlab,"addpath('../KGlasso_code')")
-
-
+if(use_matlab){
+  setOption(matlab, "readResult/interval",30*6)
+  evaluate(matlab,"addpath('../KGlasso_code')")
+}
 
 
 
@@ -69,21 +79,29 @@ evaluate(matlab,"addpath('../KGlasso_code')")
 SpikedComparison <-function(SmallDimension,BigDimension,NumSamples,NumInstances=2,TrialsPerInstance=2,spike = 10, RegMin = -5, RegMax =5, RegStride=1){
   
   Regularizers = exp(RegStride*c(floor(RegMin/RegStride):floor(RegMax/RegStride)))
-  results = data.frame(Regularizer = Regularizers,Gemini=0,ShrinkFlop = 0,Trivial=0, KGlasso = 0)
-  #need to add the sample covariance back in :/
+  results = data.frame(Regularizer = Regularizers,Gemini=0,ShrinkFlop = 0,Trivial=0)
+  
+  if(use_matlab){
+    results['KGlasso'] = 0
+  }
   
   #make copies for the other error metrics.
   GeoResults = data.frame(results)
   OpResults = data.frame(results)
   
-  setVariable(matlab, NumSamples=NumSamples, SmallDimension=SmallDimension, BigDimension=BigDimension)
+  if(use_matlab){
+    setVariable(matlab, NumSamples=NumSamples, SmallDimension=SmallDimension, BigDimension=BigDimension)
+  }
+  
   
   for (j in 1:length(Regularizers)){
     
     #for each value of the regularizer we will compute the error of the estimator on several ground truth covariances
-    MatReg = (Regularizers[j])^(.1)
+    if(use_matlab){
+      MatReg = (Regularizers[j])^(.1)
+      setVariable(matlab, MatReg = MatReg)
+    }
     
-    setVariable(matlab, MatReg = MatReg)
     for (l in 1:NumInstances){ 
   
       #define the covariances
@@ -129,8 +147,6 @@ SpikedComparison <-function(SmallDimension,BigDimension,NumSamples,NumInstances=
         
         #geodesic trivial
         GeoTrivialError = GeodesicDistance(DetNorm(invA), diag(SmallDimension))
-        
-        #GeoResults$Trivial[j] = GeoResults$Trivial[j] + GeoTrivialError/(NumInstances*TrialsPerInstance)
         GeoResults$Trivial[j] = GeoResults$Trivial[j] + 1/(NumInstances*TrialsPerInstance)
         
         #gemini
@@ -172,24 +188,22 @@ SpikedComparison <-function(SmallDimension,BigDimension,NumSamples,NumInstances=
         GeoResults$ShrinkFlop[j] = GeoResults$ShrinkFlop[j] + GeoSinkError/(NumInstances*TrialsPerInstance)
         
         #KGlasso 
-        #print(c("MatReg, ", MatReg))
-        setVariable(matlab, dat = dat)
-        evaluate(matlab,"[C,D] = KGL_R(dat,SmallDimension,BigDimension,NumSamples,MatReg,MatReg,10,.01);")
-        KGlassoEstimate = getVariable(matlab,"C")$C
+        if(use_matlab){
+          setVariable(matlab, dat = dat)
+          evaluate(matlab,"[C,D] = KGL_R(dat,SmallDimension,BigDimension,NumSamples,MatReg,MatReg,10,.01);")
+          KGlassoEstimate = getVariable(matlab,"C")$C
 
-        KGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"F")^2 / normA
-        #print(c("Glasso Error: ",KGlassoError))
-        results$KGlasso[j] = results$KGlasso[j]+ KGlassoError/(NumInstances*TrialsPerInstance)
+          KGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"F")^2 / normA
+          results$KGlasso[j] = results$KGlasso[j]+ KGlassoError/(NumInstances*TrialsPerInstance)
 
-        #operator error
-        OpKGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"I")^2
-        OpResults$KGlasso[j] = OpResults$KGlasso[j]+ OpKGlassoError/(NumInstances*TrialsPerInstance)
+          #operator error
+          OpKGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"I")^2
+          OpResults$KGlasso[j] = OpResults$KGlasso[j]+ OpKGlassoError/(NumInstances*TrialsPerInstance)
         
-        #geodesic distance
-        GeoKGlassoError = GeodesicDistance(DetNorm(invA), DetNorm(KGlassoEstimate))^2/GeoTrivialError^2
-        GeoResults$KGlasso[j] = GeoResults$KGlasso[j] + GeoKGlassoError/(NumInstances*TrialsPerInstance)
-        
-        
+          #geodesic distance
+          GeoKGlassoError = GeodesicDistance(DetNorm(invA), DetNorm(KGlassoEstimate))^2/GeoTrivialError^2
+          GeoResults$KGlasso[j] = GeoResults$KGlasso[j] + GeoKGlassoError/(NumInstances*TrialsPerInstance)
+        }
       }
     }
   }
@@ -253,12 +267,12 @@ lp + ggtitle("Error in Geodesic distance") #cool way to title on the fly :)
 
 
 
-Files
+Outputting plots to files 
 ```{r}
 
 #geodesic
 lp=SimplePlot(DoublySpiked$GeoResults)
-lp = lp + ggtitle("Error in Geodesic distance") #cool way to title on the fly :)
+lp = lp + ggtitle("Error in Geodesic distance") 
 pdf("25-50-spiked-geo.pdf")
 lp
 dev.off()
@@ -297,41 +311,41 @@ lp3 = lp3 + ggtitle("Error in Frobenius norm") + theme(legend.position="none")
 p = grid.arrange(lp1,lp2,lp3,nrow=1) 
 
 p
-#pdf("25-50-spiked-frob.pdf")
-#lp
-#dev.off()
-#lp
+
 
 ```
 
 
-
-
-Sparse comparison code
+One side sparse, one side spiked comparison code
 
 ```{r, echo=FALSE}
 
 
 
-SparseComparison <-function(SmallDimension,BigDimension,NumSamples,NumInstances=2,TrialsPerInstance=2,sparsity = 4,spike=10, RegMin = -5, RegMax =5, RegStride=1){
+SinglySparseComparison <-function(SmallDimension,BigDimension,NumSamples,NumInstances=2,TrialsPerInstance=2,sparsity = 4,spike=10, RegMin = -5, RegMax =5, RegStride=1){
   
   Regularizers = exp(RegStride*c(floor(RegMin/RegStride):floor(RegMax/RegStride)))
   print(Regularizers)
-  results = data.frame(Regularizer = Regularizers,Gemini=0,RegSink = 0,Trivial=0, KGlasso = 0)
+  results = data.frame(Regularizer = Regularizers,Gemini=0,RegSink = 0,Trivial=0)
+  if(use_matlab){
+    results['KGlasso']=0
+  }
 
   #make copies for the other error metrics.
   GeoResults = data.frame(results)
   OpResults = data.frame(results)
-  
-  setVariable(matlab, NumSamples=NumSamples, SmallDimension=SmallDimension, BigDimension=BigDimension)
+  if(use_matlab){
+    setVariable(matlab, NumSamples=NumSamples, SmallDimension=SmallDimension, BigDimension=BigDimension)
+  }
   
   for (j in 1:length(Regularizers)){
     
     MatReg = (Regularizers[j])^(.1)
     
     print(c("MatReg: ", MatReg))
-    
-    setVariable(matlab, MatReg = MatReg)
+    if(use_matlab){
+      setVariable(matlab, MatReg = MatReg)
+    }
     
     #for each value of the regularizer we will compute the error of the estimator on several ground truth covariances
 
@@ -438,23 +452,25 @@ SparseComparison <-function(SmallDimension,BigDimension,NumSamples,NumInstances=
         GeoSinkError = GeodesicDistance(DetNorm(invA), DetNorm(RegSinkEstimate))^2/GeoTrivialError^2
         GeoResults$RegSink[j] = GeoResults$RegSink[j] + GeoSinkError/(NumInstances*TrialsPerInstance)
         
-        #KGlasso 
-        #print(c("MatReg, ", MatReg))
-        setVariable(matlab, dat = dat)
-        evaluate(matlab,"[C,D] = KGL_R(dat,SmallDimension,BigDimension,NumSamples,MatReg,MatReg,10,.01);")
-        KGlassoEstimate = getVariable(matlab,"C")$C
+        if(use_matlab){
+          #KGlasso 
+          #print(c("MatReg, ", MatReg))
+          setVariable(matlab, dat = dat)
+          evaluate(matlab,"[C,D] = KGL_R(dat,SmallDimension,BigDimension,NumSamples,MatReg,MatReg,10,.01);")
+          KGlassoEstimate = getVariable(matlab,"C")$C
 
-        KGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"F")^2 / normA
-        #print(c("Glasso Error: ",KGlassoError))
-        results$KGlasso[j] = results$KGlasso[j]+ KGlassoError/(NumInstances*TrialsPerInstance)
+          KGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"F")^2 / normA
+          #print(c("Glasso Error: ",KGlassoError))
+          results$KGlasso[j] = results$KGlasso[j]+ KGlassoError/(NumInstances*TrialsPerInstance)
 
-        #operator error
-        OpKGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"I")^2
-        OpResults$KGlasso[j] = OpResults$KGlasso[j]+ OpKGlassoError/(NumInstances*TrialsPerInstance)
+          #operator error
+          OpKGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"I")^2
+          OpResults$KGlasso[j] = OpResults$KGlasso[j]+ OpKGlassoError/(NumInstances*TrialsPerInstance)
         
-        #geodesic distance
-        GeoKGlassoError = GeodesicDistance(DetNorm(invA), DetNorm(KGlassoEstimate))^2/GeoTrivialError^2
-        GeoResults$KGlasso[j] = GeoResults$KGlasso[j] + GeoKGlassoError/(NumInstances*TrialsPerInstance)
+          #geodesic distance
+          GeoKGlassoError = GeodesicDistance(DetNorm(invA), DetNorm(KGlassoEstimate))^2/GeoTrivialError^2
+          GeoResults$KGlasso[j] = GeoResults$KGlasso[j] + GeoKGlassoError/(NumInstances*TrialsPerInstance)
+        }
 
       }
     }
@@ -463,24 +479,22 @@ SparseComparison <-function(SmallDimension,BigDimension,NumSamples,NumInstances=
 }
 ```
 
-Plotting sparse comparison
-
-
-
-
+Test + plot sparse comparison
 
 ```{r}
-#test sparse comparison
-ans3 = SparseComparison(11,11,5,RegMin=-5,RegMax = 5,NumInstances =1, TrialsPerInstance  = 1, spike=10, RegStride = 1)
-lp = SimplePlot(ans$GeoResults)
-pdf("SparsePlot.pdf")
+ans3 = SinglySparseComparison(11,11,5,RegMin=-5,RegMax = 5,NumInstances =1, TrialsPerInstance  = 1, spike=10, RegStride = 1)
+lp = SimplePlot(ans3$GeoResults)
+pdf("SparsePlotTest.pdf")
 lp
 dev.off()
 lp
 ```
+
+
+Run sparse comparison
+
 ```{r, echo=FALSE}
-#test sparse comparison
-ans = SparseComparison(25,50,1,RegMin=-15,RegMax = 1,NumInstances =2, TrialsPerInstance  = 2, spike=100, RegStride = 1)
+ans = SinglySparseComparison(25,50,1,RegMin=-15,RegMax = 1,NumInstances =2, TrialsPerInstance  = 2, spike=100, RegStride = 1)
 lp = SimplePlot(ans$Results)
 pdf("SparsePlot.pdf")
 lp
@@ -488,8 +502,9 @@ dev.off()
 lp
 ```
 
+rename RegSink to ShrinkFlop
+
 ```{r}
-#rename RegSink to ShrinkFlop
 colnames(ans$Results) = c("Regularizer","Gemini","ShrinkFlop","Trivial","Kglasso")
 colnames(ans$OpResults) = c("Regularizer","Gemini","ShrinkFlop","Trivial","Kglasso")
 colnames(ans$GeoResults) = c("Regularizer","Gemini","ShrinkFlop","Trivial","Kglasso")
@@ -497,14 +512,10 @@ colnames(ans$GeoResults) = c("Regularizer","Gemini","ShrinkFlop","Trivial","Kgla
 
 ```
 
-```{r}
-SinglySpiked = SparseComparison(25,50,1,RegMin=-20,RegMax = 10,NumInstances =5, TrialsPerInstance  = 5, spike=100, RegStride = 1)
-#this fails - the KGlasso regularization parameter can't go too high, I think.
-```
+Make plots
 
 ```{r}
 #do the plots 
-#ans = SparseComparison(25,50,1,RegMin=-15,RegMax = 5,NumInstances =5, TrialsPerInstance  = 5, spike=100, RegStride = .5)
 
 #geodesic
 lp=SimplePlot(ans$GeoResults)
@@ -530,11 +541,13 @@ lp
 
 ```
 
+Another example
+
 ```{r}
 #A,B = 50x50,
 #1 sample.
 
-ans = SparseComparison(50,50,5,RegMin=-10,RegMax = 10,NumInstances =2, TrialsPerInstance  = 2, spike=300, RegStride = 2)
+ans = SinglySparseComparison(50,50,5,RegMin=-10,RegMax = 10,NumInstances =2, TrialsPerInstance  = 2, spike=300, RegStride = 2)
 lp = SimplePlot(ans$GeoResults)
 pdf("SparsePlot50-50.pdf")
 lp
@@ -542,7 +555,7 @@ dev.off()
 lp
 ```
 
-Testing write tables
+Testing write tables; only run if using matlab connection
 
 ```{r}
 #using "system", i.e. the bad way
@@ -557,26 +570,32 @@ Both sparse
 ```{r, echo=FALSE}
 
 
-
 DoublySparseComparison <-function(SmallDimension,BigDimension,NumSamples,NumInstances=2,TrialsPerInstance=2,sparsity = 4,RegMin = -5, RegMax =5, RegStride=1){
   
   Regularizers = exp(RegStride*c(floor(RegMin/RegStride):floor(RegMax/RegStride)))
   print(Regularizers)
-  results = data.frame(Regularizer = Regularizers,Gemini=0,RegSink = 0,Trivial=0, KGlasso = 0)
+  results = data.frame(Regularizer = Regularizers,Gemini=0,RegSink = 0,Trivial=0)
+  
+  if(use_matlab){
+    results['KGlasso']=0
+  }
 
   #make copies for the other error metrics.
   GeoResults = data.frame(results)
   OpResults = data.frame(results)
-  
-  setVariable(matlab, NumSamples=NumSamples, SmallDimension=SmallDimension, BigDimension=BigDimension)
+  if(use_matlab){
+    setVariable(matlab, NumSamples=NumSamples, SmallDimension=SmallDimension, BigDimension=BigDimension)
+  }
+
   
   for (j in 1:length(Regularizers)){
     
     MatReg = (Regularizers[j])^(.1)
     
     print(c("MatReg: ", MatReg))
-    
-    setVariable(matlab, MatReg = MatReg)
+    if(use_matlab){
+      setVariable(matlab, MatReg = MatReg)
+    }
     
     #for each value of the regularizer we will compute the error of the estimator on several ground truth covariances
 
@@ -678,8 +697,7 @@ DoublySparseComparison <-function(SmallDimension,BigDimension,NumSamples,NumInst
         RegSinkEstimate = regsinkhorn(X,tol = .1*Regularizers[j], reg = Regularizers[j]*RegSinkFactor)[[1]]
         toc()
         
-        print(c("Sinkhorn det",det(RegSinkEstimate)))
-        
+
         #calculate frobenius
         RegSinkError = norm(invA - (RegSinkEstimate/tr(RegSinkEstimate)),"F")^2 / normA
         results$RegSink[j] = results$RegSink[j]+ RegSinkError/(NumInstances*TrialsPerInstance)
@@ -692,23 +710,24 @@ DoublySparseComparison <-function(SmallDimension,BigDimension,NumSamples,NumInst
         GeoSinkError = GeodesicDistance(DetNorm(invA), DetNorm(RegSinkEstimate))^2/GeoTrivialError^2
         GeoResults$RegSink[j] = GeoResults$RegSink[j] + GeoSinkError/(NumInstances*TrialsPerInstance)
         
-        #KGlasso 
-        #print(c("MatReg, ", MatReg))
-        setVariable(matlab, dat = dat)
-        evaluate(matlab,"[C,D] = KGL_R(dat,SmallDimension,BigDimension,NumSamples,MatReg,MatReg,10,.01);")
-        KGlassoEstimate = getVariable(matlab,"C")$C
+        if(use_matlab){
+          #KGlasso 
+          setVariable(matlab, dat = dat)
+          evaluate(matlab,"[C,D] = KGL_R(dat,SmallDimension,BigDimension,NumSamples,MatReg,MatReg,10,.01);")
+          KGlassoEstimate = getVariable(matlab,"C")$C
 
-        KGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"F")^2 / normA
-        #print(c("Glasso Error: ",KGlassoError))
-        results$KGlasso[j] = results$KGlasso[j]+ KGlassoError/(NumInstances*TrialsPerInstance)
+          KGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"F")^2 / normA
+          results$KGlasso[j] = results$KGlasso[j]+ KGlassoError/(NumInstances*TrialsPerInstance)
 
-        #operator error
-        OpKGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"I")^2
-        OpResults$KGlasso[j] = OpResults$KGlasso[j]+ OpKGlassoError/(NumInstances*TrialsPerInstance)
+          #operator error
+          OpKGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"I")^2
+          OpResults$KGlasso[j] = OpResults$KGlasso[j]+ OpKGlassoError/(NumInstances*TrialsPerInstance)
         
-        #geodesic distance
-        GeoKGlassoError = GeodesicDistance(DetNorm(invA), DetNorm(KGlassoEstimate))^2/GeoTrivialError^2
-        GeoResults$KGlasso[j] = GeoResults$KGlasso[j] + GeoKGlassoError/(NumInstances*TrialsPerInstance)
+          #geodesic distance
+          GeoKGlassoError = GeodesicDistance(DetNorm(invA), DetNorm(KGlassoEstimate))^2/GeoTrivialError^2
+          GeoResults$KGlasso[j] = GeoResults$KGlasso[j] + GeoKGlassoError/(NumInstances*TrialsPerInstance)
+          
+        }
 
       }
     }
@@ -725,16 +744,15 @@ Doubly sparse 50 x 50
 #test doubly sparse comparison
 ans3 = DoublySparseComparison(50,50,1,RegMin=-5,RegMax = 5,NumInstances =1, TrialsPerInstance  = 5, RegStride = 1)
 lp = SimplePlot(ans3$Results)
-pdf("SparsePlot.pdf")
+pdf("DoublySparsePlot.pdf")
 lp
 dev.off()
 lp
 ```
 
-
+Doubly sparse 25x50
 
 ```{r, echo=FALSE}
-#do doubly sparse comparison
 ans3 = DoublySparseComparison(25,50,1,RegMin=-10,RegMax = 2,NumInstances =5, TrialsPerInstance  = 10, RegStride = 0.5)
 lp = SimplePlot(ans3$GeoResults)
 pdf("SparsePlot.pdf")
@@ -783,21 +801,23 @@ lp
 
 Spiked Learning curves
 ```{r}
-#this time let n to infinity. Question: what model? Sparse?
 
 SpikedLearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples,NumInstances=2,TrialsPerInstance=2,spike = 10,RegMin = -5, RegMax =5, RegStride=1){
   
-  results = data.frame(Samples = c(MinSamples:MaxSamples),Gemini=0,RegSink = 0,Sink = 0, Trivial=0, KGlasso = NA)
+  results = data.frame(Samples = c(MinSamples:MaxSamples),Gemini=0,RegSink = 0,Sink = 0, Trivial=0)
 
   #make copies for the other error metrics.
   GeoResults = data.frame(results)
   OpResults = data.frame(results)
-  
-  setVariable(matlab, SmallDimension=SmallDimension, BigDimension=BigDimension)
+  if(use_matlab){
+    setVariable(matlab, SmallDimension=SmallDimension, BigDimension=BigDimension)
+  }
   
   for(j in MinSamples:MaxSamples){
     NumSamples = as.double(j)
-    setVariable(matlab, NumSamples=NumSamples)
+    if(use_matlab){
+      setVariable(matlab, NumSamples=NumSamples)
+    }
     
     for (l in 1:NumInstances){ 
   
@@ -811,15 +831,12 @@ SpikedLearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples
       normA = norm(invA,"F")^2
       detinvA = DetNorm(invA)
       
-      print(c("det A: ", det(A)))
-    
+
       B = diag(BigDimension)
       v = matrix(rnorm(BigDimension),nrow = BigDimension, ncol = 1)
       B = B + spike*v%*%t(v)
       rootB = sqrtm(B)
-      #invB = solve(B)
-      #normB = norm(invB,"F")^2
-      #detinvB = DetNorm(invB)
+
       
     
       
@@ -837,8 +854,7 @@ SpikedLearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples
           dat[,i] = X[[i]]
           
         }
-        #print(c("dat: ",dat, nrow(dat), ncol(dat)))
-        
+
         ind = j - MinSamples + 1
         
         #trivial frobenius error
@@ -863,7 +879,6 @@ SpikedLearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples
         out <- GeminiBmult(X, GeminiRegFactor, penalize.diagonal=FALSE)
         toc()
         GeminiEstimate = out$B.hat.inv
-        print(c("Gemini det",det(GeminiEstimate)))
         #calculate frobenius error
         GeminiError = norm(invA - (GeminiEstimate/tr(GeminiEstimate)),"F")^2 / normA
         results$Gemini[ind] = results$Gemini[ind]+ GeminiError/(NumInstances*TrialsPerInstance)
@@ -905,14 +920,10 @@ SpikedLearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples
         
         #regularized Sinkhorn
         #set sinkhorn penalties
-        #RegSinkFactor = 5/log(j+1)^(1/2)
-        #RegSinkFactor = .05/j
         RegSinkFactor = .0001*2^(-1.1*j)
         tic("regularized sinkhorn")
         RegSinkEstimate = regsinkhorn(X,tol = .01, reg = RegSinkFactor)[[1]]
         toc()
-        
-        print(c("Sinkhorn det",det(RegSinkEstimate)))
         
         #calculate frobenius
         RegSinkError = norm(invA - (RegSinkEstimate/tr(RegSinkEstimate)),"F")^2 / normA
@@ -926,20 +937,6 @@ SpikedLearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples
         GeoSinkError = GeodesicDistance(DetNorm(invA), DetNorm(RegSinkEstimate))^2/GeoTrivialError^2
         GeoResults$RegSink[ind] = GeoResults$RegSink[ind] + GeoSinkError/(NumInstances*TrialsPerInstance)
         
-        #KGlasso 
-        #setVariable(matlab, dat = dat)
-        #evaluate(matlab,"[C,D] = KGL_R(dat,SmallDimension,BigDimension,NumSamples,.4,.4,30,.01);")
-        #KGlassoEstimate = getVariable(matlab,"C")$C
-
-        #KGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"F")^2 / normA
-        #results$KGlasso[ind] = results$KGlasso[ind]+ KGlassoError/(NumInstances*TrialsPerInstance)
-
-        #OpKGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"I")^2
-        #OpResults$KGlasso[ind] = OpResults$KGlasso[ind]+ OpKGlassoError/(NumInstances*TrialsPerInstance)
-        
-        #GeoKGlassoError = GeodesicDistance(DetNorm(invA), DetNorm(KGlassoEstimate))^2/GeoTrivialError^2
-        #GeoResults$KGlasso[ind] = GeoResults$KGlasso[ind] + GeoKGlassoError/(NumInstances*TrialsPerInstance)
-
       }
     }
   }
@@ -971,7 +968,7 @@ colnames(res$GeoResults) = c("Samples","Gemini","ShrinkFlop","Flip-Flop","Trivia
 Plotting learning curves
 
 ```{r}
-LearningCurvePlot(res$Results)
+#LearningCurvePlot(res$Results)
 LearningCurvePlot(res$GeoResults)
 
 
@@ -995,12 +992,16 @@ LearningCurvePlot <- function(results){
                  plot.title = element_text(face = "bold", size = rel(1.25),family = "Helvetica"))
 
   df = melt(results, id.vars = "Samples",variable.name = "Algorithm", value.name = "Error")
-  #df = melt(results, id.vars = "Regularizer",variable.name = "Algorithm")
-  lp <- ggplot(data=df, aes(x=Samples, y=Error, group=Algorithm, color=Algorithm)) + geom_line() + geom_point() + scale_y_log10(breaks = 10^(-10:10),labels = trans_format("log10", math_format(10^.x)))+ mytheme
   
+  #df = melt(results, id.vars = "Regularizer",variable.name = "Algorithm")
+  lp <- ggplot(data=df, aes(x=Samples, y=Error, group=Algorithm, color=Algorithm))+ geom_line() + geom_point() +  scale_y_log10(breaks = 10^(-10:10),labels = trans_format("log10", math_format(10^.x)))
+#+ mytheme #for some reason theme was broken - maybe fonts?
+
   return(lp)}
 
 ```
+
+
 
 ```{r}
 #do the plots 
@@ -1008,7 +1009,7 @@ LearningCurvePlot <- function(results){
 
 #geodesic
 lp=LearningCurvePlot(res$GeoResults[,1:5])
-lp = lp + ggtitle("Error in Geodesic distance") #cool way to title on the fly :)
+lp = lp + ggtitle("Error in Geodesic distance") 
 pdf("25-25-spiked-lc-geo.pdf")
 lp
 dev.off()
@@ -1039,13 +1040,17 @@ Sparsity curves
 
 SparsityCurve <-function(SmallDimension,BigDimension,NumSamples, MinSparse,MaxSparse,NumInstances=2,TrialsPerInstance=2){
   
-  results = data.frame(Sparsity = c(MinSparse:MaxSparse),Gemini=0,RegSink = 0,Sink = 0, Trivial=0, KGlasso = 0)
-
+  results = data.frame(Sparsity = c(MinSparse:MaxSparse),Gemini=0,RegSink = 0,Sink = 0, Trivial=0)
+  if(use_matlab){
+    results['KGlasso']=0
+    setVariable(matlab, SmallDimension=SmallDimension, BigDimension=BigDimension,NumSamples=NumSamples)
+  }
   #make copies for the other error metrics.
   GeoResults = data.frame(results)
   OpResults = data.frame(results)
   
-  setVariable(matlab, SmallDimension=SmallDimension, BigDimension=BigDimension,NumSamples=NumSamples)
+
+ 
   
   for(j in MinSparse:MaxSparse){
 
@@ -1129,7 +1134,6 @@ SparsityCurve <-function(SmallDimension,BigDimension,NumSamples, MinSparse,MaxSp
         out <- GeminiBmult(X, GeminiRegFactor, penalize.diagonal=FALSE)
         toc()
         GeminiEstimate = out$B.hat.inv
-        print(c("Gemini det",det(GeminiEstimate)))
         #calculate frobenius error
         GeminiError = norm(invA - (GeminiEstimate/tr(GeminiEstimate)),"F")^2 / normA
         results$Gemini[ind] = results$Gemini[ind]+ GeminiError/(NumInstances*TrialsPerInstance)
@@ -1151,8 +1155,7 @@ SparsityCurve <-function(SmallDimension,BigDimension,NumSamples, MinSparse,MaxSp
         SinkEstimate = sinkhorn(X,tol = .01)[[1]]
         toc()
         
-        #print(c("Sinkhorn det",det(RegSinkEstimate)))
-        
+
         #calculate frobenius
         SinkError = norm(invA - (SinkEstimate/tr(SinkEstimate)),"F")^2 / normA
         results$Sink[ind] = results$Sink[ind]+ SinkError/(NumInstances*TrialsPerInstance)
@@ -1192,23 +1195,24 @@ SparsityCurve <-function(SmallDimension,BigDimension,NumSamples, MinSparse,MaxSp
         
         #KGlasso 
         #print(c("MatReg, ", MatReg))
-        setVariable(matlab, dat = dat)
-        #evaluate(matlab, "SmallDimension, class(BigDimension),class(NumSamples)")
-        evaluate(matlab,"[C,D] = KGL_R(dat,SmallDimension,BigDimension,NumSamples,.4,.4,30,.01);")
-        KGlassoEstimate = getVariable(matlab,"C")$C
-
-        KGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"F")^2 / normA
-        #print(c("Glasso Error: ",KGlassoError))
-        results$KGlasso[ind] = results$KGlasso[ind]+ KGlassoError/(NumInstances*TrialsPerInstance)
-
-        #operator error
-        OpKGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"I")^2
-        OpResults$KGlasso[ind] = OpResults$KGlasso[ind]+ OpKGlassoError/(NumInstances*TrialsPerInstance)
-        
-        #geodesic distance
-        GeoKGlassoError = GeodesicDistance(DetNorm(invA), DetNorm(KGlassoEstimate))^2/GeoTrivialError^2
-        GeoResults$KGlasso[ind] = GeoResults$KGlasso[ind] + GeoKGlassoError/(NumInstances*TrialsPerInstance)
-
+        if(use_matlab){
+          setVariable(matlab, dat = dat)
+          #evaluate(matlab, "SmallDimension, class(BigDimension),class(NumSamples)")
+          evaluate(matlab,"[C,D] = KGL_R(dat,SmallDimension,BigDimension,NumSamples,.4,.4,30,.01);")
+          KGlassoEstimate = getVariable(matlab,"C")$C
+          
+          KGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"F")^2 / normA
+          #print(c("Glasso Error: ",KGlassoError))
+          results$KGlasso[ind] = results$KGlasso[ind]+ KGlassoError/(NumInstances*TrialsPerInstance)
+          
+          #operator error
+          OpKGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"I")^2
+          OpResults$KGlasso[ind] = OpResults$KGlasso[ind]+ OpKGlassoError/(NumInstances*TrialsPerInstance)
+          
+          #geodesic distance
+          GeoKGlassoError = GeodesicDistance(DetNorm(invA), DetNorm(KGlassoEstimate))^2/GeoTrivialError^2
+          GeoResults$KGlasso[ind] = GeoResults$KGlasso[ind] + GeoKGlassoError/(NumInstances*TrialsPerInstance)
+        }
       }
     }
   }
@@ -1220,9 +1224,9 @@ SparsityCurve <-function(SmallDimension,BigDimension,NumSamples, MinSparse,MaxSp
 
 
 ```{r, echo=FALSE, message=FALSE, result=hide}
-#doing the learning curves
+#test doing the learning curves
 
-res =SparsityCurve(20,20,1,40,60)
+res =SparsityCurve(5,5,1,40,60)
 ```
 
 Plotting sparsity curves
@@ -1252,7 +1256,7 @@ SparseCurvePlot <- function(results){
 
   df = melt(results, id.vars = "Sparsity",variable.name = "Algorithm", value.name = "Error")
   #df = melt(results, id.vars = "Regularizer",variable.name = "Algorithm")
-  lp <- ggplot(data=df, aes(x=Sparsity, y=Error, group=Algorithm, color=Algorithm)) + geom_line() + geom_point() + scale_x_log10(breaks = 10^(-10:10),labels = trans_format("log10", math_format(10^.x)))+ scale_y_log10(breaks = 10^(-10:10),labels = trans_format("log10", math_format(10^.x)))+ mytheme
+  lp <- ggplot(data=df, aes(x=Sparsity, y=Error, group=Algorithm, color=Algorithm)) + geom_line() + geom_point() + scale_x_log10(breaks = 10^(-10:10),labels = trans_format("log10", math_format(10^.x)))+ scale_y_log10(breaks = 10^(-10:10),labels = trans_format("log10", math_format(10^.x)))#+ mytheme
   
   return(lp)}
 
@@ -1290,17 +1294,21 @@ Learning curves (Sparse)
 ```{r}
 LearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples,NumInstances=2,TrialsPerInstance=2,sparsity = 10,RegMin = -5, RegMax =5, RegStride=1){
   
-  results = data.frame(Samples = c(MinSamples:MaxSamples),Gemini=0,RegSink = 0,Sink = 0, Trivial=0, KGlasso = 0)
-
+  results = data.frame(Samples = c(MinSamples:MaxSamples),Gemini=0,RegSink = 0,Sink = 0, Trivial=0)
+  if(use_matlab){
+    setVariable(matlab, SmallDimension=SmallDimension, BigDimension=BigDimension)
+    results['KGlasso']=0
+  }
   #make copies for the other error metrics.
   GeoResults = data.frame(results)
   OpResults = data.frame(results)
   
-  setVariable(matlab, SmallDimension=SmallDimension, BigDimension=BigDimension)
-  
   for(j in MinSamples:MaxSamples){
     NumSamples = as.double(j)
-    setVariable(matlab, NumSamples=NumSamples)
+    if(use_matlab){
+      setVariable(matlab, NumSamples=NumSamples)
+    }
+    
     
     for (l in 1:NumInstances){ 
   
@@ -1442,24 +1450,26 @@ LearningCurve <-function(SmallDimension,BigDimension,MinSamples,MaxSamples,NumIn
         GeoSinkError = GeodesicDistance(DetNorm(invA), DetNorm(RegSinkEstimate))^2/GeoTrivialError^2
         GeoResults$RegSink[ind] = GeoResults$RegSink[ind] + GeoSinkError/(NumInstances*TrialsPerInstance)
         
-        #KGlasso 
-        #print(c("MatReg, ", MatReg))
-        setVariable(matlab, dat = dat)
-        #evaluate(matlab, "SmallDimension, class(BigDimension),class(NumSamples)")
-        evaluate(matlab,"[C,D] = KGL_R(dat,SmallDimension,BigDimension,NumSamples,.4/NumSamples^(1/2),.4/NumSamples^(1/2),30,.01);")
-        KGlassoEstimate = getVariable(matlab,"C")$C
-
-        KGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"F")^2 / normA
-        #print(c("Glasso Error: ",KGlassoError))
-        results$KGlasso[ind] = results$KGlasso[ind]+ KGlassoError/(NumInstances*TrialsPerInstance)
-
-        #operator error
-        OpKGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"I")^2
-        OpResults$KGlasso[ind] = OpResults$KGlasso[ind]+ OpKGlassoError/(NumInstances*TrialsPerInstance)
-        
-        #geodesic distance
-        GeoKGlassoError = GeodesicDistance(DetNorm(invA), DetNorm(KGlassoEstimate))^2/GeoTrivialError^2
-        GeoResults$KGlasso[ind] = GeoResults$KGlasso[ind] + GeoKGlassoError/(NumInstances*TrialsPerInstance)
+        if(use_matlab){
+          #KGlasso 
+          #print(c("MatReg, ", MatReg))
+          setVariable(matlab, dat = dat)
+          #evaluate(matlab, "SmallDimension, class(BigDimension),class(NumSamples)")
+          evaluate(matlab,"[C,D] = KGL_R(dat,SmallDimension,BigDimension,NumSamples,.4/NumSamples^(1/2),.4/NumSamples^(1/2),30,.01);")
+          KGlassoEstimate = getVariable(matlab,"C")$C
+  
+          KGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"F")^2 / normA
+          #print(c("Glasso Error: ",KGlassoError))
+          results$KGlasso[ind] = results$KGlasso[ind]+ KGlassoError/(NumInstances*TrialsPerInstance)
+  
+          #operator error
+          OpKGlassoError = norm(invA - (KGlassoEstimate/tr(KGlassoEstimate)),"I")^2
+          OpResults$KGlasso[ind] = OpResults$KGlasso[ind]+ OpKGlassoError/(NumInstances*TrialsPerInstance)
+          
+          #geodesic distance
+          GeoKGlassoError = GeodesicDistance(DetNorm(invA), DetNorm(KGlassoEstimate))^2/GeoTrivialError^2
+          GeoResults$KGlasso[ind] = GeoResults$KGlasso[ind] + GeoKGlassoError/(NumInstances*TrialsPerInstance)
+        }
 
       }
     }
@@ -1511,29 +1521,9 @@ lp
 
 
 
-
-Setting the right regularization parameter.
-
-```{r}
-# to do this, compute for various n, d1, d2 the regularization parameters.
-#for gemini, the suggestion is lambda_A = log^{1/2}(min (d1,d2))/\sqrt{n d_2}
-#for tsiligkaridis, the suggestion is proportional to lambda_B = \sqrt{log M/ n d_1}, lambda_A = \sqrt{log M/n d_2} + lambda_B, I guess.
-#we can then guess 1/sqrt n dependence, 
-
-#to start, just remove KGlasso.
-
-
-
-
-
-
-```
-
-
-Computational stuff
+Computational timing stuff 
 
 ```{r}
-#timeit
 
 Timings<-function(BigDimension, SmallDimension, NumSamples, NumInstances = 1, TrialsPerInstance = 1){
       spike=10
@@ -1585,6 +1575,8 @@ Timings<-function(BigDimension, SmallDimension, NumSamples, NumInstances = 1, Tr
 
 
 ```
+
+Do timing 
 
 ```{r}
 Timings(100,200,1,NumInstances =2, TrialsPerInstance  = 2)
